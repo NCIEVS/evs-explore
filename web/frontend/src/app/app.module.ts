@@ -68,6 +68,8 @@ import { ConceptDetailComponent } from './component/concept-detail/concept-detai
 import { ConceptRelationshipComponent } from './component/concept-relationship/concept-relationship.component';
 import { ConceptDisplayComponent } from './component/concept-display/concept-display.component';
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
+import { ValueSetsComponent } from './component/value-sets/value-sets.component';
+import { MappingsComponent } from './component/mappings/mappings.component';
 
 
 @NgModule({
@@ -84,7 +86,9 @@ import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarc
     ConceptDetailComponent,
     ConceptRelationshipComponent,
     ConceptDisplayComponent,
-    HierarchyDisplayComponent
+    HierarchyDisplayComponent,
+    ValueSetsComponent,
+    MappingsComponent
   ],
   imports: [
     BrowserModule,

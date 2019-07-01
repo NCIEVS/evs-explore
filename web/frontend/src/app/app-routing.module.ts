@@ -5,11 +5,15 @@ import { PageNotFoundComponent } from './component/page-not-found/page-not-found
 import { GeneralSearchComponent } from './component/general-search/general-search.component';
 import { ConceptDisplayComponent } from './component/concept-display/concept-display.component';
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
+import { MappingsComponent } from './component/mappings/mappings.component';
+import { ValueSetsComponent } from './component/value-sets/value-sets.component';
 
 const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent },
   { path: 'concept/:code', component: ConceptDisplayComponent },  
   { path: 'hierarchy/:code', component: HierarchyDisplayComponent },
+  { path: 'mappings', component: MappingsComponent },
+  { path: 'valuesets', component: ValueSetsComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
