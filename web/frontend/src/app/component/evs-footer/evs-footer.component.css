@@ -1,0 +1,29 @@
+
+
+.socialmedia-block-inner ul {
+    padding-left: 5px;
+    list-style-type: none;
+}
+
+.socialmedia-link {
+    height: 22px;
+}
+
+footer .footercustom {
+    font-size: 12px;
+    padding-top: 10px !important;
+    border-top: solid 1px #e2e2e2;
+    color: #999;
+}
+
+footer .footercustom a {
+    color: #999;
+}
+
+footer .footercustom .block-header {
+    padding-bottom: 8px;
+}
+
+footer .footercustom .block-body {
+    padding-left: 20px;
+}

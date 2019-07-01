@@ -1,0 +1,133 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.4.RELEASE'
+	}
+    repositories {
+      
+        jcenter()
+        maven { url "http://repo.spring.io/release" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/snapshot" }
+        mavenCentral() 
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+
+
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+/*
+ * The dependency management plugin remains a transitive dependency of spring-boot-gradle-plugin
+ * so there’s no need for it to be listed as a classpath dependency in the buildscript configuration.
+ */
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+def bomVersion = "Greenwich.RELEASE"
+
+group = "gov.nih.nci.term.browser.web"
+version = "1.0.0.RELEASE"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+springBoot {
+    buildInfo()          // generate file META-INF/build-info.properties during the build
+}
+
+
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/snapshot" }
+    mavenCentral()
+}
+
+dependencies {
+    compile ('org.springframework.boot:spring-boot-starter-web')
+    
+    
+    compile 'org.springframework.boot:spring-boot-actuator'
+    compile 'org.springframework.boot:spring-boot-devtools'
+    
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+   
+    
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-zuul"
+	compile 'org.springframework.boot:spring-boot-properties-migrator'
+    /*
+     * Test Dependencies
+     */
+   
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+jar {
+    baseName = project.name
+    version =  project.version
+     manifest {
+        attributes 'Main-Class': 'main.java.gov.nih.evsexplore.web.Application'
+    }
+}
+
+
+jar {
+    from('frontend/dist') {
+        //Public is a default supported Spring Boot resources directory.
+        into 'public'
+    }
+}
+ 
+//frontend:build will be run before the processResources
+processResources.dependsOn('frontend:build')
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$bomVersion"
+    }
+}
+
+test {
+    /*
+     * Configure gradle to show standard out and standard error
+     * of the test JVM(s) on the console
+     */
+    testLogging.showStandardStreams = true
+
+    
+}
+
+task zipFile(type: Zip) {
+    def zipFileRootDirectory = "${project.name}-${project.version}"
+
+    from('src/main/bin') {
+        fileMode = 0755
+        into "$zipFileRootDirectory/bin"
+    }
+    from("$buildDir/libs") {
+        include '*.war'
+        into "$zipFileRootDirectory/lib"
+    }
+    rename { String fileName ->
+        fileName.replace("-${project.version}", "")
+    }
+}
+
+
+zipFile.dependsOn = [ bootWar ]
+build.dependsOn = [ test, bootWar, zipFile ]
+install.dependsOn = [ bootWar, zipFile ]
+
+

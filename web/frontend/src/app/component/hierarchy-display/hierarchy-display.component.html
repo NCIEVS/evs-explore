@@ -1,0 +1,43 @@
+<div id="hierarchyTableDisplay" style="height: 800px; width: 100%;">
+  <as-split [direction]="direction">
+    <as-split-area [size]="hierarchyPanelSize">
+      <div class="page-header">
+        Concept Hierarchy
+      </div>
+      <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
+        [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
+        (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)"
+        (onNodeSelect)="treeTableNodeSelected(selectedNode)">
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{rowData.label}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </as-split-area>
+    <as-split-area [size]="conceptPanelSize">
+      <div class="page-header">
+        {{ title }}
+      </div>
+      <p-tabView [activeIndex]="activeIndex" (onChange)="handleChange($event)">
+        <p-tabPanel header="Terms And Properties" [selected]="true">
+          <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
+        </p-tabPanel>
+        <p-tabPanel header="Relationships">
+          <app-concept-relationship [concept_relationships]="concept_relationships" [url_base]="url_base"
+            [url_target]="url_target">
+          </app-concept-relationship>
+        </p-tabPanel>
+        <p-tabPanel header="View All">
+          <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
+          <app-concept-relationship [concept_relationships]="concept_relationships" [url_base]="url_base"
+            [url_target]="url_target">
+          </app-concept-relationship>
+        </p-tabPanel>
+      </p-tabView>
+    </as-split-area>
+  </as-split>
+</div>

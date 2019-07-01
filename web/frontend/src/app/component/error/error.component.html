@@ -1,0 +1,21 @@
+<div style="text-align: center">
+  <!-- <img style="height: 200px" src="assets/images/header/immport-shared-data-icon.png" /> -->
+  <br><br>
+  <h1 style="font-size: 60px"> <i class="fa fa-exclamation-triangle"></i> Error :(</h1>
+  <div>
+    <h3>Sorry, something went wrong.</h3>
+  </div>
+  <div *ngIf="error.message;else no_error">
+    <div style="text-align: center">Please report below error to the NCI helpdesk</div>
+    <br>  
+    <div class="error-box">
+      {{error.message}}
+    </div>
+  </div>
+  <ng-template #no_error>
+    <div>Please contact the  NCI helpdesk</div>
+  </ng-template>    
+  <br>
+  <!--<a style="font-size: 20px" class="ui-button-success" [routerLink]="['/home']"><i class="fa fa-home"></i>Home</a>-->
+  <br><br><br>
+</div>

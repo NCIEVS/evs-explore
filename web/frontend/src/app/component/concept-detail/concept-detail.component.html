@@ -1,0 +1,157 @@
+<div *ngIf="concept">
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <tbody>
+        <tr>
+          <td class="w-25">Preferred Name:</td>
+          <td class="w-75">{{ concept.Preferred_Name }}</td>
+        </tr>
+        <tr>
+          <td class="w-25">Display Name:</td>
+          <td class="w-75">{{ concept.Display_Name }}</td>
+        </tr>
+        <tr>
+          <td class="w-25">Label:</td>
+          <td class="w-75">{{ concept.Label }}</td>
+        </tr>
+        <tr>
+          <td class="w-25">NCI Thesaurus Code:</td>
+          <td class="w-75">{{ concept.Code }}</td>
+        </tr>
+        <tr>
+          <td class="w-25">Concept Status:</td>
+          <td class="w-75">{{ concept.Concept_Status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p-panel header="Definitions" [toggleable]="true">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th class="w-80">Definition</th>
+            <th class="w-10">Source</th>
+            <th class="w-10">Attr</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let defintion of concept.DEFINITION">
+            <td>{{ defintion.definition }}</td>
+            <td>{{ defintion["def-source"] }}</td>
+            <td>{{ defintion.attr }}</td>
+          </tr>
+          <tr *ngFor="let defintion of concept.ALT_DEFINITION">
+            <td>{{ defintion.definition }}</td>
+            <td>{{ defintion["def-source"] }}</td>
+            <td>{{ defintion.attr }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-panel>
+  <br />
+  <p-panel header="Synonyms & Abbreviations" [toggleable]="true">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th class="w-60">Term</th>
+            <th class="w-15">Source</th>
+            <th class="w-5">Type</th>
+            <th class="w-10">Code</th>
+            <th class="w-10">Subsource Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let synonym of concept.FULL_SYN">
+            <td>{{ synonym["term-name"] }}</td>
+            <td>{{ synonym["term-source"] }}</td>
+            <td>{{ synonym["term-group"] }}</td>
+            <td>{{ synonym["source-code"] }}</td>
+            <td>{{ synonym["subsource-name"] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-panel>
+  <br />
+
+  <p-panel header="Other Properties" [toggleable]="true">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th class="w-30">Name</th>
+            <th class="w-70">Value (qualifiers indented underneath)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let property of properties">
+            <tr *ngIf="
+              concept[property] !== undefined &&
+              concept[property].length > 0
+            ">
+              <td>{{property}}</td>
+              <td>{{ concept[property].join(", ") }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </p-panel>
+  <br />
+
+  <p-panel header="Maps To" [toggleable]="true" *ngIf="concept.Maps_To !== undefined && concept.Maps_To.length > 0">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-responsive">
+        <thead>
+          <tr>
+            <th class="w-30">Annotated Target</th>
+            <th class="w-20">Relationship to Target</th>
+            <th class="w-20">Target Term Type</th>
+            <th class="w-10">Target Code</th>
+            <th class="w-20">Target Terminology</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mapsto of concept.Maps_To">
+            <td>{{ mapsto.annotatedTarget }}</td>
+            <td>{{ mapsto.Relationship_to_Target }}</td>
+            <td>{{ mapsto.Target_Term_Type }}</td>
+            <td>{{ mapsto.Target_Code }}</td>
+            <td>{{ mapsto.Target_Terminology }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-panel>
+  <br />
+  <p-panel header="GO Annotation" [toggleable]="true" *ngIf="
+    concept.GO_Annotation !== undefined &&
+    concept.GO_Annotation.length > 0
+  ">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-responsive">
+        <thead>
+          <tr>
+            <th class="w-20">Go Source</th>
+            <th class="w-20">Source date</th>
+            <th class="w-20">Go Id</th>
+            <th class="w-20">Go Evi</th>
+            <th class="w-20">Go Term</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let goAnnotation of concept.GO_Annotation">
+            <td>{{ goAnnotation["go-source"] }}</td>
+            <td>{{ goAnnotation["source-date"] }}</td>
+            <td>{{ goAnnotation["go-id"] }}</td>
+            <td>{{ goAnnotation["go-evi"] }}</td>
+            <td>{{ goAnnotation["go-term"] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-panel>
+</div>

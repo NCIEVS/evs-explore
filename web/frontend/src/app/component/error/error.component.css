@@ -1,0 +1,9 @@
+.error-box {
+    text-align: left;
+    margin-left: 10%;
+    margin-right: 10%;
+    max-height: 200px;
+    overflow-y: scroll;
+    background-color: #eff0f1;
+    padding: 6px;
+}

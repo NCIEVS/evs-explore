@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark sharedDataApplicationHeader">
+   <a class="navbar-brand active" routerLink="/"><i class="fa fa-home"></i> </a>
+
+  <a class="navbar-brand active" routerLink="/searchresult">
+    <img class="main-site-logo" src="assets/images/header/NCItTile.jpg" />
+    <span>NCI Term Browser
+    </span>
+    <span style=" font-size: 0.575rem;">{{versionInfo}}
+    </span>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="valuesets">Value Sets</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="mapping">Mapping</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="conceptlist">Concept List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="concept/C12913/showHierarchy">Hierarchy</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">Documentation</a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpMenu">
+          <a class="dropdown-item" routerLink="associations">Associations</a>
+          <a class="dropdown-item" routerLink="properties">Properties</a>
+          <a class="dropdown-item" routerLink="roles">Roles</a>
+          <a class="dropdown-item" routerLink="termtypes">Term Types</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="helpMenu" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">Help</a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpMenu">
+          <a class="dropdown-item" routerLink="overview">Overview</a>
+        </div>
+      </li>
+
+
+    </ul>
+  </div>
+</nav>
