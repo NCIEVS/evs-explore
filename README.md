@@ -1,2 +1,2 @@
 # evs-explore
-new terminology browser application
+new evs terminology browser application
