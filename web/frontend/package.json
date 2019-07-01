@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "copyAll": "cp -r dist/* ../src/main/resources/static/"
+    "copyAll": "mkdir -p ../src/main/resources/static/ && rm -rf ../src/main/resources/static/* && cp -r dist/* ../src/main/resources/static/"
   },
   "private": true,
   "dependencies": {
