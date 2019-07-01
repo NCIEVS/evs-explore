@@ -70,6 +70,7 @@ import { ConceptDisplayComponent } from './component/concept-display/concept-dis
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
 import { ValueSetsComponent } from './component/value-sets/value-sets.component';
 import { MappingsComponent } from './component/mappings/mappings.component';
+import { AssociationsComponent } from './component/documentation/associations/associations.component';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { MappingsComponent } from './component/mappings/mappings.component';
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
     ValueSetsComponent,
-    MappingsComponent
+    MappingsComponent,
+    AssociationsComponent
   ],
   imports: [
     BrowserModule,

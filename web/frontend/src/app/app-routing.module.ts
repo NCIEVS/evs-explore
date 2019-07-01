@@ -7,6 +7,7 @@ import { ConceptDisplayComponent } from './component/concept-display/concept-dis
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
 import { MappingsComponent } from './component/mappings/mappings.component';
 import { ValueSetsComponent } from './component/value-sets/value-sets.component';
+import { AssociationsComponent } from './component/documentation/associations/associations.component';
 
 const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'hierarchy/:code', component: HierarchyDisplayComponent },
   { path: 'mappings', component: MappingsComponent },
   { path: 'valuesets', component: ValueSetsComponent },
+  { path: 'associations', component: AssociationsComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
