@@ -1,6 +1,7 @@
 <div id="hierarchyTableDisplay" style="height: 800px; width: 100%;">
   <as-split [direction]="direction">
     <as-split-area [size]="hierarchyPanelSize">
+      <div class="hierarchy-div">
       <div class="page-header">
         Concept Hierarchy
       </div>
@@ -17,8 +18,10 @@
           </tr>
         </ng-template>
       </p-treeTable>
+      </div>
     </as-split-area>
     <as-split-area [size]="conceptPanelSize">
+      <div class="hierarchy-div">
       <div class="page-header">
         {{ title }}
       </div>
@@ -38,6 +41,7 @@
           </app-concept-relationship>
         </p-tabPanel>
       </p-tabView>
+      </div>
     </as-split-area>
   </as-split>
 </div>

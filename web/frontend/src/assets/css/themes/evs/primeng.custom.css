@@ -444,7 +444,8 @@
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121; }
-  .ui-tabview .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover a {
+
+.ui-tabview .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover a {
     color: #212121; }
 
 .ui-dialog .ui-dialog-titlebar-icon {
@@ -966,10 +967,12 @@ body .ui-fieldset .ui-fieldset-legend a .ui-fieldset-toggler {
 .ui-accordion .ui-accordion-header:hover a {
   text-decoration: none; }
 
+/*
 .ui-tabview-selected.ui-state-active {
   border-color: #0173ae !important;
   background-color: #0173ae !important;
   color: #ffffff !important; }
+*/
 
 body .ui-paginator {
   background-color: #ffffff;

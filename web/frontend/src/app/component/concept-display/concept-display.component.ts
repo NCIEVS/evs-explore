@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 
@@ -18,6 +19,8 @@ export class ConceptDisplayComponent implements OnInit {
 
   url_base = '/concept'
   url_target = '_blank'
+
+  hierarchyButtonLabel = "Open in Hierarchy"
 
   /*
    * The properties that are excluded are handled differently
@@ -39,7 +42,9 @@ export class ConceptDisplayComponent implements OnInit {
 
   constructor(
     private conceptDetailService: ConceptDetailService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
+
   ) { }
 
   ngOnInit() {
@@ -80,5 +85,10 @@ export class ConceptDisplayComponent implements OnInit {
         this.concept_relationships = response;
       });
     }
+  }
+
+  openHierarchy() {
+    const newURL = "/hierarchy/" + this.concept_code;
+    this.location.replaceState(newURL);
   }
 }

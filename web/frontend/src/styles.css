@@ -14,6 +14,19 @@ table a:hover {
   padding: .25rem;
 }
 
+/*
+ * Over-ride bootstrap
+*/
+.page-header {
+    font-weight: bold;
+    padding: 6px 10px;
+    background-color: #fff !important;
+    color: #337ab7 !important;
+    font-size: 20px !important;
+    padding: 0px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #ccc !important;
+}
 
 
 p-dialog .ui-dialog {
@@ -96,6 +109,26 @@ body .alert-info {
   border: 1px solid #ecf2f8;
   padding: 1em!important;
 }
+
+.ui-tabview .ui-tabview-panel {
+  border-width: 0;
+  padding: 0em;
+  background: 0;
+}
+
+.ui-panel .ui-panel-footer {
+  border-width: 1px 0 0;
+  padding: .25em .5em;
+  text-align: left;
+  background-color: #bee5eb;
+}
+
+.btn-link{
+  color: #222222;
+  background-color: transparent;
+  border-color: transparent;
+}
+
 .col-12 {
   flex: 0 0 100%;
   max-width: 100%;
