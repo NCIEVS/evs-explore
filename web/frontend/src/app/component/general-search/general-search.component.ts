@@ -247,8 +247,12 @@ export class GeneralSearchComponent implements OnInit,
     // setting the search parameters.
     this.termautosearch = this.searchCriteria.term;
     this.selectedSearchType = this.searchCriteria.type;
-    if (this.selectedSearchType == null || this.selectedSearchType === undefined) {
-      this.selectedSearchType = 'contains';
+    if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
+      if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
+        this.selectedSearchType = sessionStorage.getItem('searchType');
+      } else {
+        this.selectedSearchType = 'contains';
+      }
     }
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
@@ -299,7 +303,16 @@ export class GeneralSearchComponent implements OnInit,
       };
     });
 
+    if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
+      let sources = sessionStorage.getItem('source');
+      this.selectedSource = JSON.parse(sources);
+      this.getSearchResults(sessionStorage.getItem('searchTerm'));
+    }
 
+    if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
+      this.termautosearch = sessionStorage.getItem('searchTerm');
+      this.getSearchResults(sessionStorage.getItem('searchTerm'));
+    }
 
   }
 
@@ -371,6 +384,7 @@ export class GeneralSearchComponent implements OnInit,
       });
   }
 
+ 
   ngAfterViewInit() { }
 
   // onclick of Advanced Search button
@@ -453,6 +467,7 @@ export class GeneralSearchComponent implements OnInit,
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
     this.selectedSearchType = event;
+    sessionStorage.setItem('searchType', this.selectedSearchType);
     this.getSearchResults(this.termautosearch);
   }
 
@@ -500,6 +515,9 @@ export class GeneralSearchComponent implements OnInit,
 
     console.log('****search term*** - ' + JSON.stringify(event));
     this.avoidLazyLoading = true;
+  
+    sessionStorage.setItem('searchTerm', event.query);
+    
     this.getSearchResults(event.query);
 
   }
@@ -519,7 +537,9 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    console.log("In ngOnInit");
+  }
   // get the results based on the parameters
   onSubmitSearch() {
     console.log('onSubmitSearch *** - ' + this.termautosearch);
@@ -599,6 +619,7 @@ export class GeneralSearchComponent implements OnInit,
 
 
   onChangeSource(event) {
+    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.getSearchResults(this.termautosearch);
   }
 
@@ -639,6 +660,7 @@ export class GeneralSearchComponent implements OnInit,
   onSourceSelectDeselect(event) {
     console.log('event' + JSON.stringify(event));
     console.log('event - ' + JSON.stringify(this.selectedSource));
+    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.getSearchResults(this.termautosearch);
   }
 
