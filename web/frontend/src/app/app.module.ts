@@ -71,6 +71,10 @@ import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarc
 import { ValueSetsComponent } from './component/value-sets/value-sets.component';
 import { MappingsComponent } from './component/mappings/mappings.component';
 import { AssociationsComponent } from './component/documentation/associations/associations.component';
+import { PropertiesComponent } from './component/documentation/properties/properties.component';
+import { OverviewComponent } from './component/documentation/overview/overview.component';
+import { RolesComponent } from './component/documentation/roles/roles.component';
+import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 
 
 @NgModule({
@@ -90,7 +94,11 @@ import { AssociationsComponent } from './component/documentation/associations/as
     HierarchyDisplayComponent,
     ValueSetsComponent,
     MappingsComponent,
-    AssociationsComponent
+    AssociationsComponent,
+    PropertiesComponent,
+    OverviewComponent,
+    RolesComponent,
+    TermTypesComponent
   ],
   imports: [
     BrowserModule,

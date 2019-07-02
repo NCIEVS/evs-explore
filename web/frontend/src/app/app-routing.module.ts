@@ -8,6 +8,10 @@ import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarc
 import { MappingsComponent } from './component/mappings/mappings.component';
 import { ValueSetsComponent } from './component/value-sets/value-sets.component';
 import { AssociationsComponent } from './component/documentation/associations/associations.component';
+import { PropertiesComponent } from './component/documentation/properties/properties.component';
+import { OverviewComponent } from './component/documentation/overview/overview.component';
+import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
+import { RolesComponent } from './component/documentation/roles/roles.component';
 
 const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent },
@@ -16,6 +20,10 @@ const routes: Routes = [
   { path: 'mappings', component: MappingsComponent },
   { path: 'valuesets', component: ValueSetsComponent },
   { path: 'associations', component: AssociationsComponent },
+  { path: 'properties', component: PropertiesComponent },
+  { path: 'overview', component: OverviewComponent },
+  { path: 'termtypes', component: TermTypesComponent },
+  { path: 'roles', component: RolesComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
