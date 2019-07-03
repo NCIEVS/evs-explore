@@ -31,6 +31,7 @@ import { FacetField } from './../../model/FacetField';
 
 
 import { Router } from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-general-search',
@@ -253,6 +254,14 @@ export class GeneralSearchComponent implements OnInit,
       } else {
         this.selectedSearchType = 'contains';
       }
+
+      if (this.selectedSearchType === 'phrase' ||
+        this.selectedSearchType === 'fuzzy' ||
+        this.selectedSearchType === 'AND' ||
+        this.selectedSearchType === 'OR'
+      ) {
+        this.showMoreSearchOption = true;
+      }
     }
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
@@ -409,6 +418,7 @@ export class GeneralSearchComponent implements OnInit,
 
   clearSearchText(event) {
     this.termautosearch = '';
+    sessionStorage.setItem('searchTerm', this.termautosearch);
   }
 
   resetFilters(event) {
@@ -416,6 +426,7 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedPropertiesRelationshipSearch = [];
     this.selectedPropertiesReturn = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
     this.selectedSearchType = 'contains';
+    sessionStorage.setItem('searchType', this.selectedSearchType);
     this.showAdvanced = false;
     this.selectedDefintionSource = null;
     this.selectedSynonymSource = null;
@@ -423,6 +434,7 @@ export class GeneralSearchComponent implements OnInit,
     this.domainConcept = null;
     this.showAdvanced = false;
     this.selectedSource = [];
+    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.titleAdvancedSearch = 'Advanced Search';
   }
 
