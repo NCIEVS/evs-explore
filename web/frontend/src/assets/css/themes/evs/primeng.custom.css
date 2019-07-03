@@ -1241,9 +1241,13 @@ body .ui-table .ui-table-thead > tr > th {
 .ui-button:focus,
 .ui-fileupload-choose:not(.ui-state-disabled):hover {
   outline: 0 none;
-  border-color: silver;
-  background-color: #eee;
+  border:1px solid #2399e5;
+  background-color: #2399e5;
   color: #fff; }
+
+  .ui-button-text-icon-left .ui-button-text {
+    padding: .28em 1em .28em 2.1em;
+}
 
 .ui-inputgroup .ui-button {
   margin-right: 0;

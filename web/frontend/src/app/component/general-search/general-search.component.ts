@@ -422,6 +422,7 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedSynonymGroup = null;
     this.domainConcept = null;
     this.showAdvanced = false;
+    this.selectedSource = [];
     this.titleAdvancedSearch = 'Advanced Search';
   }
 

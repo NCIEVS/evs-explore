@@ -4,25 +4,30 @@
     <div class="col-12 p-0">
       <div class="shared-logo-box">
       <div class="row" >
-        <div class="col-sm-6">           
-             <div class="ui-inputgroup" style="padding-top: 2px;">
-              <p-autoComplete [inputStyle]="{'width':'400px'}"  [delay]="600"
+        <div class="col-sm-4">           
+             <div style="padding-top: 2px;">
+              <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  [delay]="600"
                 [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (onClear)="clearResults()"
                 (completeMethod)="search($event)" id="termauto" name="termauto"
-                placeholder="Hint: Enter a concept code or at least 3 letters of a term. e.g. bre" [minLength]="3">
+                placeholder="Enter concept code or at least 3 letters of a term." [minLength]="3">
               </p-autoComplete>
-              <button type="button" pButton label="search" icon="fa fa-search" (click)="returnSearchResults();"></button>            
-              <button type="button" pButton icon="fa fa-undo"
-              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
-              label="reset" tooltipPosition="bottom"></button>
+            
              </div>        
        
         </div>
-        <div class="col-sm-6">
-           <div class="ui-inputgroup" style="padding-top: 2px;">
+         <div class="col-sm-2 p-0">           
+             <div class="ui-inputgroup" style="padding-top: 2px;">
+              <button type="button" pButton label="search" icon="fa fa-search" (click)="returnSearchResults();"></button>            
+              
+             </div>        
+       
+        </div>  
+
+        <div class="col-sm-2 p-0">
+           <div class="ui-inputgroup" style="padding-top: 2px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
                 [options]="sourcesAll" [(ngModel)]="selectedSource"
-                name="sourceSearch" defaultLabel="Select a Source"
+                name="sourceSearch" defaultLabel="Source"
                 (onChange)="onChangeSource($event)" [displaySelectedLabel]="false">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
@@ -31,7 +36,17 @@
               <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset"
                 label="reset" tooltipPosition="bottom"></button>
             </div>
+            
+          
+              
         </div>
+         <div class="col-sm-4 p-0">
+           <div style="padding-top: 2px;float:left;">
+          <button type="button" pButton icon="fa fa-undo"
+              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
+              label="reset search" tooltipPosition="bottom"></button>
+              </div>
+              </div>
      </div>
       <div class="row">
          <div class="col-sm-6" style="padding-top:2px;">
@@ -57,7 +72,7 @@
 
         
         </div>
-         <div class="col-sm-6" style="padding-top:2px;">
+         <div class="col-sm-6 p-0" style="padding-top:2px;">
             <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0"
               [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)"
               addOnTab="false" addOnBlur="false">
