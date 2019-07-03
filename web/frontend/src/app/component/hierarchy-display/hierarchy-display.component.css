@@ -6,17 +6,7 @@
 .treenode {
     color: black;
 }
-  
-/*
- * Over-ride bootstrap
-*/
-.page-header {
-  font-weight: bold;
-  padding: 6px 10px;
-  background-color: #fff !important;
-  color: #337ab7 !important;
-  font-size: 20px !important;
-  padding: 0px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #ccc !important;
+
+.customtabview .ui-panel-titlebar {
+  background: #000000
 }
