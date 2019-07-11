@@ -55,6 +55,7 @@ export class GeneralSearchComponent implements OnInit,
   selectedProperties: string;
   selectedSearchValues: string[] = [];
   termautosearch: string;
+  oldTermautosearch: string;
   textSuggestions: string[] = [];
   conceptStatuses: string[] = [];
   contributingSources: string[] = [];
@@ -325,8 +326,7 @@ export class GeneralSearchComponent implements OnInit,
 
   }
 
-
-
+  
   showMoreSearchOptions() {
     if (this.showMoreSearchOption) {
       this.showMoreSearchOption = false;
@@ -418,6 +418,7 @@ export class GeneralSearchComponent implements OnInit,
 
   clearSearchText(event) {
     this.termautosearch = '';
+    this.oldTermautosearch  = '';
     sessionStorage.setItem('searchTerm', this.termautosearch);
   }
 
@@ -520,18 +521,23 @@ export class GeneralSearchComponent implements OnInit,
   }
 
   search(event) {
+    this.avoidLazyLoading = true;
     if (this.dtSearch !== null && this.dtSearch !== undefined) {
       this.dtSearch.reset();
       this.searchCriteria.fromRecord = 0;
       this.searchCriteria.pageSize = this.dtSearch.rows;
     }
-
+   
     console.log('****search term*** - ' + JSON.stringify(event));
-    this.avoidLazyLoading = true;
-  
-    sessionStorage.setItem('searchTerm', event.query);
-    
-    this.getSearchResults(event.query);
+    console.log('oldTermautosearch' + this.oldTermautosearch);
+    if (event.query !== this.oldTermautosearch) {
+      this.oldTermautosearch = event.query;
+      sessionStorage.setItem('searchTerm', event.query);
+      this.getSearchResults(event.query);
+    } else {
+      this.textSuggestions = [];
+      this.loading = false;
+    }
 
   }
 
