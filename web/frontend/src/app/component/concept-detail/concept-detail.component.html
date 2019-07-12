@@ -102,7 +102,10 @@
               concept[property].length > 0
             ">
               <td>{{property}}</td>
+              <td [innerHTML]="checkExternalLink(property)"></td>
+              <!--
               <td>{{ concept[property].join(", ") }}</td>
+              -->
             </tr>
           </ng-container>
         </tbody>
