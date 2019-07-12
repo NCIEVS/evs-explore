@@ -1,6 +1,7 @@
 <div class="container" *ngIf="termTypes">
   <div class="page-header">
     <span> {{ termTypes.title }}</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" ></button></span>
   </div>
   <p>{{ termTypes.header }}</p>
   <div class="table-responsive" style="font-size:14px;">
