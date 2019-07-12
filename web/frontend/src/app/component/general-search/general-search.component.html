@@ -15,7 +15,7 @@
              </div>        
        
         </div>
-         <div class="col-sm-2 p-0">           
+         <div class="col-sm-2">           
              <div class="ui-inputgroup" style="padding-top: 2px;">
               <button type="button" pButton label="search" icon="fa fa-search" (click)="returnSearchResults();"></button>            
               
@@ -23,7 +23,7 @@
        
         </div>  
 
-        <div class="col-sm-2 p-0">
+        <div class="col-sm-6">
            <div class="ui-inputgroup" style="padding-top: 2px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
                 [options]="sourcesAll" [(ngModel)]="selectedSource"
@@ -33,20 +33,23 @@
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
               </p-multiSelect>
-              <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset"
+              <button  type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset"
                 label="reset" tooltipPosition="bottom"></button>
+                  <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
+              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
+              label="reset search" tooltipPosition="bottom"></button>
             </div>
             
           
               
         </div>
-         <div class="col-sm-4 p-0">
+       <!--  <div class="col-sm-4">
            <div style="padding-top: 2px;float:left;">
           <button type="button" pButton icon="fa fa-undo"
               (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
               label="reset search" tooltipPosition="bottom"></button>
               </div>
-              </div>
+              </div>-->
      </div>
       <div class="row">
          <div class="col-sm-6" style="padding-top:2px;">
@@ -72,7 +75,7 @@
 
         
         </div>
-         <div class="col-sm-6" style="padding-top:2px;padding-left:0;">
+         <div class="col-sm-6" style="padding-top:2px;">
             <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0"
               [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)"
               addOnTab="false" addOnBlur="false">
