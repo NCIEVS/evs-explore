@@ -775,7 +775,7 @@ export class GeneralSearchComponent implements OnInit,
         && this.selectedPropertiesSearch.length > 0) {
         this.searchCriteria.property = this.selectedPropertiesSearch;
       } else {
-        this.searchCriteria.property = ['full_syn'];
+        this.searchCriteria.property = ['full_syn', 'code'];
       }
 
       this.searchCriteria.sources = this.selectedSource;
