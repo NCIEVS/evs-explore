@@ -12,6 +12,9 @@
 .navbar {
     position: static; }
 
+.nciHeader {
+  background-color: #1c5e86;
+} 
 .nciHeader li {
   font-size: 0.7rem;
 }

@@ -1,19 +1,19 @@
 footer .footercustom {
     font-size: 12px;
     z-index: 1000;
-    background-color: #0173ae;
+    background-color: #1c5e86;
     border-radius: 2px;
-    border: 1px solid #0173ae;
+    border: 1px solid #1c5e86;
     color: white;
-    background: #0173ae;
+    background: #1c5e86;
     /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#0188cb, #0173ae);
+    background: -webkit-linear-gradient(#0188cb, #1c5e86);
     /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#0188cb, #0173ae);
+    background: -o-linear-gradient(#0188cb, #1c5e86);
     /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#0188cb, #0173ae);
+    background: -moz-linear-gradient(#0188cb, #1c5e86);
     /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#0188cb, #0173ae);
+    background: linear-gradient(#0188cb, #1c5e86);
     /* Standard syntax */ 
 }
 
