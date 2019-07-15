@@ -12,6 +12,9 @@
 .navbar {
     position: static; }
 
+.nciHeader li {
+  font-size: 0.7rem;
+}
 
 .sharedDataApplicationHeader {
 
