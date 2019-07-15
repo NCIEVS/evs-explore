@@ -75,6 +75,7 @@ import { PropertiesComponent } from './component/documentation/properties/proper
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
+import { WelcomeComponent } from './component/welcome/welcome.component';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { TermTypesComponent } from './component/documentation/term-types/term-ty
     PropertiesComponent,
     OverviewComponent,
     RolesComponent,
-    TermTypesComponent
+    TermTypesComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,

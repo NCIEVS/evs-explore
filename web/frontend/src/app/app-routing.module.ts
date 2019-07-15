@@ -12,6 +12,7 @@ import { PropertiesComponent } from './component/documentation/properties/proper
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
+import { WelcomeComponent } from './component/welcome/welcome.component';
 
 const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'overview', component: OverviewComponent },
   { path: 'termtypes', component: TermTypesComponent },
   { path: 'roles', component: RolesComponent },
+  { path: 'welcome', component: WelcomeComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
