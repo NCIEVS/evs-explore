@@ -1,29 +1,63 @@
-
-
-.socialmedia-block-inner ul {
-    padding-left: 5px;
-    list-style-type: none;
-}
-
-.socialmedia-link {
-    height: 22px;
-}
-
 footer .footercustom {
     font-size: 12px;
-    padding-top: 10px !important;
-    border-top: solid 1px #e2e2e2;
-    color: #999;
+    z-index: 1000;
+    background-color: #0173ae;
+    border-radius: 2px;
+    border: 1px solid #0173ae;
+    color: white;
+    background: #0173ae;
+    /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#0188cb, #0173ae);
+    /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#0188cb, #0173ae);
+    /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#0188cb, #0173ae);
+    /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#0188cb, #0173ae);
+    /* Standard syntax */ 
 }
 
 footer .footercustom a {
-    color: #999;
+    color: white;
 }
 
-footer .footercustom .block-header {
-    padding-bottom: 8px;
+footer blockquote {
+    color: white;
+    margin: 0;
 }
 
-footer .footercustom .block-body {
-    padding-left: 20px;
+footer ul {
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+}
+  
+footer li {
+    color: white;
+    float: left;
+}
+
+ul.menu {
+    display: inline-block;
+    text-align: center !important;
+}
+  
+.inner {
+    width: 50%;
+    text-align: center !important;
+    margin: 0 auto;
+}
+
+footer li {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0px;
+}
+  
+footer li a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0px;
 }

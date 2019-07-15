@@ -33,7 +33,6 @@ export class ConceptDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("INSIDE ngOnInit")
   }
 
   checkExternalLink(property) {
