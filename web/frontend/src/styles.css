@@ -175,8 +175,9 @@ body .alert-info {
   height: 120px;
 }
 
-
-
+.ui-treetable .ui-treetable-toggler {
+  top: 7%!important;
+}
 
 
 
