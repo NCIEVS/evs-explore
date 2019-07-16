@@ -1,5 +1,6 @@
-<div class="container" style="padding-top:15px;">
-  <div class="row">
+
+<div class="container" >
+  <div class="row" style="padding-top: 6px;">
     
     <div class="col-12 p-0">
       <div class="shared-logo-box">
@@ -43,13 +44,7 @@
           
               
         </div>
-       <!--  <div class="col-sm-4">
-           <div style="padding-top: 2px;float:left;">
-          <button type="button" pButton icon="fa fa-undo"
-              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
-              label="reset search" tooltipPosition="bottom"></button>
-              </div>
-              </div>-->
+     
      </div>
       <div class="row">
          <div class="col-sm-6" style="padding-top:2px;">
@@ -86,109 +81,12 @@
          </div>
       </div>
      </div>
-      <!--
-      <p-panel>
-       <p-header>
-          <div>
-            <span class="ui-panel-title">Term Browser Search</span>         
-          </div>
-        </p-header>
-        <div class="row" style="padding-top:15px;">
-
-          <div class="col-sm-5">
-            <span>
-              <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="600"
-                [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (onClear)="clearResults()"
-                (completeMethod)="search($event)" id="termauto" name="termauto"
-                placeholder="Hint: Enter a concept code or at least 3 letters of a term. e.g. bre" [minLength]="3">
-              </p-autoComplete>
-
-
-            </span>
-
-          </div>
-          <div class="col-sm-1"><button type="button" pButton label="Search" icon="fa fa-search"
-              (click)="returnSearchResults();"></button></div>
-          <div class="col-sm-6">
-
-           
-            <button style="float:left" type="button" pButton icon="fa fa-undo"
-              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="Reset"
-              label="Reset Search" tooltipPosition="bottom"></button>
-          </div>
-
-
-        </div>
-        <div class="row">
-
-
-          <div class="col-sm-12" style="padding-top:10px;">
-            <p-radioButton class="radio-padding" name="searchtype" value="contains" label="Contains"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('contains')"></p-radioButton>
-            <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('match')"></p-radioButton>
-            <p-radioButton class="radio-padding" name="searchtype" value="startswith" label="Starts With"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('startswith')"></p-radioButton>
-            <p-button icon="pi pi-angle-double-right" (onClick)="showMoreSearchOptions()" *ngIf="!showMoreSearchOption">
-            </p-button><span *ngIf="showMoreSearchOption">
-              <p-radioButton class="radio-padding" name="searchtype" value="phrase" label="Phrase"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('phrase')"></p-radioButton>
-              <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('fuzzy')"></p-radioButton>
-              <p-radioButton class="radio-padding" name="searchtype" value="AND" label="AND"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('AND')"></p-radioButton>
-              <p-radioButton class="radio-padding" name="searchtype" value="OR" label="OR"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('OR')"></p-radioButton>
-            </span>
-            <p-button icon="pi pi-angle-double-left" (onClick)="showMoreSearchOptions()" *ngIf="showMoreSearchOption">
-            </p-button>
-
-
-          </div>
-
-
-        </div>
-        <hr />
-        <div class="row">
-
-          <div class="col-sm-4">
-            <div class="ui-inputgroup">
-              <p-multiSelect autoWidth="false" [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
-                [options]="sourcesAll" [(ngModel)]="selectedSource"
-                name="sourceSearch" defaultLabel="Select a Source"
-                (onChange)="onChangeSource($event)" [displaySelectedLabel]="false">
-                <ng-template let-source let-i="index" pTemplate="item">
-                  <span style="vertical-align: bottom;">{{source.label}}</span>
-                </ng-template>
-              </p-multiSelect>
-              <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset"
-                label="Reset" tooltipPosition="bottom"></button>
-            </div>
-          </div>
-         
-
-        </div>
-        <div class="row" style="padding-top:5px;">
-          <div class="col-sm-4">
-
-            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0"
-              [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)"
-              addOnTab="false" addOnBlur="false">
-              <ng-template let-item pTemplate="item">
-                {{item}}
-              </ng-template>
-            </p-chips>
-          </div>
-         
-
-        </div>
-      
-      </p-panel>-->
+   
     </div>
   </div>
  
 
-  <div class="row">
+  <div class="row" *ngIf="!welcomePage">
 
     <div class="col-sm-12 p-0">
       <div class="row">
@@ -218,13 +116,7 @@
               [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
               >
 
-             <!-- <ng-template pTemplate="caption">
-                <div class="ui-helper-clearfix">
-                  <button type="button" pButton icon="fa fa-file-o" iconPos="left" label="Export Data"
-                    (click)="dtSearch.exportCSV()" style="float:right;"></button>&nbsp;
-
-                </div>
-              </ng-template>-->
+           
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                     <col style="width: 1.8em">
@@ -288,4 +180,6 @@
     </div>
 
   </div>
+
+  <app-welcome *ngIf="welcomePage"></app-welcome>
 </div>

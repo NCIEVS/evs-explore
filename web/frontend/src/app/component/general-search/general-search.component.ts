@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { ConfigurationService } from './../../service/configuration.service';
@@ -24,7 +24,7 @@ import { SearchTermService } from './../../service/search-term.service';
 import { CovertSearchResultsService } from './../../service/covert-search-results.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 
-//import { ConceptDetailComponent } from './../concept-detail/concept-detail.component';
+
 
 import { Facet } from './../../model/Facet';
 import { FacetField } from './../../model/FacetField';
@@ -42,10 +42,12 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class GeneralSearchComponent implements OnInit,
   AfterViewInit {
   @ViewChild('dtSearch', { static: false }) public dtSearch: Table;
+  @Input() welcomePage: boolean;
   searchCriteria: SearchCriteria;
   searchResult: SearchResult;
   searchResultTableFormat: SearchResultTableFormat;
   title: string;
+
   loadedMultipleConcept = false;
   noMatchedConcepts = true;
   html = '<div class="tooltip">Hover over me' +
@@ -109,7 +111,7 @@ export class GeneralSearchComponent implements OnInit,
   loading: boolean;
 
 
-  //filter for sources
+  // filter for sources
   selectedSource: string[] = [];
   sourcesAll = null;
 
@@ -220,12 +222,12 @@ export class GeneralSearchComponent implements OnInit,
 
 
 
-  
 
 
 
 
-  //Facets
+
+  // Facets
   facets: Facet[] = new Array();
   facetFields: {};
   facetList = ['contributingSource', 'conceptStatus'];
@@ -233,78 +235,61 @@ export class GeneralSearchComponent implements OnInit,
 
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
-    private conceptDetailService: ConceptDetailService, 
-    private route: ActivatedRoute, public router: Router) {
+              private conceptDetailService: ConceptDetailService,
+              private route: ActivatedRoute, public router: Router) {
     this.searchResult = new SearchResult();
 
     this.searchCriteria = new SearchCriteria();
-    this.searchCriteria.term = route.snapshot.params['term'];
-    this.searchCriteria.type = route.snapshot.params['type'];
-    this.searchCriteria.property = route.snapshot.params['property'];
+    // this.searchCriteria.term = route.snapshot.params['term'];
+    // this.searchCriteria.type = route.snapshot.params['type'];
+    // this.searchCriteria.property = route.snapshot.params['property'];
 
     console.log('parameter term -' + this.searchCriteria.term);
     console.log('parameter searchType -' + this.searchCriteria.type);
     console.log('parameter property -' + this.searchCriteria.property);
 
+    console.log(window.location.pathname);
+    const path = '' + window.location.pathname;
+    if (path.includes('welcome')) {
+      this.welcomePage = true;
+    } else {
+      this.welcomePage = false;
+    }
+
     // setting the search parameters.
-    this.termautosearch = this.searchCriteria.term;
-    this.selectedSearchType = this.searchCriteria.type;
+    // this.termautosearch = this.searchCriteria.term;
+    // this.selectedSearchType = this.searchCriteria.type;
+    if (!this.welcomePage) {
     if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
       if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
         this.selectedSearchType = sessionStorage.getItem('searchType');
       } else {
         this.selectedSearchType = 'contains';
       }
-
-      if (this.selectedSearchType === 'phrase' ||
-        this.selectedSearchType === 'fuzzy' ||
-        this.selectedSearchType === 'AND' ||
-        this.selectedSearchType === 'OR'
-      ) {
-        this.showMoreSearchOption = true;
-      }
+    } else {
+      sessionStorage.setItem('searchType', 'contains');
+      this.selectedSearchType = 'contains';
     }
+
+    if (this.selectedSearchType === 'phrase' ||
+            this.selectedSearchType === 'fuzzy' ||
+            this.selectedSearchType === 'AND' ||
+            this.selectedSearchType === 'OR'
+          ) {
+            this.showMoreSearchOption = true;
+          }
+    }
+
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
-    this.views = [
-      {
-        label: 'Highlight View',
-        value: 'Highlight'
-      }, {
-        label: 'Table View',
-        value: 'Table'
-      }
-    ];
 
-    this.selectedViewFormat = this
-      .views
-      .find(view => view.value === 'Table');
 
     if (this.searchCriteria.property !== undefined && this.searchCriteria.property !== null
       && this.searchCriteria.property.length > 0) {
       this.selectedPropertiesSearch = this.searchCriteria.property;
     }
 
-    /*
-    if (this.searchCriteria.property !== undefined && this.searchCriteria.property !== null
-      && this.searchCriteria.property.length > 0) {
-      this.selectedPropertiesSearch = this.searchCriteria.property;
-    }
 
-    if (this.searchCriteria.relationshipProperty !== undefined && this.searchCriteria.relationshipProperty !== null
-      && this.searchCriteria.relationshipProperty.length > 0) {
-      this.selectedPropertiesRelationshipSearch = this.searchCriteria.relationshipProperty;
-    }
-
-    if (this.searchCriteria.returnProperties !== undefined && this.searchCriteria.returnProperties !== null
-      && this.searchCriteria.returnProperties.length > 0) {
-      this.selectedPropertiesReturn = this.searchCriteria.returnProperties;
-    }
-
-
-    this.getPropertyList();
-
-    this.setFacets();*/
 
     this.sourcesAll = ConfigurationService.fullSynSources.map(element => {
       return {
@@ -313,20 +298,30 @@ export class GeneralSearchComponent implements OnInit,
       };
     });
 
-    if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
-      let sources = sessionStorage.getItem('source');
-      this.selectedSource = JSON.parse(sources);
-      this.getSearchResults(sessionStorage.getItem('searchTerm'));
-    }
 
-    if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
-      this.termautosearch = sessionStorage.getItem('searchTerm');
-      this.getSearchResults(sessionStorage.getItem('searchTerm'));
+
+    if (!this.welcomePage) {
+        if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
+          const sources = sessionStorage.getItem('source');
+          this.selectedSource = JSON.parse(sources);
+          this.getSearchResults(sessionStorage.getItem('searchTerm'));
+        }
+
+        if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
+          this.termautosearch = sessionStorage.getItem('searchTerm');
+          this.getSearchResults(sessionStorage.getItem('searchTerm'));
+        }
+    } else {
+      this.selectedSource = [];
+      sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+      this.termautosearch = '';
+      this.oldTermautosearch = '';
+      sessionStorage.setItem('searchTerm', this.termautosearch);
     }
 
   }
 
-  
+
   showMoreSearchOptions() {
     if (this.showMoreSearchOption) {
       this.showMoreSearchOption = false;
@@ -393,7 +388,7 @@ export class GeneralSearchComponent implements OnInit,
       });
   }
 
- 
+
   ngAfterViewInit() { }
 
   // onclick of Advanced Search button
@@ -521,23 +516,31 @@ export class GeneralSearchComponent implements OnInit,
   }
 
   search(event) {
-    this.avoidLazyLoading = true;
-    if (this.dtSearch !== null && this.dtSearch !== undefined) {
-      this.dtSearch.reset();
-      this.searchCriteria.fromRecord = 0;
-      this.searchCriteria.pageSize = this.dtSearch.rows;
-    }
-   
-    console.log('****search term*** - ' + JSON.stringify(event));
-    console.log('oldTermautosearch' + this.oldTermautosearch);
-    if (event.query !== this.oldTermautosearch) {
-      this.oldTermautosearch = event.query;
+    console.log(window.location.pathname);
+    const path = '' + window.location.pathname;
+    if (path.includes('welcome')) {
       sessionStorage.setItem('searchTerm', event.query);
-      this.getSearchResults(event.query);
+      this.router.navigate(['/search']);
     } else {
-      this.textSuggestions = [];
-      this.loading = false;
-    }
+
+      this.avoidLazyLoading = true;
+      if (this.dtSearch !== null && this.dtSearch !== undefined) {
+        this.dtSearch.reset();
+        this.searchCriteria.fromRecord = 0;
+        this.searchCriteria.pageSize = this.dtSearch.rows;
+      }
+
+      console.log('****search term*** - ' + JSON.stringify(event));
+      console.log('oldTermautosearch' + this.oldTermautosearch);
+      if (event.query !== this.oldTermautosearch) {
+        this.oldTermautosearch = event.query;
+        sessionStorage.setItem('searchTerm', event.query);
+        this.getSearchResults(event.query);
+      } else {
+        this.textSuggestions = [];
+        this.loading = false;
+      }
+  }
 
   }
 
@@ -556,8 +559,8 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-  ngOnInit() { 
-    console.log("In ngOnInit");
+  ngOnInit() {
+    console.log('In ngOnInit');
   }
   // get the results based on the parameters
   onSubmitSearch() {
@@ -598,12 +601,12 @@ export class GeneralSearchComponent implements OnInit,
     this.propertiesReturn = [];
     this.propertiesRestrictRelationship = [];
     for (const property of ConfigurationService.propertyList) {
-      if (!this.exclude_properties_restrict.includes(property['value'])) {
+      if (!this.exclude_properties_restrict.includes(property.value)) {
         if (property.label === 'DEFINITION' || property.label === 'ALT_DEFINITION') {
 
           if (property.label === 'DEFINITION') {
             this.propertiesReturn.push(property);
-            let propertyDef = { ...property };
+            const propertyDef = { ...property };
             propertyDef.code = 'P97,P325';
             this.propertiesRestrict.push(propertyDef);
 
@@ -642,7 +645,7 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
- 
+
 
   onChangePropertySearch(event) {
     this.selectedSearchPropertiesHtml = '';
@@ -683,7 +686,7 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-  
+
 
   onPropertiesRelationshipSelectDeselect(event) {
     this.getSearchResults(this.termautosearch);
@@ -714,7 +717,7 @@ export class GeneralSearchComponent implements OnInit,
   }
 
 
- 
+
 
   returnSearchResults() {
     this.getSearchResults(this.termautosearch);
@@ -741,7 +744,7 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-  
+
 
   getSearchResults(term) {
     console.log('In getSearchResults -' + term);
@@ -797,7 +800,7 @@ export class GeneralSearchComponent implements OnInit,
       console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
     }
     this.searchCriteria.type = this.selectedSearchType;
-    
+
 
 
     this.loading = true;
@@ -809,7 +812,7 @@ export class GeneralSearchComponent implements OnInit,
         .getElasticMatchConcepts(this.searchCriteria)
         .subscribe(response => {
 
-          if (this.selectedViewFormat.value === 'Table') {
+
             if (this.searchCriteria.definitionSource !== null) {
               this.searchResultTableFormat = this
                 .covertSearchResultsService
@@ -823,34 +826,19 @@ export class GeneralSearchComponent implements OnInit,
                 .covertSearchResultsService
                 .convertSearchResponseToTableFormat(response, this.searchCriteria.returnProperties.slice());
             }
-            //console.log(JSON.stringify( this.searchResultTableFormat));
+
             this.hitsFound = this.searchResultTableFormat.totalHits;
             this.timetaken = this.searchResultTableFormat.timetaken;
-          } else {
-            this.searchResult = this
-              .covertSearchResultsService
-              .convertSearchResponse(response);
 
-            this.facetFields = this.searchResult.aggregations;
-            this.setFacets();
-            this.hitsFound = this.searchResult.totalHits;
-            this.timetaken = this.searchResult.timetaken;
-          }
-          if (this.hitsFound > 0) {
+            if (this.hitsFound > 0) {
             this.title = 'Found ' + this.hitsFound + ' concepts in ' + this.timetaken + ' ms';
-            if (this.selectedViewFormat.value === 'Table') {
-              // console.log('*******************' +
-              // JSON.stringify(this.searchResultTableFormat));
-              this.cols = [...this.searchResultTableFormat.header];
-              console.log('cols' + JSON.stringify(this.cols));
-              this.colsOrig = [...this.searchResultTableFormat.header];
-              this.reportData = [...this.searchResultTableFormat.data];
-              this.facetFields = this.searchResultTableFormat.aggregations;
-              this.setFacets();
-              this.displayTableFormat = true;
-            } else {
-              this.displayTableFormat = false;
-            }
+            this.cols = [...this.searchResultTableFormat.header];
+            console.log('cols' + JSON.stringify(this.cols));
+            this.colsOrig = [...this.searchResultTableFormat.header];
+            this.reportData = [...this.searchResultTableFormat.data];
+            this.facetFields = this.searchResultTableFormat.aggregations;
+            this.setFacets();
+            this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
           } else {
