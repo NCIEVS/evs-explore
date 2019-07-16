@@ -1,11 +1,10 @@
 .welcome {
-    color: black;
-    font-size: 12px;
-    padding: 1em!important;
+    color: black;   
+    padding: 1.5em!important;
 }
 
-.shared-logo-box {
-    padding: 6px;
+.custom-welcome {
+    padding: 10px;
     box-shadow: 0 1px 12px 0 #ecf2f8;
     border: 1px solid #ecf2f8;
     border-radius: 3px;

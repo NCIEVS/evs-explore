@@ -47,7 +47,7 @@
      
      </div>
       <div class="row">
-         <div class="col-sm-6" style="padding-top:2px;">
+         <div class="col-sm-6" style="padding-top:3px;">
             <p-radioButton class="radio-padding" name="searchtype" value="contains" label="Contains"
               [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('contains')"></p-radioButton>
             <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
@@ -70,7 +70,7 @@
 
         
         </div>
-         <div class="col-sm-6" style="padding-top:2px;">
+         <div class="col-sm-6" style="padding-top:3px;">
             <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0"
               [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)"
               addOnTab="false" addOnBlur="false">

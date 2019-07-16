@@ -50,42 +50,23 @@ export class GeneralSearchComponent implements OnInit,
 
   loadedMultipleConcept = false;
   noMatchedConcepts = true;
-  html = '<div class="tooltip">Hover over me' +
-    '<span class="tooltiptext">Tooltip text</span>' +
-    '</div>';
+  
   selectedSearchType: string;
-  selectedProperties: string;
+ 
   selectedSearchValues: string[] = [];
   termautosearch: string;
   oldTermautosearch: string;
   textSuggestions: string[] = [];
-  conceptStatuses: string[] = [];
-  contributingSources: string[] = [];
+ 
   fromRecord: number;
   biomarkers: string[] = [];
   selectedConceptCode: string;
   displayDetail = false;
-  seeMoreConceptStatusbool = false;
-  seeMoreContributingSource = false;
-  selectedPropertiesSearch: string[] = [];
   selectedPropertiesReturn: string[] = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
-  selectedPropertiesRelationshipSearch: string[] = [];
-  views = null;
-  defintionSources = null;
-  selectedDefintionSource = null;
-  synonymSources = null;
-  selectedSynonymSource = null;
-  synonymGroups = null;
-  selectedSynonymGroup = null;
-  domainConcept = null;
-  selectedSearchPropertiesHtml: string;
-  selectedReturnPropertiesHtml: string;
-  selectedSearchRelationshipPropertiesHtml: string;
+   
   displayText = false;
-  selectedViewFormat = null;
-  displayTableFormat = false;
-  showAdvanced = false;
-  titleAdvancedSearch = 'Advanced Search';
+  displayTableFormat = true;
+  
   avoidLazyLoading = true;
 
 
@@ -103,9 +84,9 @@ export class GeneralSearchComponent implements OnInit,
   // page parameters
   currentPage = 1;
 
-  propertiesRestrict = null;
+  selectedPropertiesSearch: string[] =[];
   propertiesReturn = null;
-  propertiesRestrictRelationship = null;
+  
   hitsFound = 0;
   timetaken = '';
   loading: boolean;
@@ -115,124 +96,9 @@ export class GeneralSearchComponent implements OnInit,
   selectedSource: string[] = [];
   sourcesAll = null;
 
-  exclude_properties_restrict = [
-    'def-source',
-    'Definition_Review_Date',
-    'Definition_Reviewer_Name',
-    'DesignNote',
-    'Image_Link',
-    'OLD_ASSOCIATION',
-    'OLD_CHILD',
-    'OLD_KIND',
-    'OLD_PARENT',
-    'OLD_ROLE',
-    'OLD_SOURCE_ASSOCIATION',
-    'OLD_STATE',
-    'Publish_Value_Set',
-    'Relationship_to_Target',
-    'source-code',
-    'Subsource',
-    'subsource-name',
-    'Target_Code',
-    'Target_Term',
-    'Target_Term_Type',
-    'Target_Terminology',
-    'term-source',
-    'term-group',
-    'Tolerable_Level',
-    'US_Recommended_Intake',
-    'Unit',
-    'Use_For',
-    'attr',
-    'code',
-    'def-definition',
-    'go-evi',
-    'go-id',
-    'go-source',
-    'go-term',
-    'source-date',
-    'term-name'
+  
 
-  ];
-
-  include_properties_restrict = [
-    {
-      label: 'Superconcept',
-      value: 'Superconcept',
-      code: 'Superconcept'
-    }, {
-      label: 'Subconcept',
-      value: 'Subconcept',
-      code: 'Subconcept'
-    }
-  ];
-
-  include_relationship_properties_restrict = [
-    {
-      label: 'Association',
-      value: 'Association',
-      code: 'Association'
-    }, {
-      label: 'InverseAssociation',
-      value: 'InverseAssociation',
-      code: 'InverseAssociation'
-    }, {
-      label: 'Role',
-      value: 'Role',
-      code: 'Role'
-    }, {
-      label: 'InverseRole',
-      value: 'InverseRole',
-      code: 'InverseRole'
-    },
-    {
-      label: 'DisjointWith',
-      value: 'DisjointWith',
-      code: 'DisjointWith'
-    }
-  ];
-
-  include_properties_return = [
-    {
-      label: 'Superconcept',
-      value: 'Superconcept',
-      code: 'Superconcept'
-    }, {
-      label: 'Subconcept',
-      value: 'Subconcept',
-      code: 'Subconcept'
-    }, {
-      label: 'Association',
-      value: 'Association',
-      code: 'Association'
-    }, {
-      label: 'InverseAssociation',
-      value: 'InverseAssociation',
-      code: 'InverseAssociation'
-    }, {
-      label: 'Role',
-      value: 'Role',
-      code: 'Role'
-    }, {
-      label: 'InverseRole',
-      value: 'InverseRole',
-      code: 'InverseRole'
-    }
-  ];
-
-
-
-
-
-
-
-
-  // Facets
-  facets: Facet[] = new Array();
-  facetFields: {};
-  facetList = ['contributingSource', 'conceptStatus'];
-  selectedfacetCheckboxes: string[] = [];
-
+  
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
               private conceptDetailService: ConceptDetailService,
@@ -515,7 +381,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.returnProperties = this.selectedPropertiesReturn;
     }
 
-    this.searchCriteria.relationshipProperty = this.selectedPropertiesRelationshipSearch;
+   
     console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
 
     this.searchCriteria.type = this.selectedSearchType;
@@ -547,7 +413,7 @@ export class GeneralSearchComponent implements OnInit,
             console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
-            this.facetFields = this.searchResultTableFormat.aggregations;
+            
 
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;

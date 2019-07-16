@@ -1,4 +1,5 @@
-<div *ngIf="concept">
+<div *ngIf="concept" style="padding-top:3px;">
+    <p-panel [showHeader]="false">
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
       <tbody>
@@ -25,6 +26,8 @@
       </tbody>
     </table>
   </div>
+  </p-panel>
+   <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
         Definitions

@@ -448,6 +448,16 @@
 .ui-tabview .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover a {
     color: #212121; }
 
+.ui-tabview .ui-tabview-nav li {
+    list-style: none;
+    float: left;
+    position: relative;
+    margin: 0 .125em 1px 0;
+    padding: 0;
+    white-space: nowrap;
+    background: linear-gradient(to bottom, #f7f7f7 0%, #e9ebec 100%);
+}
+
 .ui-dialog .ui-dialog-titlebar-icon {
   color: #1b1d1f; }
   .ui-dialog .ui-dialog-titlebar-icon:hover {
