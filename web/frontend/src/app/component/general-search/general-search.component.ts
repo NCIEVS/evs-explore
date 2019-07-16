@@ -237,16 +237,13 @@ export class GeneralSearchComponent implements OnInit,
   constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
               private conceptDetailService: ConceptDetailService,
               private route: ActivatedRoute, public router: Router) {
-    this.searchResult = new SearchResult();
+   
 
     this.searchCriteria = new SearchCriteria();
     // this.searchCriteria.term = route.snapshot.params['term'];
     // this.searchCriteria.type = route.snapshot.params['type'];
     // this.searchCriteria.property = route.snapshot.params['property'];
 
-    console.log('parameter term -' + this.searchCriteria.term);
-    console.log('parameter searchType -' + this.searchCriteria.type);
-    console.log('parameter property -' + this.searchCriteria.property);
 
     console.log(window.location.pathname);
     const path = '' + window.location.pathname;
@@ -256,38 +253,34 @@ export class GeneralSearchComponent implements OnInit,
       this.welcomePage = false;
     }
 
-    // setting the search parameters.
-    // this.termautosearch = this.searchCriteria.term;
-    // this.selectedSearchType = this.searchCriteria.type;
-    if (!this.welcomePage) {
-    if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
-      if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
-        this.selectedSearchType = sessionStorage.getItem('searchType');
-      } else {
-        this.selectedSearchType = 'contains';
-      }
-    } else {
+
+    if (this.welcomePage) {
       sessionStorage.setItem('searchType', 'contains');
       this.selectedSearchType = 'contains';
+    } else {
+      if (this.selectedSearchType === null || this.selectedSearchType === undefined ) {
+        if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
+          this.selectedSearchType = sessionStorage.getItem('searchType');
+        } else {
+          this.selectedSearchType = 'contains';
+        }
+      }
     }
 
     if (this.selectedSearchType === 'phrase' ||
-            this.selectedSearchType === 'fuzzy' ||
-            this.selectedSearchType === 'AND' ||
-            this.selectedSearchType === 'OR'
-          ) {
-            this.showMoreSearchOption = true;
-          }
-    }
+        this.selectedSearchType === 'fuzzy' ||
+        this.selectedSearchType === 'AND' ||
+        this.selectedSearchType === 'OR'
+      ) {
+        this.showMoreSearchOption = true;
+      }
+    
 
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
 
 
-    if (this.searchCriteria.property !== undefined && this.searchCriteria.property !== null
-      && this.searchCriteria.property.length > 0) {
-      this.selectedPropertiesSearch = this.searchCriteria.property;
-    }
+
 
 
 
@@ -301,16 +294,16 @@ export class GeneralSearchComponent implements OnInit,
 
 
     if (!this.welcomePage) {
-        if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
-          const sources = sessionStorage.getItem('source');
-          this.selectedSource = JSON.parse(sources);
-          this.getSearchResults(sessionStorage.getItem('searchTerm'));
-        }
+      if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
+        const sources = sessionStorage.getItem('source');
+        this.selectedSource = JSON.parse(sources);
+        this.getSearchResults(sessionStorage.getItem('searchTerm'));
+      }
 
-        if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
-          this.termautosearch = sessionStorage.getItem('searchTerm');
-          this.getSearchResults(sessionStorage.getItem('searchTerm'));
-        }
+      if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
+        this.termautosearch = sessionStorage.getItem('searchTerm');
+        this.getSearchResults(sessionStorage.getItem('searchTerm'));
+      }
     } else {
       this.selectedSource = [];
       sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
@@ -330,108 +323,28 @@ export class GeneralSearchComponent implements OnInit,
     }
   }
 
-  //  onclick of Advanced Search tab Menus
-  handleAdvancedSearchChange(event) {
-    console.log(JSON.stringify(event));
-    if (event.index === 2) {
-      if (this.defintionSources === null) {
-        this.getDefinitionSources();
-      }
-    }
-    if (event.index === 1) {
-      if (this.synonymSources === null) {
-        this.getSynonymSources();
-      }
-      if (this.synonymGroups === null) {
-        this.getSynonymGroups();
-      }
-    }
 
-  }
 
-  getDefinitionSources() {
-    this.conceptDetailService.getDefinitionSources()
-      .subscribe(response => {
-        const defintionSources = response;
-        this.defintionSources = defintionSources.map(element => {
-          return {
-            label: element,
-            value: element
-          };
-        });
-      });
-  }
 
-  getSynonymSources() {
-    this.conceptDetailService.getSynonymSources()
-      .subscribe(response => {
-        const synonymSources = response;
-        this.synonymSources = synonymSources.map(element => {
-          return {
-            label: element,
-            value: element
-          };
-        });
-      });
-  }
 
-  getSynonymGroups() {
-    this.conceptDetailService.getSynonymGroups()
-      .subscribe(response => {
-        const synonymGroups = response;
-        this.synonymGroups = synonymGroups.map(element => {
-          return {
-            label: element,
-            value: element
-          };
-        });
-      });
-  }
+
 
 
   ngAfterViewInit() { }
 
-  // onclick of Advanced Search button
-  advancedSearch() {
-    if (this.showAdvanced) {
-      this.showAdvanced = false;
-      this.titleAdvancedSearch = 'Advanced Search';
-      this.selectedDefintionSource = null;
-      this.selectedSynonymGroup = null;
-      this.selectedSynonymSource = null;
-      this.domainConcept = null;
-      this.selectedPropertiesSearch = [];
-      this.selectedPropertiesRelationshipSearch = [];
-      this.selectedPropertiesReturn = ['Preferred_Name', 'Display_Name'];
-      this.getSearchResults(this.termautosearch);
-    } else {
-      this.showAdvanced = true;
-      this.titleAdvancedSearch = 'Close Advanced Search';
-    }
-  }
-
 
   clearSearchText(event) {
     this.termautosearch = '';
-    this.oldTermautosearch  = '';
+    this.oldTermautosearch = '';
     sessionStorage.setItem('searchTerm', this.termautosearch);
   }
 
   resetFilters(event) {
-    this.selectedPropertiesSearch = [];
-    this.selectedPropertiesRelationshipSearch = [];
     this.selectedPropertiesReturn = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
-    this.showAdvanced = false;
-    this.selectedDefintionSource = null;
-    this.selectedSynonymSource = null;
-    this.selectedSynonymGroup = null;
-    this.domainConcept = null;
-    this.showAdvanced = false;
     this.selectedSource = [];
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
-    this.titleAdvancedSearch = 'Advanced Search';
   }
 
   resetTable() {
@@ -441,19 +354,7 @@ export class GeneralSearchComponent implements OnInit,
     this.defaultTableRows = 50;
   }
 
-  resetDefintionSource() {
-    this.selectedDefintionSource = null;
-    this.selectedSynonymSource = null;
-    this.selectedSynonymGroup = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
-  resetSynonym() {
-    this.selectedDefintionSource = null;
-    this.selectedSynonymSource = null;
-    this.selectedSynonymGroup = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
   onPageChange(event) {
     console.log('page event - ' + JSON.stringify(event));
@@ -480,40 +381,11 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-  onChangeDefinitionSource(event) {
-    console.log('onChangeDefinitionSource - ' + JSON.stringify(this.selectedDefintionSource));
-    this.selectedSynonymGroup = null;
-    this.selectedSynonymSource = null;
-    this.domainConcept = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
-  onChangeSynonymSource(event) {
-    console.log('onChangeSynonymSource - ' + JSON.stringify(this.selectedSynonymSource));
-    this.selectedDefintionSource = null;
-    this.domainConcept = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
-  onChangeSynonymGroup(event) {
-    console.log('onChangeSynonymGroup - ' + JSON.stringify(this.selectedSynonymGroup));
-    this.selectedDefintionSource = null;
-    this.domainConcept = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
-  searchDomain() {
-    console.log('domainConcept - ' + JSON.stringify(this.domainConcept));
-    this.selectedSynonymGroup = null;
-    this.selectedSynonymSource = null;
-    this.selectedDefintionSource = null;
-    this.getSearchResults(this.termautosearch);
-  }
 
-  resetHierarchySearch() {
-    this.domainConcept = null;
-    this.getSearchResults(this.termautosearch);
-  }
+
 
   search(event) {
     console.log(window.location.pathname);
@@ -530,8 +402,7 @@ export class GeneralSearchComponent implements OnInit,
         this.searchCriteria.pageSize = this.dtSearch.rows;
       }
 
-      console.log('****search term*** - ' + JSON.stringify(event));
-      console.log('oldTermautosearch' + this.oldTermautosearch);
+
       if (event.query !== this.oldTermautosearch) {
         this.oldTermautosearch = event.query;
         sessionStorage.setItem('searchTerm', event.query);
@@ -540,7 +411,7 @@ export class GeneralSearchComponent implements OnInit,
         this.textSuggestions = [];
         this.loading = false;
       }
-  }
+    }
 
   }
 
@@ -554,10 +425,7 @@ export class GeneralSearchComponent implements OnInit,
     this.loadedMultipleConcept = false;
   }
 
-  onFacetSelectDeselect(event) {
-    console.log(this.selectedfacetCheckboxes);
-    this.getSearchResults(this.termautosearch);
-  }
+
 
   ngOnInit() {
     console.log('In ngOnInit');
@@ -572,72 +440,7 @@ export class GeneralSearchComponent implements OnInit,
   }
 
 
-  onSelectCode(matchedConcept: MatchedConcept): void {
-    console.log(' matchedConcept.code - ' + matchedConcept.code);
-    this.onSelectConceptCode(matchedConcept.code);
 
-  }
-
-  onSelectConceptCode(conceptCode) {
-    console.log('conceptCode - ' + conceptCode);
-    /*
-        this
-          .dialogService
-          .open(ConceptDetailComponent, {
-            header: 'Concept Detail',
-            width: '80%',
-            height: '80%',
-            dismissableMask: true,
-            styleClass: 'overflow-scroll',
-            data: {
-              concept_code: conceptCode
-            }
-          });*/
-
-  }
-
-  getPropertyList() {
-    this.propertiesRestrict = [];
-    this.propertiesReturn = [];
-    this.propertiesRestrictRelationship = [];
-    for (const property of ConfigurationService.propertyList) {
-      if (!this.exclude_properties_restrict.includes(property.value)) {
-        if (property.label === 'DEFINITION' || property.label === 'ALT_DEFINITION') {
-
-          if (property.label === 'DEFINITION') {
-            this.propertiesReturn.push(property);
-            const propertyDef = { ...property };
-            propertyDef.code = 'P97,P325';
-            this.propertiesRestrict.push(propertyDef);
-
-          } else {
-            this.propertiesReturn.push(property);
-
-          }
-
-
-
-        } else {
-          if (property.label === 'Legacy_Concept_Name') {
-            property.value = 'Legacy_Concept_Name';
-          }
-
-          if (property.label === 'NSC_Code') {
-            property.value = 'NSC_Code';
-          }
-          this.propertiesRestrict.push(property);
-          this.propertiesReturn.push(property);
-        }
-      }
-
-    }
-
-    this.propertiesRestrict.push.apply(this.propertiesRestrict, this.include_properties_restrict);
-    this.propertiesReturn.push.apply(this.propertiesReturn, this.include_properties_return);
-    this.propertiesRestrictRelationship.push.apply(this.propertiesRestrictRelationship, this.include_relationship_properties_restrict);
-
-    // console.log('properties -- ' + JSON.stringify(this.propertiesRestrict));
-  }
 
 
   onChangeSource(event) {
@@ -645,39 +448,6 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-
-
-  onChangePropertySearch(event) {
-    this.selectedSearchPropertiesHtml = '';
-    for (const s of event.value) {
-      this.selectedSearchPropertiesHtml = this.selectedSearchPropertiesHtml + s + '<br>';
-    }
-    this.getSearchResults(this.termautosearch);
-  }
-
-  onChangeRelationshipPropertySearch(event) {
-    this.selectedSearchRelationshipPropertiesHtml = '';
-    for (const s of event.value) {
-      this.selectedSearchRelationshipPropertiesHtml = this.selectedSearchRelationshipPropertiesHtml + s + '<br>';
-    }
-    this.getSearchResults(this.termautosearch);
-  }
-
-  onChangePropertyReturn(event) {
-    this.selectedReturnPropertiesHtml = '';
-    for (const s of event.value) {
-      this.selectedReturnPropertiesHtml = this.selectedReturnPropertiesHtml + s + '<br>';
-    }
-    this.searchCriteria.returnProperties = event.value;
-    this.getSearchResults(this.termautosearch);
-
-  }
-
-  onPropertiesReturnSelectDeselect(event) {
-    console.log('event' + JSON.stringify(event));
-    console.log('event - ' + JSON.stringify(this.selectedPropertiesReturn));
-    this.getSearchResults(this.termautosearch);
-  }
 
   onSourceSelectDeselect(event) {
     console.log('event' + JSON.stringify(event));
@@ -688,21 +458,7 @@ export class GeneralSearchComponent implements OnInit,
 
 
 
-  onPropertiesRelationshipSelectDeselect(event) {
-    this.getSearchResults(this.termautosearch);
-  }
 
-  onPropertiesSearchSelectDeselect(event) {
-    this.getSearchResults(this.termautosearch);
-  }
-
-  onChangeView(event) {
-    this.searchCriteria.view = this.selectedViewFormat.value;
-    this.searchCriteria.fromRecord = 0;
-    this.searchCriteria.pageSize = this.defaultTableRows;
-    this.getSearchResults(this.termautosearch);
-
-  }
 
   onLazyLoadData(event) {
     console.log('onLazyLoadData** - ' + JSON.stringify(event));
@@ -724,81 +480,44 @@ export class GeneralSearchComponent implements OnInit,
 
   }
 
-  resetRestrictProperty() {
-    this.selectedPropertiesSearch = [];
-    this.getSearchResults(this.termautosearch);
-  }
 
-  resetRestrictRelationshipProperty() {
-    this.selectedPropertiesRelationshipSearch = [];
-    this.getSearchResults(this.termautosearch);
-  }
 
   resetSource() {
     this.selectedSource = [];
     this.getSearchResults(this.termautosearch);
   }
 
-  resetPropertyReturn() {
-    this.selectedPropertiesReturn = ['Preferred_Name', 'Display_Name'];
-    this.getSearchResults(this.termautosearch);
-  }
+
 
 
 
   getSearchResults(term) {
     console.log('In getSearchResults -' + term);
     this.searchCriteria.term = term;
-    if (this.selectedDefintionSource !== null) {
-      this.searchCriteria.synonymSource = null;
-      this.searchCriteria.synonymGroup = null;
-      this.searchCriteria.hierarchySearch = null;
-      this.searchCriteria.definitionSource = this.selectedDefintionSource.value;
-    } else if ((this.selectedSynonymSource !== null && this.selectedSynonymSource !== undefined)
-      || (this.selectedSynonymGroup !== null && this.selectedSynonymGroup !== undefined)) {
-      this.searchCriteria.definitionSource = null;
-      this.searchCriteria.hierarchySearch = null;
-      this.searchCriteria.synonymSource = (this.selectedSynonymSource) ? this.selectedSynonymSource.value : null;
-      this.searchCriteria.synonymGroup = (this.selectedSynonymGroup) ? this.selectedSynonymGroup.value : null;
-    } else if (this.domainConcept !== null && this.domainConcept !== undefined) {
-      this.searchCriteria.synonymSource = null;
-      this.searchCriteria.synonymGroup = null;
-      this.searchCriteria.definitionSource = null;
-      this.searchCriteria.returnProperties = [];
-      this.searchCriteria.hierarchySearch = this.domainConcept;
-      this.searchCriteria.hierarchySearch = String(this.searchCriteria.hierarchySearch).replace('\t', '');
+
+    this.searchCriteria.definitionSource = null;
+    this.searchCriteria.synonymSource = null;
+    this.searchCriteria.synonymGroup = null;
+    this.searchCriteria.hierarchySearch = null;
+    this.searchCriteria.returnProperties = [];
+    console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
+    if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
+      && this.selectedPropertiesSearch.length > 0) {
+      this.searchCriteria.property = this.selectedPropertiesSearch;
     } else {
-      this.searchCriteria.definitionSource = null;
-      this.searchCriteria.synonymSource = null;
-      this.searchCriteria.synonymGroup = null;
-      this.searchCriteria.hierarchySearch = null;
-      this.searchCriteria.returnProperties = [];
-      console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
-      if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
-        && this.selectedPropertiesSearch.length > 0) {
-        this.searchCriteria.property = this.selectedPropertiesSearch;
-      } else {
-        this.searchCriteria.property = ['full_syn', 'code'];
-      }
-
-      this.searchCriteria.sources = this.selectedSource;
-      /*if (this.selectedSource !== null && this.selectedSource !== undefined && this.selectedSource.length > 0) {
-
-        this.searchCriteria.returnProperties.push('Contributing_Source');
-      }
-
-      if (this.selectedTermSources !== null && this.selectedTermSources !== undefined && this.selectedTermSources.length > 0) {
-        this.searchCriteria.synonymSource = this.selectedTermSources;
-        this.searchCriteria.returnProperties.push('FULL_SYN');
-      }*/
-
-      if (this.searchCriteria.returnProperties.length === 0) {
-        this.searchCriteria.returnProperties = this.selectedPropertiesReturn;
-      }
-
-      this.searchCriteria.relationshipProperty = this.selectedPropertiesRelationshipSearch;
-      console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
+      this.searchCriteria.property = ['full_syn', 'code'];
     }
+
+    this.searchCriteria.sources = this.selectedSource;
+
+
+    if (this.searchCriteria.returnProperties.length === 0) {
+      this.searchCriteria.returnProperties = this.selectedPropertiesReturn;
+    }
+
+    this.searchCriteria.relationshipProperty = this.selectedPropertiesRelationshipSearch;
+    console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
+
     this.searchCriteria.type = this.selectedSearchType;
 
 
@@ -813,31 +532,23 @@ export class GeneralSearchComponent implements OnInit,
         .subscribe(response => {
 
 
-            if (this.searchCriteria.definitionSource !== null) {
-              this.searchResultTableFormat = this
-                .covertSearchResultsService
-                .convertSearchResponseToTableFormat(response, ['DEFINITION', 'ALT_DEFINITION']);
-            } else if (this.selectedSynonymSource !== null || this.selectedSynonymGroup !== null) {
-              this.searchResultTableFormat = this
-                .covertSearchResultsService
-                .convertSearchResponseToTableFormat(response, ['FULL_SYN']);
-            } else {
-              this.searchResultTableFormat = this
-                .covertSearchResultsService
-                .convertSearchResponseToTableFormat(response, this.searchCriteria.returnProperties.slice());
-            }
 
-            this.hitsFound = this.searchResultTableFormat.totalHits;
-            this.timetaken = this.searchResultTableFormat.timetaken;
+          this.searchResultTableFormat = this
+            .covertSearchResultsService
+            .convertSearchResponseToTableFormat(response, this.searchCriteria.returnProperties.slice());
 
-            if (this.hitsFound > 0) {
+
+          this.hitsFound = this.searchResultTableFormat.totalHits;
+          this.timetaken = this.searchResultTableFormat.timetaken;
+
+          if (this.hitsFound > 0) {
             this.title = 'Found ' + this.hitsFound + ' concepts in ' + this.timetaken + ' ms';
             this.cols = [...this.searchResultTableFormat.header];
             console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
             this.facetFields = this.searchResultTableFormat.aggregations;
-            this.setFacets();
+
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
@@ -861,30 +572,6 @@ export class GeneralSearchComponent implements OnInit,
   }
 
 
-  setFacets() {
-    // Reconstruct Facets for display
-    this.facets = []; // reset current facet filters
-    for (const facet of this.facetList) {
-      //  console.log('facet' + facet);
-      if (this.facetFields !== null && this.facetFields !== undefined && this.facetFields.hasOwnProperty(facet)) {
-        // Ex: Stripping only 'research_focus' from 'study_categorization.research_focus'
-        // const facetType = facet.replace('.', '_');
-        const facetCol = new Facet(facet);
-        const facetColFileds: FacetField[] = new Array();
-        for (let i = 0; i < this.facetFields[facet].buckets.length; i++) {
-          facetColFileds.push(new FacetField(facet,
-            this.facetFields[facet].buckets[i].key, this.facetFields[facet].buckets[i].doc_count));
-        }
-        facetCol.facetFields = facetColFileds;
-        this.facets.push(facetCol);
-      } else {
-        const facetCol = new Facet(facet);
-        const facetColFileds: FacetField[] = new Array();
-        facetCol.facetFields = facetColFileds;
-        this.facets.push(facetCol);
-      }
-    }
-    console.log(JSON.stringify(this.facets));
-  }
+
 
 }
