@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'roles', component: RolesComponent },
   { path: 'welcome', component: GeneralSearchComponent },
   { path: 'error', component: ErrorComponent },
-  { path: '', redirectTo: '/search', pathMatch: 'full' },
+  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

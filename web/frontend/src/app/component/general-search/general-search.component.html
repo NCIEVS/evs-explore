@@ -6,7 +6,7 @@
       <div class="shared-logo-box">
       <div class="row" >
         <div class="col-sm-4">           
-             <div style="padding-top: 2px;">
+             <div style="padding-top: 6px;">
               <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  [delay]="600"
                 [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (onClear)="clearResults()"
                 (completeMethod)="search($event)" id="termauto" name="termauto"
@@ -17,7 +17,7 @@
        
         </div>
          <div class="col-sm-2">           
-             <div class="ui-inputgroup" style="padding-top: 2px;">
+             <div class="ui-inputgroup" style="padding-top: 6px;">
               <button type="button" pButton label="search" icon="fa fa-search" (click)="returnSearchResults();"></button>            
               
              </div>        
@@ -25,7 +25,7 @@
         </div>  
 
         <div class="col-sm-6">
-           <div class="ui-inputgroup" style="padding-top: 2px;float:left;">
+           <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
                 [options]="sourcesAll" [(ngModel)]="selectedSource"
                 name="sourceSearch" defaultLabel="Source"

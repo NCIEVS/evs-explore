@@ -433,6 +433,11 @@
 
 }
 
+.ui-panel .ui-panel-titlebar {
+    padding: .5em .75em;
+    background: linear-gradient(to bottom, #ebebec 0%, #dee2e6 100%);
+}
+
 .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon:hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
@@ -455,7 +460,13 @@
     margin: 0 .125em 1px 0;
     padding: 0;
     white-space: nowrap;
-    background: linear-gradient(to bottom, #f7f7f7 0%, #e9ebec 100%);
+    /*background: linear-gradient(to bottom, #f7f7f7 0%, #e9ebec 100%);*/
+}
+
+.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+    border: 1px solid #ecf2f8;
+    top: 1px;
+    box-shadow: 0 1px 12px 0 #ecf2f8;
 }
 
 .ui-dialog .ui-dialog-titlebar-icon {
@@ -983,6 +994,12 @@ body .ui-fieldset .ui-fieldset-legend a .ui-fieldset-toggler {
   background-color: #0173ae !important;
   color: #ffffff !important; }
 */
+
+.ui-tabview-selected.ui-state-active {
+    border-color: #0173ae!important;
+    background-color: #0173ae!important;
+    color: #fff!important;
+}
 
 body .ui-paginator {
   background-color: #ffffff;
