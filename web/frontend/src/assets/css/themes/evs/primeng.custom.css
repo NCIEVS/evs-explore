@@ -1282,7 +1282,7 @@ body .ui-table .ui-table-thead > tr > th {
 .ui-inputgroup .ui-button {
   margin-right: 0;
   border-radius: 0;
-  margin-left: 0.5px; }
+  margin-left: 1px; }
 
 .ui-inputgroup {
   display: inline-flex; }
