@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { ConfigurationService } from './../../service/configuration.service';
@@ -14,6 +14,7 @@ import { DialogService } from 'primeng/api';
 import { MenuItem } from 'primeng/api';
 
 import { Table } from 'primeng/table';
+import { AutoComplete } from 'primeng/autocomplete';
 
 import { MatchedConcept } from './../../model/matchedConcept';
 import { SearchResult } from './../../model/searchResult';
@@ -43,6 +44,7 @@ export class GeneralSearchComponent implements OnInit,
   AfterViewInit {
   @ViewChild('dtSearch', { static: false }) public dtSearch: Table;
   @Input() welcomePage: boolean;
+  @ViewChild('termauto', { static: false }) termauto: AutoComplete;
   searchCriteria: SearchCriteria;
   searchResult: SearchResult;
   searchResultTableFormat: SearchResultTableFormat;
@@ -196,7 +198,10 @@ export class GeneralSearchComponent implements OnInit,
 
 
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+
+    setTimeout(() => this.termauto.focusInput());
+   }
 
 
   clearSearchText(event) {
