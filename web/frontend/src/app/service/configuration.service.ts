@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from './notification.service';
 import {throwError as observableThrowError,  Observable ,  of } from 'rxjs';
+import { Router } from '@angular/router';
+import { CommonDataService } from './common-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +16,14 @@ export class ConfigurationService {
   private static instance: ConfigurationService = null;
 
   // Return the instance of the service
-  public static getInstance(http: HttpClient, notificationService: NotificationService): ConfigurationService {
+  public static getInstance(injector: Injector, http: HttpClient, notificationService: NotificationService): ConfigurationService {
     if (ConfigurationService.instance === null) {
-      ConfigurationService.instance = new ConfigurationService(http, notificationService);
+      ConfigurationService.instance = new ConfigurationService(injector,http, notificationService);
     }
     return ConfigurationService.instance;
   }
 
-  constructor(private http: HttpClient, private notificationService: NotificationService) {
+  constructor(private injector: Injector, private http: HttpClient, private notificationService: NotificationService) {
   }
 
   loadEcosystem(url): Promise<any> {
@@ -33,7 +35,7 @@ export class ConfigurationService {
             ConfigurationService.fullSynSources = response['fullSynSources'];
             resolve(true);
           }).catch (error => {
-            observableThrowError(error);
+            resolve(false);
           });
         });
   }
