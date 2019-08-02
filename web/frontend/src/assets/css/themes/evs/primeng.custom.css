@@ -7,7 +7,7 @@
 /******************************************************/
 /******************************************************/
 /********************Import PrimeNG********************/
-/******************************************************/
+
 /*
 * Deprecated: Use nova instead
 */
@@ -889,8 +889,7 @@ body .ui-widget input, body .ui-widget select, body .ui-widget textarea, body .u
   font-size: .875rem;
   font-weight: 400; }
 
-body .ui-togglebutton {
-  color: #ffffff !important; }
+
 
 body .ui-chips > ul.ui-inputtext .ui-chips-token {
   padding-right: 2em; }

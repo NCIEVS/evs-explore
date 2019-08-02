@@ -37,7 +37,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
-import { TreeTableModule } from 'primeng/treetable'
+import { TreeTableModule } from 'primeng/treetable';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 //pipes
 import { DisplayPipe } from './service/display.pipe';
@@ -126,6 +127,7 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
     TabViewModule,
     TreeTableModule,
     DropdownModule,
+    ToggleButtonModule,
     AngularSplitModule.forRoot()  
   ],
   exports: [

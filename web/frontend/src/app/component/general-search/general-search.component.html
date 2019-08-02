@@ -91,16 +91,21 @@
     <div class="col-sm-12 p-0">
       <div class="row">
         <div class="col-sm-12">
-          <p-toolbar styleClass="custom-toolbar">
-          
+          <p-toolbar>
+              <div class="ui-toolbar-group-left">
               <span *ngIf="noMatchedConcepts">
                 <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above criteria.
               </span>
               <span *ngIf="loadedMultipleConcept">
-                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{{title}}
+                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{{title}}               
               </span>
-            
-            
+            </div>
+            <div *ngIf="loadedMultipleConcept" class="ui-toolbar-group-right">
+             
+                <p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Less" offLabel="Show more" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>           
+                <p-multiSelect dropdownIcon="pi pi-caret-down" [options]="multiSelectCols" [(ngModel)]="selectedColumns" (onChange)="setColumns()" selectedItemsLabel=" {0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+               
+             </div>
           </p-toolbar>
         </div>
       </div>
@@ -110,12 +115,12 @@
         <div class="row" style="margin-bottom:10px;padding-top:5px;">
           <div class="col-sm-12">
 
-            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="cols" [value]="reportData"
+            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns" [value]="reportData"
               [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100, 200]" pageLinkSize="3"
               [rows]="defaultTableRows" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
               [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
               >
-
+              
            
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>

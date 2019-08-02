@@ -52,23 +52,23 @@ export class GeneralSearchComponent implements OnInit,
 
   loadedMultipleConcept = false;
   noMatchedConcepts = true;
-  
+
   selectedSearchType: string;
- 
+
   selectedSearchValues: string[] = [];
   termautosearch: string;
   oldTermautosearch: string;
   textSuggestions: string[] = [];
- 
+
   fromRecord: number;
   biomarkers: string[] = [];
   selectedConceptCode: string;
   displayDetail = false;
   selectedPropertiesReturn: string[] = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
-   
+
   displayText = false;
   displayTableFormat = true;
-  
+
   avoidLazyLoading = true;
 
 
@@ -77,6 +77,10 @@ export class GeneralSearchComponent implements OnInit,
   // Table
   cols: any[];
   colsOrig: any[];
+  multiSelectCols: any[];
+  selectedColumns: any[];
+  displayColumns: any[];
+  columnMore = true;
   reportData: TableData[];
   selectRows: TableData[];
 
@@ -86,26 +90,27 @@ export class GeneralSearchComponent implements OnInit,
   // page parameters
   currentPage = 1;
 
-  selectedPropertiesSearch: string[] =[];
+  selectedPropertiesSearch: string[] = [];
   propertiesReturn = null;
-  
+
   hitsFound = 0;
   timetaken = '';
   loading: boolean;
+  showMore = true;
 
 
   // filter for sources
   selectedSource: string[] = [];
   sourcesAll = null;
 
-  
 
-  
+
+
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
               private conceptDetailService: ConceptDetailService,
               private route: ActivatedRoute, public router: Router) {
-   
+
 
     this.searchCriteria = new SearchCriteria();
     // this.searchCriteria.term = route.snapshot.params['term'];
@@ -142,7 +147,7 @@ export class GeneralSearchComponent implements OnInit,
       ) {
         this.showMoreSearchOption = true;
       }
-    
+
 
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
@@ -223,6 +228,14 @@ export class GeneralSearchComponent implements OnInit,
       this.dtSearch.reset();
     }
     this.defaultTableRows = 50;
+  }
+
+  showMoreDetails() {
+    if (this.showMore) {
+      this.showMore = false;
+    } else {
+      this.showMore = true;
+    }
   }
 
 
@@ -358,7 +371,9 @@ export class GeneralSearchComponent implements OnInit,
     this.getSearchResults(this.termautosearch);
   }
 
-
+  setColumns() {
+    this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
+  }
 
 
 
@@ -376,7 +391,7 @@ export class GeneralSearchComponent implements OnInit,
       && this.selectedPropertiesSearch.length > 0) {
       this.searchCriteria.property = this.selectedPropertiesSearch;
     } else {
-      this.searchCriteria.property = ['full_syn', 'code'];
+      this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
     this.searchCriteria.sources = this.selectedSource;
@@ -386,7 +401,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.returnProperties = this.selectedPropertiesReturn;
     }
 
-   
+
     console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
 
     this.searchCriteria.type = this.selectedSearchType;
@@ -415,10 +430,18 @@ export class GeneralSearchComponent implements OnInit,
           if (this.hitsFound > 0) {
             this.title = 'Found ' + this.hitsFound + ' concepts in ' + this.timetaken + ' ms';
             this.cols = [...this.searchResultTableFormat.header];
+            this.multiSelectCols = this.cols.map(element => {
+              return {
+                label: element.header,
+                value: element.header
+              };
+            });
+            this.setDefaultSelectedColumns();
+
             console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
-            
+
 
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
@@ -444,5 +467,27 @@ export class GeneralSearchComponent implements OnInit,
 
 
 
+  setDefaultSelectedColumns() {
+    if (!this.columnMore) {
+      this.displayColumns = this.cols.slice(0, 2);
+      this.selectedColumns = this.displayColumns.map(element => element.header);
+    } else {
+      if (this.selectedColumns == null || this.selectedColumns == undefined || this.selectedColumns.length <= 0){
+        this.displayColumns = this.cols;
+        this.selectedColumns = this.displayColumns.map(element => element.header);
+      } else {
+        this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
+      }
+    }
+  }
+
+  setDefaultColumns(){
+    if (!this.columnMore){
+      this.displayColumns = this.cols.slice(0, 2);
+    } else {
+      this.displayColumns = this.cols;
+    }
+    this.selectedColumns = this.displayColumns.map(element => element.header);
+  }
 
 }
