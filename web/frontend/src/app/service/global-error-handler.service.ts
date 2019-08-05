@@ -28,6 +28,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     if (error instanceof EvsError) {
     // Display notifications only if it is a known error i.e. ImmPortError and enabled
       console.log(error.displayMessage);
+      error.displayMessage = error.displayMessage + '. Please contact the  NCI helpdesk';
       if (error.displayNotification) {
           this.notifyError(error.displayMessage);
       }
@@ -58,7 +59,7 @@ export class GlobalErrorHandler extends ErrorHandler {
           closable: true
         }
       );
-      setTimeout(function(app) {
+      setTimeout( function() {
         appRef.tick();
       });
     });
