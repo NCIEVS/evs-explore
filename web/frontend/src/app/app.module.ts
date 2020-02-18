@@ -151,7 +151,7 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
      {
       provide: APP_INITIALIZER,
       useFactory: (configService: ConfigurationService) => function() {
-        return configService.loadEcosystem('/api/v1/configuration');
+        return configService.loadConfig('/api/v1/configuration');
       },
       deps: [ConfigurationService],
       multi: true
