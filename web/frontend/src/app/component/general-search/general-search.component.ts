@@ -10,7 +10,7 @@ import { TableData } from './../../model/tableData';
 
 
 import { ActivatedRoute } from '@angular/router';
-import { DialogService } from 'primeng/api';
+//import { DialogService } from 'primeng/api';
 import { MenuItem } from 'primeng/api';
 
 import { Table } from 'primeng/table';
