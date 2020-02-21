@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgModule, APP_INITIALIZER, ErrorHandler, Injector, ModuleWithProviders} from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler, Injector, ModuleWithProviders } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -128,7 +128,7 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
     TreeTableModule,
     DropdownModule,
     ToggleButtonModule,
-    AngularSplitModule.forRoot()  
+    AngularSplitModule.forRoot()
   ],
   exports: [
     NotificationComponent,
@@ -148,10 +148,10 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
       useClass: GlobalErrorHandler
     },
     ConfigurationService,
-     {
+    {
       provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigurationService) => function() {
-        return configService.loadConfig('/api/v1/configuration');
+      useFactory: (configService: ConfigurationService) => function () {
+        return configService.loadConfig('/api/v1/metadata');
       },
       deps: [ConfigurationService],
       multi: true

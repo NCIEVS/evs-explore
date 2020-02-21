@@ -58,7 +58,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   ngOnInit() {
     this.updateDisplaySize();
-    this.conceptDetailService.getAllProperties()
+    this.conceptDetailService.getProperties()
       .subscribe((properties_new: any) => {
         this.properties = []
         for (const property of properties_new) {
@@ -71,7 +71,7 @@ export class HierarchyDisplayComponent implements OnInit {
             this.concept_detail = this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
-                  .getConceptDetailSimple(params.get('code'))
+                  .getConceptSummary(params.get('code'))
               )
             )
               .subscribe((concept_new: any) => {
@@ -91,7 +91,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
       (this.concept_relationships === undefined || this.concept_relationships == null)) {
-      this.conceptDetailService.getConceptRelationships(this.concept_code).subscribe(response => {
+      this.conceptDetailService.getRelationships(this.concept_code).subscribe(response => {
         this.concept_relationships = response;
       });
     }
@@ -114,7 +114,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   treeTableNodeSelected(event) {
     this.conceptDetailService
-      .getConceptDetailSimple(event.code)
+      .getConceptSummary(event.code)
       .subscribe((concept_new: any) => {
         this.concept_detail = concept_new;
         this.concept_code = this.concept_detail.Code;
@@ -133,7 +133,7 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   getPathInHierarchy() {
-    const url = '/api/v1/concept/' + this.concept_code + '/pathInHierarchy';
+    const url = '/api/v1/concept/ncit/' + this.concept_code + '/pathFromRoot';
     this.conceptDetailService.getHierarchyData(url)
       .then(nodes => {
         this.hierarchyData = <TreeNode[]>nodes;
@@ -150,7 +150,7 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   getTreeTableChildrenNodes(code: string, node: any) {
-    const url = '/api/v1/concept/' + code + '/childNodes';
+    const url = '/api/v1/concept/ncit/' + code + '/children';
     this.conceptDetailService.getHierarchyData(url)
       .then(nodes => {
         node.children = nodes;

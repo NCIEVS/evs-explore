@@ -1,7 +1,7 @@
+// Notification service
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs';
 import { Message } from 'primeng/api';
-
 export type Severities = 'success' | 'info' | 'warn' | 'error';
 
 @Injectable()

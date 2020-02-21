@@ -1,53 +1,52 @@
+// Concept detail service
 import { Injectable } from '@angular/core';
 import { throwError as observableThrowError, Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 import { EvsError } from '../model/evsError';
 import { TreeNode } from 'primeng/api';
-
 
 @Injectable()
 export class ConceptDetailService {
 
   constructor(private http: HttpClient) { }
 
-  getConceptDetail(conceptCode: string): Observable<any> {
-    return this.http.get('/api/v1/conceptShort/' + conceptCode,
-      {
-        responseType: 'json'
-      }
-    )
-      .pipe(
-        catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch concept detail data for conceptcode - ' + conceptCode));
-        })
-      );
-  }
-
-
-  getConceptDetailSimple(conceptCode: string): Observable<any> {
-    return this.http.get('/api/v1/conceptShort/' + conceptCode,
+  // Get concept with summary includes
+  getConceptSummary(conceptCode: string): Observable<any> {
+    // "ncit" is hardcoded
+    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=summary',
       {
         responseType: 'json',
         params: {
           hideLoader: "true"
         }
       }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch concept = ' + conceptCode));
+      })
     );
   }
 
-  getAllProperties(): Observable<any> {
-    return this.http.get('/api/v1/documentation/propertiesList',
+  // Get properties
+  getProperties(): Observable<any> {
+    // "ncit" is hardcoded
+    return this.http.get('/api/v1/metadata/ncit/properties',
       {
         responseType: 'json',
       }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch concept relationships for conceptcode - ' + conceptCode));
+      })
     );
+
   }
 
-
-  getConceptRelationships(conceptCode: string) {
-    return this.http.get('/api/v1/concept/' + conceptCode + '/relationships',
+  // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
+  getRelationships(conceptCode: string) {
+    // "ncit" is hardcoded
+    return this.http.get('/api/v1/concept/ncit/' + conceptCode + 'include=roles,associations,inverseRoles,inverseAssociations,maps',
       {
         responseType: 'json',
         params: {

@@ -49,7 +49,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   ngOnInit() {
     //this.concept_code = this.route.snapshot.paramMap.get('code');
-    this.conceptDetailService.getAllProperties()
+    this.conceptDetailService.getProperties()
       .subscribe((properties_new: any) => {
         this.properties = []
         for (const property of properties_new) {
@@ -62,7 +62,7 @@ export class ConceptDisplayComponent implements OnInit {
               this.concept_detail = this.route.paramMap.pipe(
                 switchMap((params: ParamMap) =>
                   this.conceptDetailService
-                    .getConceptDetailSimple(params.get('code'))
+                    .getConceptSummary(params.get('code'))
                 )
               )
              .subscribe((concept_new: any) => {
@@ -81,7 +81,7 @@ export class ConceptDisplayComponent implements OnInit {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
       (this.concept_relationships === undefined || this.concept_relationships == null)) {
-      this.conceptDetailService.getConceptRelationships(this.concept_code).subscribe(response => {
+      this.conceptDetailService.getRelationships(this.concept_code).subscribe(response => {
         this.concept_relationships = response;
       });
     }

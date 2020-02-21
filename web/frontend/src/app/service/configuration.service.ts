@@ -1,3 +1,4 @@
+// Configuration service
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from './notification.service';

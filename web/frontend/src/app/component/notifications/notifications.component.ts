@@ -1,5 +1,5 @@
+// Notification component
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { NotificationService } from './../../service/notification.service';
 import { Subscription } from 'rxjs';
 import { Message, MessageService} from 'primeng/primeng';
@@ -18,6 +18,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private messageService: MessageService
   ) { }
 
+  // Subscribe on initialization
   ngOnInit() {
 
     this.notificationService.getNotificationChangeSubject()
@@ -37,7 +38,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+ // Unubscribe on destruction
+ ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

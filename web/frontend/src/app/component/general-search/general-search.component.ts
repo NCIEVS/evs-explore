@@ -1,36 +1,21 @@
 import { Component, Input, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef } from '@angular/core';
-import { map } from 'rxjs/operators';
-
+// import { map } from 'rxjs/operators';
 import { ConfigurationService } from './../../service/configuration.service';
-
-
-
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
-
-
 import { ActivatedRoute } from '@angular/router';
 //import { DialogService } from 'primeng/api';
 import { MenuItem } from 'primeng/api';
-
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
-
 import { MatchedConcept } from './../../model/matchedConcept';
 import { SearchResult } from './../../model/searchResult';
 import { SearchResultTableFormat } from './../../model/searchResultTableFormat';
-
-
 import { SearchTermService } from './../../service/search-term.service';
 import { CovertSearchResultsService } from './../../service/covert-search-results.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
-
-
-
 import { Facet } from './../../model/Facet';
 import { FacetField } from './../../model/FacetField';
-
-
 import { Router } from '@angular/router';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
@@ -45,33 +30,27 @@ export class GeneralSearchComponent implements OnInit,
   @ViewChild('dtSearch', { static: false }) public dtSearch: Table;
   @Input() welcomePage: boolean;
   @ViewChild('termauto', { static: false }) termauto: AutoComplete;
+
+  // fields
   searchCriteria: SearchCriteria;
   searchResult: SearchResult;
   searchResultTableFormat: SearchResultTableFormat;
   title: string;
-
   loadedMultipleConcept = false;
   noMatchedConcepts = true;
-
   selectedSearchType: string;
-
   selectedSearchValues: string[] = [];
   termautosearch: string;
   oldTermautosearch: string;
   textSuggestions: string[] = [];
-
   fromRecord: number;
   biomarkers: string[] = [];
   selectedConceptCode: string;
   displayDetail = false;
   selectedPropertiesReturn: string[] = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
-
   displayText = false;
   displayTableFormat = true;
-
   avoidLazyLoading = true;
-
-
   showMoreSearchOption = false;
 
   // Table
@@ -83,7 +62,6 @@ export class GeneralSearchComponent implements OnInit,
   columnMore = true;
   reportData: TableData[];
   selectRows: TableData[];
-
   pageinationcount: string;
   defaultTableRows = 50;
 
@@ -92,31 +70,24 @@ export class GeneralSearchComponent implements OnInit,
 
   selectedPropertiesSearch: string[] = [];
   propertiesReturn = null;
-
   hitsFound = 0;
   timetaken = '';
   loading: boolean;
   showMore = true;
 
-
   // filter for sources
   selectedSource: string[] = [];
   sourcesAll = null;
 
-
-
-
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
-              private conceptDetailService: ConceptDetailService,
-              private route: ActivatedRoute, public router: Router) {
-
+    private conceptDetailService: ConceptDetailService,
+    private route: ActivatedRoute, public router: Router) {
 
     this.searchCriteria = new SearchCriteria();
     // this.searchCriteria.term = route.snapshot.params['term'];
     // this.searchCriteria.type = route.snapshot.params['type'];
     // this.searchCriteria.property = route.snapshot.params['property'];
-
 
     console.log(window.location.pathname);
     const path = '' + window.location.pathname;
@@ -126,12 +97,11 @@ export class GeneralSearchComponent implements OnInit,
       this.welcomePage = false;
     }
 
-
     if (this.welcomePage) {
       sessionStorage.setItem('searchType', 'contains');
       this.selectedSearchType = 'contains';
     } else {
-      if (this.selectedSearchType === null || this.selectedSearchType === undefined ) {
+      if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
         if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
           this.selectedSearchType = sessionStorage.getItem('searchType');
         } else {
@@ -141,21 +111,15 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     if (this.selectedSearchType === 'phrase' ||
-        this.selectedSearchType === 'fuzzy' ||
-        this.selectedSearchType === 'AND' ||
-        this.selectedSearchType === 'OR'
-      ) {
-        this.showMoreSearchOption = true;
-      }
-
+      this.selectedSearchType === 'fuzzy' ||
+      this.selectedSearchType === 'AND' ||
+      this.selectedSearchType === 'OR'
+    ) {
+      this.showMoreSearchOption = true;
+    }
 
     this.searchCriteria.fromRecord = 0;
     this.searchCriteria.pageSize = this.defaultTableRows;
-
-
-
-
-
 
     this.sourcesAll = ConfigurationService.fullSynSources.map(element => {
       return {
@@ -163,8 +127,6 @@ export class GeneralSearchComponent implements OnInit,
         value: element
       };
     });
-
-
 
     if (!this.welcomePage) {
       if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
@@ -187,8 +149,8 @@ export class GeneralSearchComponent implements OnInit,
 
   }
 
-
-  showMoreSearchOptions() {
+  // Toggle setting
+  toggleShowMoreSearchOptions() {
     if (this.showMoreSearchOption) {
       this.showMoreSearchOption = false;
     } else {
@@ -206,7 +168,7 @@ export class GeneralSearchComponent implements OnInit,
   ngAfterViewInit() {
 
     setTimeout(() => this.termauto.focusInput());
-   }
+  }
 
 
   clearSearchText(event) {
@@ -383,10 +345,9 @@ export class GeneralSearchComponent implements OnInit,
 
     this.searchCriteria.definitionSource = null;
     this.searchCriteria.synonymSource = null;
-    this.searchCriteria.synonymGroup = null;
-    this.searchCriteria.hierarchySearch = null;
-    this.searchCriteria.returnProperties = [];
-    console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
+    this.searchCriteria.synonymTermGroup = null;
+    // this.searchCriteria.hierarchySearch = null;
+
     if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
       && this.selectedPropertiesSearch.length > 0) {
       this.searchCriteria.property = this.selectedPropertiesSearch;
@@ -394,19 +355,9 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    this.searchCriteria.sources = this.selectedSource;
-
-
-    if (this.searchCriteria.returnProperties.length === 0) {
-      this.searchCriteria.returnProperties = this.selectedPropertiesReturn;
-    }
-
-
-    console.log('this.searchCriteria.returnProperties--' + JSON.stringify(this.searchCriteria.returnProperties));
+    this.searchCriteria.contributingSource = this.selectedSource;
 
     this.searchCriteria.type = this.selectedSearchType;
-
-
 
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
@@ -414,14 +365,12 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
       this
         .searchTermService
-        .getElasticMatchConcepts(this.searchCriteria)
+        .search(this.searchCriteria)
         .subscribe(response => {
-
-
 
           this.searchResultTableFormat = this
             .covertSearchResultsService
-            .convertSearchResponseToTableFormat(response, this.searchCriteria.returnProperties.slice());
+            .convertSearchResponseToTableFormat(response, this.selectedPropertiesReturn.slice());
 
 
           this.hitsFound = this.searchResultTableFormat.totalHits;
@@ -472,7 +421,7 @@ export class GeneralSearchComponent implements OnInit,
       this.displayColumns = this.cols.slice(0, 2);
       this.selectedColumns = this.displayColumns.map(element => element.header);
     } else {
-      if (this.selectedColumns == null || this.selectedColumns == undefined || this.selectedColumns.length <= 0){
+      if (this.selectedColumns == null || this.selectedColumns == undefined || this.selectedColumns.length <= 0) {
         this.displayColumns = this.cols;
         this.selectedColumns = this.displayColumns.map(element => element.header);
       } else {
@@ -481,8 +430,8 @@ export class GeneralSearchComponent implements OnInit,
     }
   }
 
-  setDefaultColumns(){
-    if (!this.columnMore){
+  setDefaultColumns() {
+    if (!this.columnMore) {
       this.displayColumns = this.cols.slice(0, 2);
     } else {
       this.displayColumns = this.cols;

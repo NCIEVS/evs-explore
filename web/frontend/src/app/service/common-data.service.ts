@@ -1,3 +1,4 @@
+// Service for handling error messages
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
