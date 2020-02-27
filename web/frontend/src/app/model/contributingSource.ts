@@ -1,3 +1,5 @@
+// Contributing source stats
+// BAC - looks like not used
 export class ContributingSource {
     ACCCount: number;
     BRIDGCount: number;

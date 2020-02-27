@@ -20,7 +20,7 @@ export class SearchTermService {
 
   constructor(private http: HttpClient) { }
 
-  // queries the backend get the results
+  // Service for obtaining search results
   search(searchCriteria: SearchCriteria): Observable<any> {
     // this.query = this.constructQuery.constructQuery(searchCriteria);
     const url = '/api/v1/concept/search';
@@ -28,8 +28,8 @@ export class SearchTermService {
     const param: any = {};
 
     // Setup search parameters (default terminology and include, for now)
-    param.terminology = "ncit";
-    param.include = "full";
+    param.terminology = searchCriteria.terminology;
+    param.include = searchCriteria.include;
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;
 
@@ -73,6 +73,7 @@ export class SearchTermService {
       property = searchCriteria.property.join();
     }
 
+    // TODO: implement this later
     // let propertyRelationship = '';
     // if (searchCriteria.relationshipProperty !== undefined && searchCriteria.relationshipProperty != null
     //   && searchCriteria.relationshipProperty.length > 0) {

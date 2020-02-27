@@ -1,17 +1,14 @@
 <div *ngIf="concept_relationships">
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      Parent Concepts 
+      Parent Concepts
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.Superconcept !== undefined &&
             concept_relationships.Superconcept.length > 0;
           else elseBlockParentConcept
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-20">Code</th>
@@ -19,11 +16,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let superconcept of concept_relationships.Superconcept
-            "
-          >
+            ">
             <td class="w-20">{{ superconcept.code }}</td>
             <td class="w-80">
               <a [routerLink]="[url_base, superconcept.code]" [target]='url_target'>{{ superconcept.label }} </a>
@@ -37,17 +32,14 @@
   <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      Child Concepts 
+      Child Concepts
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.Subconcept !== undefined &&
             concept_relationships.Subconcept.length > 0;
           else elseBlockChildConcept
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-20">Code</th>
@@ -71,18 +63,15 @@
     <p-header class="bold-heading">
       Role Relationships
       <span class="small-heading">
-          asserted or inherited, pointing from the current concept to other concepts:
+        asserted or inherited, pointing from the current concept to other concepts:
       </span>
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.Role != undefined &&
             concept_relationships.Role.length > 0;
           else elseBlockRole
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
@@ -95,33 +84,29 @@
             <td>{{ role.relationship }}</td>
             <td>{{ role.relatedConceptCode }}</td>
             <td>
-              <a [routerLink]="[url_base, role.relatedConceptCode ]" target='url_target'>{{ role.relatedConceptLabel }}</a>
+              <a [routerLink]="[url_base, role.relatedConceptCode ]"
+                target='url_target'>{{ role.relatedConceptLabel }}</a>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <ng-template #elseBlockRole
-      >None</ng-template
-    >
+    <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
   <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      Associations 
+      Associations
       <span class="small-heading">
-         pointing from the current concept to other concepts: 
+        pointing from the current concept to other concepts:
       </span>
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.Association != undefined &&
             concept_relationships.Association.length > 0;
           else elseBlockAssociation
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
@@ -130,40 +115,34 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let association of concept_relationships.Association"
-          >
+          <tr *ngFor="let association of concept_relationships.Association">
             <td>{{ association.relationship }}</td>
             <td>{{ association.relatedConceptCode }}</td>
             <td>
-              <a [routerLink]="[url_base, association.relatedConceptCode ]" target="url_target">{{ association.relatedConceptLabel }}</a>
+              <a [routerLink]="[url_base, association.relatedConceptCode ]"
+                target="url_target">{{ association.relatedConceptLabel }}</a>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <ng-template #elseBlockAssociation
-      >None</ng-template
-    >
+    <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
   <br />
 
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      Incoming Role Relationships 
+      Incoming Role Relationships
       <span class="small-heading">
-          asserted or inherited, pointing from other concepts to the current concept:
+        asserted or inherited, pointing from other concepts to the current concept:
       </span>
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.InverseRole !== undefined &&
             concept_relationships.InverseRole.length > 0;
           else elseBlockIncomingRole
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
@@ -172,39 +151,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let inverseRole of concept_relationships.InverseRole"
-          >
+          <tr *ngFor="let inverseRole of concept_relationships.InverseRole">
             <td>{{ inverseRole.relationship }}</td>
             <td>{{ inverseRole.relatedConceptCode }}</td>
             <td>
-              <a [routerLink]="[url_base, inverseRole.relatedConceptCode ]" target="url_target">{{ inverseRole.relatedConceptLabel }}</a>
+              <a [routerLink]="[url_base, inverseRole.relatedConceptCode ]"
+                target="url_target">{{ inverseRole.relatedConceptLabel }}</a>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <ng-template #elseBlockIncomingRole>
-      None 
+      None
     </ng-template>
   </p-panel>
   <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      Incoming Associations 
+      Incoming Associations
       <span class="small-heading">
         pointing from other concepts to the current concept:
       </span>
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.InverseAssociation !== undefined &&
             concept_relationships.InverseAssociation.length > 0;
           else elseBlockIncomingAssociation
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
@@ -213,15 +188,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let inverseAssociation of concept_relationships.InverseAssociation
-            "
-          >
+            ">
             <td>{{ inverseAssociation.relationship }}</td>
             <td>{{ inverseAssociation.relatedConceptCode }}</td>
             <td>
-              <a [routerLink]="[url_base, inverseAssociation.relatedConceptCode ]" target="url_target">{{ inverseAssociation.relatedConceptLabel }}</a>
+              <a [routerLink]="[url_base, inverseAssociation.relatedConceptCode ]"
+                target="url_target">{{ inverseAssociation.relatedConceptLabel }}</a>
             </td>
           </tr>
         </tbody>
@@ -236,14 +210,11 @@
       DisjointWith
     </p-header>
     <div class="table-responsive">
-      <table
-        class="table table-striped table-bordered"
-        *ngIf="
+      <table class="table table-striped table-bordered" *ngIf="
           concept_relationships.DisjointWith !== undefined &&
             concept_relationships.DisjointWith.length > 0;
           else elseBlockDisjointAssociation
-        "
-      >
+        ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
@@ -252,13 +223,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let association of concept_relationships.DisjointWith"
-          >
+          <tr *ngFor="let association of concept_relationships.DisjointWith">
             <td>{{ association.relationship }}</td>
             <td>{{ association.relatedConceptCode }}</td>
             <td>
-              <a [routerLink]="[url_base, association.relatedConceptCode ]" target="url_target">{{ association.relatedConceptLabel }}</a>
+              <a [routerLink]="[url_base, association.relatedConceptCode ]"
+                target="url_target">{{ association.relatedConceptLabel }}</a>
             </td>
           </tr>
         </tbody>

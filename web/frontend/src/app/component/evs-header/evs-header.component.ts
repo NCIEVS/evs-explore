@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService} from '../../service/configuration.service';
 
+// Header component
 @Component({
   selector: 'app-evs-header',
   templateUrl: './evs-header.component.html',

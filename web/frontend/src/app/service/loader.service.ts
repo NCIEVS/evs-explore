@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject ,  Observable ,  BehaviorSubject } from 'rxjs';
+//import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
+// Service for tracking whether data is loading
 @Injectable()
-
 export class LoaderService {
 
     private loaderSubject = new BehaviorSubject<boolean>(false);

@@ -1,7 +1,7 @@
-// Service for handling error messages
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+// Service for handling error messages
 @Injectable()
 export class CommonDataService {
 

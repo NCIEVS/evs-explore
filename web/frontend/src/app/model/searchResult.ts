@@ -1,16 +1,16 @@
 
-import {MatchedConcept} from './matchedConcept';
-import {ConceptStatus} from './conceptStatus';
-import {ContributingSource} from './contributingSource';
+import { Concept } from './concept';
+// import {ConceptStatus} from './conceptStatus';
+// import {ContributingSource} from './contributingSource';
 
 // SearchResult
 export class SearchResult {
-   timetaken: string;
-   totalHits: number;
-   maxScore: number;
-   matchedConcepts: MatchedConcept[];
+   timeTaken: string;
+   total: number;
+   // maxScore: number;
+   concepts: Concept[];
    //conceptStatus: ConceptStatus;
    //contributingSource: ContributingSource;
-   searchAutoSuggestions: any[];
-   aggregations: any;
+   //searchAutoSuggestions: any[];
+   //aggregations: any;
 }

@@ -1,9 +1,11 @@
+
+// Search criteria - passed to SearchTermService
 export class SearchCriteria {
   // default terminology - for now
-  terminology: string = "ncit";
+  terminology: string[] = ["ncit"];
   term: string;
   type: string;
-  include: string = "summary";
+  include: string = "summary,highlights,properties";
   property: string[];
   definitionSource: string[];
   synonymSource: string[];
@@ -18,6 +20,5 @@ export class SearchCriteria {
   toString(): string {
     return this.term.toString() + ',' + this.type + ',' + this.property;
   }
-
 
 }

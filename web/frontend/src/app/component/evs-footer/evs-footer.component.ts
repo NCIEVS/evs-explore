@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Inject, AfterViewInit, ElementRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
+// Footer component
 @Component({
   selector: 'app-evs-footer',
   templateUrl: './evs-footer.component.html',

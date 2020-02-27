@@ -1,13 +1,11 @@
-table a:link,
-table a:visited,
-table a:active {
-    color: #06c;
-    text-decoration: none;
+table a:link, table a:visited, table a:active {
+  color: #06c;
+  text-decoration: none;
 }
 
 table a:hover {
-    color: #06c;
-    text-decoration: underline;
+  color: #06c;
+  text-decoration: underline;
 }
 
 .table td, .table th {
@@ -17,35 +15,35 @@ table a:hover {
 /*
  * Over-ride bootstrap
 */
+
 .page-header {
-    font-weight: bold;
-    padding: 6px 10px;
-    background-color: #fff !important;
-    color: #337ab7 !important;
-    font-size: 20px !important;
-    padding: 0px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid #ccc !important;
+  font-weight: bold;
+  padding: 6px 10px;
+  background-color: #fff !important;
+  color: #337ab7 !important;
+  font-size: 20px !important;
+  padding: 0px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ccc !important;
 }
 
-
 p-dialog .ui-dialog {
-    overflow: scroll;
-    max-height: 70%;
+  overflow: scroll;
+  max-height: 70%;
 }
 
 .overflow-scroll {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 .btn-link {
-    font-weight: 400;
-    color: #428bca;
-    background-color: transparent;
+  font-weight: 400;
+  color: #428bca;
+  background-color: transparent;
 }
 
 img, svg {
-        vertical-align: middle;
+  vertical-align: middle;
 }
 
 .btn-space {
@@ -77,9 +75,7 @@ body .alert-info {
   border-color: #bee5eb;
 }
 
-
-
-.btn-link{
+.btn-link {
   color: #222222;
   background-color: transparent;
   border-color: transparent;
@@ -92,16 +88,13 @@ body .alert-info {
   margin-right: 10px;
 }
 
-
-
-.prime-dropdown-override{
+.prime-dropdown-override {
   margin-right: .3em;
 }
 
-.p-autocomplete{
+.p-autocomplete {
   width: 100%;
 }
-
 
 .tab-menu-body {
   box-shadow: 0 1px 12px 0 #ecf2f8;
@@ -141,7 +134,7 @@ body .alert-info {
   font-size: 12px !important;
 }
 
-.btn-link{
+.btn-link {
   color: #222222;
   background-color: transparent;
   border-color: transparent;
@@ -159,16 +152,15 @@ body .alert-info {
   margin-left: 2px;
 }
 
-.margin-left{
+.margin-left {
   margin-right: 2px;
 }
 
 .paginator-stats {
-    vertical-align: -webkit-baseline-middle;
-    display: inline-block;
-    padding: 2px;
+  vertical-align: -webkit-baseline-middle;
+  display: inline-block;
+  padding: 2px;
 }
-
 
 .construction-logo {
   width: 300px;
@@ -178,23 +170,3 @@ body .alert-info {
 .ui-treetable .ui-treetable-toggler {
   top: 7%!important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

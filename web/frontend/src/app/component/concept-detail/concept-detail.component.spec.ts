@@ -2,15 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConceptDetailComponent } from './concept-detail.component';
 
+// Tests for ConceptDetailComponent (default tests)
 describe('ConceptDetailComponent', () => {
   let component: ConceptDetailComponent;
   let fixture: ComponentFixture<ConceptDetailComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConceptDetailComponent ]
+      declarations: [ConceptDetailComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

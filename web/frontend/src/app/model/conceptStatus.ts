@@ -1,3 +1,5 @@
+// Concept status statistics
+// BAC - looks like not used
 export class ConceptStatus {
     ConceptPendingApprovalCount: number;
     DeprecatedConceptCount: number;
@@ -6,6 +8,5 @@ export class ConceptStatus {
     ProvisionalConceptCount: number;
     RetiredConceptCount: number;
     NoValueConceptCount: number;
-
 
 }

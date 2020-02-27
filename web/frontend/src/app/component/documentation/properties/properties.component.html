@@ -1,35 +1,33 @@
 <div class="container" *ngIf="properties">
   <div class="page-header">
     <span>Properties</span>
-      <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" ></button></span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th class="w-10">Code</th>
-            <th class="w-20">Name</th>
-            <th class="w-70">Definition</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of properties">
-            <td>{{ row.Code }}</td>
-            <td>{{ row.Preferred_Name }}</td>
-            <td><span *ngIf="
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-10">Code</th>
+          <th class="w-20">Name</th>
+          <th class="w-70">Definition</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of properties">
+          <td>{{ row.Code }}</td>
+          <td>{{ row.Preferred_Name }}</td>
+          <td><span *ngIf="
                 row['DEFINITION'] !== undefined &&
                 row['DEFINITION'].length > 0
-                "
-            >{{ row["DEFINITION"][0]["definition"] }}
+                ">{{ row["DEFINITION"][0]["definition"] }}
             </span>
             <span *ngIf="
                 row['ALT_DEFINITION'] !== undefined &&
                 row['ALT_DEFINITION'].length > 0
-                "
-            >{{ row["ALT_DEFINITION"][0]["definition"] }}
+                ">{{ row["ALT_DEFINITION"][0]["definition"] }}
             </span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

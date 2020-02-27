@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MappingsComponent } from './mappings.component';
 
+// Testing for MappingComponent (default test)
 describe('MappingsComponent', () => {
   let component: MappingsComponent;
   let fixture: ComponentFixture<MappingsComponent>;

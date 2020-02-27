@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 
+// Concept display component
+// BAC - looks like not used
 @Component({
   selector: 'app-concept-display',
   templateUrl: './concept-display.component.html',
@@ -58,23 +60,23 @@ export class ConceptDisplayComponent implements OnInit {
           }
         }
         this.route.params.subscribe((params: any) => {
-            if (params.code) {
-              this.concept_detail = this.route.paramMap.pipe(
-                switchMap((params: ParamMap) =>
-                  this.conceptDetailService
-                    .getConceptSummary(params.get('code'))
-                )
+          if (params.code) {
+            this.concept_detail = this.route.paramMap.pipe(
+              switchMap((params: ParamMap) =>
+                this.conceptDetailService
+                  .getConceptSummary(params.get('code'))
               )
-             .subscribe((concept_new: any) => {
-               this.concept_detail = concept_new;
-               this.concept_code = this.concept_detail.Code;
-               this.title = this.concept_detail.Label + ' ( Code - ' + this.concept_detail.Code + ' )';
-               this.concept_relationships = undefined;
-               this.activeIndex = 0;
-             })
-            }
+            )
+              .subscribe((concept_new: any) => {
+                this.concept_detail = concept_new;
+                this.concept_code = this.concept_detail.Code;
+                this.title = this.concept_detail.Label + ' ( Code - ' + this.concept_detail.Code + ' )';
+                this.concept_relationships = undefined;
+                this.activeIndex = 0;
+              })
+          }
         });
-    })
+      })
   }
 
   handleChange($event) {

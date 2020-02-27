@@ -1,8 +1,8 @@
-// Configuration service
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from './notification.service';
 
+// Configuration service
 @Injectable({
   providedIn: 'root'
 })
@@ -24,9 +24,9 @@ export class ConfigurationService {
   constructor(private injector: Injector, private http: HttpClient, private notificationService: NotificationService) {
   }
 
-  loadConfig(url): Promise<any> {
+  loadConfig(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get(url).toPromise()
+      this.http.get('/api/v1/metadata').toPromise()
         .then(response => {
           ConfigurationService.propertyList = response['properties'];
           ConfigurationService.evsVersionInfo = response['evsVersionInfo'];

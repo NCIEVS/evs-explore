@@ -1,6 +1,7 @@
 import { FacetField } from './FacetField';
 import { FacetDisplayNamesEnum } from './FacetDisplayNamesEnum';
 
+// BAC - looks like not used
 export class Facet {
 
     type: string;

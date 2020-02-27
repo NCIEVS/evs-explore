@@ -4,17 +4,19 @@ import { switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 
-import {TreeNode} from 'primeng/api';
-import {TreeTable} from 'primeng/primeng';
+import { TreeNode } from 'primeng/api';
+import { TreeTable } from 'primeng/primeng';
 
+// Hierarchy display component
+// BAC - looks like not used (yet?)
 @Component({
   selector: 'app-hierarchy-display',
   templateUrl: './hierarchy-display.component.html',
   styleUrls: ['./hierarchy-display.component.css']
 })
 export class HierarchyDisplayComponent implements OnInit {
-  @ViewChild('hierarchyTable', {static: true}) hierarchyTable: TreeTable;
-    
+  @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
+
   activeIndex = 0
   concept_code: string;
   concept_detail: any;
@@ -155,11 +157,11 @@ export class HierarchyDisplayComponent implements OnInit {
       .then(nodes => {
         node.children = nodes;
         for (const child of node.children) {
-            this.setTreeTableProperties(child);
+          this.setTreeTableProperties(child);
         }
         this.deepCopyHierarchyData();
         setTimeout(() => {
-            this.scrollToSelectionTableTree(node, this.hierarchyTable);
+          this.scrollToSelectionTableTree(node, this.hierarchyTable);
         }, 100);
       });
   }
@@ -172,14 +174,14 @@ export class HierarchyDisplayComponent implements OnInit {
 
   treeTableNodeCollapse(event) {
     setTimeout(() => {
-        this.scrollToSelectionTableTree(event.node, this.hierarchyTable);
+      this.scrollToSelectionTableTree(event.node, this.hierarchyTable);
     }, 100);
   }
 
   resetTreeTableNodes() {
-      for (const node of this.hierarchyData) {
-          this.setTreeTableProperties(node);
-      }
+    for (const node of this.hierarchyData) {
+      this.setTreeTableProperties(node);
+    }
   }
 
   deepCopyHierarchyData() {
@@ -208,7 +210,7 @@ export class HierarchyDisplayComponent implements OnInit {
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
     let index = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement
-                         .querySelectorAll('.ui-treetable-tbody>tr');
+      .querySelectorAll('.ui-treetable-tbody>tr');
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
@@ -218,7 +220,7 @@ export class HierarchyDisplayComponent implements OnInit {
     }
     if (this.hierarchyTable.el.nativeElement.querySelectorAll('.ui-treetable-tbody>tr')[index] !== undefined) {
       this.hierarchyTable.el.nativeElement.querySelectorAll('.ui-treetable-tbody>tr')[index]
-      .scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
+        .scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
     }
   }
 

@@ -1,23 +1,24 @@
 <div class="hierarchy-div">
-<div class="page-header">
-  {{ title }}
-  <span>  -- <button routerLink="/hierarchy/{{concept_code}}" [label]="hierarchyButtonLabel" pButton type="button" ></button> </span>
-  <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" ></button></span>
-</div>
-<p-tabView [activeIndex]="activeIndex" (onChange)="handleChange($event)">
-  <p-tabPanel header="Terms And Properties" [selected]="true">
-     <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
-  </p-tabPanel>
-   <p-tabPanel header="Relationships">
-     <app-concept-relationship [concept_relationships]="concept_relationships"
-       [url_base]="url_base" [url_target]="url_target">
-     </app-concept-relationship>
-   </p-tabPanel>
-   <p-tabPanel header="View All">
-     <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
-     <app-concept-relationship [concept_relationships]="concept_relationships"
-       [url_base]="url_base" [url_target]="url_target">
-     </app-concept-relationship>
-   </p-tabPanel>
-</p-tabView>
+  <div class="page-header">
+    {{ title }}
+    <span> -- <button routerLink="/hierarchy/{{concept_code}}" [label]="hierarchyButtonLabel" pButton
+        type="button"></button> </span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p-tabView [activeIndex]="activeIndex" (onChange)="handleChange($event)">
+    <p-tabPanel header="Terms And Properties" [selected]="true">
+      <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
+    </p-tabPanel>
+    <p-tabPanel header="Relationships">
+      <app-concept-relationship [concept_relationships]="concept_relationships" [url_base]="url_base"
+        [url_target]="url_target">
+      </app-concept-relationship>
+    </p-tabPanel>
+    <p-tabPanel header="View All">
+      <app-concept-detail [concept]="concept_detail" [properties]="properties"></app-concept-detail>
+      <app-concept-relationship [concept_relationships]="concept_relationships" [url_base]="url_base"
+        [url_target]="url_target">
+      </app-concept-relationship>
+    </p-tabPanel>
+  </p-tabView>
 </div>

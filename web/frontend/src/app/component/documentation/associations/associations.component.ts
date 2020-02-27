@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
 import { FileLoadingService } from './../../../service/file-loading.service';
 
+// Documentation associations component 
+// BAC - looks like not used
 @Component({
   selector: 'app-associations',
   templateUrl: './associations.component.html',
@@ -17,9 +18,9 @@ export class AssociationsComponent implements OnInit {
 
   ngOnInit() {
     this.fileLoadingService.getDataFromFile('associations.json')
-    .subscribe(response => {
-      this.associations = response;
-    });
+      .subscribe(response => {
+        this.associations = response;
+      });
   }
 
 }

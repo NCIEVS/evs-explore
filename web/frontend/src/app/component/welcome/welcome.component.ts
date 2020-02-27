@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+// Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',

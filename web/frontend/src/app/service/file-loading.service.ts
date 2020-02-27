@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { throwError as observableThrowError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError} from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { EvsError } from '../model/evsError';
 
+// Service for download data
+// BAC: as far as I can tell, this is never used AND the endpoint called doesn't exist anymore
 @Injectable({
   providedIn: 'root'
 })
@@ -18,11 +20,11 @@ export class FileLoadingService {
         responseType: 'json',
       }
     )
-    .pipe(
-      catchError((error) => {
+      .pipe(
+        catchError((error) => {
           return observableThrowError(new EvsError(error, 'Could not fetch data from file'));
-      })
-    );
+        })
+      );
   }
 
 }

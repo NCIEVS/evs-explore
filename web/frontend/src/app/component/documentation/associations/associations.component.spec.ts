@@ -1,16 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AssociationsComponent } from './associations.component';
 
+// Tests for documentation AssociationsComponent (default tests)
 describe('AssociationsComponent', () => {
   let component: AssociationsComponent;
   let fixture: ComponentFixture<AssociationsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssociationsComponent ]
+      declarations: [AssociationsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

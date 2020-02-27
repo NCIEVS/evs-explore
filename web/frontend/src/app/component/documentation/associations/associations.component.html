@@ -1,29 +1,28 @@
 <div class="container" *ngIf="associations">
   <div class="page-header">
     <span>Associations</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" ></button></span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th class="w-10">Code</th>
-            <th class="w-20">Name</th>
-            <th class="w-70">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of associations">
-            <td>{{ row.Code }}</td>
-            <td>{{ row.Preferred_Name }}</td>
-            <td><span *ngIf="
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-10">Code</th>
+          <th class="w-20">Name</th>
+          <th class="w-70">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of associations">
+          <td>{{ row.Code }}</td>
+          <td>{{ row.Preferred_Name }}</td>
+          <td><span *ngIf="
                 row['DEFINITION'] !== undefined &&
                 row['DEFINITION'].length > 0
-                "
-            >{{ row["DEFINITION"][0]["definition"] }}
+                ">{{ row["DEFINITION"][0]["definition"] }}
             </span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

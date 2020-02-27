@@ -2,15 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EvsHeaderComponent } from './evs-header.component';
 
+// Testing for EvsHeaderComponent (default tests)
 describe('EvsHeaderComponent', () => {
   let component: EvsHeaderComponent;
   let fixture: ComponentFixture<EvsHeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EvsHeaderComponent ]
+      declarations: [EvsHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

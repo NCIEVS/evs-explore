@@ -1,23 +1,26 @@
-import { Component, Input, OnInit, Inject, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef } from '@angular/core';
-// import { map } from 'rxjs/operators';
+import { Component, Input, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
 import { ActivatedRoute } from '@angular/router';
-//import { DialogService } from 'primeng/api';
-import { MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
-import { MatchedConcept } from './../../model/matchedConcept';
 import { SearchResult } from './../../model/searchResult';
 import { SearchResultTableFormat } from './../../model/searchResultTableFormat';
 import { SearchTermService } from './../../service/search-term.service';
 import { CovertSearchResultsService } from './../../service/covert-search-results.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
-import { Facet } from './../../model/Facet';
-import { FacetField } from './../../model/FacetField';
 import { Router } from '@angular/router';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
+// Prior imports, now unused
+// import { Inject, ElementRef } from '@angular/core';
+// import { map } from 'rxjs/operators';
+// import { DialogService } from 'primeng/api';
+// import { MenuItem } from 'primeng/api';
+// import { MatchedConcept } from './../../model/matchedConcept';
+// import { Facet } from './../../model/Facet';
+// import { FacetField } from './../../model/FacetField';
+// import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-general-search',
@@ -47,6 +50,7 @@ export class GeneralSearchComponent implements OnInit,
   biomarkers: string[] = [];
   selectedConceptCode: string;
   displayDetail = false;
+  // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
   displayText = false;
   displayTableFormat = true;
@@ -373,8 +377,8 @@ export class GeneralSearchComponent implements OnInit,
             .convertSearchResponseToTableFormat(response, this.selectedPropertiesReturn.slice());
 
 
-          this.hitsFound = this.searchResultTableFormat.totalHits;
-          this.timetaken = this.searchResultTableFormat.timetaken;
+          this.hitsFound = this.searchResultTableFormat.total;
+          this.timetaken = this.searchResultTableFormat.timeTaken;
 
           if (this.hitsFound > 0) {
             this.title = 'Found ' + this.hitsFound + ' concepts in ' + this.timetaken + ' ms';
@@ -390,7 +394,6 @@ export class GeneralSearchComponent implements OnInit,
             console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
-
 
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;

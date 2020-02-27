@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+// Component for displaying concept details
 @Component({
   selector: 'app-concept-detail',
   templateUrl: './concept-detail.component.html',
@@ -36,15 +37,15 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   checkExternalLink(property) {
-    if ( this.externalLinks.has(property) ) {
+    if (this.externalLinks.has(property)) {
       let values = [];
       let link = this.externalLinks.get(property);
-      for (const v of this.concept[property] ) {
+      for (const v of this.concept[property]) {
         values.push('<a href="' + link + v + '" target="_blank">' + v + '</a>');
       }
       return this.sanitizer.bypassSecurityTrustHtml(values.join(", "));
     } else {
-        return this.concept[property].join(", ");
+      return this.concept[property].join(", ");
     }
   }
 

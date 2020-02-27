@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+// Component for displaying a concept relationship (as part of the concept detail view).
 @Component({
   selector: 'app-concept-relationship',
   templateUrl: './concept-relationship.component.html',
