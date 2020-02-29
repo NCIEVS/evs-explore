@@ -8,7 +8,7 @@ import { AutoComplete } from 'primeng/autocomplete';
 import { SearchResult } from './../../model/searchResult';
 import { SearchResultTableFormat } from './../../model/searchResultTableFormat';
 import { SearchTermService } from './../../service/search-term.service';
-import { CovertSearchResultsService } from './../../service/covert-search-results.service';
+import { ConvertSearchResultsService } from '../../service/convert-search-results.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Router } from '@angular/router';
 
@@ -84,7 +84,7 @@ export class GeneralSearchComponent implements OnInit,
   sourcesAll = null;
 
   // get the parameters for the search
-  constructor(private searchTermService: SearchTermService, private covertSearchResultsService: CovertSearchResultsService,
+  constructor(private searchTermService: SearchTermService, private convertSearchResultsService: ConvertSearchResultsService,
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute, public router: Router) {
 
@@ -373,7 +373,7 @@ export class GeneralSearchComponent implements OnInit,
         .subscribe(response => {
 
           this.searchResultTableFormat = this
-            .covertSearchResultsService
+            .convertSearchResultsService
             .convertSearchResponseToTableFormat(response, this.selectedPropertiesReturn.slice());
 
 
@@ -408,7 +408,7 @@ export class GeneralSearchComponent implements OnInit,
     } else {
       this.loadedMultipleConcept = false;
       this.noMatchedConcepts = true;
-      this.searchResult = new SearchResult();
+      this.searchResult = new SearchResult({ 'total': 0 });
       this.reportData = [];
       this.displayTableFormat = false;
 

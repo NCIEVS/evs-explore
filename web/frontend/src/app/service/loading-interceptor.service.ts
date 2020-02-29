@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { throwError as observableThrowError, Observable } from 'rxjs';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
-
 import { LoaderService } from './loader.service';
 import { getBasePath } from './common-functions';
-
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
-
 
   constructor(
     private loaderService: LoaderService,

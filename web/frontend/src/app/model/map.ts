@@ -6,5 +6,10 @@ export class Map {
   targetTerminology: string;
   targetTermGroup: string;
   highlight: string;
+
+  // Construct a concept reference from json input
+  constructor(input: any) {
+    Object.assign(this, input);
+  }
 }
 

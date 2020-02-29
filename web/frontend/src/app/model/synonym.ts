@@ -7,5 +7,11 @@ export class Synonym {
   subSource: string;
   termGroup: string;
   type: string;
+
+  // Construct a concept reference from json input
+  constructor(input: any) {
+    Object.assign(this, input);
+  }
+
 }
 

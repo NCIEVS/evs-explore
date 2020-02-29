@@ -22,6 +22,85 @@ export class Concept {
   inverseAssociations: Relationship[];
   maps: Map[];
 
+  constructor(input: any) {
+    Object.assign(this, input);
+    if (input.synonyms) {
+      this.synonyms = new Array();
+      for (let i = 0; i < input.synonyms.length; i++) {
+        this.synonyms.push(new Synonym(input.synonyms[i]));
+      }
+    }
+    if (input.definitions) {
+      this.definitions = new Array();
+      for (let i = 0; i < input.definitions.length; i++) {
+        this.definitions.push(new Definition(input.definitions[i]));
+      }
+    }
+    if (input.properties) {
+      this.properties = new Array();
+      for (let i = 0; i < input.properties.length; i++) {
+        this.properties.push(new Property(input.properties[i]));
+      }
+    }
+
+    // children
+    if (input.children) {
+      this.children = new Array();
+      for (let i = 0; i < input.children.length; i++) {
+        this.children.push(new ConceptReference(input.children[i]));
+      }
+    }
+
+    // parents
+    if (input.parents) {
+      this.parents = new Array();
+      for (let i = 0; i < input.parents.length; i++) {
+        this.parents.push(new ConceptReference(input.parents[i]));
+      }
+    }
+
+    // roles
+    if (input.roles) {
+      this.roles = new Array();
+      for (let i = 0; i < input.roles.length; i++) {
+        this.roles.push(new Relationship(input.role[i]));
+      }
+    }
+
+    // inverse roles
+    if (input.inverseRoles) {
+      this.inverseRoles = new Array();
+      for (let i = 0; i < input.inverseRoles.length; i++) {
+        this.inverseRoles.push(new Relationship(input.inverseRoles[i]));
+      }
+    }
+
+    // associations
+    if (input.associations) {
+      this.associations = new Array();
+      for (let i = 0; i < input.associations.length; i++) {
+        this.associations.push(new Relationship(input.associations[i]));
+      }
+    }
+
+    // inverse associations
+    if (input.inverseAssociations) {
+      this.inverseAssociations = new Array();
+      for (let i = 0; i < input.inverseAssociations.length; i++) {
+        this.inverseAssociations.push(new Relationship(input.inverseAssociations[i]));
+      }
+    }
+
+    // maps
+    if (input.maps) {
+      this.maps = new Array();
+      for (let i = 0; i < input.maps.length; i++) {
+        this.maps.push(new Map(input.maps[i]));
+      }
+    }
+
+  }
+
   // Indicates whether properties suggest this is a retired concept.
   isRetiredConcept(): boolean {
     return this.properties.filter(p => p.type == 'Concept_Status' && p.value == 'Retired_Concept').length > 0;

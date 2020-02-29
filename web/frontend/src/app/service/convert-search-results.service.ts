@@ -1,9 +1,9 @@
 // import { ContributingSource } from './../model/contributingSource';
 // import { ConceptStatus } from './../model/conceptStatus';
-import { TableHeader } from './../model/tableHeader';
-import { TableData } from './../model/tableData';
+import { TableHeader } from '../model/tableHeader';
+import { TableData } from '../model/tableData';
 import { Injectable } from '@angular/core';
-import { SearchResult } from './../model/searchResult';
+import { SearchResult } from '../model/searchResult';
 import { Concept } from '../model/concept';
 import { SearchResultTableFormat } from '../model/searchResultTableFormat';
 
@@ -13,37 +13,23 @@ import { SearchResultTableFormat } from '../model/searchResultTableFormat';
 
 // Service for converting search results
 @Injectable()
-export class CovertSearchResultsService {
+export class ConvertSearchResultsService {
 
   // constructing a response for the UI
   convertSearchResponse(response): SearchResult {
 
-    const searchResult = new SearchResult();
-    searchResult.timeTaken = response.timeTaken;
-    searchResult.total = response.totaltotal;
-    if (searchResult.total > 0) {
-      searchResult.concepts = [];
-
-
-      for (let i = 0; response.concepts.length > i; i++) {
-        const matchedConcept = new Concept();
-        // matchedConcept.score = response.hits.hits[i]._score;
-        matchedConcept.code = response.concepts[i].code;
-        matchedConcept.name = response.concepts[i].name;
-        matchedConcept.terminology = response.concepts[i].terminology;
-        matchedConcept.highlight = response.concept[i].highlight;
-        searchResult.concepts.push(matchedConcept);
-      }
-    }
+    const searchResult = new SearchResult(response);
     return searchResult;
   }
 
-
+  // Render data for display based on "returnFields" requested
   convertSearchResponseToTableFormat(
     response,
     returnFields: string[]
   ): SearchResultTableFormat {
-    // console.log(JSON.stringify(response));
+
+    // Write the search results response and let's see what up
+    console.log('XXX', response);
     const searchResultTableFormat = new SearchResultTableFormat();
     searchResultTableFormat.header = [];
     searchResultTableFormat.data = [];
@@ -88,10 +74,6 @@ export class CovertSearchResultsService {
       const totalRows = response.concepts.length;
 
       for (let i = 0; i < totalRows; i++) {
-        // this.fieldToHighlightData = new Array();
-        // for (let h = 0; h < this.allHighlightFields.length; h++) {
-        //   this.fieldToHighlightData.push('');
-        // }
 
         const data = new TableData();
         data.column1 = response.concepts[i].code;
