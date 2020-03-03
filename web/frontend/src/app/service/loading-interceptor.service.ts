@@ -14,11 +14,11 @@ export class LoadingInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Use the below two lines of code for a war file
-    //      const url = getBasePath();
+    const url = getBasePath();
     // console.log("url - " + url);
 
     // Use the below two lines of code for a jar file
-    const url = '';
+    // const url = '';
     // console.log("url - " + url);
 
     req = req.clone({
