@@ -70,7 +70,6 @@ import { CommonDataService } from './service/common-data.service';
 import { LoadingInterceptor } from './service/loading-interceptor.service';
 import { LoaderService } from './service/loader.service';
 import { ConceptDetailService } from './service/concept-detail.service';
-import { ConvertSearchResultsService } from './service/convert-search-results.service';
 import { SearchTermService } from './service/search-term.service';
 
 // Angular configuration for this application
@@ -135,7 +134,6 @@ import { SearchTermService } from './service/search-term.service';
     MessageService,
     LoaderService,
     ConceptDetailService,
-    ConvertSearchResultsService,
     SearchTermService,
     GlobalErrorHandler,
     {

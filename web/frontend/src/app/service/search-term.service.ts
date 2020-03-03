@@ -14,17 +14,15 @@ const httpOptions = {
 // Service declaration
 @Injectable()
 export class SearchTermService {
-  query: string;
-  queryfull: string;
-  suggestQuery: string;
 
+  // Construct search term service - inject HttpClient
   constructor(private http: HttpClient) { }
 
   // Service for obtaining search results
   search(searchCriteria: SearchCriteria): Observable<any> {
-    // this.query = this.constructQuery.constructQuery(searchCriteria);
+
     const url = '/api/v1/concept/search';
-    console.log('url - ' + url);
+    console.log('perform search', url);
     const param: any = {};
 
     // Setup search parameters (default terminology and include, for now)

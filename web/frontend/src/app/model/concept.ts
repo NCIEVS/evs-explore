@@ -121,10 +121,10 @@ export class Concept {
   // Assemble text from all of the definitions together.
   getDefinitionsText(): string {
     var text: string = '';
-    if (this.definitions.length > 0) {
+    if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source : '') + this.definitions[i].definition + "<br><br>";
+          this.definitions[i].source : '') + ' ' + this.definitions[i].definition + "<br><br>";
       }
     }
     return text;
@@ -134,11 +134,11 @@ export class Concept {
   getFullSynText(): string {
     let syns = this.getFullSyns();
     let synonymUniqueArray = [];
-    for (let l = 0; l < syns.length; l++) {
-      if (synonymUniqueArray.map(function (c) {
+    for (let i = 0; i < syns.length; i++) {
+      if (!synonymUniqueArray.map(function (c) {
         return c.toLowerCase();
-      }).indexOf(syns[l]['name'].toLowerCase()) === -1) {
-        synonymUniqueArray.push(syns[l]['name']);
+      }).includes(syns[i].toLowerCase())) {
+        synonymUniqueArray.push(syns[i]);
       }
     }
     return synonymUniqueArray.join('<br>');
@@ -147,7 +147,7 @@ export class Concept {
 
   // Return FULL_SYN as an array
   getFullSyns(): string[] {
-    var syns: string[];
+    let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'FULL_SYN') {
@@ -183,7 +183,7 @@ export class Concept {
     // console.log('In roles and associations');
 
     let relationshipInfo = '';
-    if (relationships !== undefined) {
+    if (relationships) {
       for (let l = 0; l < relationships.length; l++) {
         relationshipInfo =
           relationshipInfo +
@@ -217,7 +217,7 @@ export class Concept {
   // Helper for parents/children
   getParChdText(parChd: ConceptReference[]): string {
     let conceptRelationinfo = '';
-    if (parChd !== undefined) {
+    if (parChd) {
       for (let l = 0; l < parChd.length; l++) {
         conceptRelationinfo =
           conceptRelationinfo +
