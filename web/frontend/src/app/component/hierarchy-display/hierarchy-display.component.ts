@@ -18,25 +18,25 @@ export class HierarchyDisplayComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
   activeIndex = 0
-  concept_code: string;
-  concept_detail: any;
-  concept_relationships: any;
+  conceptCode: string;
+  conceptDetail: any;
+  conceptRelationships: any;
   direction = 'horizontal';
-  hierarchy_display = "";
+  hierarchyDisplay = "";
   hierarchyData: TreeNode[]
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
   title: string;
 
-  url_base = "/hierarchy"
-  url_target = '_blank'
+  urlBase = "/hierarchy"
+  urlTarget = '_blank'
 
   /*
    * The properties that are excluded are handled differently
    * than the simple properties, and are in separate sections
    * of the detail output.
    */
-  exclude_properties = [
+  excludeProperties = [
     'ALT_DEFINITION',
     'code',
     'Concept_Status',
@@ -64,23 +64,23 @@ export class HierarchyDisplayComponent implements OnInit {
       .subscribe((properties_new: any) => {
         this.properties = []
         for (const property of properties_new) {
-          if (!this.exclude_properties.includes(property['label'])) {
-            this.properties.push(property['label']);
+          if (!this.excludeProperties.includes(property['name'])) {
+            this.properties.push(property['name']);
           }
         }
         this.route.params.subscribe((params: any) => {
           if (params.code) {
-            this.concept_detail = this.route.paramMap.pipe(
+            this.conceptDetail = this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
                   .getConceptSummary(params.get('code'))
               )
             )
-              .subscribe((concept_new: any) => {
-                this.concept_detail = concept_new;
-                this.concept_code = this.concept_detail.Code;
-                this.title = this.concept_detail.Label + ' ( Code - ' + this.concept_detail.Code + ' )';
-                this.concept_relationships = undefined;
+              .subscribe((concept: any) => {
+                this.conceptDetail = concept;
+                this.conceptCode = this.conceptDetail.Code;
+                this.title = this.conceptDetail.Label + ' ( Code - ' + this.conceptDetail.Code + ' )';
+                this.conceptRelationships = undefined;
                 this.activeIndex = 0;
                 this.getPathInHierarchy();
               })
@@ -92,9 +92,9 @@ export class HierarchyDisplayComponent implements OnInit {
   handleChange($event) {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
-      (this.concept_relationships === undefined || this.concept_relationships == null)) {
-      this.conceptDetailService.getRelationships(this.concept_code).subscribe(response => {
-        this.concept_relationships = response;
+      (this.conceptRelationships === undefined || this.conceptRelationships == null)) {
+      this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+        this.conceptRelationships = response;
       });
     }
   }
@@ -118,10 +118,10 @@ export class HierarchyDisplayComponent implements OnInit {
     this.conceptDetailService
       .getConceptSummary(event.code)
       .subscribe((concept_new: any) => {
-        this.concept_detail = concept_new;
-        this.concept_code = this.concept_detail.Code;
-        this.title = this.concept_detail.Label + ' ( Code - ' + this.concept_detail.Code + ' )';
-        this.concept_relationships = undefined;
+        this.conceptDetail = concept_new;
+        this.conceptCode = this.conceptDetail.Code;
+        this.title = this.conceptDetail.Label + ' ( Code - ' + this.conceptDetail.Code + ' )';
+        this.conceptRelationships = undefined;
         this.activeIndex = 0;
         for (let i = 0; i < this.selectedNodes.length; i++) {
           this.selectedNodes[i]['highlight'] = false;
@@ -129,13 +129,13 @@ export class HierarchyDisplayComponent implements OnInit {
         this.selectedNodes = [];
         this.resetTreeTableNodes();
         this.updateDisplaySize();
-        const newURL = "/hierarchy/" + this.concept_code;
+        const newURL = "/hierarchy/" + this.conceptCode;
         this.location.replaceState(newURL);
       });
   }
 
   getPathInHierarchy() {
-    const url = '/api/v1/concept/ncit/' + this.concept_code + '/pathFromRoot';
+    const url = '/api/v1/concept/ncit/' + this.conceptCode + '/pathFromRoot';
     this.conceptDetailService.getHierarchyData(url)
       .then(nodes => {
         this.hierarchyData = <TreeNode[]>nodes;
@@ -193,10 +193,10 @@ export class HierarchyDisplayComponent implements OnInit {
     node.expandedIcon = '';
     const obj = {
       'code': node['code'],
-      'label': node['label'],
+      'name': node['name'],
       'highlight': false
     }
-    if (node['highlight'] || node['code'] === this.concept_code) {
+    if (node['highlight'] || node['code'] === this.conceptCode) {
       this.selectedNodes.push(node);
       obj['highlight'] = true;
     }

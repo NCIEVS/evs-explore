@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
+import { Concept } from './../../model/concept';
 
 // Concept display component
 // BAC - looks like not used
@@ -12,24 +13,25 @@ import { ConceptDetailService } from './../../service/concept-detail.service';
   styleUrls: ['./concept-display.component.css']
 })
 export class ConceptDisplayComponent implements OnInit {
-  activeIndex = 0
-  concept_code: string;
-  concept_detail: any;
-  concept_relationships: any;
-  hierarchy_display = "";
+
+  activeIndex = 0;
+  conceptCode: string;
+  conceptDetail: Concept;
+  conceptRelationships: any;
+  hierarchyDisplay = '';
   title: string;
 
-  url_base = '/concept'
-  url_target = '_blank'
-
-  hierarchyButtonLabel = "Open in Hierarchy"
+  urlBase = '/concept';
+  urlTarget = '_blank';
+  hierarchyButtonLabel = 'Open in Hierarchy';
 
   /*
    * The properties that are excluded are handled differently
    * than the simple properties, and are in separate sections
    * of the detail output.
    */
-  exclude_properties = [
+  // TODO: this is very NCIt specific
+  excludeProperties = [
     'ALT_DEFINITION',
     'code',
     'Concept_Status',
@@ -50,28 +52,30 @@ export class ConceptDisplayComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //this.concept_code = this.route.snapshot.paramMap.get('code');
+    // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
-      .subscribe((properties_new: any) => {
+      .subscribe((properties: any) => {
         this.properties = []
-        for (const property of properties_new) {
-          if (!this.exclude_properties.includes(property['label'])) {
-            this.properties.push(property['label']);
+        for (const property of properties) {
+          if (!this.excludeProperties.includes(property['name'])) {
+            this.properties.push(property['name']);
           }
         }
+        // Then look up the concept
         this.route.params.subscribe((params: any) => {
           if (params.code) {
-            this.concept_detail = this.route.paramMap.pipe(
+            this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
                   .getConceptSummary(params.get('code'))
               )
             )
-              .subscribe((concept_new: any) => {
-                this.concept_detail = concept_new;
-                this.concept_code = this.concept_detail.Code;
-                this.title = this.concept_detail.Label + ' ( Code - ' + this.concept_detail.Code + ' )';
-                this.concept_relationships = undefined;
+              .subscribe((concept: any) => {
+                // and finally build the local state from it
+                this.conceptDetail = new Concept(concept);
+                this.conceptCode = concept.code;
+                this.title = concept.name + ' ( Code - ' + concept.code + ' )';
+                this.conceptRelationships = undefined;
                 this.activeIndex = 0;
               })
           }
@@ -79,18 +83,19 @@ export class ConceptDisplayComponent implements OnInit {
       })
   }
 
+  // Respond to things like changes in tabs
   handleChange($event) {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
-      (this.concept_relationships === undefined || this.concept_relationships == null)) {
-      this.conceptDetailService.getRelationships(this.concept_code).subscribe(response => {
-        this.concept_relationships = response;
+      (this.conceptRelationships === undefined || this.conceptRelationships == null)) {
+      this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+        this.conceptRelationships = new Concept(response);
       });
     }
   }
 
+  // Reroute to hierarchy view
   openHierarchy() {
-    const newURL = "/hierarchy/" + this.concept_code;
-    this.location.replaceState(newURL);
+    this.location.replaceState('/hierarchy/' + this.conceptCode);
   }
 }

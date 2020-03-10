@@ -13,13 +13,12 @@ export class LoadingInterceptor implements HttpInterceptor {
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Use the below two lines of code for a war file
-    const url = getBasePath();
-    // console.log("url - " + url);
 
-    // Use the below two lines of code for a jar file
+    // Use this configuration for deployment (packaged with the .war file)
+    const url = getBasePath();
+
+    // Use this setting for development (with "npm start")
     // const url = '';
-    // console.log("url - " + url);
 
     req = req.clone({
       url: url + req.url

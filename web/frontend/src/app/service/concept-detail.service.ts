@@ -13,7 +13,7 @@ export class ConceptDetailService {
 
   // Get concept with summary includes
   getConceptSummary(conceptCode: string): Observable<any> {
-    // "ncit" is hardcoded
+    // "ncit" is hardcoded for now
     return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=summary',
       {
         responseType: 'json',
@@ -30,7 +30,7 @@ export class ConceptDetailService {
 
   // Get properties
   getProperties(): Observable<any> {
-    // "ncit" is hardcoded
+    // ncit is hardcoded
     return this.http.get('/api/v1/metadata/ncit/properties',
       {
         responseType: 'json',
@@ -46,7 +46,7 @@ export class ConceptDetailService {
   // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
   getRelationships(conceptCode: string) {
     // "ncit" is hardcoded
-    return this.http.get('/api/v1/concept/ncit/' + conceptCode + 'include=roles,associations,inverseRoles,inverseAssociations,maps',
+    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=roles,associations,inverseRoles,inverseAssociations,maps,disjointWith',
       {
         responseType: 'json',
         params: {

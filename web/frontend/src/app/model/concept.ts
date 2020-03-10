@@ -4,6 +4,7 @@ import { Synonym } from './synonym';
 import { Relationship } from './relationship';
 import { Map } from './map';
 import { ConceptReference } from './conceptRef';
+// import { isNgTemplate } from '@angular/compiler';
 
 // MatchConcept Details - UI Component
 export class Concept {
@@ -29,6 +30,7 @@ export class Concept {
       for (let i = 0; i < input.synonyms.length; i++) {
         this.synonyms.push(new Synonym(input.synonyms[i]));
       }
+      this.synonyms.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     }
     if (input.definitions) {
       this.definitions = new Array();
@@ -41,6 +43,7 @@ export class Concept {
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
       }
+      this.properties.sort((a, b) => a.type.localeCompare(b.type, undefined, { sensitivity: 'base' }));
     }
 
     // children
@@ -118,6 +121,30 @@ export class Concept {
     return this.name;
   }
 
+  // Return the display name
+  // TODO: very NCIt specific, need an alternative for other terminologies
+  getDisplayName(): string {
+    if (this.synonyms.length > 0) {
+      for (let i = 0; i < this.synonyms.length; i++) {
+        if (this.synonyms[i].type == 'Display_Name') {
+          return this.synonyms[i].name;
+        }
+      }
+    }
+    return this.name;
+  }
+
+  // Get value from Concept_Status parameter
+  // TODO: maybe concept status should be a top-level field to generalize this
+  getConceptStatus(): string {
+    if (this.properties) {
+      let cs = this.properties.filter(item => item.type == 'Concept_Status');
+      if (cs.length > 0) {
+        return cs[0].value;
+      }
+    }
+    return '';
+  }
   // Assemble text from all of the definitions together.
   getDefinitionsText(): string {
     var text: string = '';
