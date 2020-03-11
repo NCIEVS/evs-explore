@@ -54,6 +54,8 @@ export class SearchResultTableFormat {
         const data = new TableData();
         data.column1 = searchResult.concepts[i].code;
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
+        data.highlight = searchResult.concepts[i].getHighlightText();
+        console.info('xxx', data.highlight);
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
@@ -112,6 +114,7 @@ export class SearchResultTableFormat {
           }
           count++;
         }
+
         this.data.push(data);
       }
 

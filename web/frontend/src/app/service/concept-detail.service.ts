@@ -62,7 +62,8 @@ export class ConceptDetailService {
   }
 
   // Get hierarchy data (either paths from root, or children)
-  getHierarchyData(url: string) {
+  getHierarchyData(code: string) {
+    const url = '/api/v1/concept/ncit/' + code + '/subtree';
     return this.http.get(url)
       .toPromise()
       .then(res => <TreeNode[]>res);

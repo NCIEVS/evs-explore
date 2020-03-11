@@ -109,6 +109,40 @@ export class Concept {
     return this.properties.filter(p => p.type == 'Concept_Status' && p.value == 'Retired_Concept').length > 0;
   }
 
+  // Get text that shows "more information" when expanding a search result.
+  // This should be the elasticsearch highlights.
+  getHighlightText(): string {
+    var text: string = '';
+    // top-level concept name
+    if (this.highlight) {
+      text += '<strong>Preferred Name</strong>:<br/>' +
+        '<font color="#428bca">' + this.highlight + '</font><br/>';
+    }
+    // synonyms
+    let headerFlag = false;
+    for (let i = 0; i < this.synonyms.length; i++) {
+      if (this.synonyms[i].type == 'FULL_SYN' && this.synonyms[i].highlight) {
+        if (!headerFlag) {
+          text += '<strong>Synonyms</strong>:<br/>';
+          headerFlag = true;
+        }
+        text += '<font color="#428bca">' + this.synonyms[i].highlight + '</font><br/>';
+      }
+    }
+    // properties
+    headerFlag = false;
+    for (let i = 0; i < this.properties.length; i++) {
+      if (this.properties[i].highlight) {
+        if (!headerFlag) {
+          text += '<strong>Properties</strong>:<br/>';
+          headerFlag = true;
+        }
+        text += '<font color="#428bca">' + this.properties[i].type + ' - ' + this.properties[i].highlight + '</font><br/>';
+      }
+    }
+    return text;
+  }
+
   // Return the preferred name
   getPreferredName(): string {
     if (this.synonyms.length > 0) {
