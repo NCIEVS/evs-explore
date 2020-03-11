@@ -1,12 +1,12 @@
-<div *ngIf="conceptRelationships">
+<div *ngIf="concept">
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
       Parent Concepts
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.Superconcept !== undefined &&
-            conceptRelationships.Superconcept.length > 0;
+          concept.parents &&
+            concept.parents.length > 0;
           else elseBlockParentConcept
         ">
         <thead>
@@ -17,11 +17,11 @@
         </thead>
         <tbody>
           <tr *ngFor="
-              let superconcept of conceptRelationships.Superconcept
+              let parent of concept.parents
             ">
-            <td class="w-20">{{ superconcept.code }}</td>
+            <td class="w-20">{{ parent.code }}</td>
             <td class="w-80">
-              <a [routerLink]="[urlBase, superconcept.code]" [target]='urlTarget'>{{ superconcept.label }} </a>
+              <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
             </td>
           </tr>
         </tbody>
@@ -36,21 +36,21 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.Subconcept !== undefined &&
-            conceptRelationships.Subconcept.length > 0;
+          concept.children &&
+            concept.children.length > 0;
           else elseBlockChildConcept
         ">
         <thead>
           <tr>
             <th class="w-20">Code</th>
-            <th class="w-80">Label</th>
+            <th class="w-80">Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let subconcept of conceptRelationships.Subconcept">
-            <td>{{ subconcept.code }}</td>
+          <tr *ngFor="let child of concept.children">
+            <td>{{ child.code }}</td>
             <td>
-              <a [routerLink]="[urlBase, subconcept.code]" [target]='urlTarget'>{{ subconcept.label }} </a>
+              <a [routerLink]="[urlBase, child.code]" [target]='urlTarget'>{{ child.name }} </a>
             </td>
           </tr>
         </tbody>
@@ -68,24 +68,22 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.Role != undefined &&
-            conceptRelationships.Role.length > 0;
+          concept.roles && concept.roles.length > 0;
           else elseBlockRole
         ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
-            <th class="w-20">Code</th>
-            <th class="w-30">Label</th>
+            <th class="w-20">Related Code</th>
+            <th class="w-30">Related Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let role of conceptRelationships.Role">
-            <td>{{ role.relationship }}</td>
-            <td>{{ role.relatedConceptCode }}</td>
+          <tr *ngFor="let role of concept.roles">
+            <td>{{ role.type }}</td>
+            <td>{{ role.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, role.relatedConceptCode ]"
-                target='urlTarget'>{{ role.relatedConceptLabel }}</a>
+              <a [routerLink]="[urlBase, role.relatedCode ]" target='urlTarget'>{{ role.relatedName }}</a>
             </td>
           </tr>
         </tbody>
@@ -103,24 +101,23 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.Association != undefined &&
-            conceptRelationships.Association.length > 0;
+          concept.associations &&
+            concept.associations.length > 0;
           else elseBlockAssociation
         ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
-            <th class="w-20">Code</th>
-            <th class="w-30">Label</th>
+            <th class="w-20">Related Code</th>
+            <th class="w-30">Related Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let association of conceptRelationships.Association">
-            <td>{{ association.relationship }}</td>
-            <td>{{ association.relatedConceptCode }}</td>
+          <tr *ngFor="let association of concept.associations">
+            <td>{{ association.type }}</td>
+            <td>{{ association.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, association.relatedConceptCode ]"
-                target="urlTarget">{{ association.relatedConceptLabel }}</a>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target="urlTarget">{{ association.relatedName }}</a>
             </td>
           </tr>
         </tbody>
@@ -139,24 +136,22 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.InverseRole !== undefined &&
-            conceptRelationships.InverseRole.length > 0;
+          concept.inverseRoles && concept.inverseRoles.length > 0;
           else elseBlockIncomingRole
         ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
-            <th class="w-20">Code</th>
-            <th class="w-30">Label</th>
+            <th class="w-20">Related Code</th>
+            <th class="w-30">Related Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let inverseRole of conceptRelationships.InverseRole">
-            <td>{{ inverseRole.relationship }}</td>
-            <td>{{ inverseRole.relatedConceptCode }}</td>
+          <tr *ngFor="let irole of concept.inverseRoles">
+            <td>{{ irole.type }}</td>
+            <td>{{ irole.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, inverseRole.relatedConceptCode ]"
-                target="urlTarget">{{ inverseRole.relatedConceptLabel }}</a>
+              <a [routerLink]="[urlBase, irole.relatedCode ]" target="urlTarget">{{ irole.relatedName }}</a>
             </td>
           </tr>
         </tbody>
@@ -176,26 +171,25 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.InverseAssociation !== undefined &&
-            conceptRelationships.InverseAssociation.length > 0;
+          concept.inverseAssociations && concept.inverseAssociations.length > 0;
           else elseBlockIncomingAssociation
         ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
-            <th class="w-20">Code</th>
-            <th class="w-30">Label</th>
+            <th class="w-20">Related Code</th>
+            <th class="w-30">Related Name</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="
-              let inverseAssociation of conceptRelationships.InverseAssociation
+              let iassociation of concept.inverseAssociations
             ">
-            <td>{{ inverseAssociation.relationship }}</td>
-            <td>{{ inverseAssociation.relatedConceptCode }}</td>
+            <td>{{ iassociation.type }}</td>
+            <td>{{ iassociation.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, inverseAssociation.relatedConceptCode ]"
-                target="urlTarget">{{ inverseAssociation.relatedConceptLabel }}</a>
+              <a [routerLink]="[urlBase, iassociation.relatedCode ]"
+                target="urlTarget">{{ iassociation.relatedName }}</a>
             </td>
           </tr>
         </tbody>
@@ -211,24 +205,23 @@
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" *ngIf="
-          conceptRelationships.DisjointWith !== undefined &&
-            conceptRelationships.DisjointWith.length > 0;
+          concept.disjointWith &&
+            concept.disjointWith.length > 0;
           else elseBlockDisjointAssociation
         ">
         <thead>
           <tr>
             <th class="w-30">Relationship</th>
-            <th class="w-20">Code</th>
-            <th class="w-30">Label</th>
+            <th class="w-20">Related Code</th>
+            <th class="w-30">Related Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let association of conceptRelationships.DisjointWith">
-            <td>{{ association.relationship }}</td>
-            <td>{{ association.relatedConceptCode }}</td>
+          <tr *ngFor="let association of concept.disjointWith">
+            <td>{{ association.type }}</td>
+            <td>{{ association.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, association.relatedConceptCode ]"
-                target="urlTarget">{{ association.relatedConceptLabel }}</a>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target="urlTarget">{{ association.relatedName }}</a>
             </td>
           </tr>
         </tbody>

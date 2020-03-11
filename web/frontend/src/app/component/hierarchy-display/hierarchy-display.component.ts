@@ -3,12 +3,11 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
-
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
+import { Concept } from './../../model/concept';
 
-// Hierarchy display component
-// BAC - looks like not used (yet?)
+// Hierarchy display component - loaded via the /hierarchy route
 @Component({
   selector: 'app-hierarchy-display',
   templateUrl: './hierarchy-display.component.html',
@@ -20,7 +19,7 @@ export class HierarchyDisplayComponent implements OnInit {
   activeIndex = 0
   conceptCode: string;
   conceptDetail: any;
-  conceptRelationships: any;
+  conceptWithRelationships: Concept;
   direction = 'horizontal';
   hierarchyDisplay = "";
   hierarchyData: TreeNode[]
@@ -80,7 +79,7 @@ export class HierarchyDisplayComponent implements OnInit {
                 this.conceptDetail = concept;
                 this.conceptCode = this.conceptDetail.Code;
                 this.title = this.conceptDetail.Label + ' ( Code - ' + this.conceptDetail.Code + ' )';
-                this.conceptRelationships = undefined;
+                this.conceptWithRelationships = undefined;
                 this.activeIndex = 0;
                 this.getPathInHierarchy();
               })
@@ -89,12 +88,13 @@ export class HierarchyDisplayComponent implements OnInit {
       })
   }
 
+  // Handler for tabs changing in the hierarchy view.
   handleChange($event) {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
-      (this.conceptRelationships === undefined || this.conceptRelationships == null)) {
+      (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptRelationships = response;
+        this.conceptWithRelationships = new Concept(response);
       });
     }
   }
@@ -121,7 +121,7 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptDetail = concept_new;
         this.conceptCode = this.conceptDetail.Code;
         this.title = this.conceptDetail.Label + ' ( Code - ' + this.conceptDetail.Code + ' )';
-        this.conceptRelationships = undefined;
+        this.conceptWithRelationships = undefined;
         this.activeIndex = 0;
         for (let i = 0; i < this.selectedNodes.length; i++) {
           this.selectedNodes[i]['highlight'] = false;

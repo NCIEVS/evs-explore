@@ -45,7 +45,7 @@ export class ConceptDetailComponent implements OnInit {
     if (this.externalLinks.has(property.type)) {
       let values = [];
       let link = this.externalLinks.get(property.type);
-      let value = '<a href="' + link + property.type + '" target="_blank">' + property.value + '</a>';
+      let value = '<a href="' + link + property.value + '" target="_blank">' + property.value + '</a>';
       return this.sanitizer.bypassSecurityTrustHtml(value);
     } else {
       return property.value;

@@ -17,7 +17,7 @@ export class ConceptDisplayComponent implements OnInit {
   activeIndex = 0;
   conceptCode: string;
   conceptDetail: Concept;
-  conceptRelationships: any;
+  conceptWithRelationships: Concept;
   hierarchyDisplay = '';
   title: string;
 
@@ -75,7 +75,7 @@ export class ConceptDisplayComponent implements OnInit {
                 this.conceptDetail = new Concept(concept);
                 this.conceptCode = concept.code;
                 this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-                this.conceptRelationships = undefined;
+                this.conceptWithRelationships = undefined;
                 this.activeIndex = 0;
               })
           }
@@ -87,9 +87,9 @@ export class ConceptDisplayComponent implements OnInit {
   handleChange($event) {
     this.activeIndex = $event.index;
     if (($event.index === 1 || $event.index === 2) &&
-      (this.conceptRelationships === undefined || this.conceptRelationships == null)) {
+      (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptRelationships = new Concept(response);
+        this.conceptWithRelationships = new Concept(response);
       });
     }
   }

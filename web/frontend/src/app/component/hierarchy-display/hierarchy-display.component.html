@@ -34,14 +34,12 @@
             <app-concept-detail [concept]="conceptDetail" [properties]="properties"></app-concept-detail>
           </p-tabPanel>
           <p-tabPanel header="Relationships">
-            <app-concept-relationship [conceptRelationships]="conceptRelationships" [urlBase]="urlBase"
-              [urlTarget]="urlTarget">
+            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase" [urlTarget]="urlTarget">
             </app-concept-relationship>
           </p-tabPanel>
           <p-tabPanel header="View All">
             <app-concept-detail [concept]="conceptDetail" [properties]="properties"></app-concept-detail>
-            <app-concept-relationship [conceptRelationships]="conceptRelationships" [urlBase]="urlBase"
-              [urlTarget]="urlTarget">
+            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase" [urlTarget]="urlTarget">
             </app-concept-relationship>
           </p-tabPanel>
         </p-tabView>

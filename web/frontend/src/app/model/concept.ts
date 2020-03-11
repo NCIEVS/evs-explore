@@ -66,7 +66,7 @@ export class Concept {
     if (input.roles) {
       this.roles = new Array();
       for (let i = 0; i < input.roles.length; i++) {
-        this.roles.push(new Relationship(input.role[i]));
+        this.roles.push(new Relationship(input.roles[i]));
       }
     }
 

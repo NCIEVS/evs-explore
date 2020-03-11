@@ -46,7 +46,7 @@ export class ConceptDetailService {
   // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
   getRelationships(conceptCode: string) {
     // "ncit" is hardcoded
-    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=roles,associations,inverseRoles,inverseAssociations,maps,disjointWith',
+    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith',
       {
         responseType: 'json',
         params: {
