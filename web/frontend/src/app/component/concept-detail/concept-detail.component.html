@@ -112,7 +112,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="concept.Maps_To !== undefined && concept.Maps_To.length > 0">
+  <p-panel [toggleable]="true" *ngIf="concept.maps && concept.maps.length > 0">
     <p-header class="bold-heading">
       Maps To
     </p-header>
@@ -120,7 +120,7 @@
       <table class="table table-striped table-bordered table-responsive">
         <thead>
           <tr>
-            <th class="w-30">Annotated Target</th>
+            <th class="w-30">Target Name</th>
             <th class="w-20">Relationship to Target</th>
             <th class="w-20">Target Term Type</th>
             <th class="w-10">Target Code</th>
@@ -128,12 +128,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let mapsto of concept.Maps_To">
-            <td>{{ mapsto.annotatedTarget }}</td>
-            <td>{{ mapsto.Relationship_to_Target }}</td>
-            <td>{{ mapsto.Target_Term_Type }}</td>
-            <td>{{ mapsto.Target_Code }}</td>
-            <td>{{ mapsto.Target_Terminology }}</td>
+          <tr *ngFor="let map of concept.maps">
+            <td>{{ map.targetName }}</td>
+            <td>{{ map.type }}</td>
+            <td>{{ map.targetTermGroup }}</td>
+            <td>{{ map.targetCode }}</td>
+            <td>{{ map.targetTerminology }}</td>
           </tr>
         </tbody>
       </table>

@@ -13,8 +13,8 @@ export class ConceptDetailService {
 
   // Get concept with summary includes
   getConceptSummary(conceptCode: string): Observable<any> {
-    // "ncit" is hardcoded for now
-    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=summary',
+    // "ncit" is hardcoded for now, read maps for concept detail
+    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=summary,maps',
       {
         responseType: 'json',
         params: {

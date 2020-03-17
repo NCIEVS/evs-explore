@@ -27,9 +27,21 @@ export class Concept {
     Object.assign(this, input);
     if (input.synonyms) {
       this.synonyms = new Array();
+      this.properties = new Array();
       for (let i = 0; i < input.synonyms.length; i++) {
-        this.synonyms.push(new Synonym(input.synonyms[i]));
+        var synonym = new Synonym(input.synonyms[i]);
+        this.synonyms.push(synonym);
+        // Add synonyms with "_Name" to properties
+        if (synonym.type && synonym.type.endsWith('_Name') &&
+          synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
+          var prop = new Property({});
+          prop.type = synonym.type;
+          prop.value = synonym.name;
+          prop.highlight = synonym.highlight;
+          this.properties.push(new Property(prop));
+        }
       }
+      // Case-insensitive search
       this.synonyms.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     }
     if (input.definitions) {
@@ -39,7 +51,22 @@ export class Concept {
       }
     }
     if (input.properties) {
-      this.properties = new Array();
+      // if properties not already initialized in synonyms section
+      if (!input.properties) {
+        this.properties = new Array();
+      }
+
+      // Contributing sources as property
+      if (input.contributingSources) {
+        var contributingSources = input.contributingSources.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })).filter(function (el, i, a) { return i === a.indexOf(el) });
+        if (contributingSources.length > 0) {
+          var prop = new Property({});
+          prop.type = 'Contributing_Source';
+          prop.value = contributingSources.join(', ');
+          this.properties.push(new Property(prop));
+        }
+      }
+
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
       }
@@ -100,6 +127,8 @@ export class Concept {
       for (let i = 0; i < input.maps.length; i++) {
         this.maps.push(new Map(input.maps[i]));
       }
+      this.maps.sort((a, b) => a.targetName.localeCompare(b.targetName, undefined, { sensitivity: 'base' }));
+
     }
 
   }
