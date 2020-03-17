@@ -72,7 +72,7 @@ export class HierarchyDisplayComponent implements OnInit {
             this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
-                  .getConceptSummary(params.get('code'))
+                  .getConceptSummary(params.get('code'), 'summary')
               )
             )
               .subscribe((response: any) => {
@@ -114,26 +114,30 @@ export class HierarchyDisplayComponent implements OnInit {
     this.hierarchyTable.scrollHeight = (tableHeight - 200) + "px";
   }
 
+  // Handler for selecting a tree node
   treeTableNodeSelected(event) {
+    console.info('treeTableNodeSelected', event);
     this.conceptDetailService
-      .getConceptSummary(event.code)
-      .subscribe((concept_new: any) => {
-        this.conceptDetail = concept_new;
+      .getConceptSummary(event.code, 'summary')
+      .subscribe((response: any) => {
+        this.conceptDetail = new Concept(response);
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         this.conceptWithRelationships = undefined;
         this.activeIndex = 0;
+        this.getPathInHierarchy();
+        console.log('xxx', this.selectedNodes);
         for (let i = 0; i < this.selectedNodes.length; i++) {
           this.selectedNodes[i]['highlight'] = false;
         }
         this.selectedNodes = [];
         this.resetTreeTableNodes();
         this.updateDisplaySize();
-        const newURL = "/hierarchy/" + this.conceptCode;
-        this.location.replaceState(newURL);
+        this.location.replaceState("/hierarchy/" + this.conceptCode);
       });
   }
 
+  // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
     this.conceptDetailService.getHierarchyData(this.conceptCode)
       .then(nodes => {
@@ -150,8 +154,9 @@ export class HierarchyDisplayComponent implements OnInit {
       });
   }
 
+  // Get child tree nodes (for an expanded node)
   getTreeTableChildrenNodes(code: string, node: any) {
-    this.conceptDetailService.getHierarchyData(code)
+    this.conceptDetailService.getHierarchyChildData(code)
       .then(nodes => {
         node.children = nodes;
         for (const child of node.children) {
@@ -164,28 +169,35 @@ export class HierarchyDisplayComponent implements OnInit {
       });
   }
 
+  // Handler for expanding a tree node
   treeTableNodeExpand(event) {
+    console.log('treeTableNodeExpand', event.node);
     if (event.node) {
       this.getTreeTableChildrenNodes(event.node.code, event.node);
     }
   }
 
+  // Handler for collapsing a tree node
   treeTableNodeCollapse(event) {
+    console.log('treeTableNodeCollapse', event.node);
     setTimeout(() => {
       this.scrollToSelectionTableTree(event.node, this.hierarchyTable);
     }, 100);
   }
 
+  // Reset all table nodes in the hierarchy
   resetTreeTableNodes() {
     for (const node of this.hierarchyData) {
       this.setTreeTableProperties(node);
     }
   }
 
+  // Deep copy of hierarchy data
   deepCopyHierarchyData() {
     this.hierarchyData = [...this.hierarchyData];
   }
 
+  // Reset tree node properties
   setTreeTableProperties(node: TreeNode) {
     node.collapsedIcon = '';
     node.expandedIcon = '';
@@ -208,6 +220,7 @@ export class HierarchyDisplayComponent implements OnInit {
     }
   }
 
+  // Scroll to the selected node - oy!
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
     let index = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement
