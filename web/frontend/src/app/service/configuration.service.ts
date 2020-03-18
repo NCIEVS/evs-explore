@@ -24,6 +24,7 @@ export class ConfigurationService {
   constructor(private injector: Injector, private http: HttpClient, private notificationService: NotificationService) {
   }
 
+  // Load configuration
   loadConfig(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata').toPromise()

@@ -8,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeComponent implements OnInit {
 
+  // Constructor
   constructor() { }
 
+  // Post initialization
   ngOnInit() {
   }
 

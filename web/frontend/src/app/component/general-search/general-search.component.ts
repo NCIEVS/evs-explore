@@ -152,6 +152,7 @@ export class GeneralSearchComponent implements OnInit,
       if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
         const sources = sessionStorage.getItem('source');
         this.selectedSource = JSON.parse(sources);
+        this.termautosearch = sessionStorage.getItem('searchTerm');
         this.performSearch(sessionStorage.getItem('searchTerm'));
       } else if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
         this.termautosearch = sessionStorage.getItem('searchTerm');
@@ -337,7 +338,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle lazy loading of table
   onLazyLoadData(event) {
-    console.log('onLazyLoadData', event);
+    console.log('onLazyLoadData', this.avoidLazyLoading, event);
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {

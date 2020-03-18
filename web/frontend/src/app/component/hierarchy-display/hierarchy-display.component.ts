@@ -126,7 +126,6 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptWithRelationships = undefined;
         this.activeIndex = 0;
         this.getPathInHierarchy();
-        console.log('xxx', this.selectedNodes);
         for (let i = 0; i < this.selectedNodes.length; i++) {
           this.selectedNodes[i]['highlight'] = false;
         }
