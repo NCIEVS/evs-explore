@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FileLoadingService } from './../../../service/file-loading.service';
+import { ConfigurationService } from './../../../service/configuration.service';
 
 // Documentation properties component
-// BAC - looks like unused
 @Component({
   selector: 'app-properties',
   templateUrl: './properties.component.html',
@@ -13,14 +12,16 @@ export class PropertiesComponent implements OnInit {
   properties: any;
 
   constructor(
-    private fileLoadingService: FileLoadingService
+    private configService: ConfigurationService
   ) { }
 
+  // On initialization
   ngOnInit() {
-    this.fileLoadingService.getDataFromFile('properties.json')
+    // NOTE: hardcoded terminology
+    this.configService.getProperties('ncit')
       .subscribe(response => {
         this.properties = response;
+        this.properties.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
   }
-
 }

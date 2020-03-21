@@ -13,19 +13,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of properties">
-          <td>{{ row.Code }}</td>
-          <td>{{ row.Preferred_Name }}</td>
+        <tr *ngFor="let property of properties">
+          <td>{{ property.code }}</td>
+          <td>{{ property.name }}</td>
           <td><span *ngIf="
-                row['DEFINITION'] !== undefined &&
-                row['DEFINITION'].length > 0
-                ">{{ row["DEFINITION"][0]["definition"] }}
+                property.definitions &&
+                property.definitions.length > 0
+                ">{{ property.definitions[0].definition }}
             </span>
-            <span *ngIf="
-                row['ALT_DEFINITION'] !== undefined &&
-                row['ALT_DEFINITION'].length > 0
-                ">{{ row["ALT_DEFINITION"][0]["definition"] }}
-            </span></td>
         </tr>
       </tbody>
     </table>

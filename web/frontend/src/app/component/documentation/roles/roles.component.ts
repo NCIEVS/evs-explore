@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FileLoadingService } from './../../../service/file-loading.service';
+import { ConfigurationService } from './../../../service/configuration.service';
 
 // Documentation roles component
-// BAC - looks like not used
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
@@ -13,13 +12,17 @@ export class RolesComponent implements OnInit {
   roles: any;
 
   constructor(
-    private fileLoadingService: FileLoadingService
+    private configService: ConfigurationService
   ) { }
 
+  // On initialization
   ngOnInit() {
-    this.fileLoadingService.getDataFromFile('roles.json')
+    // NOTE: hardcoded terminology
+    this.configService.getRoles('ncit')
       .subscribe(response => {
+        console.info('xxx', response);
         this.roles = response;
+        this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
   }
 

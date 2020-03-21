@@ -13,13 +13,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of associations">
-          <td>{{ row.Code }}</td>
-          <td>{{ row.Preferred_Name }}</td>
+        <tr *ngFor="let association of associations">
+          <td>{{ association.code }}</td>
+          <td>{{ association.name }}</td>
           <td><span *ngIf="
-                row['DEFINITION'] !== undefined &&
-                row['DEFINITION'].length > 0
-                ">{{ row["DEFINITION"][0]["definition"] }}
+                association.definitions &&
+                association.definitions.length > 0
+                ">{{ association.definitions[0].definition }}
             </span></td>
         </tr>
       </tbody>

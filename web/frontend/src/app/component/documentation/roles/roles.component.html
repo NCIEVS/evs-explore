@@ -13,13 +13,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of roles">
-          <td>{{ row.Code }}</td>
-          <td>{{ row.Preferred_Name }}</td>
+        <tr *ngFor="let role of roles">
+          <td>{{ role.code }}</td>
+          <td>{{ role.name }}</td>
           <td><span *ngIf="
-                row['DEFINITION'] !== undefined &&
-                row['DEFINITION'].length > 0
-                ">{{ row["DEFINITION"][0]["definition"] }}
+                role.definitions &&
+                role.definitions.length > 0
+                ">{{ role.definitions[0].definition }}
             </span></td>
         </tr>
       </tbody>

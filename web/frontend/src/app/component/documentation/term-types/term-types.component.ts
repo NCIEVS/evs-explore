@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
-import { FileLoadingService } from './../../../service/file-loading.service';
+import { ConfigurationService } from './../../../service/configuration.service';
 
 // Documentation of term types component
-// BAC - looks like unused
 @Component({
   selector: 'app-term-types',
   templateUrl: './term-types.component.html',
@@ -14,13 +12,16 @@ export class TermTypesComponent implements OnInit {
   termTypes: any;
 
   constructor(
-    private fileLoadingService: FileLoadingService
+    private configService: ConfigurationService
   ) { }
 
+  // On initialization
   ngOnInit() {
-    this.fileLoadingService.getDataFromFile('TermTypes.json')
+    // NOTE: hardcoded terminology
+    this.configService.getTermTypes('ncit')
       .subscribe(response => {
         this.termTypes = response;
+        this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
   }
 
