@@ -13,11 +13,11 @@ See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
 This is how things run in production.
 
-Run `./gradlew clean build"` from the "web" folder
-
-* Use one of the following three ways to launch the applicationhte fo
+Run `./gradlew clean build"` from the "web" folder.
 
 ### Launching EVS-EXPLORE for development
+
+Install npm, ideally the version specified in package.json
 
 There are three ways to launch EVS-EXPLORE for development:
 * If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `web/frontend`
