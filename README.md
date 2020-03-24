@@ -1,13 +1,31 @@
-# evs-explore                                                                                                                          EVS terminology browser application                                                                                                                                                                                                                                           # BAC - Developer Instructions (Windows)                                                                                                                                                                                                                                      1. Install node.js - https://nodejs.org/en/download/                                                                                   2. Install the angluar cli - "npm install -g @angular/cli"                                                                             3.                                                                                                                                      # evs-explore
+# evs-explore
 EVS terminology browser application
 
-# BAC - Developer Instructions (Windows)
+### NPM Best Practices
 
-1. https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
-  - Run "npm outdated" from frontend to see whether versions are out of dates
-    Some fixing of packages was done, but this is really finicky.
+See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
-2. Update dependencies and then run "./gradlew clean build" from "web"
+* Run "npm outdated" from frontend to see whether versions are out of date
+    * Some fixing of packages was done, but this is really finicky.
+    * Sticking with Angular 8 for now.
 
-3. Launch the application from "web/frontend" using "npm start"
-OR Launch the application from "web" as a spring boot application
+### Building the Java Webapp
+
+This is how things run in production.
+
+Run `./gradlew clean build"` from the "web" folder
+
+* Use one of the following three ways to launch the applicationhte fo
+
+### Launching EVS-EXPLORE for development
+
+There are three ways to launch EVS-EXPLORE for development:
+* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `web/frontend`
+* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `web/frontend`
+* To simulate the production environment, perform the gradle build and then launch
+  the .war file.  For example:
+
+```
+$ cd web
+$ java -Xmx4096M -jar build/libs/evsexplore-*.war
+```
