@@ -1,7 +1,7 @@
 {
     "/api/v1/**": {
-        "target": "http://localhost:8082/",
-        "secure": false,
+        "target": "https://api-evsrest-dev.nci.nih.gov/",
+        "secure": true,
         "logLevel": "debug",
         "changeOrigin": true
     }

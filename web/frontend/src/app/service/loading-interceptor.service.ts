@@ -4,6 +4,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } fr
 import { LoaderService } from './loader.service';
 import { getBasePath } from './common-functions';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
@@ -14,11 +15,9 @@ export class LoadingInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // Use this configuration for deployment (packaged with the .war file)
-    const url = getBasePath();
-
-    // Use this setting for development (with "npm start")
-    // const url = '';
+    // if in production mode, assume there is a deployment base path
+    // otherwise, for development, assume there is not.    
+    const url = environment.production ? getBasePath() : '';
 
     req = req.clone({
       url: url + req.url
