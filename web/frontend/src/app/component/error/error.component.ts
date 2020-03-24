@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonDataService } from '../../service/common-data.service';
 
+// Error component
+// BAC - looks like not used
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
@@ -10,7 +12,7 @@ export class ErrorComponent implements OnInit {
   error: any;
   constructor(
     private commonDataService: CommonDataService
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.commonDataService.currentMessage.subscribe(error => {

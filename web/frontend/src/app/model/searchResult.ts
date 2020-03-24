@@ -1,16 +1,27 @@
 
-import {MatchedConcept} from './matchedConcept';
-import {ConceptStatus} from './conceptStatus';
-import {ContributingSource} from './contributingSource';
+import { Concept } from './concept';
+// import {ConceptStatus} from './conceptStatus';
+// import {ContributingSource} from './contributingSource';
 
 // SearchResult
 export class SearchResult {
-   timetaken: string;
-   totalHits: number;
-   maxScore: number;
-   matchedConcepts: MatchedConcept[];
-   //conceptStatus: ConceptStatus;
-   //contributingSource: ContributingSource;
-   searchAutoSuggestions: any[];
-   aggregations: any;
+   timeTaken: string;
+   total: number;
+   concepts: Concept[];
+   // maxScore: number;
+   // conceptStatus: ConceptStatus;
+   // contributingSource: ContributingSource;
+   // searchAutoSuggestions: any[];
+   // aggregations: any;
+
+   // Construct from a json payload response from the search service call
+   constructor(input: any) {
+      Object.assign(this, input);
+      this.concepts = [];
+      if (input && input.concepts) {
+         for (let i = 0; i < input.concepts.length; i++) {
+            this.concepts.push(new Concept(input.concepts[i]));
+         }
+      }
+   }
 }

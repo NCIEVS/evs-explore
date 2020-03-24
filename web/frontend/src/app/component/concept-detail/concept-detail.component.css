@@ -1,6 +1,4 @@
-table a:link,
-table a:visited,
-table a:active {
+table a:link, table a:visited, table a:active {
     color: #06c;
     text-decoration: none;
 }
@@ -11,11 +9,11 @@ table a:hover {
 }
 
 .table td, .table th {
-  padding: .25rem;
+    padding: .25rem;
 }
 
 .table tbody td, .table th {
-  padding: .25rem;
+    padding: .25rem;
 }
 
 /*

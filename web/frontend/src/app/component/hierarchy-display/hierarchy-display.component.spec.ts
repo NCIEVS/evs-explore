@@ -2,15 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HierarchyDisplayComponent } from './hierarchy-display.component';
 
+// Testing for HierarchyDisplayComponent (default tests)
 describe('HierarchyDisplayComponent', () => {
   let component: HierarchyDisplayComponent;
   let fixture: ComponentFixture<HierarchyDisplayComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HierarchyDisplayComponent ]
+      declarations: [HierarchyDisplayComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

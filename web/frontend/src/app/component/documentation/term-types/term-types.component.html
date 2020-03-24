@@ -1,9 +1,10 @@
 <div class="container" *ngIf="termTypes">
   <div class="page-header">
-    <span> {{ termTypes.title }}</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" ></button></span>
+    <span>Term Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
-  <p>{{ termTypes.header }}</p>
+  <p>NCI Thesaurus Term Types use 2- or 3-character abbreviations to code the nature of each term associated with a
+    concept. Here is a listing of the term type codes and their meanings:</p>
   <div class="table-responsive" style="font-size:14px;">
     <table class="table table-striped table-bordered">
       <thead>
@@ -13,13 +14,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of termTypes.table">
-          <td>{{ row.name }}</td>
-          <td>{{ row.description }}</td>
+        <tr *ngFor="let tty of termTypes">
+          <td>{{ tty.code }}</td>
+          <td>{{ tty.name }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-      
-  <p>{{ termTypes.footer }}</p>
+
+  <p>*Note on special rules governing NCI PT, HD, and AQ term types: Each concept should have one, and only one, term
+    coded with one of these three values. The NCI Preferred Term is always taken from one of the NCI terms, normally
+    that with a type of PT (Preferred Term). However, in special cases, a concept will not have a PT term, but instead,
+    will have either an HD (Header) term or an AQ term. These tags are considered equivalent to PT by the software. This
+    means that a concept may have only as single NCI PT, or HD, or AQ term. In those cases where multiple antiquated
+    terms are needed for a concept which is itself coded as antiquated, one should be tagged AQ and the rest tagged AQS.
+  </p>
 </div>

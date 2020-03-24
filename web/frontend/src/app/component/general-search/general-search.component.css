@@ -1,13 +1,16 @@
+em {
+    background-color: lightyellow;
+}
 
 .radio-padding {
-  padding-right: 0.2rem !important;
+    padding-right: 0.2rem !important;
 }
 
 /*toolbar*/
 
 .custom-toolbar {
-  padding: .25em .5em;
-  max-height: 35px;
+    padding: .25em .5em;
+    max-height: 35px;
 }
 
 .custom-toolbar.ui-toolbar {
@@ -47,5 +50,3 @@
     margin-left: 2px;
     margin-right: 2px;
 }
-
-

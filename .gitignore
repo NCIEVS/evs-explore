@@ -1,0 +1,15 @@
+web/src/main/resources/static
+**/.gradle/*
+**/build/*
+**/.vscode
+**/*~
+setenv.sh
+/.gradle/
+.classpath
+.project
+.pydevproject
+.settings/
+bin/
+__pycache__
+/build/
+WEB-INF/*

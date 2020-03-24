@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { LoaderService } from './../../service/loader.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { LoaderService } from './../../service/loader.service';
 
+// Component to display when loading calls (starts/stops based on subscriptions).
 @Component({
     selector: 'angular-loader',
     templateUrl: 'loader.component.html',

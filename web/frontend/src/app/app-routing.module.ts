@@ -12,8 +12,9 @@ import { PropertiesComponent } from './component/documentation/properties/proper
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
-import { WelcomeComponent } from './component/welcome/welcome.component';
+// import { WelcomeComponent } from './component/welcome/welcome.component';
 
+// Routes defined
 const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent }, 
   { path: 'concept/:code', component: ConceptDisplayComponent },

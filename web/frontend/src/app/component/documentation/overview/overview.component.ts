@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+// Documentation overview component
+// BAC - looks like not used
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',

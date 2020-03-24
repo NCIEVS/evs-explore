@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+// Component for mappings.  Currently, this just redirects to another page.
 @Component({
   selector: 'app-mappings',
   templateUrl: './mappings.component.html',

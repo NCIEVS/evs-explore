@@ -1,21 +1,23 @@
-import { ErrorHandler, Injectable, Injector, ApplicationRef, NgZone} from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandler, Injectable, Injector, ApplicationRef, NgZone } from '@angular/core';
+// import { HttpErrorResponse } from '@angular/common/http';
 import { LoaderService } from './loader.service';
 import { NotificationService } from './notification.service';
 import { EvsError } from './../model/evsError';
-import { Message } from 'primeng/api';
+//import { Message } from 'primeng/api';
 import { Router } from '@angular/router';
 import { CommonDataService } from './common-data.service';
 
+// Global error handler - see app.module.ts
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
   appRef: any;
 
   constructor(
     private injector: Injector) {
-      super();
+    super();
   }
 
+  // Hook for handling an error
   handleError(error: Error) {
     const loaderService = this.injector.get(LoaderService);
     const router = this.injector.get(Router);
@@ -25,12 +27,13 @@ export class GlobalErrorHandler extends ErrorHandler {
 
     loaderService.hideLoader();
 
+    // Handle EVS errors in specific ay
     if (error instanceof EvsError) {
-    // Display notifications only if it is a known error i.e. ImmPortError and enabled
+      // Display notifications only if it is a known error i.e. ImmPortError and enabled
       console.log(error.displayMessage);
       error.displayMessage = error.displayMessage + '. Please contact the  NCI helpdesk';
       if (error.displayNotification) {
-          this.notifyError(error.displayMessage);
+        this.notifyError(error.displayMessage);
       }
     } else {
       //console.log('error***' + error.message);
@@ -45,6 +48,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     super.handleError(error);
   }
 
+  // Notify listeners subscribed to error messages
   notifyError(displayMessage: string) {
     const notificationService = this.injector.get(NotificationService);
     const appRef = this.injector.get(ApplicationRef);
@@ -59,7 +63,7 @@ export class GlobalErrorHandler extends ErrorHandler {
           closable: true
         }
       );
-      setTimeout( function() {
+      setTimeout(function () {
         appRef.tick();
       });
     });

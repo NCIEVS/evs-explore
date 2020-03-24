@@ -5,15 +5,23 @@ plugins {
 version '0.0.1'
  
 node {
-  version = '12.4.0'
-  npmVersion = '6.9.0'
+  version = '12.6.0'
+  npmVersion = '6.13.4'
   download = true
   workDir = file("${project.buildDir}/node")
   nodeModulesDir = file("${project.projectDir}")
 }
- 
-task build(type: NpmTask) {
+
+// Perform the NPM build
+task npmBuild(type: NpmTask, dependsOn: npm_install) {
+  // args = ['run', 'build']
   args = ['run', 'build:prod']
 }
- 
-build.dependsOn(npm_install)
+
+// Copy the distribution up to the static folder to complete the build
+task build(type: Copy, dependsOn: npmBuild) {
+    from 'dist'
+    into '../src/main/resources/static'
+}
+
+//build.dependsOn(npm_install)

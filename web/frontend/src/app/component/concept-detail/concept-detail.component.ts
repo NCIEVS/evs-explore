@@ -1,15 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Concept } from './../../model/concept';
 
+// Component for displaying concept details
 @Component({
   selector: 'app-concept-detail',
   templateUrl: './concept-detail.component.html',
   styleUrls: ['./concept-detail.component.css']
 })
 export class ConceptDetailComponent implements OnInit {
-  @Input() concept: any;
+  @Input() concept: Concept;
   @Input() properties: string[];
 
+  // TODO: this needs to be pulled from the endpoint (e.g. application metadata)
   externalLinks = new Map(
     [
       ['CAS_Registry', 'http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno='],
@@ -32,19 +35,20 @@ export class ConceptDetailComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) { }
 
+  // On initialization
   ngOnInit() {
+    // implements OnInit
   }
 
+  // Render links appropriately if they are defined in "external Links"
   checkExternalLink(property) {
-    if ( this.externalLinks.has(property) ) {
+    if (this.externalLinks.has(property.type)) {
       let values = [];
-      let link = this.externalLinks.get(property);
-      for (const v of this.concept[property] ) {
-        values.push('<a href="' + link + v + '" target="_blank">' + v + '</a>');
-      }
-      return this.sanitizer.bypassSecurityTrustHtml(values.join(", "));
+      let link = this.externalLinks.get(property.type);
+      let value = '<a href="' + link + property.value + '" target="_blank">' + property.value + '</a>';
+      return this.sanitizer.bypassSecurityTrustHtml(value);
     } else {
-        return this.concept[property].join(", ");
+      return property.value;
     }
   }
 

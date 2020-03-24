@@ -1,5 +1,6 @@
 import { FacetQueryParameterNamesEnum } from './FacetQueryParameterNamesEnum';
 
+// BAC - looks like not used
 export class FacetField {
 
     name: string;

@@ -1,10 +1,10 @@
 .treenode-highlight {
-    color: #FFFFFF!important;
-    background-color: #186ba0!important
-  }
-  
+  color: #FFFFFF!important;
+  background-color: #186ba0!important
+}
+
 .treenode {
-    color: black;
+  color: black;
 }
 
 .customtabview .ui-panel-titlebar {

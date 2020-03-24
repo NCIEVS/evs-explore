@@ -14,7 +14,7 @@ footer .footercustom {
     background: -moz-linear-gradient(#0188cb, #1c5e86);
     /* For Firefox 3.6 to 15 */
     background: linear-gradient(#0188cb, #1c5e86);
-    /* Standard syntax */ 
+    /* Standard syntax */
 }
 
 footer .footercustom a {
@@ -31,7 +31,7 @@ footer ul {
     margin: 0;
     overflow: hidden;
 }
-  
+
 footer li {
     color: white;
     float: left;
@@ -41,7 +41,7 @@ ul.menu {
     display: inline-block;
     text-align: center !important;
 }
-  
+
 .inner {
     width: 90%;
     text-align: center !important;
@@ -54,7 +54,7 @@ footer li {
     text-decoration: none;
     padding: 0px;
 }
-  
+
 footer li a {
     display: block;
     text-align: center;

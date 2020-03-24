@@ -1,36 +1,36 @@
 <div *ngIf="concept" style="padding-top:3px;">
-    <p-panel [showHeader]="false">
-  <div class="table-responsive">
-    <table class="table table-striped table-bordered">
-      <tbody>
-        <tr>
-          <td class="w-25">Preferred Name:</td>
-          <td class="w-75">{{ concept.Preferred_Name }}</td>
-        </tr>
-        <tr>
-          <td class="w-25">Display Name:</td>
-          <td class="w-75">{{ concept.Display_Name }}</td>
-        </tr>
-        <tr>
-          <td class="w-25">Label:</td>
-          <td class="w-75">{{ concept.Label }}</td>
-        </tr>
-        <tr>
-          <td class="w-25">NCI Thesaurus Code:</td>
-          <td class="w-75">{{ concept.Code }}</td>
-        </tr>
-        <tr>
-          <td class="w-25">Concept Status:</td>
-          <td class="w-75">{{ concept.Concept_Status }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <p-panel [showHeader]="false">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td class="w-25">Preferred Name:</td>
+            <td class="w-75">{{ concept.getPreferredName() }}</td>
+          </tr>
+          <tr>
+            <td class="w-25">Display Name:</td>
+            <td class="w-75">{{ concept.getDisplayName() }}</td>
+          </tr>
+          <tr>
+            <td class="w-25">Label:</td>
+            <td class="w-75">{{ concept.name }}</td>
+          </tr>
+          <tr>
+            <td class="w-25">NCI Thesaurus Code:</td>
+            <td class="w-75">{{ concept.code }}</td>
+          </tr>
+          <tr>
+            <td class="w-25">Concept Status:</td>
+            <td class="w-75">{{ concept.getConceptStatus() }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </p-panel>
-   <br />
+  <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-        Definitions
+      Definitions
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
@@ -42,15 +42,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let defintion of concept.DEFINITION">
+          <tr *ngFor="let defintion of concept.definitions">
             <td>{{ defintion.definition }}</td>
-            <td>{{ defintion["def-source"] }}</td>
-            <td>{{ defintion.attr }}</td>
-          </tr>
-          <tr *ngFor="let defintion of concept.ALT_DEFINITION">
-            <td>{{ defintion.definition }}</td>
-            <td>{{ defintion["def-source"] }}</td>
-            <td>{{ defintion.attr }}</td>
+            <td>{{ defintion.source }}</td>
+            <td>{{ defintion.type }}</td>
           </tr>
         </tbody>
       </table>
@@ -59,7 +54,7 @@
   <br />
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-        Synonyms & Abbreviations
+      Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
@@ -73,13 +68,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let synonym of concept.FULL_SYN">
-            <td>{{ synonym["term-name"] }}</td>
-            <td>{{ synonym["term-source"] }}</td>
-            <td>{{ synonym["term-group"] }}</td>
-            <td>{{ synonym["source-code"] }}</td>
-            <td>{{ synonym["subsource-name"] }}</td>
-          </tr>
+          <!-- Only display the entries that have a termgroup -->
+          <ng-container *ngFor="let synonym of concept.synonyms">
+            <tr *ngIf="synonym.termGroup">
+              <td>{{ synonym.name }}</td>
+              <td>{{ synonym.source }}</td>
+              <td>{{ synonym.termGroup }}</td>
+              <td>{{ synonym.code }}</td>
+              <td>{{ synonym.subSource }}</td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
@@ -88,23 +86,20 @@
 
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-        Other Properties
+      Other Properties
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
-            <th class="w-30">Name</th>
-            <th class="w-70">Value (qualifiers indented underneath)</th>
+            <th class="w-30">Type</th>
+            <th class="w-70">Value</th>
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let property of properties">
-            <tr *ngIf="
-              concept[property] !== undefined &&
-              concept[property].length > 0
-            ">
-              <td>{{property}}</td>
+          <ng-container *ngFor="let property of concept.properties">
+            <tr>
+              <td>{{property.type}}</td>
               <td [innerHTML]="checkExternalLink(property)"></td>
               <!--
               <td>{{ concept[property].join(", ") }}</td>
@@ -117,15 +112,15 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="concept.Maps_To !== undefined && concept.Maps_To.length > 0">
+  <p-panel [toggleable]="true" *ngIf="concept.maps && concept.maps.length > 0">
     <p-header class="bold-heading">
-        Maps To
+      Maps To
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered table-responsive">
         <thead>
           <tr>
-            <th class="w-30">Annotated Target</th>
+            <th class="w-30">Target Name</th>
             <th class="w-20">Relationship to Target</th>
             <th class="w-20">Target Term Type</th>
             <th class="w-10">Target Code</th>
@@ -133,12 +128,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let mapsto of concept.Maps_To">
-            <td>{{ mapsto.annotatedTarget }}</td>
-            <td>{{ mapsto.Relationship_to_Target }}</td>
-            <td>{{ mapsto.Target_Term_Type }}</td>
-            <td>{{ mapsto.Target_Code }}</td>
-            <td>{{ mapsto.Target_Terminology }}</td>
+          <tr *ngFor="let map of concept.maps">
+            <td>{{ map.targetName }}</td>
+            <td>{{ map.type }}</td>
+            <td>{{ map.targetTermGroup }}</td>
+            <td>{{ map.targetCode }}</td>
+            <td>{{ map.targetTerminology }}</td>
           </tr>
         </tbody>
       </table>
@@ -150,7 +145,7 @@
     concept.GO_Annotation.length > 0
   ">
     <p-header class="bold-heading">
-      GO Annotation 
+      GO Annotation
     </p-header>
     <div class="table-responsive">
       <table class="table table-striped table-bordered table-responsive">

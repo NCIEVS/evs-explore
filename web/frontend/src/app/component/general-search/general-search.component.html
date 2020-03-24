@@ -1,90 +1,89 @@
-
-<div class="container" >
+<div class="container">
   <div class="row" style="padding-top: 6px;">
-    
+
     <div class="col-12 p-0">
       <div class="shared-logo-box">
-      <div class="row" >
-        <div class="col-sm-4">           
-             <div style="padding-top: 6px;">
-              <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  [delay]="600"
+        <div class="row">
+          <div class="col-sm-4">
+            <div style="padding-top: 6px;">
+              <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
                 [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (onClear)="clearResults()"
                 (completeMethod)="search($event)" id="termauto" name="termauto"
                 placeholder="Enter concept code or at least 3 letters of a term." [minLength]="3">
               </p-autoComplete>
-            
-             </div>        
-       
-        </div>
-         <div class="col-sm-2">           
-             <div class="ui-inputgroup" style="padding-top: 6px;">
-              <button type="button" pButton label="search" icon="fa fa-search" (click)="returnSearchResults();"></button>            
-              
-             </div>        
-       
-        </div>  
 
-        <div class="col-sm-6">
-           <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
-              <p-multiSelect autoWidth="false" [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
-                [options]="sourcesAll" [(ngModel)]="selectedSource"
-                name="sourceSearch" defaultLabel="Source"
+            </div>
+
+          </div>
+          <div class="col-sm-2">
+            <div class="ui-inputgroup" style="padding-top: 6px;">
+              <button type="button" pButton label="search" icon="fa fa-search" (click)="onPerformSearch();"></button>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
+              <p-multiSelect autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
+                [options]="sourcesAll" [(ngModel)]="selectedSource" name="sourceSearch" defaultLabel="Source"
                 (onChange)="onChangeSource($event)" [displaySelectedLabel]="false">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
               </p-multiSelect>
-              <button  type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset"
-                label="reset" tooltipPosition="bottom"></button>
-                  <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
-              (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
-              label="reset search" tooltipPosition="bottom"></button>
+              <!-- not needed because [showToggleAll]=true above
+              <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset" label="reset"
+                tooltipPosition="bottom"></button> -->
+              <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
+                (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
+                label="reset search" tooltipPosition="bottom"></button>
             </div>
-            
-          
-              
+
+
+
+          </div>
+
         </div>
-     
-     </div>
-      <div class="row">
-         <div class="col-sm-6" style="padding-top:3px;">
+        <div class="row">
+          <div class="col-sm-6" style="padding-top:3px;">
             <p-radioButton class="radio-padding" name="searchtype" value="contains" label="Contains"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('contains')"></p-radioButton>
+              [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('contains')"></p-radioButton>
             <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('match')"></p-radioButton>
-            <p-radioButton class="radio-padding" name="searchtype" value="startswith" label="Starts With"
-              [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('startswith')"></p-radioButton>
-            <p-button icon="pi pi-angle-double-right" (onClick)="showMoreSearchOptions()" *ngIf="!showMoreSearchOption">
+              [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('match')"></p-radioButton>
+            <p-radioButton class="radio-padding" name="searchtype" value="startsWith" label="Starts With"
+              [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('startsWith')"></p-radioButton>
+            <p-button icon="pi pi-angle-double-right" (onClick)="toggleShowMoreSearchOptions()"
+              *ngIf="!showMoreSearchOption">
             </p-button><span *ngIf="showMoreSearchOption">
+              <br />
               <p-radioButton class="radio-padding" name="searchtype" value="phrase" label="Phrase"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('phrase')"></p-radioButton>
+                [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('phrase')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('fuzzy')"></p-radioButton>
+                [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('fuzzy')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="AND" label="AND"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('AND')"></p-radioButton>
+                [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('AND')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="OR" label="OR"
-                [(ngModel)]="selectedSearchType" (onClick)="OnChangeSearchType('OR')"></p-radioButton>
+                [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('OR')"></p-radioButton>
             </span>
-            <p-button icon="pi pi-angle-double-left" (onClick)="showMoreSearchOptions()" *ngIf="showMoreSearchOption">
+            <p-button icon="pi pi-angle-double-left" (onClick)="toggleShowMoreSearchOptions()"
+              *ngIf="showMoreSearchOption">
             </p-button>
 
-        
-        </div>
-         <div class="col-sm-6" style="padding-top:3px;">
-            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0"
-              [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)"
-              addOnTab="false" addOnBlur="false">
+
+          </div>
+          <div class="col-sm-6" style="padding-top:3px;">
+            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0" [(ngModel)]="selectedSource"
+              (onRemove)="onSourceSelectDeselect($event)" addOnTab="false" addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}
               </ng-template>
             </p-chips>
-         </div>
+          </div>
+        </div>
       </div>
-     </div>
-   
+
     </div>
   </div>
- 
+
 
   <div class="row" *ngIf="!welcomePage">
 
@@ -92,46 +91,48 @@
       <div class="row">
         <div class="col-sm-12">
           <p-toolbar>
-              <div class="ui-toolbar-group-left">
+            <div class="ui-toolbar-group-left">
               <span *ngIf="noMatchedConcepts">
                 <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above criteria.
               </span>
               <span *ngIf="loadedMultipleConcept">
-                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{{title}}               
+                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{{title}}
               </span>
             </div>
             <div *ngIf="loadedMultipleConcept" class="ui-toolbar-group-right">
-             
-                <p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Less" offLabel="Show more" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>           
-                <p-multiSelect dropdownIcon="pi pi-caret-down" [options]="multiSelectCols" [(ngModel)]="selectedColumns" (onChange)="setColumns()" selectedItemsLabel=" {0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
-               
-             </div>
+
+              <p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Less"
+                offLabel="Show more" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>
+              <p-multiSelect dropdownIcon="pi pi-caret-down" [options]="multiSelectCols" [(ngModel)]="selectedColumns"
+                (onChange)="setColumns()" selectedItemsLabel=" {0} columns selected" [style]="{minWidth: '200px'}"
+                defaultLabel="Choose Columns"></p-multiSelect>
+
+            </div>
           </p-toolbar>
         </div>
       </div>
-    
+
 
       <div *ngIf="displayTableFormat  && !noMatchedConcepts">
         <div class="row" style="margin-bottom:10px;padding-top:5px;">
           <div class="col-sm-12">
 
-            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns" [value]="reportData"
-              [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100, 200]" pageLinkSize="3"
-              [rows]="defaultTableRows" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
-              [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
-              >
-              
-           
+            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns"
+              [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100, 200]" pageLinkSize="3"
+              [rows]="pageSize" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
+              [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)">
+
+
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                    <col style="width: 1.8em">
-                    <col *ngFor="let col of columns" [style.width]="col.width">
+                  <col style="width: 1.8em">
+                  <col *ngFor="let col of columns" [style.width]="col.width">
                 </colgroup>
               </ng-template>
               <ng-template pTemplate="header" let-columns>
                 <tr>
                   <th style="width: 1.8em"></th>
-                  <th *ngFor="let col of columns" >
+                  <th *ngFor="let col of columns">
                     {{col.header}}
 
                   </th>
@@ -155,9 +156,9 @@
                         [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
                         {{rowData[col.field]}} (Retired Concept) </a>
                     </span>
-                   <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
+                    <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
                         (click)="onSelectConceptCode(rowData['column1'])">{{rowData[col.field]}}</a></span>-->
-                    <!--  <div *ngSwitchCase="'Maps_To'" [innerHTML]="rowData[col.field] | transformDisplay:'Maps_To'"></div>-->                    
+                    <!--  <div *ngSwitchCase="'Maps_To'" [innerHTML]="rowData[col.field] | transformDisplay:'Maps_To'"></div>-->
                     <span *ngSwitchDefault [innerHTML]="rowData[col.field]"></span>
                   </td>
                 </tr>
