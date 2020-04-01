@@ -43,6 +43,7 @@ import { PropertiesComponent } from './component/documentation/properties/proper
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
+import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Local Modules
@@ -95,6 +96,7 @@ import { SearchTermService } from './service/search-term.service';
     OverviewComponent,
     RolesComponent,
     TermTypesComponent,
+    SourcesComponent,
     WelcomeComponent
   ],
   imports: [

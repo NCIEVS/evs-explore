@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from './../../service/notification.service';
 import { Subscription } from 'rxjs';
-import { Message, MessageService } from 'primeng/primeng';
+import { MessageService } from 'primeng/primeng';
 
 // Component for displaying notifications
 // This component is rendered in the top level app component
@@ -12,6 +12,7 @@ import { Message, MessageService } from 'primeng/primeng';
 })
 export class NotificationComponent implements OnInit, OnDestroy {
   stickNotification: Boolean = true;
+  link: string;
   private subscription: Subscription = new Subscription();
 
   constructor(
@@ -25,13 +26,15 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notificationService.getNotificationChangeSubject()
       .subscribe(notification => {
         if (notification != null) {
+          this.link = '<a href="https://datascience.cancer.gov/about/application-support" target="_blank">Please contact the NCI helpdesk</a>';
           this.messageService.add(
             {
+              key: 'tc',
               severity: notification.severity,
               summary: notification.summary,
               detail: notification.detail,
               sticky: notification.sticky,
-              closable: notification.closable
+              closable: notification.closable,
             }
           );
 

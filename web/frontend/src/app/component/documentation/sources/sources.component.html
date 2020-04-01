@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="page-header">
+    <span>Sources</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p>NCI Thesaurus Sources &lt; TBD &gt;:</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-20">Name</th>
+          <th class="w-80">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let source of sources">
+          <td>{{ source.code }}</td>
+          <td>{{ source.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>*any footnotes go here.
+  </p>
+</div>

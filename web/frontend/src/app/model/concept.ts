@@ -214,7 +214,7 @@ export class Concept {
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source : '') + ' ' + this.definitions[i].definition + "<br><br>";
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br><br>";
       }
     }
     return text;

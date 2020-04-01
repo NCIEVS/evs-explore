@@ -96,7 +96,7 @@ export class SearchTermService {
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Failure to get search results = ' + JSON.stringify(searchCriteria)));
+          return observableThrowError(new EvsError(error, 'Failure to get search results = <p>' + JSON.stringify(searchCriteria, null, 2) + "</p>"));
         })
       );
   }

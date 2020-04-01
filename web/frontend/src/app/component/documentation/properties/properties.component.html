@@ -13,15 +13,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let property of properties">
-          <td>{{ property.code }}</td>
-          <td>{{ property.name }}</td>
-          <td><span *ngIf="
-                property.definitions &&
-                property.definitions.length > 0
-                ">{{ property.definitions[0].definition }}
-            </span>
-        </tr>
+        <!-- Skip properties that do not have definitions, this catches "unused" and "unpublished", 
+          like def-definition, go-term, term-name, Definition_Review_Date, etc -->
+        <ng-container *ngFor="let property of properties">
+          <tr *ngIf="
+          property.definitions &&
+          property.definitions.length > 0
+          ">
+            <td>{{ property.code }}</td>
+            <td>{{ property.name }}</td>
+            <td>{{ property.definitions[0].definition }}</td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

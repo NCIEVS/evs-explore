@@ -1,0 +1,3 @@
+:host ::ng-deep .custom-toast .ui-toast-message-error {
+    background-color: #f3e8e9 !important;
+}
