@@ -2,21 +2,16 @@
 # Spring Properties
 #
 spring:
-    #
     # Application Properties
-    #
     application:
         name: evsexplore
-    #
     # JSON Formatting Properties
-    #
     jackson:
         serialization:
             INDENT_OUTPUT: true
-   # jmx
+    # jmx
     jmx:
-      enabled: false        
-    
+        enabled: false        
     
 #
 # Server Properties
@@ -39,10 +34,6 @@ management:
       exposure:
         include: heapdump,liquibase,loggers,prometheus,threaddump,info,metrics,health,hystrix.stream
 
-
-
-        
-
 # Zuul Properties
 #
 # The sensitiveHeaders are a blacklist, and the default is not empty. 
@@ -64,16 +55,13 @@ logging:
         org.springframework: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK:INFO}
         org.springframework.boot: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT:WARN}        
         gov.nih.nci.evsexplore.web: ${LOGGING_LEVEL_GOV_EVSEXPLORE:INFO}
+
+#
+# EVS Explore properties
+#
 gov:
   nih:
     nci:   
       evsexplore:               
-          web:    
+          web:
             evsApibasePath: ${EVS_API_BASE_PATH:http://localhost:8082}
-            conceptDetailPath: ${EVS_API_CONCEPT_DETAIL_PATH:/api/v1/concept/conceptCode}
-            conceptRelationshipPath: ${EVS_API_CONCEPT_DETAIL_PATH:/api/v1/concept/conceptCode/relationships}
-            conceptSearchPath: ${EVS_API_CONCEPT_SEARCH_PATH:/api/v1/search}
-            conceptPathInHierarchyPath: ${EVS_API_CONCEPT_PATH_IN_HIERARCHY_PATH:/api/v1/concept/conceptCode/pathInHierarchy}
-            conceptChildNodesPath: ${EVS_API_CONCEPT_CHILD_NODES_PATH:/api/v1/concept/conceptCode/childNodes}
-           
-             

@@ -40,6 +40,7 @@ import { ValueSetsComponent } from './component/value-sets/value-sets.component'
 import { MappingsComponent } from './component/mappings/mappings.component';
 import { AssociationsComponent } from './component/documentation/associations/associations.component';
 import { PropertiesComponent } from './component/documentation/properties/properties.component';
+import { QualifiersComponent } from './component/documentation/qualifiers/qualifiers.component';
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
@@ -93,6 +94,7 @@ import { SearchTermService } from './service/search-term.service';
     MappingsComponent,
     AssociationsComponent,
     PropertiesComponent,
+    QualifiersComponent,
     OverviewComponent,
     RolesComponent,
     TermTypesComponent,
