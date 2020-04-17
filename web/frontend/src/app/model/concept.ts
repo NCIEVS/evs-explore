@@ -56,21 +56,10 @@ export class Concept {
         this.properties = new Array();
       }
 
-      // Contributing sources as property
-      if (input.contributingSources) {
-        var contributingSources = input.contributingSources.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })).filter(function (el, i, a) { return i === a.indexOf(el) });
-        if (contributingSources.length > 0) {
-          var prop = new Property({});
-          prop.type = 'Contributing_Source';
-          prop.value = contributingSources.join(', ');
-          this.properties.push(new Property(prop));
-        }
-      }
-
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
       }
-      this.properties.sort((a, b) => a.type.localeCompare(b.type, undefined, { sensitivity: 'base' }));
+      this.properties.sort((a, b) => (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
     }
 
     // children
@@ -214,7 +203,7 @@ export class Concept {
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source : '') + ' ' + this.definitions[i].definition + "<br><br>";
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br><br>";
       }
     }
     return text;

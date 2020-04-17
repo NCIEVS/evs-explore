@@ -42,10 +42,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let defintion of concept.definitions">
-            <td>{{ defintion.definition }}</td>
-            <td>{{ defintion.source }}</td>
-            <td>{{ defintion.type }}</td>
+          <tr *ngFor="let definition of concept.definitions">
+            <td>{{ definition.definition }}</td>
+            <td>{{ definition.source }}</td>
+            <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
+            <td> <span *ngFor="let qual of definition.qualifiers">
+                <span *ngIf="qual.type == 'attr'">{{ qual.value }}</span></span></td>
           </tr>
         </tbody>
       </table>
@@ -100,7 +102,13 @@
           <ng-container *ngFor="let property of concept.properties">
             <tr>
               <td>{{property.type}}</td>
-              <td [innerHTML]="checkExternalLink(property)"></td>
+              <td><span [innerHTML]="checkExternalLink(property)"></span>
+                <span *ngIf="property.qualifiers && property.qualifiers.length > 0">
+                  <span *ngFor="let qual of property.qualifiers">
+                    <br />&nbsp;&nbsp;{{ qual.type }} = {{ qual.value }}
+                  </span>
+                </span>
+              </td>
               <!--
               <td>{{ concept[property].join(", ") }}</td>
               -->
@@ -117,7 +125,7 @@
       Maps To
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered table-responsive">
+      <table class="table table-striped table-bordered">
         <thead>
           <tr>
             <th class="w-30">Target Name</th>
@@ -140,34 +148,5 @@
     </div>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="
-    concept.GO_Annotation !== undefined &&
-    concept.GO_Annotation.length > 0
-  ">
-    <p-header class="bold-heading">
-      GO Annotation
-    </p-header>
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered table-responsive">
-        <thead>
-          <tr>
-            <th class="w-20">Go Source</th>
-            <th class="w-20">Source date</th>
-            <th class="w-20">Go Id</th>
-            <th class="w-20">Go Evi</th>
-            <th class="w-20">Go Term</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let goAnnotation of concept.GO_Annotation">
-            <td>{{ goAnnotation["go-source"] }}</td>
-            <td>{{ goAnnotation["source-date"] }}</td>
-            <td>{{ goAnnotation["go-id"] }}</td>
-            <td>{{ goAnnotation["go-evi"] }}</td>
-            <td>{{ goAnnotation["go-term"] }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </p-panel>
+
 </div>
