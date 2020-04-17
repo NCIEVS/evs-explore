@@ -18,11 +18,11 @@ export class SourcesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    // this.configService.getSources('ncit')
-    //   .subscribe(response => {
-    //     this.sources = response;
-    //     this.sources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
-    //   });
+    this.configService.getContributingSources('ncit')
+      .subscribe(response => {
+        this.sources = response;
+        this.sources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
+      });
   }
 
 }

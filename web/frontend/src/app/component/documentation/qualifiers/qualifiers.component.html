@@ -1,6 +1,6 @@
-<div class="container" *ngIf="properties">
+<div class="container" *ngIf="qualifiers">
   <div class="page-header">
-    <span>Properties</span>
+    <span>Qualifiers</span>
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
@@ -13,16 +13,14 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Skip properties that do not have definitions, this catches "unused" and "unpublished", 
-          like def-definition, go-term, term-name, Definition_Review_Date, etc -->
-        <ng-container *ngFor="let property of properties">
+        <ng-container *ngFor="let qualifier of qualifiers">
           <tr>
-            <td>{{ property.code }}</td>
-            <td>{{ property.name }}</td>
+            <td>{{ qualifier.code }}</td>
+            <td>{{ qualifier.name }}</td>
             <td><span *ngIf="
-              property.definitions &&
-              property.definitions.length > 0
-              ">{{ property.definitions[0].definition }}</span></td>
+              qualifier.definitions &&
+              qualifier.definitions.length > 0
+              ">{{ qualifier.definitions[0].definition }}</span></td>
           </tr>
         </ng-container>
       </tbody>

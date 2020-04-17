@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigurationService} from '../../service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 // Header component
 @Component({
@@ -12,8 +12,8 @@ export class EvsHeaderComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.versionInfo = '(Version: ' + ConfigurationService.evsVersionInfo.version 
-    + '; Release Date: ' +  ConfigurationService.evsVersionInfo.date + ')';
+    this.versionInfo = '(Version: ' + ConfigurationService.terminology.version
+      + '; Release Date: ' + ConfigurationService.terminology.date + ')';
   }
 
 }

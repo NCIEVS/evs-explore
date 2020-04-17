@@ -11,10 +11,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class ConfigurationService {
 
-  static propertyList = null;
-  static evsVersionInfo = null;
+  static terminology = null;
   static fullSynSources = null;
-  static associations = null;
 
   private static instance: ConfigurationService = null;
 
@@ -34,8 +32,7 @@ export class ConfigurationService {
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata').toPromise()
         .then(response => {
-          ConfigurationService.propertyList = response['properties'];
-          ConfigurationService.evsVersionInfo = response['evsVersionInfo'];
+          ConfigurationService.terminology = response['terminology'];
           ConfigurationService.fullSynSources = response['fullSynSources'];
           resolve(true);
         }).catch(error => {
@@ -86,6 +83,20 @@ export class ConfigurationService {
       );
   }
 
+  // Load qualifiers
+  getQualifiers(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/qualifiers?include=definitions',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch qualifiers = ' + terminology));
+        })
+      );
+  }
+
   // Load term types
   getTermTypes(terminology: string): Observable<any> {
     return this.http.get('/api/v1/metadata/' + terminology + '/termTypes',
@@ -96,6 +107,20 @@ export class ConfigurationService {
       .pipe(
         catchError((error) => {
           return observableThrowError(new EvsError(error, 'Could not fetch term types = ' + terminology));
+        })
+      );
+  }
+
+  // Load contributing sources
+  getContributingSources(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/contributingSources',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch contributing sources = ' + terminology));
         })
       );
   }

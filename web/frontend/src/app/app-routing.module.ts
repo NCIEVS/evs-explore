@@ -9,6 +9,7 @@ import { MappingsComponent } from './component/mappings/mappings.component';
 import { ValueSetsComponent } from './component/value-sets/value-sets.component';
 import { AssociationsComponent } from './component/documentation/associations/associations.component';
 import { PropertiesComponent } from './component/documentation/properties/properties.component';
+import { QualifiersComponent } from './component/documentation/qualifiers/qualifiers.component';
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'valuesets', component: ValueSetsComponent },
   { path: 'associations', component: AssociationsComponent },
   { path: 'properties', component: PropertiesComponent },
+  { path: 'qualifiers', component: QualifiersComponent },
   { path: 'overview', component: OverviewComponent },
   { path: 'termtypes', component: TermTypesComponent },
   { path: 'sources', component: SourcesComponent },

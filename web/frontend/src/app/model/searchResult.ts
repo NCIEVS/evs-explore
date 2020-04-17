@@ -1,7 +1,6 @@
 
 import { Concept } from './concept';
 // import {ConceptStatus} from './conceptStatus';
-// import {ContributingSource} from './contributingSource';
 
 // SearchResult
 export class SearchResult {
@@ -10,7 +9,6 @@ export class SearchResult {
    concepts: Concept[];
    // maxScore: number;
    // conceptStatus: ConceptStatus;
-   // contributingSource: ContributingSource;
    // searchAutoSuggestions: any[];
    // aggregations: any;
 
