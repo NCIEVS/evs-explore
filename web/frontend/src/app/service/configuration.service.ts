@@ -43,7 +43,7 @@ export class ConfigurationService {
 
   // Load associations
   getAssociations(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/associations?include=definitions',
+    return this.http.get('/api/v1/metadata/' + terminology + '/associations?include=summary',
       {
         responseType: 'json',
       }
@@ -57,7 +57,7 @@ export class ConfigurationService {
 
   // Load roles
   getRoles(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/roles?include=definitions',
+    return this.http.get('/api/v1/metadata/' + terminology + '/roles?include=summary',
       {
         responseType: 'json',
       }
@@ -71,7 +71,7 @@ export class ConfigurationService {
 
   // Load properties
   getProperties(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/properties?include=definitions',
+    return this.http.get('/api/v1/metadata/' + terminology + '/properties?include=summary',
       {
         responseType: 'json',
       }
@@ -85,7 +85,7 @@ export class ConfigurationService {
 
   // Load qualifiers
   getQualifiers(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/qualifiers?include=definitions',
+    return this.http.get('/api/v1/metadata/' + terminology + '/qualifiers?include=summary',
       {
         responseType: 'json',
       }

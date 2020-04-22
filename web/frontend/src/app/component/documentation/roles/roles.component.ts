@@ -20,7 +20,6 @@ export class RolesComponent implements OnInit {
     // NOTE: hardcoded terminology
     this.configService.getRoles('ncit')
       .subscribe(response => {
-        console.info('xxx', response);
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
