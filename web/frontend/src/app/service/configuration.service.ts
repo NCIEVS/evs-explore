@@ -12,7 +12,6 @@ import { catchError } from 'rxjs/operators';
 export class ConfigurationService {
 
   static terminology = null;
-  static fullSynSources = null;
 
   private static instance: ConfigurationService = null;
 
@@ -30,10 +29,11 @@ export class ConfigurationService {
   // Load configuration
   loadConfig(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get('/api/v1/metadata').toPromise()
+      this.http.get('/api/v1/metadata/terminologies').toPromise()
         .then(response => {
-          ConfigurationService.terminology = response['terminology'];
-          ConfigurationService.fullSynSources = response['fullSynSources'];
+          // response is an array of terminologies, find the "latest" NCIt one
+          var arr = response as any[];
+          ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == 'ncit')[0];
           resolve(true);
         }).catch(error => {
           resolve(false);
@@ -124,4 +124,19 @@ export class ConfigurationService {
         })
       );
   }
+
+  // Load synonym sources
+  getSynonymSources(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/synonymSources',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch synonym sources = ' + terminology));
+        })
+      );
+  }
+
 }

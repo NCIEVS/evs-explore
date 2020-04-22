@@ -84,6 +84,7 @@ export class GeneralSearchComponent implements OnInit,
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService,
     private conceptDetailService: ConceptDetailService,
+    private configService: ConfigurationService,
     private route: ActivatedRoute, public router: Router) {
 
     this.searchCriteria = new SearchCriteria();
@@ -131,12 +132,17 @@ export class GeneralSearchComponent implements OnInit,
     this.searchCriteria.pageSize = this.pageSize;
 
     // Populate sources list from application metadata
-    this.sourcesAll = ConfigurationService.fullSynSources.map(element => {
-      return {
-        label: element,
-        value: element
-      };
-    });
+    configService.getSynonymSources('ncit')
+      .subscribe(response => {
+        this.sourcesAll = response.map(element => {
+          return {
+            label: element.code,
+            value: element.code
+          };
+        });
+        this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
+      });
+
 
     // Set default selected source if on welcome page
     if (this.welcomePage) {
@@ -273,7 +279,7 @@ export class GeneralSearchComponent implements OnInit,
       sessionStorage.setItem('searchTerm', event.query);
       this.router.navigate(['/search']);
     }
-    //
+
     else {
       this.avoidLazyLoading = true;
 

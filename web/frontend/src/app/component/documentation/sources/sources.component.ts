@@ -9,7 +9,8 @@ import { ConfigurationService } from '../../../service/configuration.service';
 })
 export class SourcesComponent implements OnInit {
 
-  sources: any;
+  contributingSources: any;
+  synonymSources: any;
 
   constructor(
     private configService: ConfigurationService
@@ -20,9 +21,15 @@ export class SourcesComponent implements OnInit {
     // NOTE: hardcoded terminology
     this.configService.getContributingSources('ncit')
       .subscribe(response => {
-        this.sources = response;
-        this.sources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
+        this.contributingSources = response;
+        this.contributingSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.configService.getSynonymSources('ncit')
+      .subscribe(response => {
+        this.synonymSources = response;
+        this.synonymSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
+      });
+
   }
 
 }
