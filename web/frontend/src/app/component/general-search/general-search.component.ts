@@ -385,7 +385,6 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    this.searchCriteria.contributingSource = this.selectedSource;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {

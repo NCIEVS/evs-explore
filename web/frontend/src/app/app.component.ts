@@ -19,7 +19,7 @@ export class AppComponent {
     );
     navEndEvent$.subscribe((e: NavigationEnd) => {
       // Only report google tags in prod mode
-      if (environment.production) {
+      if (environment.production && environment.productionHost == location.hostname) {
         gtag('config', environment.code, { 'page_path': e.urlAfterRedirects });
       }
     });

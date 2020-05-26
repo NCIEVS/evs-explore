@@ -9,7 +9,6 @@
 
 // BAC - looks like not used
 export enum FacetQueryParameterNamesEnum {
-    contributingSource = 'contributingSource',
     conceptStatus = 'conceptStatus',
-   
+
 }

@@ -12,7 +12,6 @@ export class SearchCriteria {
   synonymTermGroup: string;
   hierarchySearch: string;
   conceptStatus: string[];
-  contributingSource: string[];
   fromRecord: number;
   pageSize: number;
   // view: string;

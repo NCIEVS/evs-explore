@@ -44,10 +44,6 @@ export class SearchTermService {
       && searchCriteria.conceptStatus.length > 0) {
       param.conceptStatus = searchCriteria.conceptStatus.join();
     }
-    if (searchCriteria.contributingSource !== undefined && searchCriteria.contributingSource != null
-      && searchCriteria.contributingSource.length > 0) {
-      param.synonymSource = searchCriteria.contributingSource.join();
-    }
     if (searchCriteria.definitionSource !== null && searchCriteria.definitionSource !== undefined) {
       param.definitionSource = searchCriteria.definitionSource.join();
     } else if ((searchCriteria.synonymSource !== null && searchCriteria.synonymSource !== undefined)

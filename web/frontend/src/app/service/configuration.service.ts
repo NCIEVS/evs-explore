@@ -111,20 +111,6 @@ export class ConfigurationService {
       );
   }
 
-  // Load contributing sources
-  getContributingSources(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/contributingSources',
-      {
-        responseType: 'json',
-      }
-    )
-      .pipe(
-        catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch contributing sources = ' + terminology));
-        })
-      );
-  }
-
   // Load synonym sources
   getSynonymSources(terminology: string): Observable<any> {
     return this.http.get('/api/v1/metadata/' + terminology + '/synonymSources',

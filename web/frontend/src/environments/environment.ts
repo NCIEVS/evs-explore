@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  code: 'UA-164307485-1'
+  productionHost: 'evsexplore.nci.nih.gov',
+  code: 'UA-150112876-3'
 };
 
 /*
