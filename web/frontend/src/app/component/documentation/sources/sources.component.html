@@ -22,6 +22,24 @@
     </table>
   </div>
 
+  <p>NCI Thesaurus Definition Sources</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="w-20">Name</th>
+          <th class="w-80">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let source of definitionSources">
+          <td>{{ source.code }}</td>
+          <td>{{ source.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- if/when definition sources are searchable via explore, list them here -->
 
   <p>
