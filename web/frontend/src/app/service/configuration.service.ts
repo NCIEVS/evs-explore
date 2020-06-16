@@ -125,4 +125,17 @@ export class ConfigurationService {
       );
   }
 
+  getDefinitionSources(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/definitionSources',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch definition sources = ' + terminology));
+        })
+      );
+  }
+
 }
