@@ -358,6 +358,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handler for clicking the "Search" button
   onPerformSearch() {
     console.log('onPerformSearch', this.termautosearch);
+    this.avoidLazyLoading = true; // don't see any reason for lazy loading here
     this.resetTable();
     this.performSearch(this.termautosearch);
   }
