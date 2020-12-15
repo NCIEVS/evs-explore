@@ -33,6 +33,7 @@ java -Xmx4096M -jar build/libs/evsexplore-*.war
 ```
 
 ### Supported Browsers
+The application has been specifically tested on the following browsers:
 
 * Google Chrome
 * Mozilla Firefox
