@@ -72,7 +72,7 @@ export class HierarchyDisplayComponent implements OnInit {
             this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'summary')
+                  .getConceptSummary(params.get('code'), 'summary,maps')
               )
             )
               .subscribe((response: any) => {
