@@ -379,6 +379,9 @@ export class GeneralSearchComponent implements OnInit,
     this.searchCriteria.synonymTermGroup = null;
     // this.searchCriteria.hierarchySearch = null;
 
+    if([undefined, null, "[]"].includes(sessionStorage.getItem("source")) == false){
+      this.searchCriteria.synonymSource = JSON.parse(sessionStorage.getItem("source"));
+    }
     if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
       && this.selectedPropertiesSearch.length > 0) {
       this.searchCriteria.property = this.selectedPropertiesSearch;
