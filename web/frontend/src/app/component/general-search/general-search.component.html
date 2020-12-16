@@ -118,7 +118,7 @@
           <div class="col-sm-12">
 
             <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns"
-              [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100, 200]" pageLinkSize="3"
+              [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3"
               [rows]="pageSize" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
               [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)">
 
