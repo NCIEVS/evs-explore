@@ -87,6 +87,7 @@ export class GeneralSearchComponent implements OnInit,
     private configService: ConfigurationService,
     private route: ActivatedRoute, public router: Router) {
 
+    // Instantiate new search criteria
     this.searchCriteria = new SearchCriteria();
 
     // TODO: re-enable this?
@@ -96,35 +97,12 @@ export class GeneralSearchComponent implements OnInit,
 
     console.log('window location = ', window.location.pathname);
     const path = '' + window.location.pathname;
+
+    // Determine if we are on the welcome page
     if (path.includes('welcome')) {
       this.welcomePage = true;
     } else {
       this.welcomePage = false;
-    }
-
-    // Set up defaults in session storage if welcome page
-    if (this.welcomePage) {
-      sessionStorage.setItem('searchType', 'contains');
-      this.selectedSearchType = 'contains';
-    }
-    // Otherwise, recover search type from session storage
-    else {
-      if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
-        if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
-          this.selectedSearchType = sessionStorage.getItem('searchType');
-        } else {
-          this.selectedSearchType = 'contains';
-        }
-      }
-    }
-
-    // Show more search options depending on search type
-    if (this.selectedSearchType === 'phrase' ||
-      this.selectedSearchType === 'fuzzy' ||
-      this.selectedSearchType === 'AND' ||
-      this.selectedSearchType === 'OR'
-    ) {
-      this.showMoreSearchOption = true;
     }
 
     // Set paging parameters
@@ -143,29 +121,54 @@ export class GeneralSearchComponent implements OnInit,
         this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
       });
 
-
-    // Set default selected source if on welcome page
+    // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
+
+      // Set default search to "contains"
+      sessionStorage.setItem('searchType', 'contains');
+      this.selectedSearchType = 'contains';
+
+      // Set default selected sources to empty array
       this.selectedSource = [];
       sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+
+      // Set default term search to blank
       this.termautosearch = '';
       this.oldTermautosearch = '';
       sessionStorage.setItem('searchTerm', this.termautosearch);
     }
-    // Otherwise, recover from session storage
-    else {
-      console.log('  re-perform search');
-      if ((sessionStorage.getItem('source') !== null) && (sessionStorage.getItem('source') !== undefined)) {
-        const sources = sessionStorage.getItem('source');
-        this.selectedSource = JSON.parse(sources);
-        this.termautosearch = sessionStorage.getItem('searchTerm');
-        this.performSearch(sessionStorage.getItem('searchTerm'));
-      } else if ((sessionStorage.getItem('searchTerm') !== null) && (sessionStorage.getItem('searchTerm') !== undefined)) {
-        this.termautosearch = sessionStorage.getItem('searchTerm');
-        this.performSearch(sessionStorage.getItem('searchTerm'));
-      }
-    }
 
+    // Otherwise, recover search type from session storage
+    else {
+
+      // Restore search type
+      if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
+        if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
+          this.selectedSearchType = sessionStorage.getItem('searchType');
+        } else {
+          this.selectedSearchType = 'contains';
+        }
+      }
+
+      // Compute "showMoreSearchOption" state
+      if (this.selectedSearchType === 'phrase' ||
+        this.selectedSearchType === 'fuzzy' ||
+        this.selectedSearchType === 'AND' ||
+        this.selectedSearchType === 'OR'
+      ) {
+        this.showMoreSearchOption = true;
+      }
+
+      // Reset selected source list
+      this.selectedSource = JSON.parse(sessionStorage.getItem('source'));
+
+      // Reset term to search
+      this.termautosearch = sessionStorage.getItem('searchTerm');
+
+      console.log('  re-perform search');
+      this.performSearch(this.termautosearch);
+
+    }
   }
 
   // On init, print console message
@@ -217,6 +220,7 @@ export class GeneralSearchComponent implements OnInit,
   resetSource() {
     console.log('resetSource');
     this.selectedSource = [];
+    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
 
@@ -330,7 +334,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
-    console.log("onChangeSource");
+    console.log('onChangeSource');
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
@@ -379,9 +383,6 @@ export class GeneralSearchComponent implements OnInit,
     this.searchCriteria.synonymTermGroup = null;
     // this.searchCriteria.hierarchySearch = null;
 
-    if([undefined, null, "[]"].includes(sessionStorage.getItem("source")) == false){
-      this.searchCriteria.synonymSource = JSON.parse(sessionStorage.getItem("source"));
-    }
     if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
       && this.selectedPropertiesSearch.length > 0) {
       this.searchCriteria.property = this.selectedPropertiesSearch;
@@ -389,6 +390,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
+    this.searchCriteria.synonymSource = this.selectedSource;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
