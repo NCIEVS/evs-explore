@@ -92,7 +92,7 @@ export class SearchTermService {
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, ""));
+          return observableThrowError(new EvsError(error, 'Failure to get search results = <p> ' + error.message + "</p>"));
         })
       );
   }
