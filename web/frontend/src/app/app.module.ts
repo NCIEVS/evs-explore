@@ -74,6 +74,10 @@ import { LoaderService } from './service/loader.service';
 import { ConceptDetailService } from './service/concept-detail.service';
 import { SearchTermService } from './service/search-term.service';
 
+// NGB
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
+
 // Angular configuration for this application
 @NgModule({
   declarations: [
@@ -99,9 +103,11 @@ import { SearchTermService } from './service/search-term.service';
     RolesComponent,
     TermTypesComponent,
     SourcesComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    AutofocusDirective
   ],
   imports: [
+    NgbModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
