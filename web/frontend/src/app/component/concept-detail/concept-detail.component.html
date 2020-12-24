@@ -66,8 +66,8 @@
       <p-table class="table table-striped table-bordered" [value]="concept.synonyms">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-60" [pSortableColumn]="'term'">Term
-              <p-sortIcon [field]="'term'"></p-sortIcon></th>
+            <th class="w-60" [pSortableColumn]="'name'">Term
+              <p-sortIcon [field]="'name'"></p-sortIcon></th>
             <th class="w-15" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon></th>
             <th class="w-5" [pSortableColumn]="'termGroup'">Type
@@ -100,15 +100,17 @@
       Other Properties
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead>
+      <p-table class="table table-striped table-bordered" [value]="concept.properties">
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Type</th>
-            <th class="w-70">Value</th>
+            <th class="w-30" [pSortableColumn]="'type'">Type
+              <p-sortIcon [field]="'type'"></p-sortIcon></th>
+            <th class="w-70" [pSortableColumn]="'value'">Value
+              <p-sortIcon [field]="'value'"></p-sortIcon></th>
           </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let property of concept.properties">
+        </ng-template>
+        <ng-template pTemplate="body" let-property>
+          <ng-container>
             <tr>
               <td>{{property.type}}</td>
               <td><span [innerHTML]="checkExternalLink(property)"></span>
@@ -118,13 +120,10 @@
                   </span>
                 </span>
               </td>
-              <!--
-              <td>{{ concept[property].join(", ") }}</td>
-              -->
             </tr>
           </ng-container>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
   </p-panel>
   <br />
@@ -134,26 +133,31 @@
       Maps To
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead>
+      <p-table class="table table-striped table-bordered" [value]="concept.maps">
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Target Name</th>
-            <th class="w-20">Relationship to Target</th>
-            <th class="w-20">Target Term Type</th>
-            <th class="w-10">Target Code</th>
-            <th class="w-20">Target Terminology</th>
+            <th class="w-30" [pSortableColumn]="'targetName'">Target Name
+              <p-sortIcon [field]="'targetName'"></p-sortIcon></th>
+            <th class="w-20" [pSortableColumn]="'type'">Relationship to Target
+              <p-sortIcon [field]="'type'"></p-sortIcon></th>
+            <th class="w-20" [pSortableColumn]="'targetTermGroup'">Target Term Type
+              <p-sortIcon [field]="'targetTermGroup'"></p-sortIcon></th>
+            <th class="w-10" [pSortableColumn]="'targetCode'">Target Code
+              <p-sortIcon [field]="'targetCode'"></p-sortIcon></th>
+            <th class="w-20" [pSortableColumn]="'targetTerminology'">Target Terminology
+              <p-sortIcon [field]="'targetTerminology'"></p-sortIcon></th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let map of concept.maps">
+        </ng-template>
+        <ng-template pTemplate="body" let-map>
+          <tr>
             <td>{{ map.targetName }}</td>
             <td>{{ map.type }}</td>
             <td>{{ map.targetTermGroup }}</td>
             <td>{{ map.targetCode }}</td>
             <td>{{ map.targetTerminology }} {{ map.targetTerminologyVersion }}</td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
   </p-panel>
   <br />
