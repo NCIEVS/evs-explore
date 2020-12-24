@@ -34,7 +34,7 @@
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single">
-        <ng-template pTemplate="header" let-columns>
+        <ng-template pTemplate="header">
           <tr>
           <th class="w-80" [pSortableColumn]="'definition'">Definition
               <p-sortIcon [field]="'definition'"></p-sortIcon>
@@ -63,19 +63,24 @@
       Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead>
+      <p-table class="table table-striped table-bordered" [value]="concept.synonyms">
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-60">Term</th>
-            <th class="w-15">Source</th>
-            <th class="w-5">Type</th>
-            <th class="w-10">Code</th>
-            <th class="w-10">Subsource Name</th>
+            <th class="w-60" [pSortableColumn]="'term'">Term
+              <p-sortIcon [field]="'term'"></p-sortIcon></th>
+            <th class="w-15" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon></th>
+            <th class="w-5" [pSortableColumn]="'termGroup'">Type
+              <p-sortIcon [field]="'termGroup'"></p-sortIcon></th>
+            <th class="w-10" [pSortableColumn]="'code'">Code
+              <p-sortIcon [field]="'code'"></p-sortIcon></th>
+            <th class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+              <p-sortIcon [field]="'subSource'"></p-sortIcon></th>
           </tr>
-        </thead>
-        <tbody>
+        </ng-template>
+        <ng-template pTemplate="body" let-synonym>
           <!-- Only display the entries that have a termgroup -->
-          <ng-container *ngFor="let synonym of concept.synonyms">
+          <ng-container>
             <tr *ngIf="synonym.termGroup">
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
@@ -84,8 +89,8 @@
               <td>{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
   </p-panel>
   <br />
