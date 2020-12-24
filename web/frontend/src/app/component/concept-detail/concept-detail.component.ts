@@ -10,7 +10,6 @@ import { Concept } from './../../model/concept';
 })
 export class ConceptDetailComponent implements OnInit {
   @Input() concept: Concept;
-  @Input() properties: string[];
 
   // TODO: this needs to be pulled from the endpoint (e.g. application metadata)
   externalLinks = new Map(

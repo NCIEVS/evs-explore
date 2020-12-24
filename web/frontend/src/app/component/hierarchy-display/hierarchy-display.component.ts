@@ -30,24 +30,6 @@ export class HierarchyDisplayComponent implements OnInit {
   urlBase = "/hierarchy"
   urlTarget = '_blank'
 
-  /*
-   * The properties that are excluded are handled differently
-   * than the simple properties, and are in separate sections
-   * of the detail output.
-   */
-  excludeProperties = [
-    'ALT_DEFINITION',
-    'code',
-    'Concept_Status',
-    'DEFINITION',
-    'Display_Name',
-    'FULL_SYN',
-    'GO_Annotation',
-    'Maps_To',
-    'Preferred_Name'
-  ]
-  properties: string[] = [];
-
   conceptPanelSize = "70.0"
   hierarchyPanelSize = "30.0"
 
@@ -59,33 +41,25 @@ export class HierarchyDisplayComponent implements OnInit {
 
   ngOnInit() {
     this.updateDisplaySize();
-    this.conceptDetailService.getProperties()
-      .subscribe((properties: any) => {
-        this.properties = []
-        for (const property of properties) {
-          if (!this.excludeProperties.includes(property['name'])) {
-            this.properties.push(property['name']);
-          }
-        }
-        this.route.params.subscribe((params: any) => {
-          if (params.code) {
-            this.route.paramMap.pipe(
-              switchMap((params: ParamMap) =>
-                this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'summary,maps')
-              )
-            )
-              .subscribe((response: any) => {
-                this.conceptDetail = new Concept(response);
-                this.conceptCode = this.conceptDetail.code;
-                this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-                this.conceptWithRelationships = undefined;
-                this.activeIndex = 0;
-                this.getPathInHierarchy();
-              })
-          }
-        });
-      })
+    this.route.params.subscribe((params: any) => {
+      if (params.code) {
+        this.route.paramMap.pipe(
+          switchMap((params: ParamMap) =>
+            this.conceptDetailService
+              .getConceptSummary(params.get('code'), 'summary,maps')
+          )
+        )
+          .subscribe((response: any) => {
+            this.conceptDetail = new Concept(response);
+            this.conceptCode = this.conceptDetail.code;
+            this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
+            this.conceptWithRelationships = undefined;
+            this.activeIndex = 0;
+            this.getPathInHierarchy();
+          })
+      }
+    });
+
   }
 
   // Handler for tabs changing in the hierarchy view.
@@ -140,6 +114,7 @@ export class HierarchyDisplayComponent implements OnInit {
   getPathInHierarchy() {
     this.conceptDetailService.getHierarchyData(this.conceptCode)
       .then(nodes => {
+
         this.hierarchyData = <TreeNode[]>nodes;
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node);
@@ -150,6 +125,7 @@ export class HierarchyDisplayComponent implements OnInit {
             this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
           }, 100);
         }
+
       });
   }
 
