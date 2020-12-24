@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Concept } from './../../model/concept';
-import {TableModule} from 'primeng/table';
 
 // Component for displaying concept details
 @Component({
