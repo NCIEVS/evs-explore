@@ -19,7 +19,7 @@
             <td class="w-25">NCI Thesaurus Code:</td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="concept.getConceptStatus()">
             <td class="w-25">Concept Status:</td>
             <td class="w-75">{{ concept.getConceptStatus() }}</td>
           </tr>
@@ -33,7 +33,7 @@
       Definitions
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single">
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single" *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions">
         <ng-template pTemplate="header">
           <tr>
           <th class="w-80" [pSortableColumn]="'definition'">Definition
@@ -56,6 +56,7 @@
         </ng-template>
       </p-table>
     </div>
+    <ng-template #elseBlockDefinitions>None</ng-template>
   </p-panel>
   <br />
   <p-panel [toggleable]="true">
@@ -128,12 +129,12 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="concept.maps && concept.maps.length > 0">
+  <p-panel [toggleable]="true">
     <p-header class="bold-heading">
       Maps To
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.maps">
+      <p-table class="table table-striped table-bordered" [value]="concept.maps" *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'targetName'">Target Name
@@ -159,6 +160,8 @@
         </ng-template>
       </p-table>
     </div>
+    <ng-template #elseBlockMaps>None</ng-template>
+
   </p-panel>
   <br />
 
