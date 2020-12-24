@@ -21,13 +21,12 @@ export class WelcomeComponent implements AfterViewInit {
     }
   }
 
-  // Open ng-template #content as a modal dialog
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.cookieService.set('hhsBanner', 'accepted');
+      this.cookieService.set('hhsBanner', 'accepted', 90);
       console.log('HHS Banner Accepted');
     }, (result) => {
-      this.cookieService.set('hhsBanner', 'accepted');
+      this.cookieService.set('hhsBanner', 'accepted', 90);
       console.log('HHS Banner Accepted');
     });
   }
