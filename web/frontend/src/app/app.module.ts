@@ -78,6 +78,9 @@ import { SearchTermService } from './service/search-term.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 
+// Cookies
+import { CookieService } from 'ngx-cookie-service';
+
 // Angular configuration for this application
 @NgModule({
   declarations: [
@@ -139,6 +142,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
     DisplayPipe
   ],
   providers: [
+    CookieService,
     NotificationService,
     CommonDataService,
     MessageService,

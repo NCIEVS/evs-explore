@@ -1,5 +1,6 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -11,11 +12,11 @@ export class WelcomeComponent implements AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
 
   // Constructor
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private cookieService: CookieService) { }
 
   // Post initialization
   ngAfterViewInit() {
-    if (sessionStorage.getItem('hhsBanner') == null) {
+    if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }
   }
@@ -23,21 +24,11 @@ export class WelcomeComponent implements AfterViewInit {
   // Open ng-template #content as a modal dialog
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      sessionStorage.setItem('hhsBanner', 'accepted');
+      this.cookieService.set('hhsBanner', 'accepted');
       console.log('HHS Banner Accepted');
     }, (result) => {
-      sessionStorage.setItem('hhsBanner', 'accepted');
+      this.cookieService.set('hhsBanner', 'accepted');
       console.log('HHS Banner Accepted');
     });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
   }
 }
