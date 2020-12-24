@@ -178,7 +178,6 @@ export class GeneralSearchComponent implements OnInit,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('set input focus');
     setTimeout(() => this.termauto.focusInput());
   }
 

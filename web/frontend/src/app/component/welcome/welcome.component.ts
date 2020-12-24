@@ -22,7 +22,7 @@ export class WelcomeComponent implements AfterViewInit {
 
   // Open ng-template #content as a modal dialog
   open(content: TemplateRef<any>) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       sessionStorage.setItem('hhsBanner', 'accepted');
       console.log('HHS Banner Accepted');
     }, (result) => {
