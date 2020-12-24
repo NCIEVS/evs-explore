@@ -33,21 +33,25 @@
       Definitions
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions">
-        <ng-template pTemplate="header">
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single">
+        <ng-template pTemplate="header" let-columns>
           <tr>
-            <th class="w-80">Definition</th>
-            <th class="w-10">Source</th>
-            <th class="w-10">Attr</th>
+          <th class="w-80" [pSortableColumn]="'definition'">Definition
+              <p-sortIcon [field]="'definition'"></p-sortIcon>
+          </th>
+          <th class="w-10" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
+          </th>
+          <th class="w-10">Attribution</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-value>
+        <ng-template pTemplate="body" let-val>
           <tr>
-            <td>{{ value.definition }}</td>
-            <td>{{ value.source }}</td>
+            <td>{{ val.definition }}</td>
+            <td>{{ val.source }}</td>
             <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-            <td><span *ngFor="let qual of value.qualifiers">
-                <span *ngIf="qual.type == 'attr'">{{ qual.value }}</span></span></td>
+            <td><span *ngFor="let qual of val.qualifiers">
+                <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
           </tr>
         </ng-template>
       </p-table>
