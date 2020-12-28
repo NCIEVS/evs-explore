@@ -71,7 +71,7 @@
 
           </div>
           <div class="col-sm-6" style="padding-top:3px;">
-            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource.length > 0" [(ngModel)]="selectedSource"
+            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource && selectedSource.length > 0" [(ngModel)]="selectedSource"
               (onRemove)="onSourceSelectDeselect($event)" addOnTab="false" addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}

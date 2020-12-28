@@ -374,6 +374,9 @@ export class GeneralSearchComponent implements OnInit,
 
   // Perform the search
   performSearch(term) {
+    if(term == null || term.length < 3){
+      this.router.navigate(['/welcome']);
+    }
     console.log('perform search', term);
 
     // Configure search criteria
