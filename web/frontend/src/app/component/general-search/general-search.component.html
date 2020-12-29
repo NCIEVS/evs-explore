@@ -143,7 +143,7 @@
 
                 <tr [pSelectableRow]="rowData">
                   <td style="width: 1.8em">
-                    <a href="#" *ngIf="rowData.highlight.length != 0" [pRowToggler]="rowData">
+                    <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
                       <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
                     </a>
                   </td>
