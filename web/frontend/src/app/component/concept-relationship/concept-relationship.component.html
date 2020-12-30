@@ -4,28 +4,30 @@
       Parent Concepts
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.parents" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.parents &&
             concept.parents.length > 0;
           else elseBlockParentConcept
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-20">Code</th>
-            <th class="w-80">Name</th>
+            <th class="w-20" [pSortableColumn]="'code'">Code
+              <p-sortIcon [field]="'code'"></p-sortIcon>
+            </th>
+            <th class="w-80" [pSortableColumn]="'name'">Name
+              <p-sortIcon [field]="'name'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="
-              let parent of concept.parents
-            ">
+        </ng-template>
+        <ng-template pTemplate="body" let-parent>
+          <tr>
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-80">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockParentConcept>None</ng-template>
   </p-panel>
@@ -35,26 +37,30 @@
       Child Concepts
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.children" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.children &&
             concept.children.length > 0;
           else elseBlockChildConcept
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-20">Code</th>
-            <th class="w-80">Name</th>
+            <th class="w-20" [pSortableColumn]="'code'">Code
+              <p-sortIcon [field]="'code'"></p-sortIcon>
+            </th>
+            <th class="w-80" [pSortableColumn]="'name'">Name
+              <p-sortIcon [field]="'name'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let child of concept.children">
+        </ng-template>
+        <ng-template pTemplate="body" let-child>
+          <tr>
             <td>{{ child.code }}</td>
             <td>
               <a [routerLink]="[urlBase, child.code]" [target]='urlTarget'>{{ child.name }} </a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
@@ -67,27 +73,33 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.roles && concept.roles.length > 0;
           else elseBlockRole
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Relationship</th>
-            <th class="w-20">Related Code</th>
-            <th class="w-30">Related Name</th>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let role of concept.roles">
+        </ng-template>
+        <ng-template pTemplate="body" let-role>
+          <tr>
             <td>{{ role.type }}</td>
             <td>{{ role.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, role.relatedCode ]" target='urlTarget'>{{ role.relatedName }}</a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
@@ -100,28 +112,33 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
-          concept.associations &&
-            concept.associations.length > 0;
+      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.associations && concept.associations.length > 0;
           else elseBlockAssociation
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Relationship</th>
-            <th class="w-20">Related Code</th>
-            <th class="w-30">Related Name</th>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let association of concept.associations">
+        </ng-template>
+        <ng-template pTemplate="body" let-association>
+          <tr>
             <td>{{ association.type }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, association.relatedCode ]" target="urlTarget">{{ association.relatedName }}</a>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
@@ -135,27 +152,33 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseRoles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseRoles && concept.inverseRoles.length > 0;
           else elseBlockIncomingRole
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Relationship</th>
-            <th class="w-20">Related Code</th>
-            <th class="w-30">Related Name</th>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let irole of concept.inverseRoles">
+        </ng-template>
+        <ng-template pTemplate="body" let-irole>
+          <tr>
             <td>{{ irole.type }}</td>
             <td>{{ irole.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, irole.relatedCode ]" target="urlTarget">{{ irole.relatedName }}</a>
+              <a [routerLink]="[urlBase, irole.relatedCode ]" target='urlTarget'>{{ irole.relatedName }}</a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockIncomingRole>
       None
@@ -170,30 +193,33 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseAssociations" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseAssociations && concept.inverseAssociations.length > 0;
           else elseBlockIncomingAssociation
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Relationship</th>
-            <th class="w-20">Related Code</th>
-            <th class="w-30">Related Name</th>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="
-              let iassociation of concept.inverseAssociations
-            ">
+        </ng-template>
+        <ng-template pTemplate="body" let-iassociation>
+          <tr>
             <td>{{ iassociation.type }}</td>
             <td>{{ iassociation.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, iassociation.relatedCode ]"
-                target="urlTarget">{{ iassociation.relatedName }}</a>
+              <a [routerLink]="[urlBase, iassociation.relatedCode ]" target='urlTarget'>{{ iassociation.relatedName }}</a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockIncomingAssociation>
       None
@@ -204,28 +230,33 @@
       DisjointWith
     </p-header>
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" *ngIf="
-          concept.disjointWith &&
-            concept.disjointWith.length > 0;
+      <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.disjointWith && concept.disjointWith.length > 0;
           else elseBlockDisjointAssociation
         ">
-        <thead>
+        <ng-template pTemplate="header">
           <tr>
-            <th class="w-30">Relationship</th>
-            <th class="w-20">Related Code</th>
-            <th class="w-30">Related Name</th>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let association of concept.disjointWith">
+        </ng-template>
+        <ng-template pTemplate="body" let-association>
+          <tr>
             <td>{{ association.type }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, association.relatedCode ]" target="urlTarget">{{ association.relatedName }}</a>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </p-table>
     </div>
     <ng-template #elseBlockDisjointAssociation>
       None
