@@ -4,16 +4,20 @@
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
-    <table class="table table-striped table-bordered">
-      <thead>
+    <p-table [value]="roles" sortMode="single" class="table table-striped table-bordered">
+      <ng-template pTemplate="header">
         <tr>
-          <th class="w-10">Code</th>
-          <th class="w-20">Name</th>
+          <th class="w-10" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-20" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
           <th class="w-70">Description</th>
         </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let role of roles">
+      </ng-template>
+      <ng-template pTemplate="body" let-role>
+        <tr>
           <td>{{ role.code }}</td>
           <td>{{ role.name }}</td>
           <td><span *ngIf="
@@ -22,7 +26,7 @@
                 ">{{ role.definitions[0].definition }}
             </span></td>
         </tr>
-      </tbody>
-    </table>
+      </ng-template>
+    </p-table>
   </div>
 </div>
