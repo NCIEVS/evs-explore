@@ -144,8 +144,9 @@
 
                 <tr [pSelectableRow]="rowData">
                   <td style="width: 1.8em">
-                    <a href="#" [pRowToggler]="rowData">
-                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                        (click)="expanded=!expanded"></i>
                     </a>
                   </td>
                   <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col.header">
