@@ -7,9 +7,9 @@
           <div class="col-sm-4">
             <div style="padding-top: 6px;">
               <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
-                [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (onClear)="clearResults()"
-                (completeMethod)="search($event)" id="termauto" name="termauto"
-                placeholder="Enter concept code or at least 3 letters of a term." [minLength]="3">
+                [(ngModel)]="termautosearch" [suggestions]="textSuggestions" (completeMethod)="search($event)"
+                id="termauto" name="termauto" placeholder="Enter concept code or at least 3 letters of a term."
+                [minLength]="3">
               </p-autoComplete>
 
             </div>
@@ -17,7 +17,8 @@
           </div>
           <div class="col-sm-2">
             <div class="ui-inputgroup" style="padding-top: 6px;">
-              <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"></button>
+              <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"
+                [disabled]="termautosearch.length < 3"></button>
             </div>
           </div>
 
@@ -34,8 +35,7 @@
               <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset" label="reset"
                 tooltipPosition="bottom"></button> -->
               <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
-                (click)="clearSearchText($event); resetFilters($event); resetTable();" pTooltip="reset"
-                label="Reset Search" tooltipPosition="bottom"></button>
+                (click)="onResetSearch($event)" pTooltip="reset" label="Reset Search" tooltipPosition="bottom"></button>
             </div>
 
 
@@ -121,7 +121,7 @@
             <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns"
               [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3"
               [rows]="pageSize" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
-              [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)">
+              [totalRecords]="hitsFound" paginatorPosition="both" [lazy]="false" (onLazyLoad)="onLazyLoadData($event)">
 
 
               <ng-template pTemplate="colgroup" let-columns>

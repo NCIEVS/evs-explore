@@ -39,6 +39,7 @@ export class GeneralSearchComponent implements OnInit,
   searchResultTableFormat: SearchResultTableFormat;
   title: string;
   loadedMultipleConcept = false;
+  firstSearchFlag = false;
   noMatchedConcepts = true;
   selectedSearchType: string;
   selectedSearchValues: string[] = [];
@@ -178,7 +179,6 @@ export class GeneralSearchComponent implements OnInit,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('set input focus');
     setTimeout(() => this.termauto.focusInput());
   }
 
@@ -222,6 +222,13 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedSource = [];
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
+  }
+
+  // On reset search, clear everything and navigate back to /welcome
+  onResetSearch(event) {
+    this.clearSearchText(event);
+    this.resetFilters(event);
+    this.router.navigate(['/welcome']);
   }
 
   // Reset filters and search type
@@ -285,7 +292,7 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     else {
-      this.avoidLazyLoading = true;
+      // this.avoidLazyLoading = true;
 
       if (this.dtSearch !== null && this.dtSearch !== undefined) {
         this.dtSearch.reset();
@@ -374,7 +381,17 @@ export class GeneralSearchComponent implements OnInit,
 
   // Perform the search
   performSearch(term) {
+    if (term == null || term.length < 3) {
+      if (!this.firstSearchFlag) {
+        console.log('skip search - first search has not happened, reroute to /welcome', term);
+        this.router.navigate(['/welcome']);
+      }
+      console.log('skip search - not enough characters in term', term);
+      return;
+      // this.router.navigate(['/welcome']);
+    }
     console.log('perform search', term);
+    this.firstSearchFlag = true;
 
     // Configure search criteria
     this.searchCriteria.term = term;
