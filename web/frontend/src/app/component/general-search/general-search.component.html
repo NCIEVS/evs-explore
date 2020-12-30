@@ -17,7 +17,8 @@
           </div>
           <div class="col-sm-2">
             <div class="ui-inputgroup" style="padding-top: 6px;">
-              <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"></button>
+              <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"
+                [disabled]="termautosearch.length < 3"></button>
             </div>
           </div>
 
