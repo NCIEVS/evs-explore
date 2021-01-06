@@ -292,7 +292,8 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     else {
-      // this.avoidLazyLoading = true;
+      // This prevents the double-search from happening on a new query
+      this.avoidLazyLoading = true;
 
       if (this.dtSearch !== null && this.dtSearch !== undefined) {
         this.dtSearch.reset();
