@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // Documentation overview component
 // BAC - looks like not used
@@ -9,12 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OverviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      window.open('https://ncit.nci.nih.gov/ncitbrowser/pages/help.jsf#')
-    }, 10000)
+    // n/a
   }
 
+  scrollToTop() {
+    this.router.onSameUrlNavigation = "reload";
+    this.router.navigate(["/overview"], { fragment: "top" }).finally(() => {
+      this.router.onSameUrlNavigation = "ignore"; // Restore config after navigation completes
+    });
+  }
 }

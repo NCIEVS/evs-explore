@@ -1,9 +1,246 @@
-<div align="center">
-  <h2>Future Overview Page</h2>
-  <img class="construction-logo" src="assets/images/under-construction.png" />
-  <br>
-  In 10 seconds, you will be redirected to the production Help page.
-  <br>
-  If the redirect does not happen automatically click
-  <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/help.jsf#" target="_blank">Here.</a>
+<div class="container">
+  <a name="#top"></a>
+  <div class="page-header">
+    <span>Help</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  Simple information on using this application. Click below for more information.
+  <ul>
+    <li><a href="/overview#introduction">Introduction</a></li>
+    <li><a href="/overview#welcome">EVS Explore Wecome Page</a></li>
+    <li><a href="/overview#search">Using the Search Box</a></li>
+    <li><a href="/overview#search-results">Search Results</a></li>
+    <!-- Searching Other/Multiple Versions of a Terminology
+  Advanced Search -->
+    <li><a href="/overview#concept-details">Concept Details</a></li>
+    <li><a href="/overview#hierarchy">Hierarchy</a></li>
+    <li><a href="/overview#documentation">Metadata Documentation</a></li>
+    <!-- Value Sets, Mappings -->
+  </ul>
+
+  <a name="introduction"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Introduction</h3>
+  </span>
+  <p> NCI Enterprise Vocabulary Services (EVS) provides terminology content, tools, and services to NCI and the
+    biomedical
+    research community.
+  </p>
+  <ul>
+    <li>For browser support or suggestions, use the browser's Contact Us page.</li>
+    <li>For all EVS resources, services and contacts, see the EVS Web site http://evs.nci.nih.gov/.</li>
+  </ul>
+  <p>
+    NCI Term Browser provides a consistent, user-friendly tool to browse, search and retrieve all of the biomedical
+    terminologies hosted by EVS, including both NCI Thesaurus (NCIt) and the NCI Metathesaurus (NCIm), which itself
+    includes more than 70 terminologies. The 2.0 major release added support for value sets (flat lists of terms from
+    one
+    or more terminologies used for a particular coding purpose) and mappings between terminologies to support data
+    translation and cross-reference. For information on new features and known issues, see NCI Term Browser 2.18
+    Release
+    Notes.
+  </p>
+  This help file provides basic information about how to use the NCI Term Browser effectively, as well as links to
+  additional information elsewhere. The following typeface font conventions are used for describing search and the
+  browser interface:
+  <ul>
+    <li>Bold: Browser links, buttons, page tabs, and drop-down boxes.</li>
+    <li>Fixed Width: Search strings.</li>
+    <li>Italics: Concept terms.</li>
+  </ul>
+
+  <a name="welcome"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>EVS Explore Welcome Page</h3>
+  </span>
+  <p>
+    In the upper left of the NCI Term Browser home page are 3 tabs: the Terminologies tab (the default tab), the Value
+    Sets tab, and the Mappings tab:
+  </p>
+
+  The Terminologies tab allows browsing and searching within each of the NCI hosted terminologies, or within multiple
+  terminologies.
+  The Value Sets tab allows browsing and searching within all value sets, such as the CDISC SDTM Terminology or the
+  FDA
+  SPL Terminology, available on the NCI server.
+  The Mappings tab allows browsing and searching within a mapping set such as the PDQ to NCIt Mapping or the NCIt to
+  ChEBI Mapping.
+  These 3 tabs will appear at the top of every Term Browser page you are on, and the tab that is highlighted indicates
+  which section of the Term Browser you are in. The NCI Term Browser icon above the tabs always leads back to the main
+  Terminologies home page. The Term Browser and LexEVS terminology server versions are displayed in the browser's home
+  page banner; for more information on LexEVS, see the LexEVS Wiki Pages.
+
+  The NCI Term Browser home page contains a Search Box in the upper right hand corner. This Search Box has different
+  options, and will bring back different results, depending on which tab you are on in the Term Browser.
+
+  Several links appear below the Search Box. Most appear only in certain tabs or other settings, but these appear on
+  the
+  home pages of all tabs:
+
+  Sources always appears at the left, and gives information about all terminologies and mappings including the
+  descriptions that appear on their individual home pages.
+  Visited Concepts will appear under the Search box once you start visiting individual concept pages. It shows the
+  concept name, terminology, and version for each concept visited, with the most recent concepts at the top.
+  Help always appears at the far right, linking to this Help page.
+
+  <a name="search"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Using the Search Box</h3>
+  </span>
+  The Search Box, in the upper right corner of the Term Browser home page and of most Term Browser pages, lets you
+  enter
+  all or part of what you are looking for and how you want to search for it. Some details:
+
+  Text Box: Enter the string of characters you want to search for.
+  Search is not case sensitive (e.g., aids will match aids, Aids, and AIDS).
+  There are no wildcard characters. All characters are matched literally (e.g., searching for Begins With NAT2* will
+  match NAT2*5 Allele but not NAT2 Gene).
+  Do not use quotes - they will be searched for literally, as characters to be matched.
+  Search multiple words requires that all search words be found in target terms. There are two different methods used:
+  Method 1: For Exact Match and Begins With methods, and for all Property and Relationship targets, the words must be
+  found together in the order entered with no separation.
+  Method 2: Contains search on Name, however, now looks for those words separately. A special index makes these
+  searches
+  faster and more flexible than before, while still ranking best matches first. Note: The current implementation only
+  finds matches at the start of words, not the middle or end; we plan to address this in a future release.
+  For example, if you do a Contains search on Melanoma Cornea, no results will be returned, for any option covered
+  under
+  Method 1,but with Method 2 you will match Corneal Melanoma . Refinement of these methods is ongoing.
+  Match method radio buttons select how your search string will be matched.
+  Contains button is the default. It will search for what you enter at the start of any words in a Name search, or at
+  the beginning or end of any words in a Property or Relationship search (e.g., adeno will match adenocarcinoma in all
+  these searches, but carcinoma will only match it in Property or Relationship searches). For multiple word search,
+  see
+  description in the preceding section.
+  Exact Match Only terms or codes that are identical will match.
+  Begins With button can be selected to find all terms that start with the words or characters you enter. Codes cannot
+  be searched this way.
+  Concept Codes will only match if they exactly match what you enter. If you select a search target of Code and then
+  the
+  Begins With or Contains method button, the browser will switch to the default Name search target radio button.
+  Match target radio buttons select what category of concept information is searched.
+  Name button is the default: Search text is matched to a concept's preferred name, synonyms, or acronyms. Unless
+  stated
+  otherwise, all search examples in this Help page use the default name search.
+  Code button is for searching concepts by code: Search text is matched to a concept code, or source code. The search
+  is
+  case-sensitive.
+  Property button will match to other direct property attributes of a concept, such as definitions.
+  Relationship button will return concepts that have relationships to concepts that match by name/code (e.g., an exact
+  relationship search on hand does not return the concept Hand, but does return Finger and other related concepts that
+  have relationships that point to Hand; note that the Hand concept's Relationships tab shows relationships that point
+  from Hand to other concepts).
+  Search button starts a search.
+  The "?" button brings you to this Search section of the Help file.
+  If you are in the NCI Term Browser home page, all currently selected terminologies on the Terminologies tab will be
+  searched. When you are in the pages of a particular terminology, only that terminology will be searched. The banner
+  to
+  the left of the Search box tells you which terminology environment you are in.
+
+  <a name="search-results"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Search Results</h3>
+  </span>
+  When a terminologies search is run, Search Results are displayed by concept preferred name. If you are searching
+  multiple terminologies, a right-hand column displays the corresponding name of the terminology for each matching
+  concept. If there is only one match, the concept details page is shown directly without first listing results,
+  unless
+  the matching concept is in the NCI Metathesaurus (because this links to the separate NCIm Browser). Some details:
+
+  All matching concepts are returned.
+  Results are listed from best match to weakest. For example, a Contains search on Bone returns Bone at the top,
+  followed by concepts with two word matches (e.g., Flat Bone), followed by concepts whose terms have more non- Bone
+  content.
+  When a terminology search is run, it looks for matches not only in the preferred name of concepts but also among the
+  synonyms of the preferred name as listed in the concept details page. For this reason, the match will often be to
+  synonyms or codes only visible on the concept details page (e.g., searching Begins With melanoma will show MIA in
+  the
+  results list because that concept contains a synonym of melanoma inhibitory activity.)
+  If there are too many to show on one page, you can page through the results, with a default of 50 per page. To
+  change
+  the default number, use the Show results per page drop-down menu at the bottom of the results page.
+  If a concept is retired, this will be indicated by the phrase "(Retired Concept") next to the name of the concept in
+  the Results listing.
+  Click on the preferred name to see a concept's details.
+  A Back to search results link appears in the search box when you leave the results page for other pages in the
+  Terminologies tab; click on the link to return to that last results page. If you run a new search or switch to
+  another
+  main browser tab, that results page is lost and the link disappears.
+
+
+  <a name="concept-details"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Concept Details</h3>
+  </span>
+  <p>
+    Detailed information on a selected concept is grouped and shown on several related pages:
+  </p>
+  <p>
+    Tabbed information gives the concept's meaning, labels, and direct relationships:
+    Terms & Properties: Gives definitions, synonyms, abbreviations, codes, and other information.
+    Synonym Details: Shows each term or abbreviation with the corresponding term type, source, and code (for sources
+    that
+    have them).
+    Relationships: Shows how other concepts are directly related to this concept as parents, children, or in other ways.
+    For NCIt concepts, role relationships are grouped by the type of concept to which the concept is related, and, for
+    concepts that have logical models built from their inter-concept relationships, there is a separate Logical
+    Definition
+    section showing the parent concepts and direct role assertions that define that concept. Note: For some sources, the
+    browser adds inverse relationships not asserted bidirectionally in the source data file; this is often useful for
+    informational and navigational purposes, but is sometimes confusing, and will continue to be evaluated for
+    adjustments
+    in future releases.
+    Mappings: Gives the mapping relationships, if any, to other vocabularies.
+    View All: Combines all of the concept details on a single page.
+    Concept specific links provide additional information and actions, some limited to sources for which they are
+    available:
+    View in Hierarchy: Click the link to see where the concept is found within the terminology hierarchy. Concepts are
+    often found in several different places. The focus concept will be bold, underlined, and colored red.
+    View History: Click the link to see a history of changes made to the current concept, for sources that provide
+    concept history data.
+    View Graph: Click the link to see an interactive graphic presentation of some information available in the
+    Relationships tab. The default displays all available relationships at once. A drop-down pick list allows choosing
+    specific relationships for viewing.
+    Add to Cart: For information about placing concepts into the Cart (using the Add to Cart link found on the Concept
+    Details pages) in order to Export concept information to a file, please see below.
+    Suggest Changes: This link appears in the upper right of all concept details pages of sources for which NCI can
+    handle such requests. It goes to a special suggestion page with source and concept code filled in.
+  </p>
+
+  <a name="hierarchy"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Hierarchy</h3>
+  </span>
+  <p>
+    Hierarchy: Click the link to bring up a separate window showing the full terminology hierarchy. Some details:
+    At first, only the top level nodes of the hierarchy are shown.
+    At each level, concepts are listed alphabetically by concept preferred name.
+    Browse through the levels by clicking on the + next to each concept that has child concepts.
+    Click on the concept name itself to see the concept's details in the main browser window.
+    Value Sets: Click the link to bring up a separate window showing a hierarchy of the value sets defined using the
+    terminology. Clicking on the name of a value set will bring up that value set's home page. Terminologies that do not
+    have value sets will not have the Value Sets link (see the information on the Value Sets tab below).
+    Maps: Click the link to bring up a list of the mapping data sets of the terminology, which can then be searched.
+    Terminologies that do not have mappings will not have the Maps link (see the information on the Mappings tab below).
+  </p>
+
+  <a name="documentation"></a>
+  <span>
+    <span style="float:right">[<a href="/overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h3>Metadata Documentation</h3>
+  </span>
+  <p>
+    Along the top toolbar, there is a "Documentation" dropdown that when clicked reveals
+    a number of sub-entries for the various kinds of metadata, including: Associations,
+    Properties, Qualifiers, Roles, Term Types, Sources, Synonym Types, and Definition Types.
+  </p>
+  <p>
+    Choosing any of these items loads a two or three-column table with the codes, names,
+    and definitions of the metadata elements of the specified type.</p>
 </div>
