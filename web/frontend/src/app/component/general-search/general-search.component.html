@@ -167,7 +167,7 @@
               </ng-template>
               <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                 <tr>
-                  <td [attr.colspan]="columns.length + 1">
+                  <td *ngIf="columns.length > 0" [attr.colspan]="columns.length + 1">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
