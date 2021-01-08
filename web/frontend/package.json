@@ -45,7 +45,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.800.6",
+    "@angular-devkit/build-angular": "^0.803.24",
     "@angular/cli": "~8.0.2",
     "@angular/compiler-cli": "~8.0.0",
     "@angular/language-service": "~8.0.3",
@@ -64,5 +64,9 @@
     "ts-node": "~8.6.2",
     "tslint": "~5.0.0",
     "typescript": "~3.4.0"
+  },
+  "resolutions": {
+    "serialize-javascript": "~3.1.0",
+    "dot-prop": "~4.2.1"
   }
 }
