@@ -31,7 +31,7 @@
     "cookie": "^0.4.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.0",
-    "ngx-cookie-service": "^11.0.2",
+    "ngx-cookie-service": "^2.3.0",
     "ngx-facebook": "^2.4.0",
     "ngx-spinner": "^8.1.0",
     "npm": "^6.14.6",
@@ -45,7 +45,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.24",
+    "@angular-devkit/build-angular": "^0.800.6",
     "@angular/cli": "~8.0.2",
     "@angular/compiler-cli": "~8.0.0",
     "@angular/language-service": "~8.0.3",
@@ -64,9 +64,5 @@
     "ts-node": "~8.6.2",
     "tslint": "~5.0.0",
     "typescript": "~3.4.0"
-  },
-  "resolutions": {
-    "serialize-javascript": "~3.1.0",
-    "dot-prop": "~4.2.1"
   }
 }
