@@ -215,7 +215,8 @@
             <td>{{ iassociation.type }}</td>
             <td>{{ iassociation.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, iassociation.relatedCode ]" target='urlTarget'>{{ iassociation.relatedName }}</a>
+              <a [routerLink]="[urlBase, iassociation.relatedCode ]" target='urlTarget'>{{ iassociation.relatedName
+                }}</a>
             </td>
           </tr>
         </ng-template>
@@ -227,7 +228,7 @@
   </p-panel>
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      DisjointWith
+      Disjoint With
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
