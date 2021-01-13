@@ -50,7 +50,7 @@ export class GeneralSearchComponent implements OnInit,
   selectedConceptCode: string;
   displayDetail = false;
   // TODO: VERY NCIt specific
-  selectedPropertiesReturn: string[] = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
+  selectedPropertiesReturn: string[] = ['Preferred Name', 'FULL_SYN', 'Definitions'];
   displayText = false;
   displayTableFormat = true;
   avoidLazyLoading = true;
@@ -234,7 +234,7 @@ export class GeneralSearchComponent implements OnInit,
   // Reset filters and search type
   resetFilters(event) {
     console.log('resetFilters');
-    this.selectedPropertiesReturn = ['Preferred_Name', 'FULL_SYN', 'DEFINITION'];
+    this.selectedPropertiesReturn = ['Preferred Name', 'FULL_SYN', 'Definitions'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
     this.selectedSource = [];

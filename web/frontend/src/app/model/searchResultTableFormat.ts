@@ -28,7 +28,7 @@ export class SearchResultTableFormat {
 
       // check if returnProperties is null and fill it with default fields
       // if (returnFields === null || returnFields === undefined || returnFields.length === 0) {
-      //   returnFields.push('Preferred_Name');
+      //   returnFields.push('Preferred Name');
       //    returnFields.push('Display_Name');
       // }
 
@@ -37,9 +37,9 @@ export class SearchResultTableFormat {
         console.debug('  field - ' + returnFields[i]);
         let tableHeader = null;
         // TODO: this is too specific to NCI and the property values, needs generalization
-        if (returnFields[i] === 'Preferred_Name' || returnFields[i] === 'FULL_SYN') {
+        if (returnFields[i] === 'Preferred Name' || returnFields[i] === 'FULL_SYN') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
-        } else if (returnFields[i] === 'DEFINITION') {
+        } else if (returnFields[i] === 'Definitions') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '300px');
         } else {
           tableHeader = new TableHeader('column' + count, returnFields[i], '250px');
@@ -59,7 +59,7 @@ export class SearchResultTableFormat {
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
           console.log('  field = ', '.', field, '.');
-          if (field === 'DEFINITION' || field === 'ALT_DEFINITION') {
+          if (field === 'Definitions' || field === 'ALT_DEFINITION') {
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'FULL_SYN') {
             data['column' + count] = searchResult.concepts[i].getFullSynText();
@@ -106,7 +106,7 @@ export class SearchResultTableFormat {
             //   }
             //   data['column' + count] = goannotationinfo;
 
-          } else if (returnFields[k] === 'Preferred_Name') {
+          } else if (returnFields[k] === 'Preferred Name') {
             data['column' + count] = searchResult.concepts[i].getPreferredName();
           } else {
             console.debug('NEED TO SUPPORT THIS', returnFields[k]);
