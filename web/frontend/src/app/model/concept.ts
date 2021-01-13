@@ -139,7 +139,7 @@ export class Concept {
     // synonyms
     let headerFlag = false;
     for (let i = 0; i < this.synonyms.length; i++) {
-      if (this.synonyms[i].type == 'FULL_SYN' && this.synonyms[i].highlight) {
+      if (this.synonyms[i].type == 'Synonyms' && this.synonyms[i].highlight) {
         if (!headerFlag) {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;

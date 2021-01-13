@@ -37,7 +37,7 @@ export class SearchResultTableFormat {
         console.debug('  field - ' + returnFields[i]);
         let tableHeader = null;
         // TODO: this is too specific to NCI and the property values, needs generalization
-        if (returnFields[i] === 'Preferred Name' || returnFields[i] === 'FULL_SYN') {
+        if (returnFields[i] === 'Preferred Name' || returnFields[i] === 'Synonyms') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else if (returnFields[i] === 'Definitions') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '300px');
@@ -61,7 +61,7 @@ export class SearchResultTableFormat {
           console.log('  field = ', '.', field, '.');
           if (field === 'Definitions' || field === 'ALT_DEFINITION') {
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
-          } else if (field === 'FULL_SYN') {
+          } else if (field === 'Synonyms') {
             data['column' + count] = searchResult.concepts[i].getFullSynText();
           } else if (field === 'Role') {
             data['column' + count] = searchResult.concepts[i].getRolesText();
