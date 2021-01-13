@@ -14,6 +14,7 @@ import { OverviewComponent } from './component/documentation/overview/overview.c
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
+import { ContactUsComponent } from './component/contact-us/contact-us.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'sources', component: SourcesComponent },
   { path: 'roles', component: RolesComponent },
   { path: 'welcome', component: GeneralSearchComponent },
+  { path: 'contact', component: ContactUsComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }

@@ -80,6 +80,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
+import { ContactUsComponent } from './component/contact-us/contact-us.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -107,7 +108,8 @@ import { CookieService } from 'ngx-cookie-service';
     TermTypesComponent,
     SourcesComponent,
     WelcomeComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    ContactUsComponent
   ],
   imports: [
     NgbModule,
