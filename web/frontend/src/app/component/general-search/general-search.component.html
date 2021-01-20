@@ -26,7 +26,7 @@
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
                 [options]="sourcesAll" [(ngModel)]="selectedSource" name="sourceSearch" defaultLabel="Source"
-                (onChange)="onChangeSource($event)" [displaySelectedLabel]="false">
+                (onChange)="onChangeSource($event)" [displaySelectedLabel]="false" [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
