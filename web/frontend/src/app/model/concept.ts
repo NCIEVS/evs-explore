@@ -33,7 +33,7 @@ export class Concept {
         this.synonyms.push(synonym);
         // Add synonyms with "_Name" to properties
         if (synonym.type && synonym.type.endsWith('_Name') &&
-          synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
+          synonym.type != 'Preferred Name' && synonym.type != 'Display_Name') {
           var prop = new Property({});
           prop.type = synonym.type;
           prop.value = synonym.name;
@@ -139,7 +139,7 @@ export class Concept {
     // synonyms
     let headerFlag = false;
     for (let i = 0; i < this.synonyms.length; i++) {
-      if (this.synonyms[i].type == 'FULL_SYN' && this.synonyms[i].highlight) {
+      if (this.synonyms[i].type == 'Synonyms' && this.synonyms[i].highlight) {
         if (!headerFlag) {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;
@@ -165,7 +165,7 @@ export class Concept {
   getPreferredName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'Preferred_Name') {
+        if (this.synonyms[i].type == 'Preferred Name') {
           return this.synonyms[i].name;
         }
       }
@@ -209,7 +209,7 @@ export class Concept {
     return text;
   }
 
-  // Assemble text from all FULL_SYN together
+  // Assemble text from all Synonyms together
   getFullSynText(): string {
     let syns = this.getFullSyns();
     let synonymUniqueArray = [];
@@ -224,7 +224,7 @@ export class Concept {
 
   }
 
-  // Return FULL_SYN as an array
+  // Return Synonyms as an array
   getFullSyns(): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
