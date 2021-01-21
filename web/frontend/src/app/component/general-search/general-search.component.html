@@ -28,6 +28,7 @@
                 [options]="sourcesAll" [(ngModel)]="selectedSource" name="sourceSearch" defaultLabel="Source"
                 [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false"
                 [resetFilterOnHide]="true">
+                [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
