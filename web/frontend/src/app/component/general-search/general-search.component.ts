@@ -342,7 +342,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
-    console.log('onChangeSource');
+    console.log('onChangeSource', event, this.selectedSource);
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
