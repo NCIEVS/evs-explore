@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
+import { CookieService } from 'ngx-cookie-service';
 
 // Concept display component
 // BAC - looks like not used
@@ -47,11 +48,17 @@ export class ConceptDisplayComponent implements OnInit {
   constructor(
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private cookieService: CookieService
 
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
+
+    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
       .subscribe((properties: any) => {
@@ -77,6 +84,12 @@ export class ConceptDisplayComponent implements OnInit {
                 this.title = concept.name + ' ( Code - ' + concept.code + ' )';
                 this.conceptWithRelationships = undefined;
                 this.activeIndex = 0;
+                if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+                  (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+                  this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+                    this.conceptWithRelationships = new Concept(response);
+                  });
+                }
               })
           }
         });
@@ -86,6 +99,8 @@ export class ConceptDisplayComponent implements OnInit {
   // Respond to things like changes in tabs
   handleChange($event) {
     this.activeIndex = $event.index;
+    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
+
     if (($event.index === 1 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
