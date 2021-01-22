@@ -58,7 +58,7 @@
               <br />
               <p-radioButton class="radio-padding" name="searchtype" value="phrase" label="Phrase"
                 [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('phrase')"></p-radioButton>
-              <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy"
+              <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy" title="Returns approximate string matches"
                 [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('fuzzy')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="AND" label="AND"
                 [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('AND')"></p-radioButton>
