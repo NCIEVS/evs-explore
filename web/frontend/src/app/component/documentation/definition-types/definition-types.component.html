@@ -1,0 +1,27 @@
+<div class="container" *ngIf="definitionTypes">
+  <div class="page-header">
+    <span>Definition Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p>Here is a listing of NCIt definition types:</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="termTypes" sortMode="single">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tty>
+        <tr>
+          <td>{{ tty.code }}</td>
+          <td>{{ tty.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -43,6 +43,8 @@ import { PropertiesComponent } from './component/documentation/properties/proper
 import { QualifiersComponent } from './component/documentation/qualifiers/qualifiers.component';
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
+import { DefinitionTypesComponent } from './component/documentation/definition-types/definition-types.component';
+import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { WelcomeComponent } from './component/welcome/welcome.component';
@@ -105,6 +107,8 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     QualifiersComponent,
     OverviewComponent,
     RolesComponent,
+    DefinitionTypesComponent,
+    SynonymTypesComponent,
     TermTypesComponent,
     SourcesComponent,
     WelcomeComponent,
