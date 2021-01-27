@@ -52,11 +52,12 @@ export class ConceptDisplayComponent implements OnInit {
     private cookieService: CookieService
 
   ) {
-
   }
 
   ngOnInit() {
 
+    // Set active index based on cookie unless never set
+    // then default to 0
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
 
     // Start by getting properties because this is a new window
@@ -83,7 +84,6 @@ export class ConceptDisplayComponent implements OnInit {
                 this.conceptCode = concept.code;
                 this.title = concept.name + ' ( Code - ' + concept.code + ' )';
                 this.conceptWithRelationships = undefined;
-                this.activeIndex = 0;
                 if ((this.activeIndex === 1 || this.activeIndex === 2) &&
                   (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
                   this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
