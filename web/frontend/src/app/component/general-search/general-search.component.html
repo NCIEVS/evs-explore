@@ -157,8 +157,8 @@
                   <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col.header">
                     <span *ngSwitchCase="'Highlights'">
                       <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
-                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                        pTooltip="Click to show/hide highlights" (click)="expanded=!expanded"></i>
+                        <i [ngClass]="rowData.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                          pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
                     <span *ngSwitchCase="'Code'">
@@ -178,7 +178,7 @@
               </ng-template>
               <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                 <tr>
-                  <td *ngIf="columns.length > 0" [attr.colspan]="columns.length">
+                  <td *ngIf="rowData.expanded" [attr.colspan]="columns.length">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
