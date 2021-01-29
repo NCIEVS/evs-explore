@@ -59,8 +59,9 @@
               <br />
               <p-radioButton class="radio-padding" name="searchtype" value="phrase" label="Phrase"
                 [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('phrase')"></p-radioButton>
-              <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy" title="Returns approximate string matches"
-                [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('fuzzy')"></p-radioButton>
+              <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" label="Fuzzy"
+                title="Returns approximate string matches" [(ngModel)]="selectedSearchType"
+                (onClick)="changeSearchType('fuzzy')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="AND" label="AND"
                 [(ngModel)]="selectedSearchType" (onClick)="changeSearchType('AND')"></p-radioButton>
               <p-radioButton class="radio-padding" name="searchtype" value="OR" label="OR"
@@ -150,8 +151,8 @@
                 <tr [pSelectableRow]="rowData">
                   <!--<td style="width: 1.8em">
                     <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
-                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                        pTooltip="Click to show/hide highlights" (click)="expanded=!expanded"></i>
+                      <i [ngClass]="rowData.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                        pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                     </a>
                   </td>-->
                   <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col.header">
@@ -164,7 +165,7 @@
                     <span *ngSwitchCase="'Code'">
                       <a target="_blank" *ngIf="rowData.retiredConcept === 'no'"
                         [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
-                        {{rowData[col.field]}} </a>
+                        {{rowData[col.field]}}</a>
                       <a target="_blank" *ngIf="rowData.retiredConcept === 'yes'"
                         [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
                         {{rowData[col.field]}} (Retired Concept) </a>
@@ -175,10 +176,8 @@
                     <span *ngSwitchDefault [innerHTML]="rowData[col.field]"></span>
                   </td>
                 </tr>
-              </ng-template>
-              <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                 <tr>
-                  <td *ngIf="columns.length > 0" [attr.colspan]="columns.length">
+                  <td *ngIf="rowData.expanded" [attr.colspan]="columns.length + 1">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
