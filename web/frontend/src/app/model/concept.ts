@@ -142,8 +142,12 @@ export class Concept {
     }
     // synonyms
     let headerFlag = false;
+    this.synonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
+                        .map(name => {
+                          return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
+                        });
     for (let i = 0; i < this.synonyms.length; i++) {
-      if (this.synonyms[i].type == 'Synonyms' && this.synonyms[i].highlight) {
+      if (this.synonyms[i].highlight) {
         if (!headerFlag) {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;
