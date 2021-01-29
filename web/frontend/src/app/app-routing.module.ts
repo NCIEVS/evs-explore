@@ -15,6 +15,8 @@ import { TermTypesComponent } from './component/documentation/term-types/term-ty
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
+import { DefinitionTypesComponent } from './component/documentation/definition-types/definition-types.component';
+import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -29,6 +31,8 @@ const routes: Routes = [
   { path: 'qualifiers', component: QualifiersComponent },
   { path: 'overview', component: OverviewComponent },
   { path: 'termtypes', component: TermTypesComponent },
+  { path: 'definitiontypes', component: DefinitionTypesComponent },
+  { path: 'synonymtypes', component: SynonymTypesComponent },
   { path: 'sources', component: SourcesComponent },
   { path: 'roles', component: RolesComponent },
   { path: 'welcome', component: GeneralSearchComponent },

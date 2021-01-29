@@ -20,6 +20,8 @@ export class SearchResultTableFormat {
     if (this.total > 0) {
 
       // Table Header
+      const tableHeaderCode0 = new TableHeader('column0', 'Highlights', '70px');
+      this.header.push(tableHeaderCode0);
       const tableHeaderCode = new TableHeader('column1', 'Code', '70px');
       this.header.push(tableHeaderCode);
 
@@ -55,10 +57,11 @@ export class SearchResultTableFormat {
         data.column1 = searchResult.concepts[i].code;
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
         data.highlight = searchResult.concepts[i].getHighlightText();
+        data.expanded = false;
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
-          console.log('  field = ', '.', field, '.');
+          // console.log('  field = ', '.', field, '.');
           if (field === 'Definitions' || field === 'ALT_DEFINITION') {
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {

@@ -131,15 +131,23 @@ export class Concept {
   // This should be the elasticsearch highlights.
   getHighlightText(): string {
     var text: string = '';
-    // top-level concept name
     if (this.highlight) {
-      text += '<strong>Preferred Name</strong>:<br/>' +
-        '<font color="#428bca">' + this.highlight + '</font><br/>';
+      if (this.highlight.indexOf(this.code) != -1) {
+        text += '<strong>Code</strong>:<br/>' +
+          '<font color="#428bca">' + this.highlight + '</font><br/>';
+      } else {
+        text += '<strong>Preferred Name</strong>:<br/>' +
+          '<font color="#428bca">' + this.highlight + '</font><br/>';
+      }
     }
     // synonyms
     let headerFlag = false;
+    this.synonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
+                        .map(name => {
+                          return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
+                        });
     for (let i = 0; i < this.synonyms.length; i++) {
-      if (this.synonyms[i].type == 'Synonyms' && this.synonyms[i].highlight) {
+      if (this.synonyms[i].highlight) {
         if (!headerFlag) {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;
