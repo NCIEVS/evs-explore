@@ -20,6 +20,8 @@ export class SearchResultTableFormat {
     if (this.total > 0) {
 
       // Table Header
+      const tableHeaderCode0 = new TableHeader('column0', 'Highlights', '70px');
+      this.header.push(tableHeaderCode0);
       const tableHeaderCode = new TableHeader('column1', 'Code', '70px');
       this.header.push(tableHeaderCode);
 

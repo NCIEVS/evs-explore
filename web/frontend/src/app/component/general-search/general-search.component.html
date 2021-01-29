@@ -104,6 +104,8 @@
             </div>
             <div *ngIf="loadedMultipleConcept" class="ui-toolbar-group-right">
 
+              <!--<p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Highlights"
+                offLabel="Hide Highlights" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>-->
               <p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Less"
                 offLabel="Show more" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>
               <p-multiSelect [showToggleAll]="false" dropdownIcon="pi pi-caret-down" [options]="multiSelectCols"
@@ -129,13 +131,13 @@
 
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                  <col style="width: 1.8em">
+                  <!--<col style="width: 1.8em">-->
                   <col *ngFor="let col of columns" [style.width]="col.width">
                 </colgroup>
               </ng-template>
               <ng-template pTemplate="header" let-columns>
                 <tr>
-                  <th style="width: 1.8em"></th>
+                  <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
                     {{col.header}}
 
@@ -146,13 +148,19 @@
               <ng-template pTemplate="body" let-rowData let-columns="columns">
 
                 <tr [pSelectableRow]="rowData">
-                  <td style="width: 1.8em">
+                  <!--<td style="width: 1.8em">
                     <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
                       <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
                         pTooltip="Click to show/hide highlights" (click)="expanded=!expanded"></i>
                     </a>
-                  </td>
+                  </td>-->
                   <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col.header">
+                    <span *ngSwitchCase="'Highlights'">
+                      <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                        pTooltip="Click to show/hide highlights" (click)="expanded=!expanded"></i>
+                      </a>
+                    </span>
                     <span *ngSwitchCase="'Code'">
                       <a target="_blank" *ngIf="rowData.retiredConcept === 'no'"
                         [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
@@ -170,7 +178,7 @@
               </ng-template>
               <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                 <tr>
-                  <td *ngIf="columns.length > 0" [attr.colspan]="columns.length + 1">
+                  <td *ngIf="columns.length > 0" [attr.colspan]="columns.length">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
