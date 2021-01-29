@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, ViewChild, ViewEncapsulation, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
@@ -44,7 +44,6 @@ export class GeneralSearchComponent implements OnInit,
   selectedSearchType: string;
   selectedSearchValues: string[] = [];
   termautosearch: string;
-  oldTermautosearch: string;
   textSuggestions: string[] = [];
   biomarkers: string[] = [];
   selectedConceptCode: string;
@@ -107,8 +106,7 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     // Set paging parameters
-    this.searchCriteria.fromRecord = 0;
-    this.searchCriteria.pageSize = this.pageSize;
+    this.resetPaging();
 
     // Populate sources list from application metadata
     configService.getSynonymSources('ncit')
@@ -135,7 +133,6 @@ export class GeneralSearchComponent implements OnInit,
 
       // Set default term search to blank
       this.termautosearch = '';
-      this.oldTermautosearch = '';
       sessionStorage.setItem('searchTerm', this.termautosearch);
     }
 
@@ -206,7 +203,6 @@ export class GeneralSearchComponent implements OnInit,
   clearSearchText(event) {
     console.log('clear search text');
     this.termautosearch = '';
-    this.oldTermautosearch = '';
     sessionStorage.setItem('searchTerm', this.termautosearch);
   }
 
@@ -273,8 +269,7 @@ export class GeneralSearchComponent implements OnInit,
   changeSearchType(event) {
     console.log('changeSearchType', event);
     this.currentPage = 1;
-    this.searchCriteria.fromRecord = 0;
-    this.searchCriteria.pageSize = this.pageSize;
+    this.resetTable();
     this.selectedSearchType = event;
     sessionStorage.setItem('searchType', this.selectedSearchType);
     this.performSearch(this.termautosearch);
@@ -282,11 +277,11 @@ export class GeneralSearchComponent implements OnInit,
 
   // Perform search
   search(event) {
-    console.log('window location (search) = ', window.location.pathname);
     const path = '' + window.location.pathname;
 
     // Navigate from welcome page
     if (path.includes('welcome')) {
+      console.log('window location (search) = ', window.location.pathname);
       sessionStorage.setItem('searchTerm', event.query);
       this.router.navigate(['/search']);
     }
@@ -297,22 +292,14 @@ export class GeneralSearchComponent implements OnInit,
 
       if (this.dtSearch !== null && this.dtSearch !== undefined) {
         this.dtSearch.reset();
-        this.searchCriteria.fromRecord = 0;
+        this.resetPaging();
+        // this.searchCriteria.fromRecord = 0;
         // TODO: this is not ideal, the page size should be controlled by a service
-        this.searchCriteria.pageSize = this.dtSearch.rows;
+        // this.searchCriteria.pageSize = this.dtSearch.rows;
       }
 
-      // Save query in session storage and perform search
-      if (event.query !== this.oldTermautosearch) {
-        this.oldTermautosearch = event.query;
-        sessionStorage.setItem('searchTerm', event.query);
-        this.performSearch(event.query);
-      }
-      // Handle case where the search query text didnt change
-      else {
-        this.textSuggestions = [];
-        this.loading = false;
-      }
+      sessionStorage.setItem('searchTerm', event.query);
+      this.performSearch(event.query);
     }
 
   }
@@ -335,8 +322,7 @@ export class GeneralSearchComponent implements OnInit,
   onSubmitSearch() {
     console.log('onSubmitSearch', this.termautosearch);
     this.currentPage = 1;
-    this.searchCriteria.fromRecord = 0;
-    this.searchCriteria.pageSize = this.dtSearch.rows;
+    this.resetPaging();
     this.performSearch(this.termautosearch);
   }
 

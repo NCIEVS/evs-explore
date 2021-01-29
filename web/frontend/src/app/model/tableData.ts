@@ -63,7 +63,8 @@ export class TableData {
     public column58?: string,
     public column59?: string,
     public highlight?: string,
-    public retiredConcept?: string
+    public retiredConcept?: string,
+    public expanded?: boolean
   ) { }
 
 }
