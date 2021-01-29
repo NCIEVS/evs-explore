@@ -125,6 +125,20 @@ export class ConfigurationService {
       );
   }
 
+  // Load synonym sources
+  getSynonymTypes(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/synonymTypes',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch synonym types = ' + terminology));
+        })
+      );
+  }
+
   getDefinitionSources(terminology: string): Observable<any> {
     return this.http.get('/api/v1/metadata/' + terminology + '/definitionSources',
       {
@@ -134,6 +148,19 @@ export class ConfigurationService {
       .pipe(
         catchError((error) => {
           return observableThrowError(new EvsError(error, 'Could not fetch definition sources = ' + terminology));
+        })
+      );
+  }
+
+  getDefinitionTypes(terminology: string): Observable<any> {
+    return this.http.get('/api/v1/metadata/' + terminology + '/definitionTypes',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch definition types = ' + terminology));
         })
       );
   }
