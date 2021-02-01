@@ -455,7 +455,7 @@ export class GeneralSearchComponent implements OnInit,
   setDefaultSelectedColumns() {
     console.log('setDefaultSelectedColumns');
     if (!this.columnMore) {
-      this.displayColumns = this.cols.slice(0, 2);
+      this.displayColumns = this.cols.slice(1, 3);
       this.selectedColumns = this.displayColumns.map(element => element.header);
     } else {
       if (this.selectedColumns == null || this.selectedColumns == undefined || this.selectedColumns.length <= 0) {
