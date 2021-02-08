@@ -457,8 +457,7 @@ export class GeneralSearchComponent implements OnInit,
   setDefaultSelectedColumns() {
     console.log('setDefaultSelectedColumns');
     if(this.cookieService.check('displayColumns')) {
-      console.log(this.cookieService.get('displayColumns'));
-      this.displayColumns = this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
+      this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
     }
     else {
       this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
