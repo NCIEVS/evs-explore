@@ -9,6 +9,7 @@ import { SearchResult } from './../../model/searchResult';
 import { SearchResultTableFormat } from './../../model/searchResultTableFormat';
 import { SearchTermService } from './../../service/search-term.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
+import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
 // Prior imports, now unused
@@ -61,7 +62,6 @@ export class GeneralSearchComponent implements OnInit,
   multiSelectCols: any[];
   selectedColumns: any[];
   displayColumns: any[];
-  columnMore = true;
   reportData: TableData[];
   selectRows: TableData[];
   pageinationcount: string;
@@ -85,6 +85,7 @@ export class GeneralSearchComponent implements OnInit,
   constructor(private searchTermService: SearchTermService,
     private conceptDetailService: ConceptDetailService,
     private configService: ConfigurationService,
+    private cookieService: CookieService,
     private route: ActivatedRoute, public router: Router) {
 
     // Instantiate new search criteria
@@ -364,6 +365,7 @@ export class GeneralSearchComponent implements OnInit,
   // Set columns
   setColumns() {
     this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
+    this.cookieService.set('displayColumns', this.selectedColumns.join());
   }
 
   // Perform the search
@@ -454,26 +456,12 @@ export class GeneralSearchComponent implements OnInit,
   // Set default selected columns
   setDefaultSelectedColumns() {
     console.log('setDefaultSelectedColumns');
-    if (!this.columnMore) {
-      this.displayColumns = this.cols.slice(1, 3);
-      this.selectedColumns = this.displayColumns.map(element => element.header);
-    } else {
-      if (this.selectedColumns == null || this.selectedColumns == undefined || this.selectedColumns.length <= 0) {
-        this.displayColumns = this.cols;
-        this.selectedColumns = this.displayColumns.map(element => element.header);
-      } else {
-        this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
-      }
+    if(this.cookieService.check('displayColumns')) {
+      console.log(this.cookieService.get('displayColumns'));
+      this.displayColumns = this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
     }
-  }
-
-  // Set default columns
-  setDefaultColumns() {
-    console.log('setDefaultColumns');
-    if (!this.columnMore) {
-      this.displayColumns = this.cols.slice(1, 3);
-    } else {
-      this.displayColumns = this.cols;
+    else {
+      this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
     }
     this.selectedColumns = this.displayColumns.map(element => element.header);
   }
