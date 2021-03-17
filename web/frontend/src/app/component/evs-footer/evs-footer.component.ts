@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Inject, AfterViewInit, ElementRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 
 // Footer component
 @Component({
@@ -11,7 +12,7 @@ import { DOCUMENT } from '@angular/common';
 export class EvsFooterComponent implements OnInit {
 
   constructor( @Inject(DOCUMENT) private document,
-  private elementRef: ElementRef) { }
+  private elementRef: ElementRef, public router: Router) { }
 
   ngOnInit() {
   }
@@ -21,6 +22,11 @@ export class EvsFooterComponent implements OnInit {
     s.type = 'text/javascript';
     s.src = '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9';
     this.elementRef.nativeElement.appendChild(s);
+  }
+
+  contactPage() {
+    this.router.navigate(['/contact']);
+    return false;
   }
 
 }
