@@ -177,7 +177,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td *ngIf="rowData.expanded" [attr.colspan]="columns.length">
+                  <td *ngIf="rowData.expanded && columns[0].header == 'Highlights'" [attr.colspan]="columns.length">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
