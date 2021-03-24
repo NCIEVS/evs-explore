@@ -13,7 +13,7 @@ declare var gtag
 })
 export class AppComponent {
 
-  constructor(router: Router) {
+  constructor(private router: Router) {
     const navEndEvent$ = router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     );
@@ -30,5 +30,14 @@ export class AppComponent {
     document.head.prepend(script);
   }
 
+  // Scroll to top whenever route changes
+  ngOnInit() {
+    this.router.events.subscribe((evt) => {
+      if (!(evt instanceof NavigationEnd)) {
+        return;
+      }
+      window.scrollTo(0, 0)
+    });
+  }
   title = 'frontend';
 }
