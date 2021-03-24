@@ -92,7 +92,7 @@ export class HierarchyDisplayComponent implements OnInit {
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
     this.conceptDetailService
-      .getConceptSummary(event.code, 'summary')
+      .getConceptSummary(event.code, 'summary,maps')
       .subscribe((response: any) => {
         this.conceptDetail = new Concept(response);
         this.conceptCode = this.conceptDetail.code;
