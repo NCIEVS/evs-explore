@@ -6,6 +6,7 @@ import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
+import { CookieService } from 'ngx-cookie-service';
 
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
@@ -36,10 +37,15 @@ export class HierarchyDisplayComponent implements OnInit {
   constructor(
     private conceptDetailService: ConceptDetailService,
     private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cookieService: CookieService
   ) { }
 
   ngOnInit() {
+    // Set active index based on cookie unless never set
+    // then default to 0
+    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+
     this.updateDisplaySize();
     this.route.params.subscribe((params: any) => {
       if (params.code) {
@@ -54,7 +60,12 @@ export class HierarchyDisplayComponent implements OnInit {
             this.conceptCode = this.conceptDetail.code;
             this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
             this.conceptWithRelationships = undefined;
-            this.activeIndex = 0;
+            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+                this.conceptWithRelationships = new Concept(response);
+              });
+            }
             this.getPathInHierarchy();
           })
       }
@@ -65,6 +76,8 @@ export class HierarchyDisplayComponent implements OnInit {
   // Handler for tabs changing in the hierarchy view.
   handleChange($event) {
     this.activeIndex = $event.index;
+    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
+
     if (($event.index === 1 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
@@ -98,7 +111,7 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         this.conceptWithRelationships = undefined;
-        this.activeIndex = 0;
+
         this.getPathInHierarchy();
         for (let i = 0; i < this.selectedNodes.length; i++) {
           this.selectedNodes[i]['highlight'] = false;
