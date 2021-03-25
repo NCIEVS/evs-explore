@@ -36,7 +36,9 @@ export class AppComponent {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
-      window.scrollTo(0, 0)
+      if (this.router.url.indexOf('#') == -1) {
+        window.scrollTo(0, 0);
+      }
     });
   }
   title = 'frontend';
