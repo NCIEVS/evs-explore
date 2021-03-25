@@ -155,7 +155,7 @@
                         pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                     </a>
                   </td>-->
-                  <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col.header">
+                  <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col && col.header">
                     <span *ngSwitchCase="'Highlights'">
                       <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
                         <i [ngClass]="rowData.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
@@ -177,7 +177,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td *ngIf="rowData.expanded && columns[0].header == 'Highlights'" [attr.colspan]="columns.length">
+                  <td *ngIf="rowData.expanded && columns[0] && columns[0].header == 'Highlights'"
+                    [attr.colspan]="columns.length">
                     <div class="col-md-12 text-justify">
                       <span class="text-justify" [innerHTML]="rowData.highlight"></span>
                     </div>
