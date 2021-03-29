@@ -74,12 +74,7 @@ export class ValueSetsComponent implements OnInit {
     /*
      * Adjust the size of the hierarchy display
     */
-    let tableHeight = 0;
-    if (bodyHeight > 1200) {
-      tableHeight = 1200;
-    } else {
-      tableHeight = bodyHeight
-    }
+    let tableHeight = bodyHeight;
     this.hierarchyTable.scrollHeight = (tableHeight - 200) + "px";
   }
 
