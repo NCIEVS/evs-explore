@@ -1,10 +1,35 @@
-<div align="center">
-  <h2>NCIt Value Sets</h2>
-  <img class="construction-logo" src="assets/images/under-construction.png" />
-  <br>
-  This page will eventually hold the NCIt value sets.
-  <br>
-  If you wish to view the current version of the value sets at the current ncit website, click
-  <a href="https://ncit.nci.nih.gov/ncitbrowser/ajax?action=create_src_vs_tree&nav_type=valuesets&mode=0"
-    target="_blank">here.</a>
+<div id="hierarchyTableDisplay" style="height: 800px; width: 100%;">
+  <as-split [direction]="direction">
+    <as-split-area [size]="valueSetPanelSize">
+      <div class="hierarchy-div">
+        <div class="page-header">
+          Value Set Hierarchy
+        </div>
+        <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
+          [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
+          (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)"
+          (onNodeSelect)="treeTableNodeSelected(selectedNode)">
+          <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+            <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
+              <td>
+                <div style="cursor: pointer; display:flex;">
+                  <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                  {{rowData.label}}
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-treeTable>
+      </div>
+    </as-split-area>
+    <as-split-area [size]="conceptPanelSize">
+      <div class="hierarchy-div">
+        <div class="page-header">
+          {{ title }}
+          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
+              type="button"></button></span>
+        </div>
+      </div>
+    </as-split-area>
+  </as-split>
 </div>
