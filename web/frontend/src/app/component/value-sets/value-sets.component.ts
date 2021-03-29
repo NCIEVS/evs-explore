@@ -34,8 +34,8 @@ export class ValueSetsComponent implements OnInit {
   urlBase = "/valuesets"
   urlTarget = '_blank'
 
-  valueSetPanelSize = "70.0"
-  hierarchyPanelSize = "30.0"
+  conceptPanelSize = "70.0"
+  valueSetPanelSize = "30.0"
 
   constructor(
     private valueSetDetailService: ConceptDetailService,
