@@ -111,6 +111,12 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         this.conceptWithRelationships = undefined;
+        if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+          (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+            this.conceptWithRelationships = new Concept(response);
+          });
+        }
 
         this.getPathInHierarchy();
         for (let i = 0; i < this.selectedNodes.length; i++) {
