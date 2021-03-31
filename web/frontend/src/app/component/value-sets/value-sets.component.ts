@@ -51,7 +51,6 @@ export class ValueSetsComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
 
     this.updateDisplaySize();
-    this.valueSetCode = "C54443";
     this.getPathInHierarchy();
   }
 
@@ -82,22 +81,14 @@ export class ValueSetsComponent implements OnInit {
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
     console.info('event code = ' + event.code);
-    this.valueSetDetailService
-      .getConceptSummary(event.code, 'summary,maps')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-
-        this.resetTreeTableNodes();
-        this.updateDisplaySize();
-      });
+    this.title = event.name + ' ( Code - ' + event.code + ' )';
+    this.resetTreeTableNodes();
+    this.updateDisplaySize();
   }
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    console.log(this.valueSetCode);
-    this.valueSetDetailService.getHierarchyChildData(this.valueSetCode)
+    this.valueSetDetailService.getValueSetTopLevel()
       .then(nodes => {
 
         this.hierarchyData = <TreeNode[]>nodes;
@@ -115,25 +106,21 @@ export class ValueSetsComponent implements OnInit {
   }
 
   // Get child tree nodes (for an expanded node)
-  getTreeTableChildrenNodes(code: string, node: any) {
-    this.valueSetDetailService.getHierarchyChildData(code)
-      .then(nodes => {
-        node.children = nodes;
-        for (const child of node.children) {
-          this.setTreeTableProperties(child);
-        }
-        this.deepCopyHierarchyData();
-        setTimeout(() => {
-          this.scrollToSelectionTableTree(node, this.hierarchyTable);
-        }, 100);
-      });
+  getTreeTableChildrenNodes(code: string, nodeChildren: any) {
+      for (const child of nodeChildren) {
+        this.setTreeTableProperties(child);
+      }
+      this.deepCopyHierarchyData();
+      setTimeout(() => {
+        this.scrollToSelectionTableTree(nodeChildren, this.hierarchyTable);
+      }, 100);
   }
 
   // Handler for expanding a tree node
   treeTableNodeExpand(event) {
     console.log('treeTableNodeExpand', event.node);
     if (event.node) {
-      this.getTreeTableChildrenNodes(event.node.code, event.node);
+      this.getTreeTableChildrenNodes(event.node.code, event.node.children);
     }
   }
 
@@ -163,13 +150,10 @@ export class ValueSetsComponent implements OnInit {
     node.expandedIcon = '';
     const obj = {
       'code': node['code'],
-      'label': node['label'],
+      'label': node['name'],
       'highlight': false
     }
-    if (node['highlight'] || node['code'] === this.valueSetCode) {
-      this.selectedNodes.push(node);
-      obj['highlight'] = true;
-    }
+    this.selectedNodes.push(node);
     node.data = obj;
 
     if (!node.children) {

@@ -77,4 +77,12 @@ export class ConceptDetailService {
       .then(res => <TreeNode[]>res);
   }
 
+  // Get Value Set Top Level
+  getValueSetTopLevel(){
+    const url = '/api/v1/metadata/ncit/subsets?include=minimal'
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <TreeNode[]>res);
+  }
+
 }
