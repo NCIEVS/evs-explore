@@ -42,12 +42,12 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   // Handle lazy loading of table
-  onLazyLoadData(event, code) {
+  onLazyLoadData(event) {
     console.log('onLazyLoadData', this.avoidLazyLoading, event);
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
-      this.subsetDetailService.getSubsetDetails(code)
+      this.subsetDetailService.getSubsetDetails(this.titleCode)
       .then(nodes => {
         this.hitsFound = nodes.length;
         this.subsetList = nodes.slice(event.first, event.first + event.rows);
