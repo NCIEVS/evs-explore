@@ -16,6 +16,7 @@ import { SourcesComponent } from './component/documentation/sources/sources.comp
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
 import { DefinitionTypesComponent } from './component/documentation/definition-types/definition-types.component';
+import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
 import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'search', component: GeneralSearchComponent },
   { path: 'concept/:code', component: ConceptDisplayComponent },
   { path: 'hierarchy/:code', component: HierarchyDisplayComponent },
+  { path: 'subset/:code', component: SubsetDetailsComponent },
   { path: 'mappings', component: MappingsComponent },
   { path: 'valuesets', component: ValueSetsComponent },
   { path: 'associations', component: AssociationsComponent },

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -42,7 +42,8 @@ export class ValueSetsComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private cookieService: CookieService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -84,6 +85,8 @@ export class ValueSetsComponent implements OnInit {
     this.title = event.name + ' ( Code - ' + event.code + ' )';
     this.resetTreeTableNodes();
     this.updateDisplaySize();
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/subset/'+event.code]));
+    window.open(url, '_blank');
   }
 
   // Gets path in the hierarchy and scrolls to the active node

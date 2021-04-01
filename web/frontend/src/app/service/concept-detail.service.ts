@@ -85,4 +85,12 @@ export class ConceptDetailService {
       .then(res => <TreeNode[]>res);
   }
 
+  // Get Value Set Top Level
+  getSubsetDetails(code: string){
+    const url = '/api/v1/concept/ncit/subsetMembers/' + code;
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <TreeNode[]>res);
+  }
+
 }
