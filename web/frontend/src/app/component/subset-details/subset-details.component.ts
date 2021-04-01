@@ -42,9 +42,8 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   // Handle lazy loading of table
-  onLazyLoadData(event, subset, code) {
+  onLazyLoadData(event, code) {
     console.log('onLazyLoadData', this.avoidLazyLoading, event);
-    console.log(subset);
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
