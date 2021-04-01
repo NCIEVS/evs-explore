@@ -1,10 +1,12 @@
 <div *ngIf="subsetList">
   <p-panel [toggleable]="true">
     <p-header class="bold-heading">
-      {{ title }}
+      Subset of {{ titleCode }}
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="subsetList" sortMode="single" class="table table-striped table-bordered">
+      <p-table [value]="subsetList" [rows]="pageSize" [totalRecords]="hitsFound" sortMode="single"
+               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+               [lazy]="true" (onLazyLoad)="onLazyLoadData($event, subsetList, titleCode)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20" [pSortableColumn]="'code'">Code
@@ -20,6 +22,11 @@
             <td class="w-20">{{ subset.code }}</td>
             <td class="w-80">{{ subset.name }}</td>
           </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
+          <div class="paginator-stats">Showing {{state.first + 1}} to
+            {{(state.first + state.rows) > state.totalRecords?state.totalRecords:state.first + state.rows}} of
+            {{state.totalRecords}}</div>
         </ng-template>
       </p-table>
     </div>
