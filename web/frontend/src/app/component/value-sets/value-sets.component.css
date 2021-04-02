@@ -10,3 +10,7 @@
 .customtabview .ui-panel-titlebar {
   background: #000000
 }
+
+.page-header {
+  padding-bottom: 0.5em;
+}

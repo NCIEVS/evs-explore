@@ -21,7 +21,8 @@ export class SubsetDetailsComponent implements OnInit {
   conceptCode: string;
   hierarchyDisplay = '';
   titleCode: string;
-  subsetList: TreeNode[]
+  usedSubsetList: TreeNode[];
+  fullSubsetList: TreeNode[];
   avoidLazyLoading = true;
 
   constructor(private subsetDetailService: ConceptDetailService,
@@ -33,10 +34,11 @@ export class SubsetDetailsComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.subsetDetailService.getSubsetDetails(params.code)
+      this.subsetDetailService.getSubsetDetails(this.titleCode)
       .then(nodes => {
         this.hitsFound = nodes.length;
-        this.subsetList = nodes.slice(0, this.pageSize);
+        this.fullSubsetList = nodes;
+        this.usedSubsetList = nodes.slice(0, this.pageSize);
       });
     });
   }
@@ -47,12 +49,8 @@ export class SubsetDetailsComponent implements OnInit {
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
-      this.subsetDetailService.getSubsetDetails(this.titleCode)
-      .then(nodes => {
-        this.hitsFound = nodes.length;
-        this.subsetList = nodes.slice(event.first, event.first + event.rows);
-        console.log(this.subsetList);
-      });
+      this.usedSubsetList = this.fullSubsetList.slice(event.first, event.first + event.rows);
+      console.log(this.usedSubsetList);
     }
   }
 

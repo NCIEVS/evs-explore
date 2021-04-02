@@ -4,6 +4,8 @@
       <div class="hierarchy-div">
         <div class="page-header">
           Value Set Hierarchy
+          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
+              type="button"></button></span>
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
           [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
@@ -20,15 +22,6 @@
             </tr>
           </ng-template>
         </p-treeTable>
-      </div>
-    </as-split-area>
-    <as-split-area [size]="conceptPanelSize">
-      <div class="hierarchy-div">
-        <div class="page-header">
-          {{ title }}
-          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
-              type="button"></button></span>
-        </div>
       </div>
     </as-split-area>
   </as-split>
