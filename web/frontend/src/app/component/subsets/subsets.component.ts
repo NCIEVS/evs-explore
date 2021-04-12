@@ -100,7 +100,7 @@ export class SubsetsComponent implements OnInit {
         this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
           setTimeout(() => {
-            this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
+            this.scrollToSelectionTableTree(this.selectedNodes[0]);
           }, 100);
         }
 
@@ -108,13 +108,13 @@ export class SubsetsComponent implements OnInit {
   }
 
   // Get child tree nodes (for an expanded node)
-  getTreeTableChildrenNodes(code: string, nodeChildren: any) {
+  getTreeTableChildrenNodes(nodeChildren: any) {
       for (const child of nodeChildren) {
         this.setTreeTableProperties(child);
       }
       this.deepCopyHierarchyData();
       setTimeout(() => {
-        this.scrollToSelectionTableTree(nodeChildren, this.hierarchyTable);
+        this.scrollToSelectionTableTree(nodeChildren);
       }, 100);
   }
 
@@ -122,7 +122,7 @@ export class SubsetsComponent implements OnInit {
   treeTableNodeExpand(event) {
     console.log('treeTableNodeExpand', event.node);
     if (event.node) {
-      this.getTreeTableChildrenNodes(event.node.code, event.node.children);
+      this.getTreeTableChildrenNodes(event.node.children);
     }
   }
 
@@ -130,7 +130,7 @@ export class SubsetsComponent implements OnInit {
   treeTableNodeCollapse(event) {
     console.log('treeTableNodeCollapse', event.node);
     setTimeout(() => {
-      this.scrollToSelectionTableTree(event.node, this.hierarchyTable);
+      this.scrollToSelectionTableTree(event.node);
     }, 100);
   }
 
@@ -167,7 +167,7 @@ export class SubsetsComponent implements OnInit {
   }
 
   // Scroll to the selected node - oy!
-  scrollToSelectionTableTree(selectedNode, hierarchyTable) {
+  scrollToSelectionTableTree(selectedNode) {
     let index = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement
       .querySelectorAll('.ui-treetable-tbody>tr');
@@ -177,10 +177,6 @@ export class SubsetsComponent implements OnInit {
         index = i;
         break;
       }
-    }
-    if (this.hierarchyTable.el.nativeElement.querySelectorAll('.ui-treetable-tbody>tr')[index] !== undefined) {
-      this.hierarchyTable.el.nativeElement.querySelectorAll('.ui-treetable-tbody>tr')[index]
-        .scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
     }
   }
 
