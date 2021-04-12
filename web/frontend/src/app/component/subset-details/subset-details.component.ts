@@ -20,8 +20,8 @@ export class SubsetDetailsComponent implements OnInit {
   hierarchyDisplay = '';
   titleCode: string;
   titleDesc: string;
-  usedSubsetList: TreeNode[];
-  fullSubsetList: TreeNode[];
+  usedSubsetList: Array<Concept>;
+  fullSubsetList: Array<Concept>;
   avoidLazyLoading = true;
 
   urlBase = '/concept';
@@ -46,11 +46,12 @@ export class SubsetDetailsComponent implements OnInit {
         var conceptDetail = new Concept(response);
         this.titleDesc = conceptDetail.name;
       });
-      this.subsetDetailService.getSubsetDetails(this.titleCode)
+      this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
-        this.hitsFound = nodes.length;
-        this.fullSubsetList = nodes;
-        this.usedSubsetList = nodes.slice(0, this.pageSize);
+        console.log(nodes);
+        this.hitsFound = nodes["total"];
+        this.fullSubsetList = nodes["concepts"];
+        this.usedSubsetList = this.fullSubsetList;
       });
     });
   }
@@ -61,8 +62,14 @@ export class SubsetDetailsComponent implements OnInit {
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
-      this.usedSubsetList = this.fullSubsetList.slice(event.first, event.first + event.rows);
-      console.log(this.usedSubsetList);
+      const fromRecord = event.first;
+      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
+      .then(nodes => {
+        console.log(nodes);
+        this.hitsFound = nodes["total"];
+        this.fullSubsetList = nodes["concepts"];
+        this.usedSubsetList = this.fullSubsetList;
+      });
     }
   }
 

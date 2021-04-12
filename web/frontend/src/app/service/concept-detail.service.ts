@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { EvsError } from '../model/evsError';
 import { TreeNode } from 'primeng/api';
+import { Concept } from '../model/concept';
 
 // Service for loading concept information
 @Injectable()
@@ -90,7 +91,14 @@ export class ConceptDetailService {
     const url = '/api/v1/concept/ncit/subsetMembers/' + code;
     return this.http.get(url)
       .toPromise()
-      .then(res => <TreeNode[]>res);
+      .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10,){
+    const url = '/api/v1/concept/ncit/search?include=summary&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
   }
 
 }

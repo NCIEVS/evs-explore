@@ -11,13 +11,25 @@
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20">Code</th>
-            <th class="w-80">Name</th>
+            <th class="w-20">Name</th>
+            <th class="w-30">Synonyms</th>
+            <th class="w-30">Definitions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-subset>
           <tr>
             <td class="w-20">{{ subset.code }}</td>
-            <td class="w-80"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-20"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-30">
+              <span *ngFor="let syn of subset.synonyms">
+                {{syn.name}}
+              </span>
+            </td>
+            <td class="w-30">
+              <span *ngFor="let def of subset.definitions; last as isLast">
+                {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
+              </span>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
