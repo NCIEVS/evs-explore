@@ -17,7 +17,7 @@
         <ng-template pTemplate="body" let-subset>
           <tr>
             <td class="w-20">{{ subset.code }}</td>
-            <td class="w-80">{{ subset.name }}</td>
+            <td class="w-80"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">

@@ -24,6 +24,9 @@ export class SubsetDetailsComponent implements OnInit {
   fullSubsetList: TreeNode[];
   avoidLazyLoading = true;
 
+  urlBase = '/concept';
+  urlTarget = '_blank';
+
   constructor(private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
     private cookieService: CookieService) { }
