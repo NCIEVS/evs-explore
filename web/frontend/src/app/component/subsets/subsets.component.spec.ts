@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ValueSetsComponent } from './value-sets.component';
+import { SubsetsComponent } from './subsets.component';
 
-// Tests for ValueSetsComponent (default test)
-describe('ValueSetsComponent', () => {
-  let component: ValueSetsComponent;
-  let fixture: ComponentFixture<ValueSetsComponent>;
+// Tests for SubsetsComponent (default test)
+describe('SubsetsComponent', () => {
+  let component: SubsetsComponent;
+  let fixture: ComponentFixture<SubsetsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValueSetsComponent ]
+      declarations: [ SubsetsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ValueSetsComponent);
+    fixture = TestBed.createComponent(SubsetsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

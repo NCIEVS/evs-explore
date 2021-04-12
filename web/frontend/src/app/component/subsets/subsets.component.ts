@@ -15,7 +15,7 @@ import { CookieService } from 'ngx-cookie-service';
   templateUrl: './value-sets.component.html',
   styleUrls: ['./value-sets.component.css']
 })
-export class ValueSetsComponent implements OnInit {
+export class SubsetsComponent implements OnInit {
   [x: string]: any;
 
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
@@ -31,7 +31,7 @@ export class ValueSetsComponent implements OnInit {
   selectedNodes: TreeNode[] = [];
   title: string;
 
-  urlBase = "/valuesets"
+  urlBase = "/subsets"
   urlTarget = '_blank'
 
   conceptPanelSize = "70.0"
