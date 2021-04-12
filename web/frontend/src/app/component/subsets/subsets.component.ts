@@ -11,9 +11,9 @@ import { CookieService } from 'ngx-cookie-service';
 
 // Component for value sets.  Currently, this page just redirects to another page
 @Component({
-  selector: 'app-value-sets',
-  templateUrl: './value-sets.component.html',
-  styleUrls: ['./value-sets.component.css']
+  selector: 'subsets',
+  templateUrl: './subsets.component.html',
+  styleUrls: ['./subsets.component.css']
 })
 export class SubsetsComponent implements OnInit {
   [x: string]: any;

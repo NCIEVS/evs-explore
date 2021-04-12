@@ -21,6 +21,7 @@ export class SubsetDetailsComponent implements OnInit {
   conceptCode: string;
   hierarchyDisplay = '';
   titleCode: string;
+  titleDesc: string;
   usedSubsetList: TreeNode[];
   fullSubsetList: TreeNode[];
   avoidLazyLoading = true;
@@ -34,6 +35,16 @@ export class SubsetDetailsComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
+      this.route.paramMap.pipe(
+        switchMap((params: ParamMap) =>
+          this.subsetDetailService
+            .getConceptSummary(this.titleCode, 'minimal')
+        )
+      )
+      .subscribe((response: any) => {
+        var conceptDetail = new Concept(response);
+        this.titleDesc = conceptDetail.name;
+      });
       this.subsetDetailService.getSubsetDetails(this.titleCode)
       .then(nodes => {
         this.hitsFound = nodes.length;
