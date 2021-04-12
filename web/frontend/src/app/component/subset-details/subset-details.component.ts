@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { TreeNode } from 'primeng/api';
-import { TreeTable } from 'primeng/primeng';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({

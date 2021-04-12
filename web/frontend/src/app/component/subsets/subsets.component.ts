@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConceptDetailService } from './../../service/concept-detail.service';
