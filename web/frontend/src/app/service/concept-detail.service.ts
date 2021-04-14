@@ -94,8 +94,11 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10,){
-    const url = '/api/v1/concept/ncit/search?include=summary&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""){
+    var url = '/api/v1/concept/ncit/search?include=summary&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
+    if(searchTerm != "")
+      url += "&term="+searchTerm;
+    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(res => <Array<Concept>[]>res);

@@ -23,6 +23,8 @@ export class SubsetDetailsComponent implements OnInit {
   usedSubsetList: Array<Concept>;
   fullSubsetList: Array<Concept>;
   avoidLazyLoading = true;
+  synonymSources: any;
+  termAutoSearch: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -52,6 +54,12 @@ export class SubsetDetailsComponent implements OnInit {
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
+        var synonymMap = new Array<Map<string, string>>();
+        this.usedSubsetList.forEach(conc => {
+          synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+        });
+        this.synonymSources = synonymMap;
+        this.termAutoSearch = "";
       });
     });
   }
@@ -69,8 +77,63 @@ export class SubsetDetailsComponent implements OnInit {
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
+        var synonymMap = new Array<Map<string, string>>();
+        this.usedSubsetList.forEach(conc => {
+          synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+        });
+        this.synonymSources = synonymMap;
+        console.log(this.synonymSources);
       });
     }
+  }
+
+  getSynonymSources(synonyms){
+    var synonymSourceMap = new Map<string, string>();
+    synonyms.forEach(synonym => {
+      if(synonym["source"] == undefined){
+        if(!(synonymSourceMap.has("No Source"))) {
+          synonymSourceMap.set("No Source", synonym["name"]);
+        }
+        else {
+          var key = synonymSourceMap.get("No Source") + ", " + synonym["name"];
+          synonymSourceMap.set("No Source", key);
+        }
+      }
+      else{
+        if(!(synonymSourceMap.has(synonym["source"]))) {
+          synonymSourceMap.set(synonym["source"], synonym["name"]);
+        }
+        else{
+          var key = synonymSourceMap.get(synonym["source"]) + ", " + synonym["name"];
+          synonymSourceMap.set(synonym["source"], key);
+        }
+      }
+
+    });
+    return synonymSourceMap;
+  }
+
+  search(event){
+    console.log(event);
+    this.subsetDetailService.getSubsetFullDetails(this.titleCode, undefined, undefined, event.query)
+      .then(nodes => {
+        console.log(nodes);
+        this.hitsFound = nodes["total"];
+        if(this.hitsFound > 0) {
+          this.fullSubsetList = nodes["concepts"];
+          this.usedSubsetList = this.fullSubsetList;
+          var synonymMap = new Array<Map<string, string>>();
+          this.usedSubsetList.forEach(conc => {
+            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          });
+          this.synonymSources = synonymMap;
+          console.log(this.synonymSources);
+        }
+        else {
+          this.fullSubsetList = null;
+          this.usedSubsetList = null;
+        }
+      });
   }
 
 }
