@@ -46,13 +46,13 @@
             <th class="w-40">Definitions</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-subset>
-          <tr>
+        <ng-template pTemplate="body">
+          <tr *ngFor="let subset of usedSubsetList; let i=index">
             <td class="w-10">{{ subset.code }}</td>
             <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
             <td class="w-40">
-              <span *ngFor="let syn of subset.synonyms">
-                <a *ngIf="syn.source">{{syn.source}}: </a>{{syn.name}},
+              <span *ngFor="let syn of synonymSources[i] | keyvalue">
+                  <p> {{syn.key}}: {{syn.value}} </p>
               </span>
             </td>
             <td class="w-40">
