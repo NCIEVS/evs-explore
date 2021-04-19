@@ -190,7 +190,6 @@ export class SubsetsComponent implements OnInit {
 
 
   expandOrCollapseAllNodes(hierarchyData, element, level = 0){
-    console.log(element)
     if(this.expand){
       for (let i = 0; i < hierarchyData.length; i++) {
         if(hierarchyData[i].children.length > 0){
@@ -206,12 +205,11 @@ export class SubsetsComponent implements OnInit {
     }
     else {
       // TODO: figure out how collapsing works
-      if(level == 0){
-        this.expand = true;
-        element.textContent = "Expand All"
+      this.ngOnInit()
+      this.expand = true;
+      element.textContent = "Expand All"
       }
     }
   }
 
-}
 
