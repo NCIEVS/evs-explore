@@ -29,6 +29,7 @@ export class SubsetsComponent implements OnInit {
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
   title: string;
+  expand = true;
 
   urlBase = "/subsets"
   urlTarget = '_blank'
@@ -118,6 +119,13 @@ export class SubsetsComponent implements OnInit {
       }, 100);
   }
 
+  clearTreeTableChildrenNodes(nodeChildren: any) {
+    for (const child of nodeChildren) {
+      this.setTreeTableProperties(null);
+    }
+    this.deepCopyHierarchyData();
+  }
+
   // Handler for expanding a tree node
   treeTableNodeExpand(event) {
     console.log('treeTableNodeExpand', event.node);
@@ -180,4 +188,30 @@ export class SubsetsComponent implements OnInit {
     }
   }
 
+
+  expandOrCollapseAllNodes(hierarchyData, element, level = 0){
+    console.log(element)
+    if(this.expand){
+      for (let i = 0; i < hierarchyData.length; i++) {
+        if(hierarchyData[i].children.length > 0){
+          this.getTreeTableChildrenNodes(hierarchyData[i].children);
+          this.expandOrCollapseAllNodes(hierarchyData[i].children, undefined, level + 1);
+          hierarchyData[i].expanded = true;
+        }
+      }
+      if(level == 0){ // make sure everything is finished
+        this.expand = false;
+        element.textContent = "Collapse All"
+      }
+    }
+    else {
+      // TODO: figure out how collapsing works
+      if(level == 0){
+        this.expand = true;
+        element.textContent = "Expand All"
+      }
+    }
+  }
+
 }
+

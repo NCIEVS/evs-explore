@@ -4,6 +4,8 @@
       <div class="hierarchy-div">
         <div class="page-header">
           Subset Hierarchy
+          <button label="Expand All" (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton
+              type="button"></button>
           <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
               type="button"></button></span>
         </div>
