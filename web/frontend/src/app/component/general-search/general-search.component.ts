@@ -460,8 +460,11 @@ export class GeneralSearchComponent implements OnInit,
       this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
     }
     else {
-      this.displayColumns = ["Highlights","Preferred Name","Definitions","Code","Synonyms"];
+      this.selectedColumns = ["Highlights","Preferred Name","Definitions","Code","Synonyms"];
+      this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
+
     }
+    console.log(this.displayColumns)
     this.selectedColumns = this.displayColumns.map(element => element.header);
   }
 
