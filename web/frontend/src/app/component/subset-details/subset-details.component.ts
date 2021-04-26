@@ -23,8 +23,10 @@ export class SubsetDetailsComponent implements OnInit {
   usedSubsetList: Array<Concept>;
   fullSubsetList: Array<Concept>;
   avoidLazyLoading = true;
+  loading: boolean;
   synonymSources: any;
   termAutoSearch: string;
+  textSuggestions: string[] = [];
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -114,10 +116,8 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   search(event){
-    console.log(event);
     this.subsetDetailService.getSubsetFullDetails(this.titleCode, undefined, undefined, event.query)
       .then(nodes => {
-        console.log(nodes);
         this.hitsFound = nodes["total"];
         if(this.hitsFound > 0) {
           this.fullSubsetList = nodes["concepts"];
@@ -127,13 +127,13 @@ export class SubsetDetailsComponent implements OnInit {
             synonymMap.push(this.getSynonymSources(conc["synonyms"]));
           });
           this.synonymSources = synonymMap;
-          console.log(this.synonymSources);
         }
         else {
           this.fullSubsetList = null;
           this.usedSubsetList = null;
         }
       });
+    this.textSuggestions = [];
   }
 
 }

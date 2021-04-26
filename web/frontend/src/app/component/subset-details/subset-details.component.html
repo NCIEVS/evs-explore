@@ -9,7 +9,7 @@
           <div class="col-sm-4">
             <div style="padding-bottom: 6px;">
               <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
-                [(ngModel)]="termAutoSearch" (completeMethod)="search($event)"
+                [(ngModel)]="termAutoSearch" [suggestions]="textSuggestions" (completeMethod)="search($event)"
                 id="termauto" name="termauto" placeholder="Enter at least 3 letters of a term."
                 [minLength]="3">
               </p-autoComplete>
