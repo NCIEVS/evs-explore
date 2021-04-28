@@ -23,7 +23,6 @@ export class ConceptDetailComponent implements OnInit {
       ['NCI_META_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code='],
       ['NSC_Code', 'https://dtp.cancer.gov/dtpstandard/servlet/dwindex?searchtype=NSC&amp;searchlist='],
       ['OMIM_Number', 'https://omim.org/entry/'],
-      ['PDQ_Open_Trial_Search_ID', 'http://www.cancer.gov/Search/ClinicalTrialsLink.aspx?idtype=1&amp;id='],
       ['PubMedID_Primary_Reference', 'http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids='],
       ['Swiss_Prot', 'https://www.uniprot.org/uniprot/'],
       ['UMLS_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code=']
