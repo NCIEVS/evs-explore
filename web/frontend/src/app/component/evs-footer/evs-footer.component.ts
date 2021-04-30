@@ -24,9 +24,4 @@ export class EvsFooterComponent implements OnInit {
     this.elementRef.nativeElement.appendChild(s);
   }
 
-  contactPage() {
-    this.router.navigate(['/contact']);
-    return false;
-  }
-
 }
