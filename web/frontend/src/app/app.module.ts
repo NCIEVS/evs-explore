@@ -36,7 +36,7 @@ import { ConceptDetailComponent } from './component/concept-detail/concept-detai
 import { ConceptRelationshipComponent } from './component/concept-relationship/concept-relationship.component';
 import { ConceptDisplayComponent } from './component/concept-display/concept-display.component';
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
-import { ValueSetsComponent } from './component/value-sets/value-sets.component';
+import { SubsetsComponent } from './component/subsets/subsets.component';
 import { MappingsComponent } from './component/mappings/mappings.component';
 import { AssociationsComponent } from './component/documentation/associations/associations.component';
 import { PropertiesComponent } from './component/documentation/properties/properties.component';
@@ -83,6 +83,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
+import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -100,7 +101,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     ConceptRelationshipComponent,
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
-    ValueSetsComponent,
+    SubsetsComponent,
     MappingsComponent,
     AssociationsComponent,
     PropertiesComponent,
@@ -113,7 +114,8 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     SourcesComponent,
     WelcomeComponent,
     AutofocusDirective,
-    ContactUsComponent
+    ContactUsComponent,
+    SubsetDetailsComponent
   ],
   imports: [
     NgbModule,

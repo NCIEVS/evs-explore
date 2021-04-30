@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { EvsError } from '../model/evsError';
 import { TreeNode } from 'primeng/api';
+import { Concept } from '../model/concept';
 
 // Service for loading concept information
 @Injectable()
@@ -75,6 +76,32 @@ export class ConceptDetailService {
     return this.http.get(url)
       .toPromise()
       .then(res => <TreeNode[]>res);
+  }
+
+  // Get Value Set Top Level
+  getValueSetTopLevel(){
+    const url = '/api/v1/metadata/ncit/subsets?include=minimal'
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <TreeNode[]>res);
+  }
+
+  // Get Value Set Top Level
+  getSubsetDetails(code: string){
+    const url = '/api/v1/concept/ncit/subsetMembers/' + code;
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""){
+    var url = '/api/v1/concept/ncit/search?include=summary&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
+    if(searchTerm != "")
+      url += "&term="+searchTerm;
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
   }
 
 }
