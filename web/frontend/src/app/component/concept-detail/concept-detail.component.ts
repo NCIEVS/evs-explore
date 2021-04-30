@@ -14,7 +14,7 @@ export class ConceptDetailComponent implements OnInit {
   // TODO: this needs to be pulled from the endpoint (e.g. application metadata)
   externalLinks = new Map(
     [
-      ['CAS_Registry', 'http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno='],
+      ['CAS_Registry', 'http://chem.nlm.nih.gov/chemidplus/direct.jsp?regno='],
       ['CHEBI_ID', 'http://www.ebi.ac.uk/chebi/advancedSearchFT.do?searchString='],
       ['EntrezGene_ID', 'http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&amp;cmd=ShowDetailView&amp;TermToSearch='],
       ['GenBank_Accession_Number', 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=search&amp;term=+'],
