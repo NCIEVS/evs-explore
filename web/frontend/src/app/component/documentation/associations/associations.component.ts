@@ -31,6 +31,8 @@ export class AssociationsComponent implements OnInit {
     event.data.sort((data1, data2) => {
         let value1 = data1[event.field];
         let value2 = data2[event.field];
+        if(value1 == undefined)
+          return 0;
         return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
 }
