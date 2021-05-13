@@ -33,7 +33,7 @@
       Definitions
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single" *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions">
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single" *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
           <th class="w-80" [pSortableColumn]="'definition'">Definition
@@ -64,7 +64,7 @@
       Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.synonyms">
+      <p-table class="table table-striped table-bordered" [value]="concept.synonyms" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-60" [pSortableColumn]="'name'">Term
@@ -101,7 +101,7 @@
       Other Properties
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.properties">
+      <p-table class="table table-striped table-bordered" [value]="concept.properties" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Type
@@ -134,7 +134,7 @@
       Maps To
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.maps" *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps">
+      <p-table class="table table-striped table-bordered" [value]="concept.maps" *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'targetName'">Target Name
