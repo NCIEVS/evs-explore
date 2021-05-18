@@ -4,7 +4,7 @@
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
-    <p-table [value]="roles" sortMode="single" class="table table-striped table-bordered">
+    <p-table [value]="roles" sortMode="single" class="table table-striped table-bordered" (sortFunction)="customSort($event)" [customSort]="true">
       <ng-template pTemplate="header">
         <tr>
           <th class="w-10" [pSortableColumn]="'code'">Code
@@ -30,3 +30,4 @@
     </p-table>
   </div>
 </div>
+<p>
