@@ -1,0 +1,290 @@
+<p>
+<div class="container" *ngIf="associations">
+  <div class="page-header">
+    <span>Associations</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table [value]="associations" sortMode="single" class="table table-striped table-bordered" (sortFunction)="customSort($event)" [customSort]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-10" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-20" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th class="w-70">Definition</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-association>
+        <tr>
+          <td>{{ association.code }}</td>
+          <td>{{ association.name }}</td>
+          <td><span *ngIf="
+                association.definitions &&
+                association.definitions.length > 0
+                ">{{ association.definitions[0].definition }}
+            </span></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
+
+<div class="container" *ngIf="properties">
+  <div class="page-header">
+    <span>Properties</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table [value]="properties" sortMode="single" class="table table-striped table-bordered" (sortFunction)="customSort($event)" [customSort]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-10" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-20" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th class="w-70">Definition</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-property>
+        <tr>
+          <td>{{ property.code }}</td>
+          <td>{{ property.name }}</td>
+          <td><span *ngIf="
+                property.definitions &&
+                property.definitions.length > 0
+                ">{{ property.definitions[0].definition }}
+            </span></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
+
+<div class="container" *ngIf="qualifiers">
+  <div class="page-header">
+    <span>Qualifiers</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table [value]="qualifiers" sortMode="single" class="table table-striped table-bordered">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-10" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-20" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th class="w-70">Definition</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-qualifier>
+        <tr>
+          <td>{{ qualifier.code }}</td>
+          <td>{{ qualifier.name }}</td>
+          <td><span *ngIf="
+                qualifier.definitions &&
+                qualifier.definitions.length > 0
+                ">{{ qualifier.definitions[0].definition }}
+            </span></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
+
+<div class="container" *ngIf="roles">
+  <div class="page-header">
+    <span>Roles</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table [value]="roles" sortMode="single" class="table table-striped table-bordered" (sortFunction)="customSort($event)" [customSort]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-10" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-20" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th class="w-70">Description</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-role>
+        <tr>
+          <td>{{ role.code }}</td>
+          <td>{{ role.name }}</td>
+          <td><span *ngIf="
+                role.definitions &&
+                role.definitions.length > 0
+                ">{{ role.definitions[0].definition }}
+            </span></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
+
+<div class="container" *ngIf="termTypes">
+  <div class="page-header">
+    <span>Term Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p>NCI Thesaurus Term Types use 2- or 3-character abbreviations to code the nature of each term associated with a
+    concept. Here is a listing of the term type codes and their meanings:</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="termTypes" sortMode="single">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Name
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Description
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tty>
+        <tr>
+          <td>{{ tty.code }}</td>
+          <td>{{ tty.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p>*Note on special rules governing NCI PT, HD, and AQ term types: Each concept should have one, and only one, term
+    coded with one of these three values. The NCI Preferred Term is always taken from one of the NCI terms, normally
+    that with a type of PT (Preferred Term). However, in special cases, a concept will not have a PT term, but instead,
+    will have either an HD (Header) term or an AQ term. These tags are considered equivalent to PT by the software. This
+    means that a concept may have only as single NCI PT, or HD, or AQ term. In those cases where multiple antiquated
+    terms are needed for a concept which is itself coded as antiquated, one should be tagged AQ and the rest tagged AQS.
+  </p>
+</div>
+
+<div class="container">
+  <div class="page-header">
+    <span>Sources</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+
+  <p>NCI Thesaurus Synonym Sources</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="synonymSources" sortMode="single">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Name
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Description
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-source>
+        <tr>
+          <td>{{ source.code }}</td>
+          <td>{{ source.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p>
+
+  <p>NCI Thesaurus Definition Sources</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="definitionSources" sortMode="single">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Name
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Description
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-source>
+        <tr>
+          <td>{{ source.code }}</td>
+          <td>{{ source.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- if/when definition sources are searchable via explore, list them here -->
+
+  <p>
+    <!--*any footnotes go here.-->
+  </p>
+</div>
+<p>
+
+<div class="container" *ngIf="definitionTypes">
+  <div class="page-header">
+    <span>Definition Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p>Here is a listing of NCIt definition types:</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="definitionTypes" sortMode="single" (sortFunction)="customSort($event)" [customSort]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tty>
+        <tr>
+          <td>{{ tty.code }}</td>
+          <td>{{ tty.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
+
+<div class="container" *ngIf="synonymTypes">
+  <div class="page-header">
+    <span>Synonym Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+  </div>
+  <p>Here is a listing of NCIt synonym types:</p>
+  <div class="table-responsive" style="font-size:14px;">
+    <p-table class="table table-striped table-bordered" [value]="synonymTypes" sortMode="single" (sortFunction)="customSort($event)" [customSort]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-20" [pSortableColumn]="'code'">Code
+            <p-sortIcon [field]="'code'"></p-sortIcon>
+          </th>
+          <th class="w-80" [pSortableColumn]="'name'">Name
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tty>
+        <tr>
+          <td>{{ tty.code }}</td>
+          <td>{{ tty.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p>
