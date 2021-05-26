@@ -83,6 +83,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
+import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
 import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
 
 // Angular configuration for this application
@@ -114,6 +115,8 @@ import { SubsetDetailsComponent } from './component/subset-details/subset-detail
     SourcesComponent,
     WelcomeComponent,
     AutofocusDirective,
+    ContactUsComponent,
+    AlldocsComponent
     ContactUsComponent,
     SubsetDetailsComponent
   ],
