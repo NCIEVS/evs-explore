@@ -116,7 +116,7 @@ import { SubsetDetailsComponent } from './component/subset-details/subset-detail
     WelcomeComponent,
     AutofocusDirective,
     ContactUsComponent,
-    AlldocsComponent
+    AlldocsComponent,
     ContactUsComponent,
     SubsetDetailsComponent
   ],
