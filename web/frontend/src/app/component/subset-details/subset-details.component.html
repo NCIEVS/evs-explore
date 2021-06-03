@@ -129,7 +129,9 @@
               </span>
             </td>
             <td class="w-20">
-              TBD
+              <span *ngFor="let def of subset.definitions; last as isLast">
+                <span *ngIf="def.source == subsetFormat"> {{def.definition}} </span>
+              </span>
             </td>
             <td class="w-30">
               <span *ngFor="let def of subset.definitions; last as isLast">
