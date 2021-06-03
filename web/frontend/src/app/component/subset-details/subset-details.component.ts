@@ -27,6 +27,7 @@ export class SubsetDetailsComponent implements OnInit {
   synonymSources: any;
   termAutoSearch: string;
   textSuggestions: string[] = [];
+  subsetFormat: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -43,12 +44,22 @@ export class SubsetDetailsComponent implements OnInit {
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getConceptSummary(this.titleCode, 'minimal')
+            .getConceptSummary(this.titleCode, 'summary')
         )
       )
       .subscribe((response: any) => {
         var conceptDetail = new Concept(response);
         this.titleDesc = conceptDetail.name;
+        let ContSource = conceptDetail.properties.filter(item => item.type == 'Contributing_Source');
+        if(ContSource.length == 1){
+          if(ContSource[0].value == "CTRP")
+            this.subsetFormat = "CTRP";
+          else
+            this.subsetFormat = "default";
+        }
+        else{
+          this.subsetFormat = "NCIt";
+        }
       });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
@@ -75,7 +86,6 @@ export class SubsetDetailsComponent implements OnInit {
       const fromRecord = event.first;
       this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
       .then(nodes => {
-        console.log(nodes);
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
@@ -84,7 +94,6 @@ export class SubsetDetailsComponent implements OnInit {
           synonymMap.push(this.getSynonymSources(conc["synonyms"]));
         });
         this.synonymSources = synonymMap;
-        console.log(this.synonymSources);
       });
     }
   }
