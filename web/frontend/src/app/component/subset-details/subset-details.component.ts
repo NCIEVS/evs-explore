@@ -55,11 +55,12 @@ export class SubsetDetailsComponent implements OnInit {
           if(ContSource[0].value == "CTRP")
             this.subsetFormat = "CTRP";
           else
-            this.subsetFormat = "default";
+            this.subsetFormat = ContSource[0].value;
         }
         else{
           this.subsetFormat = "NCIt";
         }
+        console.log(this.subsetFormat);
       });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
