@@ -28,6 +28,7 @@ export class SubsetDetailsComponent implements OnInit {
   termAutoSearch: string;
   textSuggestions: string[] = [];
   subsetFormat: string;
+  ValueSetLink: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -44,11 +45,12 @@ export class SubsetDetailsComponent implements OnInit {
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getConceptSummary(this.titleCode, 'summary')
+            .getConceptSummary(this.titleCode, 'full')
         )
       )
       .subscribe((response: any) => {
         var conceptDetail = new Concept(response);
+        this.ValueSetLink = conceptDetail.valueSetLink;
         this.titleDesc = conceptDetail.name;
         let ContSource = conceptDetail.properties.filter(item => item.type == 'Contributing_Source');
         if(ContSource.length == 1){
@@ -60,11 +62,9 @@ export class SubsetDetailsComponent implements OnInit {
         else{
           this.subsetFormat = "NCIt";
         }
-        console.log(this.subsetFormat);
       });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
-        console.log(nodes);
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;

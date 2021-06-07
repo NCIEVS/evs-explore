@@ -22,6 +22,7 @@ export class Concept {
   associations: Relationship[];
   inverseAssociations: Relationship[];
   maps: Map[];
+  valueSetLink: string;
 
   constructor(input: any) {
     Object.assign(this, input);
@@ -243,6 +244,11 @@ export class Concept {
       }
     }
     return syns;
+  }
+
+  // Returns ValueSetLink if it exists
+  getValueSetLink() {
+    return this.valueSetLink ? this.valueSetLink : null;
   }
 
   // Return roles text
