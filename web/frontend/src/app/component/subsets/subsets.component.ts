@@ -20,9 +20,9 @@ export class SubsetsComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
   activeIndex = 0
-  valueSetCode: string;
-  valueSetDetail: Concept;
-  valueSetWithRelationships: Concept;
+  subsetCode: string;
+  subsetDetail: Concept;
+  subsetWithRelationships: Concept;
   direction = 'horizontal';
   hierarchyDisplay = "";
   hierarchyData: TreeNode[]
@@ -35,10 +35,10 @@ export class SubsetsComponent implements OnInit {
   urlTarget = '_blank'
 
   conceptPanelSize = "70.0"
-  valueSetPanelSize = "30.0"
+  subsetPanelSize = "30.0"
 
   constructor(
-    private valueSetDetailService: ConceptDetailService,
+    private subsetDetailService: ConceptDetailService,
     private location: Location,
     private route: ActivatedRoute,
     private cookieService: CookieService,
@@ -61,9 +61,9 @@ export class SubsetsComponent implements OnInit {
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
     if (($event.index === 1 || $event.index === 2) &&
-      (this.valueSetWithRelationships === undefined || this.valueSetWithRelationships == null)) {
-      this.valueSetDetailService.getRelationships(this.valueSetCode).subscribe(response => {
-        this.valueSetWithRelationships = new Concept(response);
+      (this.subsetWithRelationships === undefined || this.subsetWithRelationships == null)) {
+      this.subsetDetailService.getRelationships(this.subsetCode).subscribe(response => {
+        this.subsetWithRelationships = new Concept(response);
       });
     }
   }
@@ -91,7 +91,7 @@ export class SubsetsComponent implements OnInit {
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    this.valueSetDetailService.getValueSetTopLevel()
+    this.subsetDetailService.getSubsetTopLevel()
       .then(nodes => {
 
         this.hierarchyData = <TreeNode[]>nodes;

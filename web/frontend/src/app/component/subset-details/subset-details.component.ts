@@ -28,7 +28,7 @@ export class SubsetDetailsComponent implements OnInit {
   termAutoSearch: string;
   textSuggestions: string[] = [];
   subsetFormat: string;
-  valueSetLink: string;
+  subsetLink: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -42,27 +42,6 @@ export class SubsetDetailsComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.route.paramMap.pipe(
-        switchMap((params: ParamMap) =>
-          this.subsetDetailService
-            .getConceptSummary(this.titleCode, 'summary')
-        )
-      )
-      .subscribe((response: any) => {
-        var conceptDetail = new Concept(response);
-        console.log(conceptDetail);
-        this.titleDesc = conceptDetail.name;
-        let ContSource = conceptDetail.properties.filter(item => item.type == 'Contributing_Source');
-        if(ContSource.length == 1){
-          if(ContSource[0].value == "CTRP")
-            this.subsetFormat = "CTRP";
-          else
-            this.subsetFormat = ContSource[0].value;
-        }
-        else{
-          this.subsetFormat = "NCIt";
-        }
-      });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
         console.log(nodes)
@@ -79,13 +58,24 @@ export class SubsetDetailsComponent implements OnInit {
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getSubsetInfo(this.titleCode, "valueSetLink")
+            .getSubsetInfo(this.titleCode, "summary")
         )
       )
       .subscribe((response: any) => {
         var subsetDetail = new Concept(response);
         console.log(subsetDetail)
-        this.valueSetLink = subsetDetail.getValueSetLink();
+        this.titleDesc = subsetDetail.name;
+        let ContSource = subsetDetail.properties.filter(item => item.type == 'Contributing_Source');
+        if(ContSource.length == 1){
+          if(ContSource[0].value == "CTRP")
+            this.subsetFormat = "CTRP";
+          else
+            this.subsetFormat = ContSource[0].value;
+        }
+        else{
+          this.subsetFormat = "NCIt";
+        }
+        this.subsetLink = subsetDetail.getSubsetLink();
       });
     });
   }

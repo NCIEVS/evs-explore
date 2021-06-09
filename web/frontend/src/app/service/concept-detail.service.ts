@@ -79,7 +79,7 @@ export class ConceptDetailService {
   }
 
   // Get Value Set Top Level
-  getValueSetTopLevel(){
+  getSubsetTopLevel(){
     const url = '/api/v1/metadata/ncit/subsets?include=minimal'
     return this.http.get(url)
       .toPromise()

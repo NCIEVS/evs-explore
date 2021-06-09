@@ -1,8 +1,8 @@
 <div>
   <p-panel [toggleable]="true">
     <p>View value sets organized by standards category or source terminology. Standards categories group the value sets supporting them; all other labels lead to the home pages of actual value sets or source terminologies. Search or browse a value set from its home page, or search all value sets at once from this page (very slow) to find which ones contain a particular code or term. Many of these value sets are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding standards.</p>
-    <div *ngIf="valueSetLink != null">
-      Value Set Download Link: <a href={{valueSetLink}}>{{valueSetLink}}</a>
+    <div *ngIf="subsetLink != null">
+      Value Set Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
     </div><br />
     <p-header class="bold-heading">
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
