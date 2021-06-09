@@ -95,10 +95,17 @@ export class ConceptDetailService {
   }
 
   getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""){
-    var url = '/api/v1/concept/ncit/search?include=summary&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
+    var url = '/api/v1/concept/ncit/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
     if(searchTerm != "")
       url += "&term="+searchTerm;
     console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetInfo(code: string, include: string){
+    var url = '/api/v1/metadata/ncit/subset/' + code + '?include=' + include;
     return this.http.get(url)
       .toPromise()
       .then(res => <Array<Concept>[]>res);

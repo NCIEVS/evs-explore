@@ -28,7 +28,7 @@ export class SubsetDetailsComponent implements OnInit {
   termAutoSearch: string;
   textSuggestions: string[] = [];
   subsetFormat: string;
-  ValueSetLink: string;
+  valueSetLink: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -45,12 +45,12 @@ export class SubsetDetailsComponent implements OnInit {
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getConceptSummary(this.titleCode, 'full')
+            .getConceptSummary(this.titleCode, 'summary')
         )
       )
       .subscribe((response: any) => {
         var conceptDetail = new Concept(response);
-        this.ValueSetLink = conceptDetail.valueSetLink;
+        console.log(conceptDetail);
         this.titleDesc = conceptDetail.name;
         let ContSource = conceptDetail.properties.filter(item => item.type == 'Contributing_Source');
         if(ContSource.length == 1){
@@ -65,6 +65,7 @@ export class SubsetDetailsComponent implements OnInit {
       });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
+        console.log(nodes)
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
@@ -74,6 +75,17 @@ export class SubsetDetailsComponent implements OnInit {
         });
         this.synonymSources = synonymMap;
         this.termAutoSearch = "";
+      });
+      this.route.paramMap.pipe(
+        switchMap((params: ParamMap) =>
+          this.subsetDetailService
+            .getSubsetInfo(this.titleCode, "valueSetLink")
+        )
+      )
+      .subscribe((response: any) => {
+        var subsetDetail = new Concept(response);
+        console.log(subsetDetail)
+        this.valueSetLink = subsetDetail.getValueSetLink();
       });
     });
   }
