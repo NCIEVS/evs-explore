@@ -27,6 +27,8 @@ export class SubsetDetailsComponent implements OnInit {
   synonymSources: any;
   termAutoSearch: string;
   textSuggestions: string[] = [];
+  subsetFormat: string;
+  subsetLink: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -40,19 +42,9 @@ export class SubsetDetailsComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.route.paramMap.pipe(
-        switchMap((params: ParamMap) =>
-          this.subsetDetailService
-            .getConceptSummary(this.titleCode, 'minimal')
-        )
-      )
-      .subscribe((response: any) => {
-        var conceptDetail = new Concept(response);
-        this.titleDesc = conceptDetail.name;
-      });
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)
       .then(nodes => {
-        console.log(nodes);
+        console.log(nodes)
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
@@ -62,6 +54,28 @@ export class SubsetDetailsComponent implements OnInit {
         });
         this.synonymSources = synonymMap;
         this.termAutoSearch = "";
+      });
+      this.route.paramMap.pipe(
+        switchMap((params: ParamMap) =>
+          this.subsetDetailService
+            .getSubsetInfo(this.titleCode, "summary")
+        )
+      )
+      .subscribe((response: any) => {
+        var subsetDetail = new Concept(response);
+        console.log(subsetDetail)
+        this.titleDesc = subsetDetail.name;
+        let ContSource = subsetDetail.properties.filter(item => item.type == 'Contributing_Source');
+        if(ContSource.length == 1){
+          if(ContSource[0].value == "CTRP")
+            this.subsetFormat = "CTRP";
+          else
+            this.subsetFormat = ContSource[0].value;
+        }
+        else{
+          this.subsetFormat = "NCIt";
+        }
+        this.subsetLink = subsetDetail.getSubsetLink();
       });
     });
   }
@@ -75,7 +89,6 @@ export class SubsetDetailsComponent implements OnInit {
       const fromRecord = event.first;
       this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
       .then(nodes => {
-        console.log(nodes);
         this.hitsFound = nodes["total"];
         this.fullSubsetList = nodes["concepts"];
         this.usedSubsetList = this.fullSubsetList;
@@ -84,7 +97,6 @@ export class SubsetDetailsComponent implements OnInit {
           synonymMap.push(this.getSynonymSources(conc["synonyms"]));
         });
         this.synonymSources = synonymMap;
-        console.log(this.synonymSources);
       });
     }
   }

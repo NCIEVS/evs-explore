@@ -1,6 +1,9 @@
 <div>
   <p-panel [toggleable]="true">
     <p>View value sets organized by standards category or source terminology. Standards categories group the value sets supporting them; all other labels lead to the home pages of actual value sets or source terminologies. Search or browse a value set from its home page, or search all value sets at once from this page (very slow) to find which ones contain a particular code or term. Many of these value sets are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding standards.</p>
+    <div *ngIf="subsetLink != null">
+      Value Set Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
+    </div><br />
     <p-header class="bold-heading">
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
     </p-header>
@@ -35,7 +38,7 @@
           <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
         </p-header>
       </div>
-      <p-table *ngIf="usedSubsetList" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
+      <p-table *ngIf="usedSubsetList && subsetFormat == 'NCIt'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
                [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
                [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
@@ -56,6 +59,84 @@
               </span>
             </td>
             <td class="w-40">
+              <span *ngFor="let def of subset.definitions; last as isLast">
+                {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
+          <div class="paginator-stats">Showing {{state.first + 1}} to
+            {{(state.first + state.rows) > state.totalRecords?state.totalRecords:state.first + state.rows}} of
+            {{state.totalRecords}}</div>
+        </ng-template>
+      </p-table>
+      <p-table *ngIf="usedSubsetList && subsetFormat == 'CTRP'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
+               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+               [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+        <ng-template pTemplate="header">
+          <tr>
+          <th class="w-10">Subset Code</th>
+            <th class="w-10">Concept Code</th>
+            <th class="w-10">Name</th>
+            <th class="w-30">Synonyms</th>
+            <th class="w-30">Definitions</th>
+            <th class="w-10">CTRP Display Name</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+          <tr *ngFor="let subset of usedSubsetList; let i=index">
+            <td class="w-10">{{ titleCode }}</td>
+            <td class="w-10">{{ subset.code }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-30">
+              <span *ngFor="let syn of synonymSources[i] | keyvalue">
+                  <p> {{syn.key}}: {{syn.value}} </p>
+              </span>
+            </td>
+            <td class="w-30">
+              <span *ngFor="let def of subset.definitions; last as isLast">
+                {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
+              </span>
+            </td>
+            <td class="w-10">{{ subset.name }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
+          <div class="paginator-stats">Showing {{state.first + 1}} to
+            {{(state.first + state.rows) > state.totalRecords?state.totalRecords:state.first + state.rows}} of
+            {{state.totalRecords}}</div>
+        </ng-template>
+      </p-table>
+      <p-table *ngIf="usedSubsetList && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
+               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+               [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-10">Code</th>
+            <th class="w-10">Source</th>
+            <th class="w-10">Name</th>
+            <th class="w-20">Synonyms</th>
+            <th class="w-20">Source Definitions</th>
+            <th class="w-30">Definitions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+          <tr *ngFor="let subset of usedSubsetList; let i=index">
+            <td class="w-10">{{ subset.code }}</td>
+            <td class="w-10">{{ subsetFormat }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-20">
+              <span *ngFor="let syn of synonymSources[i] | keyvalue">
+                  <p> {{syn.key}}: {{syn.value}} </p>
+              </span>
+            </td>
+            <td class="w-20">
+              <span *ngFor="let def of subset.definitions; last as isLast">
+                <span *ngIf="def.source == subsetFormat"> {{def.definition}} </span>
+              </span>
+            </td>
+            <td class="w-30">
               <span *ngFor="let def of subset.definitions; last as isLast">
                 {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
               </span>
