@@ -404,7 +404,6 @@ export class GeneralSearchComponent implements OnInit,
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
-      console.log(this.searchCriteria);
       // call search term service
       this
         .searchTermService
