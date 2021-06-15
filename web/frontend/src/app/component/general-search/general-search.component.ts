@@ -296,7 +296,7 @@ export class GeneralSearchComponent implements OnInit,
         this.resetPaging();
         // this.searchCriteria.fromRecord = 0;
         // TODO: this is not ideal, the page size should be controlled by a service
-        // this.searchCriteria.pageSize = this.dtSearch.rows;
+        this.searchCriteria.pageSize = this.dtSearch.rows;
       }
 
       sessionStorage.setItem('searchTerm', event.query);
@@ -352,6 +352,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.pageSize = event.rows;
       this.performSearch(this.termautosearch);
     }
+
   }
 
   // Handler for clicking the "Search" button
