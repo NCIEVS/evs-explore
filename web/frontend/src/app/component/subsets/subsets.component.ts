@@ -85,7 +85,7 @@ export class SubsetsComponent implements OnInit {
     this.title = event.name + ' ( Code - ' + event.code + ' )';
     this.resetTreeTableNodes();
     this.updateDisplaySize();
-    const url = this.router.serializeUrl(this.router.createUrlTree(['/subset/'+event.code]));
+    const url = this.router.serializeUrl(this.router.createUrlTree(['subset/'+event.code]));
     window.open(url, '_blank');
   }
 
