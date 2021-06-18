@@ -78,17 +78,6 @@ export class SubsetsComponent implements OnInit {
     this.hierarchyTable.scrollHeight = (tableHeight - 200) + "px";
   }
 
-  // Handler for selecting a tree node
-  treeTableNodeSelected(event) {
-    console.info('treeTableNodeSelected', event);
-    console.info('event code = ' + event.code);
-    this.title = event.name + ' ( Code - ' + event.code + ' )';
-    this.resetTreeTableNodes();
-    this.updateDisplaySize();
-    const url = this.router.serializeUrl(this.router.createUrlTree(['subset/'+event.code]));
-    window.open(url, '_blank');
-  }
-
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
     this.subsetDetailService.getSubsetTopLevel()
