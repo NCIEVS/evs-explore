@@ -89,9 +89,21 @@
             <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'>{{ titleCode }}</a></td>
             <td class="w-10">CTRP Agent Terminology</td>
             <td class="w-20"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.code }}</a></td>
-            <td class="w-20">{{ subset.name }}</td>
-            <td class="w-20">{{ subset.name }}</td>
-            <td class="w-20">{{ subset.name }}</td>
+            <td class="w-20">
+              <span *ngFor="let syn of subset.synonyms">
+                <p *ngIf="syn.type == 'Preferred_Name'">{{ syn.name }}</p>
+              </span>
+            </td>
+            <td class="w-20">
+              <span *ngFor="let syn of subset.synonyms">
+                <p *ngIf="syn.type == 'Display_Name'">{{ syn.name }}</p>
+              </span>
+            </td>
+            <td class="w-20">
+              <span *ngFor="let syn of subset.synonyms">
+                <p *ngIf="syn.source == 'CTRP'">{{ syn.name }}</p>
+              </span>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
