@@ -3,9 +3,9 @@
     <as-split-area [size]="subsetPanelSize">
       <div class="hierarchy-div">
         <div class="page-header">
-          Subset Hierarchy
+          Subsets
           <button label="Expand All" (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton
-              type="button"></button>
+            type="button"></button>
           <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
               type="button"></button></span>
         </div>
@@ -15,7 +15,8 @@
           <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
             <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
               <td>
-                <a [routerLink]="['/subset/', rowData.code]" target="_blank" style="text-decoration: none; color: black;">
+                <a [routerLink]="['/subset/', rowData.code]" target="_blank"
+                  style="text-decoration: none; color: black;">
                   <div style="cursor: pointer; display:flex; font-size:medium; padding:0.1em">
                     <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                     {{rowData.label}}
