@@ -1,5 +1,5 @@
 <div>
-  <p-panel [toggleable]="true">
+  <p-panel>
     <p>View value sets organized by standards category or source terminology. Standards categories group the value sets supporting them; all other labels lead to the home pages of actual value sets or source terminologies. Search or browse a value set from its home page, or search all value sets at once from this page (very slow) to find which ones contain a particular code or term. Many of these value sets are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding standards.</p>
     <div *ngIf="subsetLink != null">
       Value Set Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
@@ -49,17 +49,17 @@
             <th class="w-40">Definitions</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body">
-          <tr *ngFor="let subset of usedSubsetList; let i=index">
-            <td class="w-10">{{ subset.code }}</td>
-            <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+        <ng-template pTemplate="body" let-value let-i="rowIndex">
+          <tr>
+            <td class="w-10">{{ value.code }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.name }}</a></td>
             <td class="w-40">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
                   <p> {{syn.key}}: {{syn.value}} </p>
               </span>
             </td>
             <td class="w-40">
-              <span *ngFor="let def of subset.definitions; last as isLast">
+              <span *ngFor="let def of value.definitions; last as isLast">
                 {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
               </span>
             </td>
@@ -84,22 +84,22 @@
             <th class="w-10">CTRP Display Name</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body">
-          <tr *ngFor="let subset of usedSubsetList; let i=index">
+        <ng-template pTemplate="body" let-value let-i="rowIndex">
+          <tr>
             <td class="w-10">{{ titleCode }}</td>
-            <td class="w-10">{{ subset.code }}</td>
-            <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-10">{{ value.code }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.name }}</a></td>
             <td class="w-30">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
                   <p> {{syn.key}}: {{syn.value}} </p>
               </span>
             </td>
             <td class="w-30">
-              <span *ngFor="let def of subset.definitions; last as isLast">
+              <span *ngFor="let def of value.definitions; last as isLast">
                 {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
               </span>
             </td>
-            <td class="w-10">{{ subset.name }}</td>
+            <td class="w-10">{{ value.name }}</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
@@ -121,18 +121,18 @@
             <th class="w-30">Definitions</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body">
-          <tr *ngFor="let subset of usedSubsetList; let i=index">
-            <td class="w-10">{{ subset.code }}</td>
+        <ng-template pTemplate="body" let-value let-i="rowIndex">
+          <tr>
+            <td class="w-10">{{ value.code }}</td>
             <td class="w-10">{{ subsetFormat }}</td>
-            <td class="w-10"><a [routerLink]="[urlBase, subset.code ]" target='urlTarget'>{{ subset.name }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.name }}</a></td>
             <td class="w-20">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
                   <p> {{syn.key}}: {{syn.value}} </p>
               </span>
             </td>
             <td class="w-20">
-              <span *ngFor="let def of subset.definitions; last as isLast">
+              <span *ngFor="let def of value.definitions; last as isLast">
                 <span *ngIf="def.source == subsetFormat"> {{def.definition}} </span>
               </span>
             </td>
