@@ -29,6 +29,7 @@ export class SubsetDetailsComponent implements OnInit {
   textSuggestions: string[] = [];
   subsetFormat: string;
   subsetLink: string;
+  subsetNCItDefinition: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -58,7 +59,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getSubsetInfo(this.titleCode, "summary")
+            .getSubsetInfo(this.titleCode, "summary,definitions")
         )
       )
       .subscribe((response: any) => {
@@ -76,6 +77,13 @@ export class SubsetDetailsComponent implements OnInit {
           this.subsetFormat = "NCIt";
         }
         this.subsetLink = subsetDetail.getSubsetLink();
+        for(let definition of subsetDetail.definitions){
+          if(definition.source == "NCI"){
+            this.subsetNCItDefinition = definition.definition;
+            break;
+          }
+        }
+        console.log(this.subsetNCItDefinition)
       });
     });
   }
