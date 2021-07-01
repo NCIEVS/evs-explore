@@ -19,6 +19,7 @@ import { DefinitionTypesComponent } from './component/documentation/definition-t
 import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
 import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
 import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
+import { SubsetNcitComponent } from './component/documentation/subset-ncit/subset-ncit.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -40,10 +41,11 @@ const routes: Routes = [
   { path: 'sources', component: SourcesComponent },
   { path: 'roles', component: RolesComponent },
   { path: 'welcome', component: GeneralSearchComponent },
+  { path: 'subsetncit', component: SubsetNcitComponent },
   { path: 'contact', component: ContactUsComponent },
   { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

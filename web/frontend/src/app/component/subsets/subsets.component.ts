@@ -8,7 +8,6 @@ import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 
-// Component for value sets.  Currently, this page just redirects to another page
 @Component({
   selector: 'subsets',
   templateUrl: './subsets.component.html',
