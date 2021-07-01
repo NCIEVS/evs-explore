@@ -48,6 +48,9 @@ import { SynonymTypesComponent } from './component/documentation/synonym-types/s
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { WelcomeComponent } from './component/welcome/welcome.component';
+import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
+import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
+import { SubsetNcitComponent } from './component/documentation/subset-ncit/subset-ncit.component';
 
 // Local Modules
 import { AppRoutingModule } from './app-routing.module';
@@ -83,8 +86,6 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
-import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
-import { SubsetDetailsComponent } from './component/subset-details/subset-details.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -118,7 +119,8 @@ import { SubsetDetailsComponent } from './component/subset-details/subset-detail
     ContactUsComponent,
     AlldocsComponent,
     ContactUsComponent,
-    SubsetDetailsComponent
+    SubsetDetailsComponent,
+    SubsetNcitComponent
   ],
   imports: [
     NgbModule,
