@@ -1,12 +1,13 @@
 <div>
-  <p-panel>
+  <p-panel [showHeader]="false">
+    <div class="page-header" style="margin-bottom: 0.2em">
+      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search" label="Back to Search" pButton
+              type="button"></button></span>
+    </div>
     <p>{{ subsetNCItDefinition }}</p>
     <div *ngIf="subsetLink != null">
       Value Set Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
     </div><br />
-    <p-header class="bold-heading">
-      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
-    </p-header>
     <div class="table-responsive">
       <div class="row">
           <div class="col-sm-4">
