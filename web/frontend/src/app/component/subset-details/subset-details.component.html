@@ -87,9 +87,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'>{{ titleCode }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'>{{ titleCode }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
             <td class="w-10">CTRP Agent Terminology</td>
-            <td class="w-20"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}</a></td>
+            <td class="w-20"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
             <td class="w-20">
               <span *ngFor="let syn of value.synonyms">
                 <p *ngIf="syn.type == 'Preferred_Name'">{{ syn.name }}</p>
@@ -118,19 +118,19 @@
                [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10">Code</th>
-            <th class="w-10">Source</th>
-            <th class="w-10">Name</th>
-            <th class="w-20">Synonyms</th>
-            <th class="w-20">Source Definitions</th>
-            <th class="w-30">Definitions</th>
+            <th class="w-10">NCIt Concept Code</th>
+            <th class="w-10">{{subsetFormat }} Name</th>
+            <th class="w-10">NCIt Preferred Term</th>
+            <th class="w-20">NCIt Synonyms</th>
+            <th class="w-20">{{subsetFormat}} Definition</th>
+            <th class="w-30">NCIt Definition</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10">{{ value.code }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
             <td class="w-10">{{ subsetFormat }}</td>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.name }}</a></td>
+            <td class="w-10">{{ value.name }}</td>
             <td class="w-20">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
                   <p> {{syn.key}}: {{syn.value}} </p>
