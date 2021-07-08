@@ -88,7 +88,7 @@
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
             <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'>{{ titleCode }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
-            <td class="w-10">CTRP Agent Terminology</td>
+            <td class="w-10">{{titleDesc}}</td>
             <td class="w-20"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
             <td class="w-20">
               <span *ngFor="let syn of value.synonyms">
