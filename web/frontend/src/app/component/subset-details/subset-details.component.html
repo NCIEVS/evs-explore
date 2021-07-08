@@ -56,12 +56,12 @@
             <td class="w-10">{{ value.name }}</td>
             <td class="w-40">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
-                  <p> {{syn.value}} </p>
+                  <p *ngIf="syn.key == 'NCI'"> {{syn.value}} </p>
               </span>
             </td>
             <td class="w-40">
               <span *ngFor="let def of value.definitions; last as isLast">
-                {{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span>
+                <p *ngIf="def.source == 'NCI'">{{def.definition}}</p> <span *ngIf="!isLast"><br /><br /></span>
               </span>
             </td>
           </tr>
@@ -133,7 +133,7 @@
             <td class="w-10">{{ value.name }}</td>
             <td class="w-20">
               <span *ngFor="let syn of synonymSources[i] | keyvalue">
-                  <p> {{syn.key}}: {{syn.value}} </p>
+                  <p *ngIf="syn.key == 'NCI'"> {{syn.value}} </p>
               </span>
             </td>
             <td class="w-20">
@@ -143,7 +143,7 @@
             </td>
             <td class="w-30">
               <span *ngFor="let def of value.definitions; last as isLast">
-                 <span *ngIf="def.source != subsetFormat">{{def.source}}: {{def.definition}} <span *ngIf="!isLast"><br /><br /></span> </span>
+                 <span *ngIf="def.source == 'NCI'">{{def.definition}} <span *ngIf="!isLast"><br /><br /></span> </span>
               </span>
             </td>
           </tr>
