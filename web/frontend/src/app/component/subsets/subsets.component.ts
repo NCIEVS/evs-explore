@@ -84,7 +84,7 @@ export class SubsetsComponent implements OnInit {
 
         this.hierarchyData = <TreeNode[]>nodes;
         for (const node of this.hierarchyData) {
-          this.setTreeTableProperties(node);
+          this.setTreeTableProperties(node, false);
         }
         this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
@@ -109,7 +109,7 @@ export class SubsetsComponent implements OnInit {
 
   clearTreeTableChildrenNodes(nodeChildren: any) {
     for (const child of nodeChildren) {
-      this.setTreeTableProperties(null);
+      this.setTreeTableProperties(child, true);
     }
     this.deepCopyHierarchyData();
   }
@@ -133,7 +133,7 @@ export class SubsetsComponent implements OnInit {
   // Reset all table nodes in the hierarchy
   resetTreeTableNodes() {
     for (const node of this.hierarchyData) {
-      this.setTreeTableProperties(node);
+      this.setTreeTableProperties(node, false);
     }
   }
 
