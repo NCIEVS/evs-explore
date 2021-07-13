@@ -1,65 +1,66 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search" label="Back to Search" pButton
-              type="button"></button></span>
+      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search"
+          label="Back to Search" pButton type="button"></button></span>
     </div>
     <p>{{ subsetNCItDefinition }}</p>
     <div *ngIf="subsetLink != null">
-      Value Set Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
+      Subset Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
     </div><br />
     <div class="table-responsive">
       <div class="row">
-          <div class="col-sm-4">
-            <div style="padding-bottom: 6px;">
-              <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
-                [(ngModel)]="termAutoSearch" [suggestions]="textSuggestions" (completeMethod)="search($event)"
-                id="termauto" name="termauto" placeholder="Enter at least 3 letters of a term."
-                [minLength]="3">
-              </p-autoComplete>
-
-            </div>
+        <div class="col-sm-4">
+          <div style="padding-bottom: 6px;">
+            <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
+              [(ngModel)]="termAutoSearch" [suggestions]="textSuggestions" (completeMethod)="search($event)"
+              id="termauto" name="termauto" placeholder="Enter at least 3 letters of a term." [minLength]="3">
+            </p-autoComplete>
 
           </div>
-          <div class="col-sm-2">
-            <div class="ui-inputgroup" style="padding-bottom: 6px;">
-              <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
-                [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-            </div>
-          </div>
-          <div class="col-sm-2">
-            <div class="ui-inputgroup" style="padding-bottom: 6px;">
-              <button type="button" pButton label="Reset" (click)="ngOnInit()"
-                ></button>
-            </div>
+
+        </div>
+        <div class="col-sm-2">
+          <div class="ui-inputgroup" style="padding-bottom: 6px;">
+            <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
+              [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
           </div>
         </div>
+        <div class="col-sm-2">
+          <div class="ui-inputgroup" style="padding-bottom: 6px;">
+            <button type="button" pButton label="Reset" (click)="ngOnInit()"></button>
+          </div>
+        </div>
+      </div>
       <div *ngIf="!usedSubsetList">
         <p-header class="bold-heading">
           <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
         </p-header>
       </div>
-      <p-table *ngIf="usedSubsetList && subsetFormat == 'NCIt'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
-               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-               [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+
+      <!-- "NCIt" Subset Format -->
+      <p-table *ngIf="usedSubsetList && subsetFormat == 'NCIt'" [value]="usedSubsetList" [rows]="pageSize"
+        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10">NCIt Concept Code</th>
-            <th class="w-10">NCIt Preferred Term</th>
-            <th class="w-40">NCIt Synonyms</th>
-            <th class="w-40">NCIt Definition</th>
+            <th class="w-30">NCIt Preferred Term</th>
+            <th class="w-30">NCIt Synonyms</th>
+            <th class="w-30">NCIt Definition</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
-            <td class="w-10">{{ value.name }}</td>
-            <td class="w-40">
-              <span *ngFor="let syn of synonymSources[i] | keyvalue">
-                  <p *ngIf="syn.key == 'NCI'"> {{syn.value}} </p>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
+                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-30">{{ value.name }}</td>
+            <td class="w-30">
+              <span *ngFor="let syn of value.getSynonymNames('NCI'); last as isLast">
+                <span>{{syn}} <span *ngIf="!isLast"><br /></span> </span>
               </span>
             </td>
-            <td class="w-40">
+            <td class="w-30">
               <span *ngFor="let def of value.definitions; last as isLast">
                 <p *ngIf="def.source == 'NCI'">{{def.definition}}</p> <span *ngIf="!isLast"><br /><br /></span>
               </span>
@@ -72,14 +73,16 @@
             {{state.totalRecords}}</div>
         </ng-template>
       </p-table>
-      <p-table *ngIf="usedSubsetList && subsetFormat == 'CTRP'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
-               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-               [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+
+      <!-- "CTRP" Subset Format -->
+      <p-table *ngIf="usedSubsetList && subsetFormat == 'CTRP'" [value]="usedSubsetList" [rows]="pageSize"
+        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10">NCIt Subset Code</th>
-            <th class="w-10">NCIt Subset Name</th>
-            <th class="w-20">NCIt Concept Code</th>
+            <th class="w-20">NCIt Subset Name</th>
+            <th class="w-10">NCIt Concept Code</th>
             <th class="w-20">NCIt Preferred Name</th>
             <th class="w-20">NCIt Display Name</th>
             <th class="w-20">CTRP Display Name</th>
@@ -87,13 +90,12 @@
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'>{{ titleCode }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
-            <td class="w-10">{{titleDesc}}</td>
-            <td class="w-20"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
-            <td class="w-20">
-              <span *ngFor="let syn of value.synonyms">
-                <p *ngIf="syn.type == 'Preferred_Name'">{{ syn.name }}</p>
-              </span>
+            <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'><i class="fa fa-external-link"
+                  style="margin-left:0.2em;"></i> {{ titleCode }}</a></td>
+            <td class="w-20">{{titleDesc}}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
+                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-20">{{value.name}}
             </td>
             <td class="w-20">
               <span *ngFor="let syn of value.synonyms">
@@ -101,8 +103,8 @@
               </span>
             </td>
             <td class="w-20">
-              <span *ngFor="let syn of value.synonyms">
-                <p *ngIf="syn.source == 'CTRP'">{{ syn.name }}</p>
+              <span *ngFor="let syn of value.getSynonymNames('CTRP', 'DN'); last as isLast">
+                <span>{{syn}} <span *ngIf="!isLast"><br /></span> </span>
               </span>
             </td>
           </tr>
@@ -113,27 +115,35 @@
             {{state.totalRecords}}</div>
         </ng-template>
       </p-table>
-      <p-table *ngIf="usedSubsetList && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" [value]="usedSubsetList" [rows]="pageSize" [totalRecords]="hitsFound"
-               [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-               [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+
+      <!-- "Other" Subset Format -->
+      <p-table *ngIf="usedSubsetList && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" [value]="usedSubsetList"
+        [rows]="pageSize" [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both"
+        [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
+        class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10">NCIt Concept Code</th>
-            <th class="w-10">{{subsetFormat }} Name</th>
-            <th class="w-10">NCIt Preferred Term</th>
+            <th class="w-15">{{subsetFormat }} Name</th>
+            <th class="w-15">NCIt Preferred Term</th>
             <th class="w-20">NCIt Synonyms</th>
             <th class="w-20">{{subsetFormat}} Definition</th>
-            <th class="w-30">NCIt Definition</th>
+            <th class="w-20">NCIt Definition</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'>{{ value.code }}<i class="fa fa-external-link" style="margin-left:0.2em;"></i></a></td>
-            <td class="w-10">{{ subsetFormat }}</td>
-            <td class="w-10">{{ value.name }}</td>
+            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
+                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-15">
+              <span *ngFor="let syn of value.getSynonymNames(subsetFormat); last as isLast">
+                <span>{{syn}} <span *ngIf="!isLast"><br /></span> </span>
+              </span>
+            </td>
+            <td class="w-25">{{ value.name }}</td>
             <td class="w-20">
-              <span *ngFor="let syn of synonymSources[i] | keyvalue">
-                  <p *ngIf="syn.key == 'NCI'"> {{syn.value}} </p>
+              <span *ngFor="let syn of value.getSynonymNames('NCI'); last as isLast">
+                <span>{{syn}} <span *ngIf="!isLast"><br /></span> </span>
               </span>
             </td>
             <td class="w-20">
@@ -141,9 +151,9 @@
                 <span *ngIf="def.source == subsetFormat"> {{def.definition}} </span>
               </span>
             </td>
-            <td class="w-30">
+            <td class="w-20">
               <span *ngFor="let def of value.definitions; last as isLast">
-                 <span *ngIf="def.source == 'NCI'">{{def.definition}} <span *ngIf="!isLast"><br /><br /></span> </span>
+                <span *ngIf="def.source == 'NCI'">{{def.definition}} <span *ngIf="!isLast"><br /><br /></span> </span>
               </span>
             </td>
           </tr>
