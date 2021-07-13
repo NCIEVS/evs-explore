@@ -144,9 +144,9 @@ export class Concept {
     // synonyms
     let headerFlag = false;
     this.synonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
-                        .map(name => {
-                          return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
-                        });
+      .map(name => {
+        return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
+      });
     for (let i = 0; i < this.synonyms.length; i++) {
       if (this.synonyms[i].highlight) {
         if (!headerFlag) {
@@ -243,6 +243,28 @@ export class Concept {
         }
       }
     }
+    return syns;
+  }
+
+  // Return unique ynonym names for a specified source
+  getSynonymNames(source: string, termGroup: string): string[] {
+    let syns = [];
+    if (this.synonyms.length > 0) {
+      for (let i = 0; i < this.synonyms.length; i++) {
+        if (termGroup != null && this.synonyms[i].termGroup != termGroup) {
+          continue;
+        }
+        if (source != null && this.synonyms[i].source != source) {
+          continue
+        }
+        if (syns.indexOf(this.synonyms[i].name) != -1) {
+          continue;
+        }
+        syns.push(this.synonyms[i].name);
+      }
+    }
+    // case-insensitive sort
+    syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
   }
 

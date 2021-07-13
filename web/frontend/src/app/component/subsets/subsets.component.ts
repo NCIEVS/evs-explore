@@ -98,13 +98,13 @@ export class SubsetsComponent implements OnInit {
 
   // Get child tree nodes (for an expanded node)
   getTreeTableChildrenNodes(nodeChildren: any) {
-      for (const child of nodeChildren) {
-        this.setTreeTableProperties(child);
-      }
-      this.deepCopyHierarchyData();
-      setTimeout(() => {
-        this.scrollToSelectionTableTree(nodeChildren);
-      }, 100);
+    for (const child of nodeChildren) {
+      this.setTreeTableProperties(child, true);
+    }
+    this.deepCopyHierarchyData();
+    setTimeout(() => {
+      this.scrollToSelectionTableTree(nodeChildren);
+    }, 100);
   }
 
   clearTreeTableChildrenNodes(nodeChildren: any) {
@@ -143,13 +143,14 @@ export class SubsetsComponent implements OnInit {
   }
 
   // Reset tree node properties
-  setTreeTableProperties(node: TreeNode) {
+  setTreeTableProperties(node: TreeNode, child: boolean) {
     node.collapsedIcon = '';
     node.expandedIcon = '';
     const obj = {
       'code': node['code'],
       'label': node['name'],
-      'highlight': false
+      'highlight': false,
+      'root': !child
     }
     this.selectedNodes.push(node);
     node.data = obj;
@@ -158,7 +159,7 @@ export class SubsetsComponent implements OnInit {
       node.children = [];
     }
     for (const child of node.children) {
-      this.setTreeTableProperties(child);
+      this.setTreeTableProperties(child, true);
     }
   }
 
@@ -177,16 +178,16 @@ export class SubsetsComponent implements OnInit {
   }
 
 
-  expandOrCollapseAllNodes(hierarchyData, element, level = 0){
-    if(this.expand){
+  expandOrCollapseAllNodes(hierarchyData, element, level = 0) {
+    if (this.expand) {
       for (let i = 0; i < hierarchyData.length; i++) {
-        if(hierarchyData[i].children.length > 0){
+        if (hierarchyData[i].children.length > 0) {
           this.getTreeTableChildrenNodes(hierarchyData[i].children);
           this.expandOrCollapseAllNodes(hierarchyData[i].children, undefined, level + 1);
           hierarchyData[i].expanded = true;
         }
       }
-      if(level == 0){ // make sure everything is finished
+      if (level == 0) { // make sure everything is finished
         this.expand = false;
         element.textContent = "Collapse All"
       }
@@ -196,8 +197,8 @@ export class SubsetsComponent implements OnInit {
       this.ngOnInit()
       this.expand = true;
       element.textContent = "Expand All"
-      }
     }
   }
+}
 
 

@@ -9,24 +9,29 @@
           <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
               type="button"></button></span>
         </div>
-        <p>View subsets organized by standards category or source terminology. Standards categories group the subsets supporting them; all other labels lead to the home pages of actual subsets or source terminologies. Search or browse a subset from its home page to find which ones contain a particular code or term. Many of these subsets are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding standards.</p>
+        <p>View subsets organized by standards category or source terminology. Standards categories group the subsets
+          supporting them; all other labels lead to the home pages of actual subsets or source terminologies. Search or
+          browse a subset from its home page to find which ones contain a particular code or term. Many of these subsets
+          are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding
+          standards.</p>
         <p>See the
           <a routerLink="/subsetncit" target="_blank">
-              NCIt Thesaurus Subsets Page
+            NCIt Thesaurus Subsets Page
           </a>
         </p>
-        <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
+        <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
           [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
           (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)">
           <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
             <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
               <td>
-                <a [routerLink]="['/subset/', rowData.code]" target="_blank">
-                  <div style="cursor: pointer; display:flex; font-size:medium; padding:0.1em">
-                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                    {{rowData.label}}<i class="fa fa-external-link" style="margin-left:0.2em;"></i>
-                  </div>
-                </a>
+                <div style="cursor: pointer; display:flex;">
+                  <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                  <a [routerLink]="['/subset/', rowData.code]" target="_blank">
+                    <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-fw pi-blank"></i>
+                    <i class="fa fa-external-link" style="margin-left:0.2em;"></i> {{rowData.label}}
+                  </a>
+                </div>
               </td>
             </tr>
           </ng-template>
