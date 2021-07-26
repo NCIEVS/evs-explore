@@ -33,7 +33,10 @@ export class ConfigurationService {
         .then(response => {
           // response is an array of terminologies, find the "latest" NCIt one
           var arr = response as any[];
-          ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == 'ncit')[0];
+          ConfigurationService.terminology = arr.filter(t => t.latest && t.tags["monthly"] == "true" && t.terminology == 'ncit')[0];
+          if(ConfigurationService.terminology == null){
+            ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == 'ncit')[0];
+          }
           resolve(true);
         }).catch(error => {
           resolve(false);
