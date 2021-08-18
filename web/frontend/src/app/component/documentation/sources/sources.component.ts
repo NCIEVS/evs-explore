@@ -18,13 +18,13 @@ export class SourcesComponent implements OnInit {
 
   // On initialization
   ngOnInit() {
-    this.configService.getSynonymSources('ncit')
+    this.configService.getSynonymSources(this.configService.getTerminologyName())
       .subscribe(response => {
         this.synonymSources = response;
         this.synonymSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
 
-    this.configService.getDefinitionSources('ncit')
+    this.configService.getDefinitionSources(this.configService.getTerminologyName())
       .subscribe(response => {
         this.definitionSources = response;
         this.definitionSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));

@@ -18,7 +18,7 @@ export class QualifiersComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getQualifiers('ncit')
+    this.configService.getQualifiers(this.configService.getTerminologyName())
       .subscribe(response => {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

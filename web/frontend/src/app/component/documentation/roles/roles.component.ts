@@ -19,7 +19,7 @@ export class RolesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getRoles('ncit')
+    this.configService.getRoles(this.configService.getTerminologyName())
       .subscribe(response => {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

@@ -19,7 +19,7 @@ export class PropertiesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getProperties('ncit')
+    this.configService.getProperties(this.configService.getTerminologyName())
       .subscribe(response => {
         this.properties = response;
         this.properties.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

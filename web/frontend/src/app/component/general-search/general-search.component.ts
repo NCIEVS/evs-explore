@@ -89,7 +89,7 @@ export class GeneralSearchComponent implements OnInit,
     private route: ActivatedRoute, public router: Router) {
 
     // Instantiate new search criteria
-    this.searchCriteria = new SearchCriteria();
+    this.searchCriteria = new SearchCriteria(configService);
 
     // TODO: re-enable this?
     // this.searchCriteria.term = route.snapshot.params['term'];
@@ -110,7 +110,7 @@ export class GeneralSearchComponent implements OnInit,
     this.resetPaging();
 
     // Populate sources list from application metadata
-    configService.getSynonymSources('ncit')
+    configService.getSynonymSources(this.configService.getTerminologyName())
       .subscribe(response => {
         this.sourcesAll = response.map(element => {
           return {
