@@ -35,7 +35,13 @@ export class ConfigurationService {
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
-          ConfigurationService.terminology = arr.filter(t => t.latest && t.tags && t.tags["monthly"] == "true" && t.terminology == ConfigurationService.terminologyName)[0];
+          arr = arr.filter(t => t.latest && t.terminology == ConfigurationService.terminologyName); // filter down to latest of terminology name
+          if(ConfigurationService.terminologyName == "ncit") {
+            arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
+          }
+          else {
+            arr = arr[0];
+          }
           if(ConfigurationService.terminology == null){
             ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == ConfigurationService.terminologyName)[0];
           }
@@ -175,6 +181,19 @@ export class ConfigurationService {
       .pipe(
         catchError((error) => {
           return observableThrowError(new EvsError(error, 'Could not fetch definition types = ' + terminology));
+        })
+      );
+  }
+
+  getTerminologies(): Observable<any> {
+    return this.http.get('/api/v1/metadata/terminologies?latest=true',
+      {
+        responseType: 'json',
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch terminologies'));
         })
       );
   }
