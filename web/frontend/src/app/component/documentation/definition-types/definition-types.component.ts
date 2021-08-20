@@ -19,7 +19,7 @@ export class DefinitionTypesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded definitioninology
-    this.configService.getDefinitionTypes('ncit')
+    this.configService.getDefinitionTypes(this.configService.getTerminologyName())
       .subscribe(response => {
         this.definitionTypes = response;
         this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));

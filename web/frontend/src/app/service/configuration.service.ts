@@ -13,6 +13,8 @@ export class ConfigurationService {
 
   static terminology = null;
 
+  private static terminologyName = "ncit";
+
   private static instance: ConfigurationService = null;
 
   // Return the instance of the service
@@ -31,17 +33,26 @@ export class ConfigurationService {
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata/terminologies').toPromise()
         .then(response => {
-          // response is an array of terminologies, find the "latest" NCIt one
+          // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
-          ConfigurationService.terminology = arr.filter(t => t.latest && t.tags["monthly"] == "true" && t.terminology == 'ncit')[0];
+          ConfigurationService.terminology = arr.filter(t => t.latest && t.tags && t.tags["monthly"] == "true" && t.terminology == ConfigurationService.terminologyName)[0];
           if(ConfigurationService.terminology == null){
-            ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == 'ncit')[0];
+            ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == ConfigurationService.terminologyName)[0];
           }
+          console.log(ConfigurationService.terminology.tags["monthly"])
           resolve(true);
         }).catch(error => {
           resolve(false);
         });
     });
+  }
+
+  getTerminologyName(): string {
+    return ConfigurationService.terminologyName;
+  }
+
+  setTerminologyName(terminology: string){
+    ConfigurationService.terminologyName = terminology;
   }
 
   // Load associations

@@ -19,7 +19,7 @@ export class AssociationsComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getAssociations('ncit')
+    this.configService.getAssociations(this.configService.getTerminologyName())
       .subscribe(response => {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

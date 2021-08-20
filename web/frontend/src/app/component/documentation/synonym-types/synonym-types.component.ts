@@ -19,7 +19,7 @@ export class SynonymTypesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded synonyminology
-    this.configService.getSynonymTypes('ncit')
+    this.configService.getSynonymTypes(this.configService.getTerminologyName())
       .subscribe(response => {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));

@@ -18,7 +18,7 @@ export class TermTypesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getTermTypes('ncit')
+    this.configService.getTermTypes(this.configService.getTerminologyName())
       .subscribe(response => {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
