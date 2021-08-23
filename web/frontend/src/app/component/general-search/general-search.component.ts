@@ -114,7 +114,7 @@ export class GeneralSearchComponent implements OnInit,
     this.resetPaging();
 
     // Populate sources list from application metadata
-    configService.getSynonymSources(this.configService.getTerminologyName())
+    configService.getSynonymSources(this.cookieService.get('term'))
       .subscribe(response => {
         this.sourcesAll = response.map(element => {
           return {
@@ -138,8 +138,8 @@ export class GeneralSearchComponent implements OnInit,
         .map(id => {
           return this.termsAll.find(a => a.value === id)
         }) // remove dupes
-        if(sessionStorage.getItem('term') == '')
-          sessionStorage.setItem('term', 'ncit')
+        if(this.cookieService.get('term') == '')
+          this.cookieService.set('term', 'ncit')
       });
 
     // Set up defaults in session storage if welcome page
@@ -154,8 +154,11 @@ export class GeneralSearchComponent implements OnInit,
       sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
 
       // Set default selected sources to ncit default
-      this.selectedTerm = "ncit";
-      sessionStorage.setItem('term', this.selectedTerm);
+      if(this.cookieService.get('term') == undefined){
+        this.selectedTerm = "ncit";
+        this.cookieService.set('term', this.selectedTerm)
+      }
+      this.selectedTerm = this.cookieService.get('term');
 
       // Set default term search to blank
       this.termautosearch = '';
@@ -187,7 +190,7 @@ export class GeneralSearchComponent implements OnInit,
       this.selectedSource = JSON.parse(sessionStorage.getItem('source'));
 
       // Reset selected term list
-      this.selectedTerm = sessionStorage.getItem('term');
+      this.selectedTerm = this.cookieService.get('term');
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
@@ -252,8 +255,8 @@ export class GeneralSearchComponent implements OnInit,
   // Reset term
   resetTerm() {
     console.log('resetTerm');
-    this.selectedTerm = "";
-    sessionStorage.setItem('term', JSON.stringify(this.selectedTerm));
+    this.selectedTerm = "ncit";
+    this.cookieService.set('term', this.selectedTerm);
     this.performSearch(this.termautosearch);
   }
 
@@ -338,6 +341,7 @@ export class GeneralSearchComponent implements OnInit,
       sessionStorage.setItem('searchTerm', event.query);
       this.performSearch(event.query);
     }
+    this.selectedTerm = this.cookieService.get('term');
 
   }
 
@@ -373,8 +377,8 @@ export class GeneralSearchComponent implements OnInit,
   // Handle a change of the term - save termName and re-set
   onChangeTerm(event) {
     console.log('onChangeTerm', event, this.selectedTerm);
-    this.configService.setTerminologyName(event.value);
-    sessionStorage.setItem('term', this.selectedTerm);
+    this.selectedTerm = event.value;
+    this.cookieService.set('term', this.selectedTerm);
     this.router.navigate(['/welcome']); // reset to the welcome page
   }
 
@@ -480,6 +484,7 @@ export class GeneralSearchComponent implements OnInit,
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
+            console.log(this.cookieService.get('term'))
           } else {
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
@@ -496,6 +501,7 @@ export class GeneralSearchComponent implements OnInit,
     }
     this.textSuggestions = [];
     this.loading = false;
+    console.log(this.cookieService.get('term'))
   }
 
   // Set default selected columns

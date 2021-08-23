@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { SearchCriteria } from './../model/searchCriteria';
 import { EvsError } from '../model/evsError';
 import { ConfigurationService } from './configuration.service';
+import { CookieService } from 'ngx-cookie-service';
 
 // Default HTTP Options
 const httpOptions = {
@@ -18,7 +19,8 @@ export class SearchTermService {
 
   // Construct search term service - inject HttpClient
   constructor(private http: HttpClient,
-    private configService: ConfigurationService) { }
+    private configService: ConfigurationService,
+    private cookieService: CookieService) { }
 
   // Service for obtaining search results
   search(searchCriteria: SearchCriteria): Observable<any> {
@@ -28,7 +30,7 @@ export class SearchTermService {
     const param: any = {};
 
     // Setup search parameters (default terminology and include, for now)
-    param.terminology = this.configService.getTerminologyName();
+    param.terminology = this.cookieService.get('term');
     param.include = searchCriteria.include;
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;

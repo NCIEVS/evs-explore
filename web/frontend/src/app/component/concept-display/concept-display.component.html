@@ -1,7 +1,7 @@
 <div class="hierarchy-div">
   <div class="page-header">
     {{ title }}
-    <span> -- <button routerLink="/hierarchy/{{conceptCode}}" [label]="hierarchyButtonLabel" pButton
+    <span *ngIf="displayHierarchy"> -- <button routerLink="/hierarchy/{{conceptCode}}" [label]="hierarchyButtonLabel" pButton
         type="button"></button> </span>
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>

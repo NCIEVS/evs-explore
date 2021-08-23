@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from '../../../service/configuration.service';
 
@@ -11,19 +12,22 @@ import { ConfigurationService } from '../../../service/configuration.service';
 export class DefinitionTypesComponent implements OnInit {
 
   definitionTypes: any;
+  terminology: string;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService,
+    private cookieService: CookieService
   ) { }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded definitioninology
-    this.configService.getDefinitionTypes(this.configService.getTerminologyName())
+    this.configService.getDefinitionTypes(this.cookieService.get('term'))
       .subscribe(response => {
         this.definitionTypes = response;
         this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.terminology = this.cookieService.get('term');
   }
 
   customSort(event: SortEvent) {

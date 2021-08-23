@@ -4,6 +4,7 @@ import { NotificationService } from './notification.service';
 import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 // Configuration service
 @Injectable({
@@ -13,39 +14,39 @@ export class ConfigurationService {
 
   static terminology = null;
 
-  private static terminologyName = "ncit";
 
   private static instance: ConfigurationService = null;
 
   // Return the instance of the service
-  public static getInstance(injector: Injector, http: HttpClient, notificationService: NotificationService): ConfigurationService {
+  public static getInstance(injector: Injector, http: HttpClient, notificationService: NotificationService, cookieService: CookieService): ConfigurationService {
     if (ConfigurationService.instance === null) {
-      ConfigurationService.instance = new ConfigurationService(injector, http, notificationService);
+      ConfigurationService.instance = new ConfigurationService(injector, http, notificationService, cookieService);
     }
     return ConfigurationService.instance;
   }
 
-  constructor(private injector: Injector, private http: HttpClient, private notificationService: NotificationService) {
+  constructor(private injector: Injector, private http: HttpClient, private notificationService: NotificationService, private cookieService: CookieService) {
   }
 
   // Load configuration
   loadConfig(): Promise<any> {
+    if(this.cookieService.get('term') == "")
+      this.cookieService.set('term', 'ncit')
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata/terminologies').toPromise()
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
-          arr = arr.filter(t => t.latest && t.terminology == ConfigurationService.terminologyName); // filter down to latest of terminology name
-          if(ConfigurationService.terminologyName == "ncit") {
+          arr = arr.filter(t => t.latest && t.terminology == this.cookieService.get('term')); // filter down to latest of terminology name
+          if(this.cookieService.get('term') == 'ncit') {
             arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
           }
-          else {
-            arr = arr[0];
+          else if(this.cookieService.get('term') == 'ncim') {
+            ConfigurationService.terminology = arr[0];
           }
           if(ConfigurationService.terminology == null){
-            ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == ConfigurationService.terminologyName)[0];
+            ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == this.cookieService.get('term'))[0];
           }
-          console.log(ConfigurationService.terminology.tags["monthly"])
           resolve(true);
         }).catch(error => {
           resolve(false);
@@ -54,11 +55,7 @@ export class ConfigurationService {
   }
 
   getTerminologyName(): string {
-    return ConfigurationService.terminologyName;
-  }
-
-  setTerminologyName(terminology: string){
-    ConfigurationService.terminologyName = terminology;
+    return this.cookieService.get('term');
   }
 
   // Load associations
