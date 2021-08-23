@@ -14,7 +14,6 @@ export class ConfigurationService {
 
   static terminology = null;
 
-
   private static instance: ConfigurationService = null;
 
   // Return the instance of the service
@@ -47,6 +46,7 @@ export class ConfigurationService {
           if(ConfigurationService.terminology == null){
             ConfigurationService.terminology = arr.filter(t => t.latest && t.terminology == this.cookieService.get('term'))[0];
           }
+          console.log(ConfigurationService.terminology.tags["monthly"])
           resolve(true);
         }).catch(error => {
           resolve(false);

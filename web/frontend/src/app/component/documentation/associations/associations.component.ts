@@ -22,6 +22,7 @@ export class AssociationsComponent implements OnInit {
   ngOnInit() {
     // NOTE: hardcoded terminology
     this.configService.getAssociations(this.cookieService.get('term'))
+
       .subscribe(response => {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
