@@ -32,12 +32,12 @@
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
               </p-multiSelect>
-              <!-- not needed because [showToggleAll]=true above
-              <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset" label="reset"
-                tooltipPosition="bottom"></button> -->
+
               <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
                 (click)="onResetSearch($event)" pTooltip="Click to reset the search" label="Reset Search"
                 tooltipPosition="bottom"></button>
+
+              <p-dropdown [options]="termsAll" [(ngModel)]="selectedTerm" (onChange)="onChangeTerm($event)" name="selectedTerm"></p-dropdown>
             </div>
 
 

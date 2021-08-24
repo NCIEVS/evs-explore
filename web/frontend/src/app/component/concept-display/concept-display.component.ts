@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Concept display component
 // BAC - looks like not used
@@ -21,6 +22,7 @@ export class ConceptDisplayComponent implements OnInit {
   conceptWithRelationships: Concept;
   hierarchyDisplay = '';
   title: string;
+  displayHierarchy: boolean;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -49,7 +51,7 @@ export class ConceptDisplayComponent implements OnInit {
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
     private location: Location,
-    private cookieService: CookieService
+    private cookieService: CookieService,
 
   ) {
   }
@@ -59,6 +61,8 @@ export class ConceptDisplayComponent implements OnInit {
     // Set active index based on cookie unless never set
     // then default to 0
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+
+    this.displayHierarchy = (this.cookieService.get('term') == 'ncit') ? true : false;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()

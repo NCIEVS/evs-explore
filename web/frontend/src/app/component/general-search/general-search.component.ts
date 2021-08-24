@@ -81,6 +81,10 @@ export class GeneralSearchComponent implements OnInit,
   selectedSource: string[] = [];
   sourcesAll = null;
 
+  // filter for terminologies
+  selectedTerm: string;
+  termsAll = null;
+
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService,
     private conceptDetailService: ConceptDetailService,
@@ -110,7 +114,7 @@ export class GeneralSearchComponent implements OnInit,
     this.resetPaging();
 
     // Populate sources list from application metadata
-    configService.getSynonymSources(this.configService.getTerminologyName())
+    configService.getSynonymSources(this.cookieService.get('term'))
       .subscribe(response => {
         this.sourcesAll = response.map(element => {
           return {
@@ -119,6 +123,23 @@ export class GeneralSearchComponent implements OnInit,
           };
         });
         this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
+      });
+
+    // Populate terms list from application metadata
+    configService.getTerminologies()
+      .subscribe(response => {
+        this.termsAll = response.map(element => {
+          return {
+            label: element.terminology,
+            value: element.terminology
+          };
+        });
+        this.termsAll = Array.from(new Set(this.termsAll.map(a => a.value)))
+        .map(id => {
+          return this.termsAll.find(a => a.value === id)
+        }) // remove dupes
+        if(this.cookieService.get('term') == '')
+          this.cookieService.set('term', 'ncit')
       });
 
     // Set up defaults in session storage if welcome page
@@ -131,6 +152,13 @@ export class GeneralSearchComponent implements OnInit,
       // Set default selected sources to empty array
       this.selectedSource = [];
       sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+
+      // Set default selected sources to ncit default
+      if(this.cookieService.get('term') == undefined){
+        this.selectedTerm = "ncit";
+        this.cookieService.set('term', this.selectedTerm)
+      }
+      this.selectedTerm = this.cookieService.get('term');
 
       // Set default term search to blank
       this.termautosearch = '';
@@ -160,6 +188,9 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset selected source list
       this.selectedSource = JSON.parse(sessionStorage.getItem('source'));
+
+      // Reset selected term list
+      this.selectedTerm = this.cookieService.get('term');
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
@@ -218,6 +249,14 @@ export class GeneralSearchComponent implements OnInit,
     console.log('resetSource');
     this.selectedSource = [];
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+    this.performSearch(this.termautosearch);
+  }
+
+  // Reset term
+  resetTerm() {
+    console.log('resetTerm');
+    this.selectedTerm = "ncit";
+    this.cookieService.set('term', this.selectedTerm);
     this.performSearch(this.termautosearch);
   }
 
@@ -302,6 +341,7 @@ export class GeneralSearchComponent implements OnInit,
       sessionStorage.setItem('searchTerm', event.query);
       this.performSearch(event.query);
     }
+    this.selectedTerm = this.cookieService.get('term');
 
   }
 
@@ -332,6 +372,14 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onChangeSource', event, this.selectedSource);
     sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
+  }
+
+  // Handle a change of the term - save termName and re-set
+  onChangeTerm(event) {
+    console.log('onChangeTerm', event, this.selectedTerm);
+    this.selectedTerm = event.value;
+    this.cookieService.set('term', this.selectedTerm);
+    this.router.navigate(['/welcome']); // reset to the welcome page
   }
 
   // Handle deselecting a source
@@ -436,6 +484,7 @@ export class GeneralSearchComponent implements OnInit,
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
+            console.log(this.cookieService.get('term'))
           } else {
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
@@ -452,6 +501,7 @@ export class GeneralSearchComponent implements OnInit,
     }
     this.textSuggestions = [];
     this.loading = false;
+    console.log(this.cookieService.get('term'))
   }
 
   // Set default selected columns

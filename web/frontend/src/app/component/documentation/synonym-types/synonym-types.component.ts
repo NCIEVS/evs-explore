@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from '../../../service/configuration.service';
 
@@ -13,13 +14,14 @@ export class SynonymTypesComponent implements OnInit {
   synonymTypes: any;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService,
+    private cookieService: CookieService
   ) { }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded synonyminology
-    this.configService.getSynonymTypes(this.configService.getTerminologyName())
+    this.configService.getSynonymTypes(this.cookieService.get('term'))
       .subscribe(response => {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
