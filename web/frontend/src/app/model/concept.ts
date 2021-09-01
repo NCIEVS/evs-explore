@@ -238,7 +238,8 @@ export class Concept {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'FULL_SYN') {
+        // TODO: this is hardcoded but should be config
+        if (this.synonyms[i].type == 'FULL_SYN' || this.synonyms[i].type == 'Synonym') {
           syns.push(this.synonyms[i].name);
         }
       }
