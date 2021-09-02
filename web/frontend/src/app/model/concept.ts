@@ -34,7 +34,7 @@ export class Concept {
         this.synonyms.push(synonym);
         // Add synonyms with "_Name" to properties
         if (synonym.type && synonym.type.endsWith('_Name') &&
-          synonym.type != 'Preferred Name' && synonym.type != 'Display_Name') {
+          synonym.type != 'Preferred Name' && synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
           var prop = new Property({});
           prop.type = synonym.type;
           prop.value = synonym.name;
