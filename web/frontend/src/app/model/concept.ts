@@ -34,7 +34,7 @@ export class Concept {
         this.synonyms.push(synonym);
         // Add synonyms with "_Name" to properties
         if (synonym.type && synonym.type.endsWith('_Name') &&
-          synonym.type != 'Preferred Name' && synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
+          synonym.type != 'Preferred Name' && synonym.type != 'Display_Name') {
           var prop = new Property({});
           prop.type = synonym.type;
           prop.value = synonym.name;
@@ -158,6 +158,7 @@ export class Concept {
     }
     // properties
     headerFlag = false;
+    this.properties = this.filterSetByUniqueObjects(this.properties);
     for (let i = 0; i < this.properties.length; i++) {
       if (this.properties[i].highlight) {
         if (!headerFlag) {
@@ -168,6 +169,14 @@ export class Concept {
       }
     }
     return text;
+  }
+
+  filterSetByUniqueObjects = function(set) {
+    var seen = {};
+    return set.filter(function(x) {
+        var key = JSON.stringify(x);
+        return !(key in seen) && (seen[key] = x);
+    });
   }
 
   // Return the preferred name
