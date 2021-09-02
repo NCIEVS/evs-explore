@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
+import { CookieService } from 'ngx-cookie-service';
 
 // Component for displaying concept details
 @Component({
@@ -31,8 +32,11 @@ export class ConceptDetailComponent implements OnInit {
     ]
   )
 
+  terminology = this.cookieService.get('term');
+
   constructor(
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cookieService: CookieService
   ) { }
 
   // On initialization

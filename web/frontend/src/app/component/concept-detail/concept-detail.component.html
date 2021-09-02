@@ -42,7 +42,7 @@
           <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
           </th>
-          <th class="w-10">Attribution</th>
+          <th *ngIf="terminology=='ncit'" class="w-10">Attribution</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-val>
@@ -50,7 +50,7 @@
             <td>{{ val.definition }}</td>
             <td>{{ val.source }}</td>
             <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-            <td><span *ngFor="let qual of val.qualifiers">
+            <td *ngIf="terminology=='ncit'"><span *ngFor="let qual of val.qualifiers">
                 <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
           </tr>
         </ng-template>
@@ -75,7 +75,7 @@
               <p-sortIcon [field]="'termGroup'"></p-sortIcon></th>
             <th class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon></th>
-            <th class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+            <th *ngIf="terminology=='ncit'" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon></th>
           </tr>
         </ng-template>
@@ -87,7 +87,7 @@
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
               <td>{{ synonym.code }}</td>
-              <td>{{ synonym.subSource }}</td>
+              <td *ngIf="terminology=='ncit'">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
         </ng-template>
@@ -104,10 +104,12 @@
       <p-table class="table table-striped table-bordered" [value]="concept.properties" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Type
+            <th class="w-20" [pSortableColumn]="'type'">Type
               <p-sortIcon [field]="'type'"></p-sortIcon></th>
-            <th class="w-70" [pSortableColumn]="'value'">Value
+            <th class="w-50" [pSortableColumn]="'value'">Value
               <p-sortIcon [field]="'value'"></p-sortIcon></th>
+            <th *ngIf="terminology=='ncim'" class="w-30" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-property>
@@ -121,6 +123,7 @@
                   </span>
                 </span>
               </td>
+              <td>{{property.source}}</td>
             </tr>
           </ng-container>
         </ng-template>
