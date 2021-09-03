@@ -158,6 +158,7 @@ export class Concept {
     }
     // properties
     headerFlag = false;
+    this.properties = this.filterSetByUniqueObjects(this.properties);
     for (let i = 0; i < this.properties.length; i++) {
       if (this.properties[i].highlight) {
         if (!headerFlag) {
@@ -168,6 +169,14 @@ export class Concept {
       }
     }
     return text;
+  }
+
+  filterSetByUniqueObjects = function(set) {
+    var seen = {};
+    return set.filter(function(x) {
+        var key = JSON.stringify(x);
+        return !(key in seen) && (seen[key] = x);
+    });
   }
 
   // Return the preferred name
