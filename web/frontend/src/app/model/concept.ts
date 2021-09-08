@@ -384,6 +384,33 @@ export class Concept {
     return mapInfo;
   }
 
+  broaderConceptsExist(): boolean {
+    var assocs = this.associations;
+    for (let l = 0; l < assocs.length; l++) {
+      if(assocs[l].type == "BR")
+        return true;
+    }
+    return false;
+  }
+
+  narrowerConceptsExist(): boolean {
+    var assocs = this.associations;
+    for (let l = 0; l < assocs.length; l++) {
+      if(assocs[l].type == "RN")
+        return true;
+    }
+    return false;
+  }
+
+  otherConceptsExist(): boolean {
+    var assocs = this.associations;
+    for (let l = 0; l < assocs.length; l++) {
+      if(assocs[l].type != "RN" && assocs[l].type != "BR")
+        return true;
+    }
+    return false;
+  }
+
   // Default string representation is the name
   toString(): string {
     return this.name.toString();

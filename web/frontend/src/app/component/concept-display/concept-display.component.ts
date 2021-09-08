@@ -79,7 +79,7 @@ export class ConceptDisplayComponent implements OnInit {
             this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'summary,maps')
+                  .getConceptSummary(params.get('code'), 'full')
               )
             )
               .subscribe((concept: any) => {

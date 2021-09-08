@@ -73,7 +73,7 @@
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
     <p-header class="bold-heading">
       Role Relationships
       <span class="small-heading">
@@ -112,7 +112,7 @@
     <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
     <p-header class="bold-heading">
       Associations
       <span class="small-heading">
@@ -150,9 +150,48 @@
     </div>
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncim'">
+    <p-header class="bold-heading">
+      Broader Concepts
+    </p-header>
+    <div class="table-responsive">
+      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.associations && concept.broaderConceptsExist() == true;
+          else elseBlockAssociation
+        " (sortFunction)="customSort($event)" [customSort]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-association>
+          <tr *ngIf="association.type == 'RB'">
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.relatedCode }}</td>
+            <td>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
+            </td>
+            <td>{{ association.source }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockAssociation>None</ng-template>
+  </p-panel>
   <br />
 
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
     <p-header class="bold-heading">
       Incoming Role Relationships
       <span class="small-heading">
@@ -192,8 +231,49 @@
       None
     </ng-template>
   </p-panel>
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncim'">
+    <p-header class="bold-heading">
+      Narrower Concepts
+    </p-header>
+    <div class="table-responsive">
+      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.associations && concept.narrowerConceptsExist() == true;
+          else elseBlockAssociation
+        " (sortFunction)="customSort($event)" [customSort]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-association>
+          <tr *ngIf="association.type == 'RN'">
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.relatedCode }}</td>
+            <td>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
+            </td>
+            <td>{{ association.source }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockAssociation>
+      None
+    </ng-template>
+  </p-panel>
   <br />
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
     <p-header class="bold-heading">
       Incoming Associations
       <span class="small-heading">
@@ -231,6 +311,47 @@
       </p-table>
     </div>
     <ng-template #elseBlockIncomingAssociation>
+      None
+    </ng-template>
+  </p-panel>
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncim'">
+    <p-header class="bold-heading">
+      Other Relationships
+    </p-header>
+    <div class="table-responsive">
+      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.associations && concept.otherConceptsExist() == true;
+          else elseBlockAssociation
+        " (sortFunction)="customSort($event)" [customSort]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
+              <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'relatedName'">Related Name
+              <p-sortIcon [field]="'relatedName'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-association>
+          <tr *ngIf="association.type != 'RB' && association.type != 'RN'">
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.relatedCode }}</td>
+            <td>
+              <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
+            </td>
+            <td>{{ association.source }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockAssociation>
       None
     </ng-template>
   </p-panel>
