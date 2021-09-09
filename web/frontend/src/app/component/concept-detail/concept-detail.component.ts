@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 
 // Component for displaying concept details
 @Component({
@@ -36,12 +37,17 @@ export class ConceptDetailComponent implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private conceptDisplayService: ConceptDisplayComponent
   ) { }
 
   // On initialization
   ngOnInit() {
     // implements OnInit
+  }
+
+  getSelectedSource() {
+    return this.conceptDisplayService.selectedSource;
   }
 
   // Render links appropriately if they are defined in "external Links"

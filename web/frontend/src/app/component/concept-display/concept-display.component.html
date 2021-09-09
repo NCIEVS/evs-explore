@@ -5,6 +5,10 @@
         type="button"></button> </span>
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
+  <p-tabView *ngIf="!displayHierarchy" [(activeIndex)]="selectedSource" (onChange)="setSelectedSource($event)">
+    <p-tabPanel *ngFor="let source of sources; let i = index" [selected]="i == 0" header={{source}}>
+    </p-tabPanel>
+  </p-tabView>
   <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
     <p-tabPanel header="Terms And Properties">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
@@ -19,4 +23,5 @@
       </app-concept-relationship>
     </p-tabPanel>
   </p-tabView>
+
 </div>

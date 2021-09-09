@@ -26,7 +26,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-parent>
-          <tr>
+          <tr *ngIf="parent.source && (parent.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
