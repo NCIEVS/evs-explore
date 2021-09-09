@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { Concept } from './../../model/concept';
@@ -15,7 +16,10 @@ export class ConceptRelationshipComponent implements OnInit {
   @Input() urlBase: string;
   @Input() urlTarget: string
 
-  constructor(private conceptDisplayService: ConceptDisplayComponent) { }
+  terminology = this.cookieService.get('term');
+
+  constructor(private cookieService: CookieService,
+              private conceptDisplayService: ConceptDisplayComponent) { }
 
   ngOnInit() {
   }
