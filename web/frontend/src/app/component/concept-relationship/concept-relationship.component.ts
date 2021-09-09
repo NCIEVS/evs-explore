@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SortEvent } from 'primeng/api';
+import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { Concept } from './../../model/concept';
 
 // Component for displaying a concept relationship (as part of the concept detail view).
@@ -14,9 +15,13 @@ export class ConceptRelationshipComponent implements OnInit {
   @Input() urlBase: string;
   @Input() urlTarget: string
 
-  constructor() { }
+  constructor(private conceptDisplayService: ConceptDisplayComponent) { }
 
   ngOnInit() {
+  }
+
+  getSelectedSource() {
+    return this.conceptDisplayService.selectedSource;
   }
 
   customSort(event: SortEvent) {
