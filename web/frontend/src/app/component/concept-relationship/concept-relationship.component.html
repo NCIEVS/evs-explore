@@ -176,7 +176,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RB'">
+          <tr *ngIf="association.type == 'RB' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -257,7 +257,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RN'">
+          <tr *ngIf="association.type == 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -340,7 +340,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type != 'RB' && association.type != 'RN'">
+          <tr *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
