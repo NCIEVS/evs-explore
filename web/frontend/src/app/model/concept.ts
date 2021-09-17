@@ -23,6 +23,8 @@ export class Concept {
   inverseAssociations: Relationship[];
   maps: Map[];
   subsetLink: string;
+  synonymUniqueArray: any[];
+  definitionUniqueArray: any[];
 
   constructor(input: any) {
     Object.assign(this, input);
@@ -218,13 +220,35 @@ export class Concept {
   // Assemble text from all of the definitions together.
   getDefinitionsText(): string {
     var text: string = '';
+    var definitionUniqueArray = [];
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br><br>";
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br /><br />";
+          definitionUniqueArray.push((this.definitions[i].source ?
+            this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition);
       }
     }
+    this.definitionUniqueArray = definitionUniqueArray;
     return text;
+  }
+
+  getPartialDefText(): string {
+    let defs = this.definitionUniqueArray;
+    var defsPartial = [];
+    var defsPartialLength = 0;
+    for (let i = 0; i < defs.length; i++) {
+      if (defs[i].length < 100 - defsPartialLength) {
+        defsPartial.push(defs[i]);
+        defsPartialLength += defs[i].length
+      }
+      else if (defs[i].length/2 < 100 - defsPartialLength || i == 0) {
+        let halfString = defs[i].substring(0, defs[i].length/2);
+        defsPartial.push(halfString + '...');
+        break;
+      }
+    }
+    return defsPartial.join('<br />');
   }
 
   // Assemble text from all Synonyms together
@@ -238,8 +262,27 @@ export class Concept {
         synonymUniqueArray.push(syns[i]);
       }
     }
-    return synonymUniqueArray.join('<br>');
+    this.synonymUniqueArray = synonymUniqueArray;
+    return synonymUniqueArray.join('<br />');
 
+  }
+
+  getPartialSynText(): string {
+    let syns = this.synonymUniqueArray;
+    var synonymPartial = [];
+    var synonymPartialLength = 0;
+    for (let i = 0; i < syns.length; i++) {
+      if (syns[i].length < 100 - synonymPartialLength) {
+        synonymPartial.push(syns[i]);
+        synonymPartialLength += syns[i].length
+      }
+      else if (syns[i].length/2 < 100 - synonymPartialLength || i == 0) {
+        let halfString = syns[i].substring(0, syns[i].length/2);
+        synonymPartial.push(halfString + '...');
+        break;
+      }
+    }
+    return synonymPartial.join('<br />');
   }
 
   // Return Synonyms as an array

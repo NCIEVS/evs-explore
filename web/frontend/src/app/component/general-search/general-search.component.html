@@ -168,6 +168,14 @@
                         [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
                         {{rowData[col.field]}} (Retired Concept) </a>
                     </span>
+                    <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
+                      <button class="link" *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[More]</button>
+                      <button class="link" *ngIf="rowData['synValue'] == rowData['expandedSynonyms']" (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[Less]</button>
+                    </span>
+                    <span *ngSwitchCase="'Definitions'"><span [innerHTML]="rowData['defValue']"></span>
+                      <button class="link" *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']" (click)="rowData['defValue'] = rowData['expandedDefinitions']">[More]</button>
+                      <button class="link" *ngIf="rowData['defValue'] == rowData['expandedDefinitions']" (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[Less]</button>
+                    </span>
                     <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
                         (click)="onSelectConceptCode(rowData['column1'])">{{rowData[col.field]}}</a></span>-->
                     <!--  <div *ngSwitchCase="'Maps_To'" [innerHTML]="rowData[col.field] | transformDisplay:'Maps_To'"></div>-->
