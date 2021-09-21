@@ -19,7 +19,6 @@ export class ConceptDetailService {
 
   // Get concept with summary includes
   getConceptSummary(conceptCode: string, include: string): Observable<any> {
-    console.log(this.cookieService.get('term'))
     return this.http.get('/api/v1/concept/' + this.cookieService.get('term') + '/' + conceptCode + '?include=' + include,
       {
         responseType: 'json',

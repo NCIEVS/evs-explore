@@ -321,6 +321,16 @@ export class Concept {
     return syns;
   }
 
+  getSemanticType(): any {
+    if (this.properties.length > 0) {
+      for (let i = 0; i < this.properties.length; i++) {
+        if(this.properties[i].type == "Semantic_Type")
+          return this.properties[i].value;
+      }
+      return null;
+    }
+  }
+
   // Returns SubsetLink if it exists
   getSubsetLink() {
     return this.subsetLink ? this.subsetLink : null;

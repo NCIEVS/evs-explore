@@ -85,6 +85,7 @@ export class ConceptDisplayComponent implements OnInit {
               )
             )
               .subscribe((concept: any) => {
+                console.log(concept)
                 // and finally build the local state from it
                 this.conceptDetail = new Concept(concept);
                 this.conceptCode = concept.code;

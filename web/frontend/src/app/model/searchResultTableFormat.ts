@@ -43,6 +43,8 @@ export class SearchResultTableFormat {
           tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else if (returnFields[i] === 'Definitions') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '300px');
+        } else if (returnFields[i] === 'Semantic Type') {
+          tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else {
           tableHeader = new TableHeader('column' + count, returnFields[i], '250px');
         }
@@ -58,6 +60,7 @@ export class SearchResultTableFormat {
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
+        data.semanticType = searchResult.concepts[i].getSemanticType();
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
@@ -72,8 +75,6 @@ export class SearchResultTableFormat {
               data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
-            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join(""))
-            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join("").length)
             if(searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100) {
               data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
               data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
