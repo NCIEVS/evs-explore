@@ -1,14 +1,12 @@
 
-#export NCI_TERM_BROWSER_SERVER_PORT="8081"
-#export EVS_API_BASE_PATH="http://localhost:8080/evsrestapi"
+export NCI_EVSEXPLORE_SERVER_PORT="8080"
+export EVS_API_BASE_PATH="http://localhost:8082"
 
-
-export LOGGING_LEVEL_GOV_TERM_BROWSER="DEBUG"
+export EVS_REST_API_URL="http://localhost::8082/api/v1"
+export LOGGING_LEVEL_GOV_EVSEXPLORE="DEBUG"
 
 export LOGGING_LEVEL_ORG_SPRINGFRAMEWORK="ERROR"
 
-
-export NCI_TERM_BROWSER_CONTEXT_PATH="/"
 
 
 
