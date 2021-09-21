@@ -501,7 +501,6 @@ export class GeneralSearchComponent implements OnInit,
     }
     this.textSuggestions = [];
     this.loading = false;
-    console.log(this.cookieService.get('term'))
   }
 
   // Set default selected columns
