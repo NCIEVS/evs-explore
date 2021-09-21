@@ -63,8 +63,24 @@ export class SearchResultTableFormat {
           let field = returnFields[k];
           // console.log('  field = ', '.', field, '.');
           if (field === 'Definitions' || field === 'ALT_DEFINITION') {
+            if(searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100) {
+              data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
+              data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
+              data["defValue"] = searchResult.concepts[i].getPartialDefText();
+            }
+            else
+              data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
+            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join(""))
+            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join("").length)
+            if(searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100) {
+              data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
+              data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
+              data["synValue"] = searchResult.concepts[i].getPartialSynText();
+            }
+            else
+              data["synValue"] = searchResult.concepts[i].getFullSynText();
             data['column' + count] = searchResult.concepts[i].getFullSynText();
           } else if (field === 'Role') {
             data['column' + count] = searchResult.concepts[i].getRolesText();
@@ -116,7 +132,6 @@ export class SearchResultTableFormat {
           }
           count++;
         }
-
         this.data.push(data);
       }
 

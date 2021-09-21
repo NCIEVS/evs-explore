@@ -82,7 +82,7 @@
         <ng-template pTemplate="body" let-synonym>
           <!-- Only display the entries that have a termgroup -->
           <ng-container>
-            <tr *ngIf="synonym.termGroup">
+            <tr *ngIf="synonym.source && (synonym.source == getSelectedSource() || getSelectedSource() == 'All')">
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
@@ -114,7 +114,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-property>
           <ng-container>
-            <tr>
+            <tr *ngIf="property.source && (property.source == getSelectedSource() || getSelectedSource() == 'All')">
               <td>{{property.type}}</td>
               <td><span [innerHTML]="checkExternalLink(property)"></span>
                 <span *ngIf="property.qualifiers && property.qualifiers.length > 0">

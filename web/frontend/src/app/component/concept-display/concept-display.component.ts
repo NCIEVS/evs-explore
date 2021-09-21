@@ -46,6 +46,8 @@ export class ConceptDisplayComponent implements OnInit {
     'Preferred_Name'
   ]
   properties: string[] = [];
+  sources: string[] = [];
+  selectedSource = "All";
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -79,7 +81,7 @@ export class ConceptDisplayComponent implements OnInit {
             this.route.paramMap.pipe(
               switchMap((params: ParamMap) =>
                 this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'summary,maps')
+                  .getConceptSummary(params.get('code'), 'full')
               )
             )
               .subscribe((concept: any) => {
@@ -88,6 +90,7 @@ export class ConceptDisplayComponent implements OnInit {
                 this.conceptCode = concept.code;
                 this.title = concept.name + ' ( Code - ' + concept.code + ' )';
                 this.conceptWithRelationships = undefined;
+                this.sources = this.getSourceList(this.conceptDetail);
                 if ((this.activeIndex === 1 || this.activeIndex === 2) &&
                   (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
                   this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
@@ -116,5 +119,35 @@ export class ConceptDisplayComponent implements OnInit {
   // Reroute to hierarchy view
   openHierarchy() {
     this.location.replaceState('/hierarchy/' + this.conceptCode);
+  }
+
+  getSourceList(concept) {
+    var sourceList = [];
+    sourceList.push("All");
+    for (const obj in concept.synonyms){
+      if(!(sourceList.includes(concept.synonyms[obj].source)) && concept.synonyms[obj].source){
+        sourceList.push(concept.synonyms[obj].source)
+      }
+    }
+    for (const obj in concept.properties){
+      if(!(sourceList.includes(concept.properties[obj].source)) && concept.properties[obj].source){
+        sourceList.push(concept.properties[obj].source)
+      }
+    }
+    for (const obj in concept.associations){
+      if(!(sourceList.includes(concept.associations[obj].source)) && concept.associations[obj].source){
+        sourceList.push(concept.associations[obj].source)
+      }
+    }
+    for (const obj in concept.inverseAssociations){
+      if(!(sourceList.includes(concept.inverseAssociations[obj].source)) && concept.inverseAssociations[obj].source){
+        sourceList.push(concept.inverseAssociations[obj].source)
+      }
+    }
+    return sourceList;
+  }
+
+  setSelectedSource($event) {
+    this.selectedSource = this.sources[$event.index]
   }
 }
