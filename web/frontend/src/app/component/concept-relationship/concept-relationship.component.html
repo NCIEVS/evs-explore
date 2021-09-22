@@ -32,7 +32,8 @@
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
             </td>
             <td class="w-20">{{ parent.source }}</td>
-            <td class="w-20">{{ parent.qualifiers[0].type == "RELA" ? parent.qualifiers[0].value : "" }}</td>
+            <td class="w-20">{{ parent.qualifiers && parent.qualifiers[0].type == "RELA" ? parent.qualifiers[0].value :
+              "" }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -176,7 +177,8 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RB' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+          <tr
+            *ngIf="association.type == 'RB' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -257,7 +259,8 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+          <tr
+            *ngIf="association.type == 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -340,7 +343,8 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+          <tr
+            *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>

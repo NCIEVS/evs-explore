@@ -1,14 +1,19 @@
 <div class="hierarchy-div">
   <div class="page-header">
     {{ title }}
-    <span *ngIf="displayHierarchy"> -- <button routerLink="/hierarchy/{{conceptCode}}" [label]="hierarchyButtonLabel" pButton
-        type="button"></button> </span>
+    <span *ngIf="displayHierarchy"> -- <button routerLink="/hierarchy/{{conceptCode}}" [label]="hierarchyButtonLabel"
+        pButton type="button"></button> </span>
     <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
   </div>
-  <p-tabView *ngIf="!displayHierarchy" [(activeIndex)]="selectedSource" (onChange)="setSelectedSource($event)">
-    <p-tabPanel *ngFor="let source of sources; let i = index" [selected]="i == 0" header={{source}}>
-    </p-tabPanel>
-  </p-tabView>
+  <div class="center">
+    <span *ngIf="!displayHierarchy">
+      <span *ngFor="let source of sources; index as i">
+        <span *ngIf="i != 0"> | </span>
+        <a [routerLink]="" *ngIf="selectedSource != source" (click)="setSelectedSource(source)">{{source}}</a>
+        <span *ngIf="selectedSource == source"><b>{{source}}</b></span>
+      </span>
+    </span>
+  </div>
   <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
     <p-tabPanel header="Terms And Properties">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
