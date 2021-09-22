@@ -85,7 +85,7 @@ export class ConceptDisplayComponent implements OnInit {
               )
             )
               .subscribe((concept: any) => {
-                console.log(concept)
+                // console.log(concept)
                 // and finally build the local state from it
                 this.conceptDetail = new Concept(concept);
                 this.conceptCode = concept.code;
@@ -125,23 +125,23 @@ export class ConceptDisplayComponent implements OnInit {
   getSourceList(concept) {
     var sourceList = [];
     sourceList.push("All");
-    for (const obj in concept.synonyms){
-      if(!(sourceList.includes(concept.synonyms[obj].source)) && concept.synonyms[obj].source){
+    for (const obj in concept.synonyms) {
+      if (!(sourceList.includes(concept.synonyms[obj].source)) && concept.synonyms[obj].source) {
         sourceList.push(concept.synonyms[obj].source)
       }
     }
-    for (const obj in concept.properties){
-      if(!(sourceList.includes(concept.properties[obj].source)) && concept.properties[obj].source){
+    for (const obj in concept.properties) {
+      if (!(sourceList.includes(concept.properties[obj].source)) && concept.properties[obj].source) {
         sourceList.push(concept.properties[obj].source)
       }
     }
-    for (const obj in concept.associations){
-      if(!(sourceList.includes(concept.associations[obj].source)) && concept.associations[obj].source){
+    for (const obj in concept.associations) {
+      if (!(sourceList.includes(concept.associations[obj].source)) && concept.associations[obj].source) {
         sourceList.push(concept.associations[obj].source)
       }
     }
-    for (const obj in concept.inverseAssociations){
-      if(!(sourceList.includes(concept.inverseAssociations[obj].source)) && concept.inverseAssociations[obj].source){
+    for (const obj in concept.inverseAssociations) {
+      if (!(sourceList.includes(concept.inverseAssociations[obj].source)) && concept.inverseAssociations[obj].source) {
         sourceList.push(concept.inverseAssociations[obj].source)
       }
     }

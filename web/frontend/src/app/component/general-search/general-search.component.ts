@@ -135,10 +135,10 @@ export class GeneralSearchComponent implements OnInit,
           };
         });
         this.termsAll = Array.from(new Set(this.termsAll.map(a => a.value)))
-        .map(id => {
-          return this.termsAll.find(a => a.value === id)
-        }) // remove dupes
-        if(this.cookieService.get('term') == '')
+          .map(id => {
+            return this.termsAll.find(a => a.value === id)
+          }) // remove dupes
+        if (this.cookieService.get('term') == '')
           this.cookieService.set('term', 'ncit')
       });
 
@@ -154,7 +154,7 @@ export class GeneralSearchComponent implements OnInit,
       sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
 
       // Set default selected sources to ncit default
-      if(this.cookieService.get('term') == undefined){
+      if (this.cookieService.get('term') == undefined) {
         this.selectedTerm = "ncit";
         this.cookieService.set('term', this.selectedTerm)
       }
@@ -505,11 +505,11 @@ export class GeneralSearchComponent implements OnInit,
   // Set default selected columns
   setDefaultSelectedColumns() {
     console.log('setDefaultSelectedColumns');
-    if(this.cookieService.check('displayColumns')) {
+    if (this.cookieService.check('displayColumns')) {
       this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
     }
     else {
-      this.selectedColumns = ["Highlights","Preferred Name","Definitions","Code","Synonyms","Semantic Type"];
+      this.selectedColumns = ["Highlights", "Preferred Name", "Definitions", "Code", "Synonyms"];
       this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
 
     }
