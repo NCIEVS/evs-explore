@@ -37,7 +37,8 @@
                 (click)="onResetSearch($event)" pTooltip="Click to reset the search" label="Reset Search"
                 tooltipPosition="bottom"></button>
 
-              <p-dropdown [options]="termsAll" [(ngModel)]="selectedTerm" (onChange)="onChangeTerm($event)" name="selectedTerm"></p-dropdown>
+              <p-dropdown [options]="termsAll" [(ngModel)]="selectedTerm" (onChange)="onChangeTerm($event)"
+                name="selectedTerm"></p-dropdown>
             </div>
 
 
@@ -169,12 +170,16 @@
                         {{rowData[col.field]}} (Retired Concept) </a>
                     </span>
                     <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
-                      <button class="link" *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[More]</button>
-                      <button class="link" *ngIf="rowData['synValue'] == rowData['expandedSynonyms']" (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[Less]</button>
+                      <button class="link" *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']"
+                        (click)="rowData['synValue'] = rowData['expandedSynonyms']">[More]</button>
+                      <button class="link" *ngIf="rowData['synValue'] == rowData['expandedSynonyms']"
+                        (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[Less]</button>
                     </span>
                     <span *ngSwitchCase="'Definitions'"><span [innerHTML]="rowData['defValue']"></span>
-                      <button class="link" *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']" (click)="rowData['defValue'] = rowData['expandedDefinitions']">[More]</button>
-                      <button class="link" *ngIf="rowData['defValue'] == rowData['expandedDefinitions']" (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[Less]</button>
+                      <button class="link" *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']"
+                        (click)="rowData['defValue'] = rowData['expandedDefinitions']">[More]</button>
+                      <button class="link" *ngIf="rowData['defValue'] == rowData['expandedDefinitions']"
+                        (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[Less]</button>
                     </span>
                     <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
                         (click)="onSelectConceptCode(rowData['column1'])">{{rowData[col.field]}}</a></span>-->

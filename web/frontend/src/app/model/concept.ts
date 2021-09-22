@@ -173,11 +173,11 @@ export class Concept {
     return text;
   }
 
-  filterSetByUniqueObjects = function(set) {
+  filterSetByUniqueObjects = function (set) {
     var seen = {};
-    return set.filter(function(x) {
-        var key = JSON.stringify(x);
-        return !(key in seen) && (seen[key] = x);
+    return set.filter(function (x) {
+      var key = JSON.stringify(x);
+      return !(key in seen) && (seen[key] = x);
     });
   }
 
@@ -225,8 +225,8 @@ export class Concept {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
           this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br /><br />";
-          definitionUniqueArray.push((this.definitions[i].source ?
-            this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition);
+        definitionUniqueArray.push((this.definitions[i].source ?
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition);
       }
     }
     this.definitionUniqueArray = definitionUniqueArray;
@@ -242,8 +242,8 @@ export class Concept {
         defsPartial.push(defs[i]);
         defsPartialLength += defs[i].length
       }
-      else if (defs[i].length/2 < 100 - defsPartialLength || i == 0) {
-        let halfString = defs[i].substring(0, defs[i].length/2);
+      else if (defs[i].length / 2 < 100 - defsPartialLength || i == 0) {
+        let halfString = defs[i].substring(0, defs[i].length / 2);
         defsPartial.push(halfString + '...');
         break;
       }
@@ -276,8 +276,8 @@ export class Concept {
         synonymPartial.push(syns[i]);
         synonymPartialLength += syns[i].length
       }
-      else if (syns[i].length/2 < 100 - synonymPartialLength || i == 0) {
-        let halfString = syns[i].substring(0, syns[i].length/2);
+      else if (syns[i].length / 2 < 100 - synonymPartialLength || i == 0) {
+        let halfString = syns[i].substring(0, syns[i].length / 2);
         synonymPartial.push(halfString + '...');
         break;
       }
@@ -430,7 +430,7 @@ export class Concept {
   broaderConceptsExist(): boolean {
     var assocs = this.associations;
     for (let l = 0; l < assocs.length; l++) {
-      if(assocs[l].type == "BR")
+      if (assocs[l].type == "BR")
         return true;
     }
     return false;
@@ -439,7 +439,7 @@ export class Concept {
   narrowerConceptsExist(): boolean {
     var assocs = this.associations;
     for (let l = 0; l < assocs.length; l++) {
-      if(assocs[l].type == "RN")
+      if (assocs[l].type == "RN")
         return true;
     }
     return false;
@@ -448,7 +448,7 @@ export class Concept {
   otherConceptsExist(): boolean {
     var assocs = this.associations;
     for (let l = 0; l < assocs.length; l++) {
-      if(assocs[l].type != "RN" && assocs[l].type != "BR")
+      if (assocs[l].type != "RN" && assocs[l].type != "BR")
         return true;
     }
     return false;
