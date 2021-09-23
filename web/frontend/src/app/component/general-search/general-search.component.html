@@ -140,7 +140,6 @@
                   <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
                     {{col.header}}
-
                   </th>
                 </tr>
 
@@ -162,24 +161,36 @@
                       </a>
                     </span>
                     <span *ngSwitchCase="'Code'">
-                      <a target="_blank" *ngIf="rowData.retiredConcept === 'no'"
-                        [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
-                        {{rowData[col.field]}}</a>
-                      <a target="_blank" *ngIf="rowData.retiredConcept === 'yes'"
-                        [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
-                        {{rowData[col.field]}} (Retired Concept) </a>
+                      <a target="_blank" [routerLink]="['/concept/', rowData['column1'] ]"><i
+                          pTooltip="Click to open concept in new tab" class="fa fa-external-link"></i></a>
+                      <a target="_blank" class="ml3"
+                        [routerLink]="['/concept/', rowData['column1'] ]">{{rowData[col.field]}}<span
+                          *ngIf="rowData.retiredConcept === 'yes'">
+                          (Retired Concept)</span></a>
                     </span>
                     <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
-                      <button class="link" *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']"
-                        (click)="rowData['synValue'] = rowData['expandedSynonyms']">[More]</button>
-                      <button class="link" *ngIf="rowData['synValue'] == rowData['expandedSynonyms']"
-                        (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[Less]</button>
+                      <span *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[ More
+                          ]</button>
+                      </span>
+                      <span *ngIf="rowData['synValue'] == rowData['expandedSynonyms']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[ Less
+                          ]</button>
+                      </span>
                     </span>
                     <span *ngSwitchCase="'Definitions'"><span [innerHTML]="rowData['defValue']"></span>
-                      <button class="link" *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']"
-                        (click)="rowData['defValue'] = rowData['expandedDefinitions']">[More]</button>
-                      <button class="link" *ngIf="rowData['defValue'] == rowData['expandedDefinitions']"
-                        (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[Less]</button>
+                      <span *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['defValue'] = rowData['expandedDefinitions']">[ More
+                          ]</button>
+                      </span>
+                      <span *ngIf="rowData['defValue'] == rowData['expandedDefinitions']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[ Less
+                          ]</button>
+                      </span>
                     </span>
                     <span *ngSwitchCase="'Semantic Type'" [innerHTML]="rowData['semanticType']"></span>
                     <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"

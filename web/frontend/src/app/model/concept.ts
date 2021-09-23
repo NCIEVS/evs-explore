@@ -241,13 +241,13 @@ export class Concept {
       if (defs[i].length < 100 - defsPartialLength) {
         defsPartial.push(defs[i]);
         defsPartialLength += defs[i].length
-        if(i == 2){
+        if (i == 2) {
           break;
         }
       }
       else if (defs[i].length / 2 < 100 - defsPartialLength || i == 0) {
         let halfString = defs[i].substring(0, defs[i].length / 2);
-        defsPartial.push(halfString + '...');
+        defsPartial.push(halfString);
         break;
       }
     }
@@ -278,7 +278,7 @@ export class Concept {
       if (syns[i].length < 100 - synonymPartialLength) {
         synonymPartial.push(syns[i]);
         synonymPartialLength += syns[i].length
-        if(i == 2){
+        if (i == 2) {
           break;
         }
       }
@@ -331,7 +331,7 @@ export class Concept {
     let semTypes = [];
     if (this.properties.length > 0) {
       for (let i = 0; i < this.properties.length; i++) {
-        if(this.properties[i].type == "Semantic_Type")
+        if (this.properties[i].type == "Semantic_Type")
           semTypes.push(this.properties[i].value + "<br />");
       }
       return semTypes;
