@@ -24,12 +24,11 @@ export class PropertiesComponent implements OnInit {
     this.configService.getProperties(this.cookieService.get('term'))
       .subscribe(response => {
         this.properties = response;
-        this.properties.sort((a, b) => a.code.localeCompare(b.name, undefined, { sensitivity: 'base' })); // name doesn't always exist
+        this.properties.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' })); // name doesn't always exist
       });
   }
 
   customSort(event: SortEvent) {
-    console.log(event)
     event.data.sort((data1, data2) => {
         let value1 = data1[event.field];
         let value2 = data2[event.field];
