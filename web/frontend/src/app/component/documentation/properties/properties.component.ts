@@ -20,13 +20,19 @@ export class PropertiesComponent implements OnInit {
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded terminology
     this.configService.getProperties(this.cookieService.get('term'))
       .subscribe(response => {
         this.properties = response;
-        this.properties.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' })); // name doesn't always exist
-      });
-  }
+        this.properties.sort((a, b) => {
+          let value1 = a.code; // use code because value doesn't always exist
+          let value2 = b.code;
+          if(value1 == undefined)
+            return 0;
+          return value1.localeCompare(value2, 'en', { numeric: true }); //use customSort
+        }
+    );
+  });
+}
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
