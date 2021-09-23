@@ -128,7 +128,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-property>
           <ng-container>
-            <tr *ngIf="property.source && (property.source == getSelectedSource() || getSelectedSource() == 'All')">
+            <tr *ngIf="(property.source && property.source == getSelectedSource()) || getSelectedSource() == 'All'">
               <td>{{property.type}}</td>
               <td><span [innerHTML]="checkExternalLink(property)"></span>
                 <span *ngIf="property.qualifiers && property.qualifiers.length > 0">

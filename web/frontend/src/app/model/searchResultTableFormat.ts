@@ -43,6 +43,8 @@ export class SearchResultTableFormat {
           tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else if (returnFields[i] === 'Definitions') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '300px');
+        } else if (returnFields[i] === 'Semantic Type') {
+          tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else {
           tableHeader = new TableHeader('column' + count, returnFields[i], '250px');
         }
@@ -58,26 +60,25 @@ export class SearchResultTableFormat {
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
+        data.semanticType = searchResult.concepts[i].getSemanticType().join("");
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
           // console.log('  field = ', '.', field, '.');
           if (field === 'Definitions' || field === 'ALT_DEFINITION') {
-            if(searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100) {
+            if(searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100 || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
               data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
               data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
-              data["defValue"] = searchResult.concepts[i].getPartialDefText();
+              data["defValue"] = data["collapsedDefinitions"];
             }
             else
               data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
-            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join(""))
-            console.log(searchResult.concepts[i].getFullSynText().split("<br />").join("").length)
-            if(searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100) {
+            if(searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100 || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
               data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
               data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
-              data["synValue"] = searchResult.concepts[i].getPartialSynText();
+              data["synValue"] = data["collapsedSynonyms"];
             }
             else
               data["synValue"] = searchResult.concepts[i].getFullSynText();
@@ -132,6 +133,7 @@ export class SearchResultTableFormat {
           }
           count++;
         }
+        console.log(searchResult.concepts[i].getFullSynText().split("<br />"))
         this.data.push(data);
       }
 
