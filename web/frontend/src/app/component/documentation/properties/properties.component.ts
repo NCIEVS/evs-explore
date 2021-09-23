@@ -24,7 +24,6 @@ export class PropertiesComponent implements OnInit {
     this.configService.getProperties(this.cookieService.get('term'))
       .subscribe(response => {
         this.properties = response;
-        console.log(this.properties)
         this.properties.sort((a, b) => a.code.localeCompare(b.name, undefined, { sensitivity: 'base' })); // name doesn't always exist
       });
   }
