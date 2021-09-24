@@ -17,11 +17,11 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-20" [pSortableColumn]="'source'">Source
-              <p-sortIcon [field]="'source'"></p-sortIcon>
-            </th>
             <th class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
         </ng-template>
@@ -31,9 +31,9 @@
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
             </td>
-            <td class="w-20">{{ parent.source }}</td>
             <td class="w-20">{{ parent.qualifiers && parent.qualifiers[0].type == "RELA" ? parent.qualifiers[0].value :
               "" }}</td>
+            <td class="w-20">{{ parent.source }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -56,8 +56,14 @@
             <th class="w-20" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th class="w-80" [pSortableColumn]="'name'">Name
+            <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship Attribute
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
+            </th>
+            <th class="w-30" [pSortableColumn]="'source'">Source
+              <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
         </ng-template>
@@ -67,6 +73,9 @@
             <td>
               <a [routerLink]="[urlBase, child.code]" [target]='urlTarget'>{{ child.name }} </a>
             </td>
+            <td>{{ child.qualifiers && child.qualifiers[0].type == "RELA" ? child.qualifiers[0].value :
+              "" }}</td>
+            <td>{{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
       </p-table>
