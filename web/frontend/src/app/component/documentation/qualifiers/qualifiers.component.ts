@@ -11,6 +11,7 @@ import { ConfigurationService } from '../../../service/configuration.service';
 export class QualifiersComponent implements OnInit {
 
   qualifiers: any;
+  terminology = this.cookieService.get('term');
 
   constructor(
     private configService: ConfigurationService,

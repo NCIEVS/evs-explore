@@ -12,6 +12,7 @@ import { ConfigurationService } from './../../../service/configuration.service';
 export class PropertiesComponent implements OnInit {
 
   properties: any;
+  terminology = this.cookieService.get('term');
 
   constructor(
     private configService: ConfigurationService,
@@ -24,23 +25,23 @@ export class PropertiesComponent implements OnInit {
       .subscribe(response => {
         this.properties = response;
         this.properties.sort((a, b) => {
-          let value1 = a.code; // use code because value doesn't always exist
-          let value2 = b.code;
-          if(value1 == undefined)
-            return 0;
-          return value1.localeCompare(value2, 'en', { numeric: true }); //use customSort
+          // use code because value doesn't always exist
+          let value1 = a.code || "";
+          let value2 = b.code || "";
+          // case-inensitive sort
+          return value1.localeCompare(value2, undefined, { sensitivity: 'base' });
         }
-    );
-  });
-}
+        );
+      });
+  }
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        if(value1 == undefined)
-          return 0;
-        return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
