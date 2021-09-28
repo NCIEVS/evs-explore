@@ -26,8 +26,8 @@ export class PropertiesComponent implements OnInit {
         this.properties = response;
         this.properties.sort((a, b) => {
           // use code because value doesn't always exist
-          let value1 = a.code || "";
-          let value2 = b.code || "";
+          let value1 = a.name || "";
+          let value2 = b.name || "";
           // case-inensitive sort
           return value1.localeCompare(value2, undefined, { sensitivity: 'base' });
         }
