@@ -44,7 +44,7 @@
             <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology=='ncit'" class="w-10">Attribution</th>
+            <th *ngIf="terminology!='ncim'" class="w-10">Attribution</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-val>
@@ -53,7 +53,7 @@
               <td>{{ val.definition }}</td>
               <td>{{ val.source }}</td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="terminology=='ncit'"><span *ngFor="let qual of val.qualifiers">
+              <td *ngIf="terminology!='ncim'"><span *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
             </tr>
           </ng-container>
@@ -84,7 +84,7 @@
             <th class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology=='ncit'" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+            <th *ngIf="terminology!='ncim'" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
           </tr>
@@ -97,7 +97,7 @@
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
               <td>{{ synonym.code }}</td>
-              <td *ngIf="terminology=='ncit'">{{ synonym.subSource }}</td>
+              <td *ngIf="terminology!='ncim'">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
         </ng-template>

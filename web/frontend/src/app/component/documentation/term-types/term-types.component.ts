@@ -11,6 +11,7 @@ import { ConfigurationService } from './../../../service/configuration.service';
 export class TermTypesComponent implements OnInit {
 
   termTypes: any;
+  terminology: string;
 
   constructor(
     private configService: ConfigurationService,
@@ -25,6 +26,7 @@ export class TermTypesComponent implements OnInit {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.terminology = this.cookieService.get('term');
   }
 
 }

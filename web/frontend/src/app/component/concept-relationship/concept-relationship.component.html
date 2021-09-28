@@ -83,7 +83,7 @@
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="terminology!='ncim'">
     <p-header class="bold-heading">
       Role Relationships
       <span class="small-heading">
@@ -122,7 +122,7 @@
     <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="terminology!='ncim'">
     <p-header class="bold-heading">
       Associations
       <span class="small-heading">
@@ -202,7 +202,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="terminology!='ncim'">
     <p-header class="bold-heading">
       Incoming Role Relationships
       <span class="small-heading">
@@ -285,7 +285,7 @@
     </ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="terminology!='ncim'">
     <p-header class="bold-heading">
       Incoming Associations
       <span class="small-heading">
@@ -368,7 +368,7 @@
       None
     </ng-template>
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="terminology!='ncim'">
     <p-header class="bold-heading">
       Disjoint With
     </p-header>
