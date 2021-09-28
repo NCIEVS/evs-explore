@@ -137,7 +137,7 @@
                   </span>
                 </span>
               </td>
-              <td>{{property.source}}</td>
+              <td *ngIf="terminology=='ncim'">{{property.source}}</td>
             </tr>
           </ng-container>
         </ng-template>
