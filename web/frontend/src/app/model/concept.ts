@@ -447,7 +447,7 @@ export class Concept {
   broaderConceptsExist(): boolean {
     var assocs = this.associations;
     for (let l = 0; l < assocs.length; l++) {
-      if (assocs[l].type == "BR")
+      if (assocs[l].type == "RB")
         return true;
     }
     return false;

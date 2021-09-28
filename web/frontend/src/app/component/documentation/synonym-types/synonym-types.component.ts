@@ -12,6 +12,7 @@ import { ConfigurationService } from '../../../service/configuration.service';
 export class SynonymTypesComponent implements OnInit {
 
   synonymTypes: any;
+  terminology: string;
 
   constructor(
     private configService: ConfigurationService,
@@ -26,6 +27,7 @@ export class SynonymTypesComponent implements OnInit {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.terminology = this.cookieService.get('term');
   }
 
   customSort(event: SortEvent) {
