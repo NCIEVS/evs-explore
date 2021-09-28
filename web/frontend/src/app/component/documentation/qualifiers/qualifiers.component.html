@@ -13,14 +13,14 @@
           <th class="w-20" [pSortableColumn]="'name'">Name
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th class="w-70">Definition</th>
+          <th *ngIf="terminology != 'ncim'" class="w-70">Definition</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-qualifier>
         <tr>
           <td>{{ qualifier.code }}</td>
           <td>{{ qualifier.name }}</td>
-          <td><span *ngIf="
+          <td *ngIf="terminology != 'ncim'"><span *ngIf="
                 qualifier.definitions &&
                 qualifier.definitions.length > 0
                 ">{{ qualifier.definitions[0].definition }}
@@ -30,4 +30,4 @@
     </p-table>
   </div>
 </div>
-<p>
+<p>&nbsp;</p>
