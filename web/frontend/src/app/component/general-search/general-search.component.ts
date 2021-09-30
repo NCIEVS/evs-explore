@@ -132,6 +132,8 @@ export class GeneralSearchComponent implements OnInit,
         value: element
       };
     });
+    // filter for list of terminologies presented
+    this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
@@ -184,6 +186,11 @@ export class GeneralSearchComponent implements OnInit,
       this.performSearch(this.termautosearch);
 
     }
+  }
+
+  // filter out terminologies that shouldn't be in the list on the search page
+  terminologySearchListFilter(value) {
+    return (value.value.terminology != 'ncit' || (value.value.tags && "monthly" in value.value.tags));
   }
 
   // On init, print console message

@@ -25,7 +25,7 @@ export class ConfigurationService {
   }
 
   getTerminologies(): Array<any> {
-    return this.terminology;
+    return this.terminologies;
   }
 
   setTerminology(terminology) {
@@ -38,12 +38,20 @@ export class ConfigurationService {
     return this.subject;
   }
 
+  setSubject(subject) {
+    this.subject = subject;
+  }
+
   // Load configuration
   loadConfig(): Promise<any> {
 
     // Default to "ncit" if no settings
     if (this.cookieService.get('term') == "") {
       this.cookieService.set('term', 'ncit')
+    }
+    // defining subject object for subscription
+    if (this.getSubject() == undefined) {
+      this.setSubject(new Subject<any>());
     }
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata/terminologies').toPromise()
