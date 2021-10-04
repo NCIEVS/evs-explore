@@ -16,7 +16,8 @@
             <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr>
-            <td class="w-25">NCI Thesaurus Code:</td>
+            <td *ngIf="terminology=='ncit'" class="w-25">NCI Thesaurus Code:</td>
+            <td *ngIf="terminology!='ncit'" class="w-25">Code:</td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
