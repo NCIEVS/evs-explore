@@ -48,6 +48,7 @@ export class ConceptDisplayComponent implements OnInit {
   properties: string[] = [];
   sources: string[] = [];
   selectedSource = "All";
+  selectedSources = new Set().add("All");
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -150,6 +151,21 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   setSelectedSource(source) {
+    console.log(source);
     this.selectedSource = source;
+    // clear if All is selected or was last selected
+    if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
+      this.selectedSources.clear();
+    }
+    if (this.selectedSources.has(source)) {
+      this.selectedSources.delete(source);
+      // reset to All if removing last selected source
+      if (this.selectedSources.size == 0) {
+        this.selectedSources.add("All");
+      }
+    }
+    else {
+      this.selectedSources.add(source);
+    }
   }
 }
