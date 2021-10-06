@@ -46,7 +46,7 @@ export class ConceptDetailComponent implements OnInit {
     // implements OnInit
   }
 
-  getSelectedSource() {
+  getSelectedSources() {
     return this.conceptDisplayService.selectedSources;
   }
 

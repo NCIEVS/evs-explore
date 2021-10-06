@@ -47,7 +47,6 @@ export class ConceptDisplayComponent implements OnInit {
   ]
   properties: string[] = [];
   sources: string[] = [];
-  selectedSource = "All";
   selectedSources = new Set().add("All");
 
   constructor(
@@ -151,8 +150,6 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   setSelectedSource(source) {
-    console.log(source);
-    this.selectedSource = source;
     // clear if All is selected or was last selected
     if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
       this.selectedSources.clear();
