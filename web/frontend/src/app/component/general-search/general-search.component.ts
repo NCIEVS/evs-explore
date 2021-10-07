@@ -114,16 +114,7 @@ export class GeneralSearchComponent implements OnInit,
     this.resetPaging();
 
     // Populate sources list from application metadata
-    configService.getSynonymSources(this.cookieService.get('term'))
-      .subscribe(response => {
-        this.sourcesAll = response.map(element => {
-          return {
-            label: element.code,
-            value: element.code
-          };
-        });
-        this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
-      });
+    this.loadAllSources();
 
     // Populate terms list from application metadata
     this.termsAll = configService.getTerminologies().map(element => {
@@ -368,11 +359,25 @@ export class GeneralSearchComponent implements OnInit,
   }
 
   // Handle a change of the term - save termName and re-set
-  onChangeTerm(event) {
-    console.log('onChangeTerm', event, this.selectedTerm);
+  onChangeTerminology(event) {
+    console.log('onChangeTerminology', event, this.selectedTerm);
     this.selectedTerm = event.value;
     this.configService.setTerminology(this.selectedTerm);
+    this.loadAllSources();
     this.router.navigate(['/welcome']); // reset to the welcome page
+  }
+
+  loadAllSources() {
+    this.configService.getSynonymSources(this.cookieService.get('term'))
+      .subscribe(response => {
+        this.sourcesAll = response.map(element => {
+          return {
+            label: element.code,
+            value: element.code
+          };
+        });
+        this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
+      });
   }
 
   // Handle deselecting a source
