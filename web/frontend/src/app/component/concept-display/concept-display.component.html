@@ -9,8 +9,8 @@
     <span *ngIf="!displayHierarchy">
       <span *ngFor="let source of sources; index as i">
         <span *ngIf="i != 0"> | </span>
-        <a [routerLink]="" *ngIf="selectedSource != source" (click)="setSelectedSource(source)">{{source}}</a>
-        <span *ngIf="selectedSource == source"><b>{{source}}</b></span>
+        <a [routerLink]="" *ngIf="!selectedSources.has(source)" (click)="setSelectedSource(source)">{{source}}</a>
+        <span *ngIf="selectedSources.has(source)"  (click)="setSelectedSource(source)"><b>{{source}}</b></span>
       </span>
     </span>
   </div>

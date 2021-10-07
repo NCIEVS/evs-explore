@@ -50,7 +50,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-val>
           <ng-container>
-            <tr *ngIf="val.source && (val.source == getSelectedSource() || getSelectedSource() == 'All')">
+            <tr *ngIf="val.source && (getSelectedSources().has(val.source) || getSelectedSources().has('All'))">
               <td>{{ val.definition }}</td>
               <td>{{ val.source }}</td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
@@ -93,7 +93,7 @@
         <ng-template pTemplate="body" let-synonym>
           <!-- Only display the entries that have a termgroup -->
           <ng-container>
-            <tr *ngIf="synonym.source && (synonym.source == getSelectedSource() || getSelectedSource() == 'All')">
+            <tr *ngIf="synonym.source && (getSelectedSources().has(synonym.source) || getSelectedSources().has('All'))">
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
@@ -129,7 +129,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-property>
           <ng-container>
-            <tr *ngIf="(property.source && property.source == getSelectedSource()) || getSelectedSource() == 'All'">
+            <tr *ngIf="property.source && (getSelectedSources().has(property.source) || getSelectedSources().has('All'))">
               <td>{{property.type}}</td>
               <td><span [innerHTML]="checkExternalLink(property)"></span>
                 <span *ngIf="property.qualifiers && property.qualifiers.length > 0">

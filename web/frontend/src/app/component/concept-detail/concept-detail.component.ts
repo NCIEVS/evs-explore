@@ -46,8 +46,8 @@ export class ConceptDetailComponent implements OnInit {
     // implements OnInit
   }
 
-  getSelectedSource() {
-    return this.conceptDisplayService.selectedSource;
+  getSelectedSources() {
+    return this.conceptDisplayService.selectedSources;
   }
 
   // Render links appropriately if they are defined in "external Links"
@@ -64,11 +64,11 @@ export class ConceptDetailComponent implements OnInit {
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        if(value1 == undefined)
-          return 0;
-        return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
