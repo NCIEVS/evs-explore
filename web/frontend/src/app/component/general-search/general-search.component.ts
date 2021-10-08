@@ -123,16 +123,8 @@ export class GeneralSearchComponent implements OnInit,
         value: element
       };
     });
-    this.termsAll.forEach(element => {
-      console.log(element.value.name);
-    });
     // filter for list of terminologies presented
-    console.log("BEFORE FILTER")
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-    console.log("AFTER FILTER");
-    this.termsAll.forEach(element => {
-      console.log(element.value.name);
-    });
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
@@ -189,12 +181,9 @@ export class GeneralSearchComponent implements OnInit,
 
   // filter out terminologies that shouldn't be in the list on the search page
   terminologySearchListFilter(value) {
-    console.log(value.value.terminology + " + tags monthly: " + (value.value.tags ? value.value.tags["monthly"] : undefined) + " latest: " + value.value.latest);
     if (value.value.terminology != 'ncit')
       return true;
-    if (value.value.tags && "monthly" in value.value.tags)
-      return true;
-    if (value.value.latest == "true")
+    if (value.value.tags && "monthly" in value.value.tags && value.value.latest == "true")
       return true;
     return false;
   }
