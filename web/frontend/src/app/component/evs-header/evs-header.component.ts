@@ -22,9 +22,21 @@ export class EvsHeaderComponent implements OnInit {
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
       this.versionInfo = '(Version: ' + this.terminology.version
-      + '; Release Date: ' + this.terminology.date + ')';
+        + '; Release Date: ' + this.terminology.date + ')';
 
     });
+  }
+
+  getVersionInfo() {
+    return this.versionInfo;
+  }
+
+  getTerminology() {
+    return this.terminology;
+  }
+
+  getTerminologyName() {
+    return this.terminology.terminology;
   }
 
   ngOnDestroy() {
