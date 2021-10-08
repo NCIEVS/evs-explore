@@ -363,6 +363,7 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onChangeTerminology', event, this.selectedTerm);
     this.selectedTerm = event.value;
     this.configService.setTerminology(this.selectedTerm);
+    console.log(this.configService.getTerminology());
     this.loadAllSources();
     this.router.navigate(['/welcome']); // reset to the welcome page
   }

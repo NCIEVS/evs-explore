@@ -19,23 +19,23 @@ export class ConceptRelationshipComponent implements OnInit {
   terminology = this.cookieService.get('term');
 
   constructor(private cookieService: CookieService,
-              private conceptDisplayService: ConceptDisplayComponent) { }
+    private conceptDisplayService: ConceptDisplayComponent) { }
 
   ngOnInit() {
   }
 
   getSelectedSource() {
-    return this.conceptDisplayService.selectedSource;
+    return this.conceptDisplayService.selectedSources;
   }
 
   customSort(event: SortEvent) {
     console.log(event)
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        if(value1 == undefined)
-          return 0;
-        return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
