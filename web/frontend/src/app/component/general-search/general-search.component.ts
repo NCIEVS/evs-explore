@@ -125,9 +125,6 @@ export class GeneralSearchComponent implements OnInit,
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-    this.termsAll.forEach(element => {
-      console.log(element);
-    });
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
@@ -186,7 +183,7 @@ export class GeneralSearchComponent implements OnInit,
   terminologySearchListFilter(value) {
     if (value.value.terminology != 'ncit')
       return true;
-    if (value.value.tags && "monthly" in value.value.tags && value.value.latest == "true")
+    if (value.value.tags && "monthly" in value.value.tags && value.value.latest == true)
       return true;
     return false;
   }
