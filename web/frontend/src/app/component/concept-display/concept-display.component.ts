@@ -47,7 +47,7 @@ export class ConceptDisplayComponent implements OnInit {
   ]
   properties: string[] = [];
   sources: string[] = [];
-  selectedSources = new Set().add("All");
+  selectedSources = new Set<String>().add("All");
 
   constructor(
     private conceptDetailService: ConceptDetailService,
