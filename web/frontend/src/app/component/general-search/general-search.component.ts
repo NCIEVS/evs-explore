@@ -125,6 +125,9 @@ export class GeneralSearchComponent implements OnInit,
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
+    this.termsAll.forEach(element => {
+      console.log(element);
+    });
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
