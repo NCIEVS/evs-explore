@@ -17,10 +17,10 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
+            <th *ngIf="getTerminology() == 'ncim'" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
-            <th class="w-20" [pSortableColumn]="'source'">Source
+            <th *ngIf="getTerminology() == 'ncim'" class="w-20" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -31,9 +31,9 @@
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
             </td>
-            <td class="w-20">{{ parent.qualifiers && parent.qualifiers[0].type == "RELA" ? parent.qualifiers[0].value :
+            <td *ngIf="getTerminology() == 'ncim'" class="w-20">{{ parent.qualifiers && parent.qualifiers[0].type == "RELA" ? parent.qualifiers[0].value :
               "" }}</td>
-            <td class="w-20">{{ parent.source }}</td>
+            <td *ngIf="getTerminology() == 'ncim'" class="w-20">{{ parent.source }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -59,10 +59,10 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" [pSortableColumn]="'rela'">Relationship Attribute
+            <th class="w-30" *ngIf="getTerminology() == 'ncim'" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
-            <th class="w-30" [pSortableColumn]="'source'">Source
+            <th class="w-30" *ngIf="getTerminology() == 'ncim'" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -73,9 +73,9 @@
             <td>
               <a [routerLink]="[urlBase, child.code]" [target]='urlTarget'>{{ child.name }} </a>
             </td>
-            <td>{{ child.qualifiers && child.qualifiers[0].type == "RELA" ? child.qualifiers[0].value :
+            <td *ngIf="getTerminology() == 'ncim'">{{ child.qualifiers && child.qualifiers[0].type == "RELA" ? child.qualifiers[0].value :
               "" }}</td>
-            <td>{{ child.source ? child.source : "" }}</td>
+            <td *ngIf="getTerminology() == 'ncim'">{{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
       </p-table>
