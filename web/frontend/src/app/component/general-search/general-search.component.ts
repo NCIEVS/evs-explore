@@ -181,7 +181,11 @@ export class GeneralSearchComponent implements OnInit,
 
   // filter out terminologies that shouldn't be in the list on the search page
   terminologySearchListFilter(value) {
-    return (value.value.terminology != 'ncit' || (value.value.tags && "monthly" in value.value.tags));
+    if (value.value.terminology != 'ncit')
+      return true;
+    if (value.value.tags && "monthly" in value.value.tags && value.value.latest == true)
+      return true;
+    return false;
   }
 
   // On init, print console message
