@@ -65,8 +65,10 @@ export class SearchResultTableFormat {
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
           // console.log('  field = ', '.', field, '.');
+          let sourceList = sessionStorage.getItem('source').split(/[,\"]/) // allow for filtering sources
           if (field === 'Definitions' || field === 'ALT_DEFINITION') {
-            if(searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100 || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
+            searchResult.concepts[i].definitions = searchResult.concepts[i].definitions.filter(def => sourceList.includes(def.source) || sourceList.includes("[]")); // filter by source
+            if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100 || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
               data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
               data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
               data["defValue"] = data["collapsedDefinitions"];
@@ -75,7 +77,8 @@ export class SearchResultTableFormat {
               data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
-            if(searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100 || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
+            searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms.filter(syn => sourceList.includes(syn.source) || sourceList.includes("[]")); // filter by source
+            if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100 || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
               data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
               data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
               data["synValue"] = data["collapsedSynonyms"];
@@ -133,7 +136,6 @@ export class SearchResultTableFormat {
           }
           count++;
         }
-        console.log(searchResult.concepts[i].getFullSynText().split("<br />"))
         this.data.push(data);
       }
 
