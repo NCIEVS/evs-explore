@@ -88,7 +88,7 @@ export class SearchTermService {
     // }
 
     // Perform the HTTP call
-    return this.http.get(url,
+    return this.http.get(encodeURI(url),
       {
         responseType: 'json',
         params: param

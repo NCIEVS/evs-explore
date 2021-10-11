@@ -78,7 +78,7 @@ export class ConfigurationService {
 
   // Load associations
   getAssociations(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/associations?include=summary',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/associations?include=summary'),
       {
         responseType: 'json',
       }
@@ -92,7 +92,7 @@ export class ConfigurationService {
 
   // Load roles
   getRoles(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/roles?include=summary',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/roles?include=summary'),
       {
         responseType: 'json',
       }
@@ -106,7 +106,7 @@ export class ConfigurationService {
 
   // Load properties
   getProperties(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/properties?include=summary',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/properties?include=summary'),
       {
         responseType: 'json',
       }
@@ -120,7 +120,7 @@ export class ConfigurationService {
 
   // Load qualifiers
   getQualifiers(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/qualifiers?include=summary',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/qualifiers?include=summary'),
       {
         responseType: 'json',
       }
@@ -134,7 +134,7 @@ export class ConfigurationService {
 
   // Load term types
   getTermTypes(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/termTypes',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termTypes'),
       {
         responseType: 'json',
       }
@@ -148,7 +148,7 @@ export class ConfigurationService {
 
   // Load synonym sources
   getSynonymSources(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/synonymSources',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
       }
@@ -162,7 +162,7 @@ export class ConfigurationService {
 
   // Load synonym sources
   getSynonymTypes(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/synonymTypes',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymTypes'),
       {
         responseType: 'json',
       }
@@ -175,7 +175,7 @@ export class ConfigurationService {
   }
 
   getDefinitionSources(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/definitionSources',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/definitionSources'),
       {
         responseType: 'json',
       }
@@ -188,7 +188,7 @@ export class ConfigurationService {
   }
 
   getDefinitionTypes(terminology: string): Observable<any> {
-    return this.http.get('/api/v1/metadata/' + terminology + '/definitionTypes',
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/definitionTypes'),
       {
         responseType: 'json',
       }
