@@ -5,7 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+
 
 // Concept display component
 // BAC - looks like not used
@@ -85,7 +85,6 @@ export class ConceptDisplayComponent implements OnInit {
               )
             )
               .subscribe((concept: any) => {
-                // console.log(concept)
                 // and finally build the local state from it
                 this.conceptDetail = new Concept(concept);
                 this.conceptCode = concept.code;
@@ -103,6 +102,24 @@ export class ConceptDisplayComponent implements OnInit {
           }
         });
       })
+  }
+
+  selectedSourcesFromSearch(fullSourceSet) {
+    let selectedSources = new Set<String>();
+    let incomingSources = JSON.parse(this.cookieService.get('source'));
+    console.log(incomingSources)
+    console.log(fullSourceSet)
+    if (incomingSources.length > 0) {
+      incomingSources.forEach(source => {
+        if (fullSourceSet.includes(source)) {
+          console.log(source + " added")
+          selectedSources.add(source);
+        }
+      });
+      return selectedSources;
+    }
+    else
+      return selectedSources.add("All");
   }
 
   // Respond to things like changes in tabs
@@ -146,6 +163,7 @@ export class ConceptDisplayComponent implements OnInit {
         sourceList.push(concept.inverseAssociations[obj].source)
       }
     }
+    this.selectedSources = this.selectedSourcesFromSearch(sourceList);
     return sourceList;
   }
 

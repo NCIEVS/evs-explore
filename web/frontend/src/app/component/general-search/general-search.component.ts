@@ -138,7 +138,7 @@ export class GeneralSearchComponent implements OnInit,
 
       // Set default selected sources to empty array
       this.selectedSource = [];
-      sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+      this.cookieService.set('source', JSON.stringify(this.selectedSource));
 
 
       // Set default term search to blank
@@ -168,7 +168,7 @@ export class GeneralSearchComponent implements OnInit,
       }
 
       // Reset selected source list
-      this.selectedSource = JSON.parse(sessionStorage.getItem('source'));
+      this.selectedSource = JSON.parse(this.cookieService.get('source'));
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
@@ -235,7 +235,7 @@ export class GeneralSearchComponent implements OnInit,
   resetSource() {
     console.log('resetSource');
     this.selectedSource = [];
-    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+    this.cookieService.set('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
 
@@ -261,7 +261,7 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
     this.selectedSource = [];
-    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+    this.cookieService.set('source', JSON.stringify(this.selectedSource));
     console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSource);
   }
 
@@ -358,7 +358,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSource);
-    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+    this.cookieService.set('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
 
@@ -388,7 +388,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle deselecting a source
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event, this.selectedSource);
-    sessionStorage.setItem('source', JSON.stringify(this.selectedSource));
+    this.cookieService.set('source', JSON.stringify(this.selectedSource));
     this.performSearch(this.termautosearch);
   }
 
