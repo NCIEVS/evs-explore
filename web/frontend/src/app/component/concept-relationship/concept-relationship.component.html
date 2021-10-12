@@ -26,7 +26,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-parent>
-          <tr *ngIf="getTerminology() == 'ncit' || (parent.source && (parent.source == getSelectedSource() || sourceParentCheck(parent)))">
+          <tr *ngIf="getTerminology() == 'ncit' || (parent.source && (getSelectedSources().has(parent.source) || sourceParentCheck(parent)))">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
