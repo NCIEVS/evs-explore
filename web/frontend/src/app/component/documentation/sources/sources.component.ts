@@ -12,7 +12,7 @@ export class SourcesComponent implements OnInit {
 
   synonymSources: any;
   definitionSources: any;
-
+  terminology: any;
   constructor(
     private configService: ConfigurationService,
     private cookieService: CookieService
@@ -31,6 +31,8 @@ export class SourcesComponent implements OnInit {
         this.definitionSources = response;
         this.definitionSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+
+    this.terminology = this.configService.getTerminology().terminology;
 
   }
 
