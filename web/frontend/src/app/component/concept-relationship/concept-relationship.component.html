@@ -26,7 +26,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-parent>
-          <tr *ngIf="parent.source && (parent.source == getSelectedSource() || getSelectedSource() == 'All')">
+          <tr *ngIf="getTerminology() == 'ncit' || (parent.source && (parent.source == getSelectedSource() || sourceParentCheck(parent)))">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
@@ -187,7 +187,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type == 'RB' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+            *ngIf="association.type == 'RB' && association.source && sourceAssociationCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -269,7 +269,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type == 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+            *ngIf="association.type == 'RN' && association.source && sourceAssociationCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -353,7 +353,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && (association.source == getSelectedSource() || getSelectedSource() == 'All')">
+            *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && sourceAssociationCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
