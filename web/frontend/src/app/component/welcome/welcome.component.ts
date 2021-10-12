@@ -1,6 +1,7 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -12,13 +13,18 @@ export class WelcomeComponent implements AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
 
   // Constructor
-  constructor(private modalService: NgbModal, private cookieService: CookieService) { }
+  constructor(private modalService: NgbModal, private cookieService: CookieService,
+    private configService: ConfigurationService) { }
 
   // Post initialization
   ngAfterViewInit() {
     if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }
+  }
+
+  getTerminology(): String {
+    return this.configService.getTerminology().terminology;
   }
 
   open(content: TemplateRef<any>) {
