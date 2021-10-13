@@ -60,6 +60,10 @@ em {
   margin-right: 0;
 }
 
+.search-bar {
+  padding-left: 0 !important;
+}
+
 .w-10 {
   width: 10% !important;
 }
