@@ -55,8 +55,17 @@ em {
   margin-right: 2px;
 }
 
+.search-row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .w-10 {
   width: 10% !important;
+}
+
+.w-15 {
+  width: 15% !important;
 }
 
 .w-20 {
