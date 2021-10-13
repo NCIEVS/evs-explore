@@ -64,6 +64,10 @@ em {
   padding-left: 0 !important;
 }
 
+.subset-table {
+  overflow: visible;
+}
+
 .w-10 {
   width: 10% !important;
 }
