@@ -107,8 +107,6 @@ export class ConceptDisplayComponent implements OnInit {
   selectedSourcesFromSearch(fullSourceSet) {
     let selectedSources = new Set<String>();
     let incomingSources = JSON.parse(this.cookieService.get('source'));
-    console.log(incomingSources)
-    console.log(fullSourceSet)
     if (incomingSources.length > 0) {
       incomingSources.forEach(source => {
         if (fullSourceSet.includes(source)) {
