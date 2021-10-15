@@ -26,7 +26,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-parent>
-          <tr *ngIf="getTerminology() == 'ncit' || (parent.source && (getSelectedSources().has(parent.source) || sourceParentCheck(parent)))">
+          <tr *ngIf="parent.source && sourceCheck(parent)">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, parent.code]" [target]='urlTarget'>{{ parent.name }} </a>
@@ -68,7 +68,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-child>
-          <tr>
+          <tr *ngIf='child.source && sourceCheck(child)'>
             <td>{{ child.code }}</td>
             <td>
               <a [routerLink]="[urlBase, child.code]" [target]='urlTarget'>{{ child.name }} </a>
@@ -187,7 +187,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type == 'RB' && association.source && sourceAssociationCheck(association)">
+            *ngIf="association.type == 'RB' && association.source && sourceCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -269,7 +269,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type == 'RN' && association.source && sourceAssociationCheck(association)">
+            *ngIf="association.type == 'RN' && association.source && sourceCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -353,7 +353,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr
-            *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && sourceAssociationCheck(association)">
+            *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && sourceCheck(association)">
             <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>

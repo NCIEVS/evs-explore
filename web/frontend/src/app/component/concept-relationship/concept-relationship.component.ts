@@ -34,12 +34,8 @@ export class ConceptRelationshipComponent implements OnInit {
     return this.configService.getTerminology().terminology;
   }
 
-  sourceParentCheck(parent): Boolean {
-    return ((parent.source == this.getSelectedSources() || this.getSelectedSources().has('All')));
-  }
-
-  sourceAssociationCheck(association): Boolean {
-    return (association.source == this.getSelectedSources() || this.getSelectedSources().has('All'));
+  sourceCheck(object): Boolean {
+    return (this.getSelectedSources().has('All') || this.getSelectedSources().has(object.source));
   }
 
   customSort(event: SortEvent) {
