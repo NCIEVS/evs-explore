@@ -188,7 +188,7 @@
         <ng-template pTemplate="body" let-association>
           <tr
             *ngIf="association.type == 'RB' && association.source && sourceCheck(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "broader" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
@@ -270,7 +270,7 @@
         <ng-template pTemplate="body" let-association>
           <tr
             *ngIf="association.type == 'RN' && association.source && sourceCheck(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "narrower" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
@@ -354,7 +354,7 @@
         <ng-template pTemplate="body" let-association>
           <tr
             *ngIf="association.type != 'RB' && association.type != 'RN' && association.source && sourceCheck(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "other" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, association.relatedCode ]" target='urlTarget'>{{ association.relatedName }}</a>
