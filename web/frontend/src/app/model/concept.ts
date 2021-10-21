@@ -256,17 +256,17 @@ export class Concept {
 
   // Assemble text from all Synonyms together
   getFullSynText(): string {
-    let syns = this.getFullSyns();
-    let synonymUniqueArray = [];
+    let syns = this.getAllSynonymNames();
+    let uniqSynonyms = [];
     for (let i = 0; i < syns.length; i++) {
-      if (!synonymUniqueArray.map(function (c) {
+      if (!uniqSynonyms.map(function (c) {
         return c.toLowerCase();
       }).includes(syns[i].toLowerCase())) {
-        synonymUniqueArray.push(syns[i]);
+        uniqSynonyms.push(syns[i]);
       }
     }
-    this.synonymUniqueArray = synonymUniqueArray;
-    return synonymUniqueArray.join('<br />');
+    this.synonymUniqueArray = uniqSynonyms;
+    return uniqSynonyms.join('<br />');
 
   }
 
@@ -292,14 +292,11 @@ export class Concept {
   }
 
   // Return Synonyms as an array
-  getFullSyns(): string[] {
+  getAllSynonymNames(): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        // TODO: this is hardcoded but should be config
-        if (this.synonyms[i].type == 'FULL_SYN' || this.synonyms[i].type == 'Synonym') {
-          syns.push(this.synonyms[i].name);
-        }
+        syns.push(this.synonyms[i].name);
       }
     }
     return syns;
