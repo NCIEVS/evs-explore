@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../../service/configuration.service';
 
 // Documentation qualifiers component
@@ -11,17 +10,18 @@ import { ConfigurationService } from '../../../service/configuration.service';
 export class QualifiersComponent implements OnInit {
 
   qualifiers: any;
-  terminology = this.cookieService.get('term');
+  terminology: string = null;;
 
   constructor(
-    private configService: ConfigurationService,
-    private cookieService: CookieService
-  ) { }
+    private configService: ConfigurationService
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getQualifiers(this.cookieService.get('term'))
+    this.configService.getQualifiers(this.terminology)
       .subscribe(response => {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

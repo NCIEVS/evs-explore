@@ -8,36 +8,27 @@ import { ConfigurationService } from '../../service/configuration.service';
   styleUrls: ['./evs-header.component.css']
 })
 export class EvsHeaderComponent implements OnInit {
-  private versionInfo = null;
-  private terminology = null;
+  versionInfo = '';
+  terminology = null;
   private subscription = null;
 
   constructor(private configService: ConfigurationService) { }
 
   ngOnInit() {
     this.terminology = this.configService.getTerminology();
-    this.versionInfo = '(Version: ' + this.terminology.version
-      + '; Release Date: ' + this.terminology.date + ')';
-
-    this.subscription = this.configService.getSubject().subscribe(terminology => {
-      this.terminology = terminology;
+    if (this.terminology) {
       this.versionInfo = '(Version: ' + this.terminology.version
         + '; Release Date: ' + this.terminology.date + ')';
-
+    }
+    this.subscription = this.configService.getSubject().subscribe(terminology => {
+      this.terminology = terminology;
+      if (this.terminology) {
+        this.versionInfo = '(Version: ' + this.terminology.version
+          + '; Release Date: ' + this.terminology.date + ')';
+      }
     });
   }
 
-  getVersionInfo() {
-    return this.versionInfo;
-  }
-
-  getTerminology() {
-    return this.terminology;
-  }
-
-  getTerminologyName() {
-    return this.terminology.terminology;
-  }
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
 
@@ -12,18 +11,19 @@ import { ConfigurationService } from './../../../service/configuration.service';
 export class AssociationsComponent implements OnInit {
 
   associations: any;
-  terminology = this.cookieService.get('term');
+  terminology = null;
 
   constructor(
-    private configService: ConfigurationService,
-    private cookieService: CookieService
-  ) { }
+    private configService: ConfigurationService
+  ) {
+    this.terminology = configService.getTerminologyName();
+
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getAssociations(this.cookieService.get('term'))
-
+    this.configService.getAssociations(this.terminology)
       .subscribe(response => {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

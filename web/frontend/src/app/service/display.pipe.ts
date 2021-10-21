@@ -23,7 +23,7 @@ export class DisplayPipe implements PipeTransform {
       html = html + '<button [pTooltip]="' + 'test' + '" type="button" class="btn btn-link">' + 'test' + '</button><br>';
 
       //html = html + 'test123';
-      console.log(JSON.stringify(html));
+      // console.log(JSON.stringify(html));
       return html;
 
     } /*else if ( field === 'selectedFacet') {
