@@ -8,8 +8,8 @@ import { ConfigurationService } from '../../service/configuration.service';
   styleUrls: ['./evs-header.component.css']
 })
 export class EvsHeaderComponent implements OnInit {
-  private versionInfo = '';
-  private terminology = null;
+  versionInfo = '';
+  terminology = null;
   private subscription = null;
 
   constructor(private configService: ConfigurationService) { }
