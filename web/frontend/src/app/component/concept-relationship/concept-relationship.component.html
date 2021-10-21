@@ -193,7 +193,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type == 'RB' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Broader" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -276,7 +276,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type == 'RN' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Narrower" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -361,7 +361,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type != 'RB' && association.type != 'RN' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "unknown" }}</td>
+            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Other" }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
