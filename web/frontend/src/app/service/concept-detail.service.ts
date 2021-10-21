@@ -6,20 +6,20 @@ import { EvsError } from '../model/evsError';
 import { TreeNode } from 'primeng/api';
 import { Concept } from '../model/concept';
 import { ConfigurationService } from './configuration.service';
-import { CookieService } from 'ngx-cookie-service';
 
 // Service for loading concept information
 @Injectable()
 export class ConceptDetailService {
 
+  terminology: string = null;
+
   constructor(
     private http: HttpClient,
-    private configService: ConfigurationService,
-    private cookieService: CookieService) { }
+    private configService: ConfigurationService
+  ) { }
 
   // Get concept with summary includes
   getConceptSummary(conceptCode: string, include: string): Observable<any> {
-    console.log(this.configService.getTerminology().terminology)
     return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include),
       {
         responseType: 'json',
@@ -36,7 +36,7 @@ export class ConceptDetailService {
 
   // Get properties
   getProperties(): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/metadata/' + this.cookieService.get('term') + '/properties'),
+    return this.http.get(encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/properties'),
       {
         responseType: 'json',
       }
@@ -50,7 +50,7 @@ export class ConceptDetailService {
 
   // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
   getRelationships(conceptCode: string) {
-    return this.http.get(encodeURI('/api/v1/concept/' + this.cookieService.get('term') + '/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith'),
+    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith'),
       {
         responseType: 'json',
         params: {
@@ -67,7 +67,7 @@ export class ConceptDetailService {
 
   // Get hierarchy data (either paths from root, or children)
   getHierarchyData(code: string) {
-    const url = '/api/v1/concept/' + this.cookieService.get('term') + '/' + code + '/subtree';
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree';
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -75,7 +75,7 @@ export class ConceptDetailService {
 
   // Get hierarchy data for children of specified code.
   getHierarchyChildData(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.cookieService.get('term') + '/' + code + '/subtree/children');
+    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -83,7 +83,7 @@ export class ConceptDetailService {
 
   // Get Value Set Top Level
   getSubsetTopLevel() {
-    const url = encodeURI('/api/v1/metadata/' + this.cookieService.get('term') + '/subsets?include=minimal');
+    const url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subsets?include=minimal');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -91,25 +91,23 @@ export class ConceptDetailService {
 
   // Get Value Set Top Level
   getSubsetDetails(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.cookieService.get('term') + '/subsetMembers/' + code);
+    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/subsetMembers/' + code);
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
   }
 
   getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = "") {
-    var url = encodeURI('/api/v1/concept/' + this.cookieService.get('term') + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
+    var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
     if (searchTerm != "")
       url += "&term=" + searchTerm;
-    console.log(url);
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
   }
 
   getSubsetInfo(code: string, include: string) {
-    var url = encodeURI('/api/v1/metadata/' + this.cookieService.get('term') + '/subset/' + code + '?include=' + include);
-    console.log(url)
+    var url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subset/' + code + '?include=' + include);
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);

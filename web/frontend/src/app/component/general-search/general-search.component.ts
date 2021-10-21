@@ -78,7 +78,7 @@ export class GeneralSearchComponent implements OnInit,
   showMore = true;
 
   // filter for sources
-  selectedSource: string[] = [];
+  selectedSources: string[] = [];
   sourcesAll = null;
 
   // filter for terminologies
@@ -100,7 +100,7 @@ export class GeneralSearchComponent implements OnInit,
     // this.searchCriteria.type = route.snapshot.params['type'];
     // this.searchCriteria.property = route.snapshot.params['property'];
 
-    console.log('window location = ', window.location.pathname);
+    // console.log('window location = ', window.location.pathname);
     const path = '' + window.location.pathname;
 
     // Determine if we are on the welcome page
@@ -137,9 +137,7 @@ export class GeneralSearchComponent implements OnInit,
       this.selectedSearchType = 'contains';
 
       // Set default selected sources to empty array
-      this.selectedSource = [];
-      this.cookieService.set('source', JSON.stringify(this.selectedSource));
-
+      this.selectedSources = [];
 
       // Set default term search to blank
       this.termautosearch = '';
@@ -166,9 +164,6 @@ export class GeneralSearchComponent implements OnInit,
       ) {
         this.showMoreSearchOption = true;
       }
-
-      // Reset selected source list
-      this.selectedSource = JSON.parse(this.cookieService.get('source'));
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
@@ -234,8 +229,7 @@ export class GeneralSearchComponent implements OnInit,
   // Reset source
   resetSource() {
     console.log('resetSource');
-    this.selectedSource = [];
-    this.cookieService.set('source', JSON.stringify(this.selectedSource));
+    this.selectedSources = [];
     this.performSearch(this.termautosearch);
   }
 
@@ -243,7 +237,7 @@ export class GeneralSearchComponent implements OnInit,
   resetTerm() {
     console.log('resetTerm');
     this.selectedTerm = this.configService.getTerminology();
-    this.cookieService.set('term', this.selectedTerm.terminology);
+    this.configService.setTerminology(this.selectedTerm);
     this.performSearch(this.termautosearch);
   }
 
@@ -260,9 +254,8 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
-    this.selectedSource = [];
-    this.cookieService.set('source', JSON.stringify(this.selectedSource));
-    console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSource);
+    this.selectedSources = [];
+    console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSources);
   }
 
   // Reset the search table
@@ -357,8 +350,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
-    console.log('onChangeSource', event, this.selectedSource);
-    this.cookieService.set('source', JSON.stringify(this.selectedSource));
+    console.log('onChangeSource', event, this.selectedSources);
     this.performSearch(this.termautosearch);
   }
 
@@ -373,7 +365,7 @@ export class GeneralSearchComponent implements OnInit,
   }
 
   loadAllSources() {
-    this.configService.getSynonymSources(this.cookieService.get('term'))
+    this.configService.getSynonymSources(this.configService.getTerminologyName())
       .subscribe(response => {
         this.sourcesAll = response.map(element => {
           return {
@@ -387,8 +379,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle deselecting a source
   onSourceSelectDeselect(event) {
-    console.log('onSourceSelectDeselect', event, this.selectedSource);
-    this.cookieService.set('source', JSON.stringify(this.selectedSource));
+    console.log('onSourceSelectDeselect', event, this.selectedSources);
     this.performSearch(this.termautosearch);
   }
 
@@ -448,7 +439,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    this.searchCriteria.synonymSource = this.selectedSource;
+    this.searchCriteria.synonymSource = this.selectedSources;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
@@ -520,4 +511,11 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedColumns = this.displayColumns.map(element => element.header);
   }
 
+  // Prep data for the sources= query param
+  getSelectedSourcesQueryParam() {
+    if (this.selectedSources && this.selectedSources.length > 0) {
+      return { sources: this.selectedSources.join(',') };
+    }
+    return {};
+  }
 }

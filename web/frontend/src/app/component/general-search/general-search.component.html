@@ -25,7 +25,7 @@
           <div class="col-sm-6">
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
-                [options]="sourcesAll" [(ngModel)]="selectedSource" name="sourceSearch" defaultLabel="Source"
+                [options]="sourcesAll" [(ngModel)]="selectedSources" name="sourceSearch" defaultLabel="Source"
                 [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false"
                 [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
@@ -75,8 +75,8 @@
 
           </div>
           <div class="col-sm-6" style="padding-top:3px;">
-            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource && selectedSource.length > 0"
-              [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
+            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSources && selectedSources.length > 0"
+              [(ngModel)]="selectedSources" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
               addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}
@@ -160,11 +160,12 @@
                           pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
-                    <span *ngSwitchCase="'Code'">
-                      <a target="_blank" [routerLink]="['/concept/', rowData['column1'] ]"><i
-                          pTooltip="Click to open concept in new tab" class="fa fa-external-link"></i></a>
+                    <span pTooltip="Open concept details in new tab" *ngSwitchCase="'Code'">
+                      <a target="_blank" [routerLink]="['/concept/', selectedTerm.terminology, rowData['column1'] ]"
+                        [queryParams]="getSelectedSourcesQueryParam()"><i class="fa fa-external-link"></i></a>
                       <a target="_blank" class="ml3"
-                        [routerLink]="['/concept/', rowData['column1'] ]">{{rowData[col.field]}}<span
+                        [routerLink]="['/concept', selectedTerm.terminology, rowData['column1'] ]"
+                        [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}<span
                           *ngIf="rowData.retiredConcept === 'yes'">
                           (Retired Concept)</span></a>
                     </span>

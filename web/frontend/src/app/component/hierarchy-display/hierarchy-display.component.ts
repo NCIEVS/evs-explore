@@ -7,6 +7,8 @@ import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../../service/configuration.service';
+
 
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
@@ -34,12 +36,24 @@ export class HierarchyDisplayComponent implements OnInit {
   conceptPanelSize = "70.0"
   hierarchyPanelSize = "30.0"
 
+  // For source control
+  sources: string[] = [];
+  selectedSources = null;
+
   constructor(
     private conceptDetailService: ConceptDetailService,
     private location: Location,
     private route: ActivatedRoute,
-    private cookieService: CookieService
-  ) { }
+    private cookieService: CookieService,
+    private configService: ConfigurationService
+  ) {
+
+    // Do this in the constructor so it's ready to go when this component is injected
+    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
+    this.selectedSources = this.configService.getSelectedSources();
+
+  }
 
   ngOnInit() {
     // Set active index based on cookie unless never set
@@ -47,29 +61,24 @@ export class HierarchyDisplayComponent implements OnInit {
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
 
     this.updateDisplaySize();
-    this.route.params.subscribe((params: any) => {
-      if (params.code) {
-        this.route.paramMap.pipe(
-          switchMap((params: ParamMap) =>
-            this.conceptDetailService
-              .getConceptSummary(params.get('code'), 'summary,maps')
-          )
-        )
-          .subscribe((response: any) => {
-            this.conceptDetail = new Concept(response);
-            this.conceptCode = this.conceptDetail.code;
-            this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-            this.conceptWithRelationships = undefined;
-            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                this.conceptWithRelationships = new Concept(response);
-              });
-            }
-            this.getPathInHierarchy();
-          })
-      }
-    });
+
+    this.conceptDetailService
+      .getConceptSummary(this.configService.getCode(), 'summary,maps')
+      .subscribe((response: any) => {
+        this.conceptDetail = new Concept(response);
+        this.conceptCode = this.conceptDetail.code;
+        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
+        // Sort the source list (case insensitive)
+        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        this.conceptWithRelationships = undefined;
+        if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+          (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+            this.conceptWithRelationships = new Concept(response);
+          });
+        }
+        this.getPathInHierarchy();
+      });
 
   }
 
@@ -232,4 +241,56 @@ export class HierarchyDisplayComponent implements OnInit {
     }
   }
 
+
+  getSourceList(concept) {
+    var sourceList = new Set<string>();
+    sourceList.add("All");
+    for (const obj in concept.synonyms) {
+      if (concept.synonyms[obj].source) {
+        sourceList.add(concept.synonyms[obj].source)
+      }
+    }
+    for (const obj in concept.properties) {
+      if (concept.properties[obj].source) {
+        sourceList.add(concept.properties[obj].source)
+      }
+    }
+    for (const obj in concept.associations) {
+      if (concept.associations[obj].source) {
+        sourceList.add(concept.associations[obj].source)
+      }
+    }
+    for (const obj in concept.inverseAssociations) {
+      if (concept.inverseAssociations[obj].source) {
+        sourceList.add(concept.inverseAssociations[obj].source)
+      }
+    }
+
+    // If there is no overlap between sourceList and selectedSources, clear selectedSources
+    const intersection = [...sourceList].filter(x => this.selectedSources.has(x));
+    if (intersection.length == 0) {
+      this.toggleSelectedSource('All');
+    }
+
+    // Convert set to array and return
+    return [...sourceList];
+  }
+
+
+  toggleSelectedSource(source) {
+    // clear if All is selected or was last selected
+    if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
+      this.selectedSources.clear();
+    }
+    if (this.selectedSources.has(source)) {
+      this.selectedSources.delete(source);
+      // reset to All if removing last selected source
+      if (this.selectedSources.size == 0) {
+        this.selectedSources.add("All");
+      }
+    }
+    else {
+      this.selectedSources.add(source);
+    }
+  }
 }

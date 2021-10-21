@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 
 // Concept display component
@@ -47,15 +47,22 @@ export class ConceptDisplayComponent implements OnInit {
   ]
   properties: string[] = [];
   sources: string[] = [];
-  selectedSources = new Set<String>().add("All");
+  selectedSources = null;
+  terminology: string;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
     private location: Location,
     private cookieService: CookieService,
-
+    private configService: ConfigurationService
   ) {
+
+    // Do this in the constructor so it's ready to go when this component is injected
+    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
+    this.selectedSources = this.configService.getSelectedSources();
+    this.terminology = this.configService.getTerminologyName();
   }
 
   ngOnInit() {
@@ -64,7 +71,7 @@ export class ConceptDisplayComponent implements OnInit {
     // then default to 0
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
 
-    this.displayHierarchy = (this.cookieService.get('term') == 'ncim') ? false : true;
+    this.displayHierarchy = (this.configService.getTerminologyName() == 'ncim') ? false : true;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
@@ -76,50 +83,26 @@ export class ConceptDisplayComponent implements OnInit {
           }
         }
         // Then look up the concept
-        this.route.params.subscribe((params: any) => {
-          if (params.code) {
-            this.route.paramMap.pipe(
-              switchMap((params: ParamMap) =>
-                this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'full')
-              )
-            )
-              .subscribe((concept: any) => {
-                // and finally build the local state from it
-                this.conceptDetail = new Concept(concept);
-                this.conceptCode = concept.code;
-                this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-                this.conceptWithRelationships = undefined;
-                // Sort the source list (case insensitive)
-                this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-                if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-                  (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-                  this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                    this.conceptWithRelationships = new Concept(response);
-                  });
-                }
-              })
-          }
-        });
-      })
-  }
+        this.conceptDetailService
+          .getConceptSummary(this.configService.getCode(), 'full')
+          .subscribe((concept: any) => {
+            // and finally build the local state from it
+            this.conceptDetail = new Concept(concept);
+            this.conceptCode = concept.code;
+            this.title = concept.name + ' ( Code - ' + concept.code + ' )';
+            this.conceptWithRelationships = undefined;
+            // Sort the source list (case insensitive)
+            this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
-  selectedSourcesFromSearch(fullSourceSet) {
-    let selectedSources = new Set<String>();
-    let incomingSources = JSON.parse(this.cookieService.get('source'));
-    console.log(incomingSources)
-    console.log(fullSourceSet)
-    if (incomingSources.length > 0) {
-      incomingSources.forEach(source => {
-        if (fullSourceSet.includes(source)) {
-          console.log(source + " added")
-          selectedSources.add(source);
-        }
-      });
-      return selectedSources;
-    }
-    else
-      return selectedSources.add("All");
+            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+                this.conceptWithRelationships = new Concept(response);
+              });
+            }
+          })
+
+      })
   }
 
   // Respond to things like changes in tabs
@@ -141,33 +124,40 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   getSourceList(concept) {
-    var sourceList = [];
-    sourceList.push("All");
+    var sourceList = new Set<string>();
+    sourceList.add("All");
     for (const obj in concept.synonyms) {
-      if (!(sourceList.includes(concept.synonyms[obj].source)) && concept.synonyms[obj].source) {
-        sourceList.push(concept.synonyms[obj].source)
+      if (concept.synonyms[obj].source) {
+        sourceList.add(concept.synonyms[obj].source)
       }
     }
     for (const obj in concept.properties) {
-      if (!(sourceList.includes(concept.properties[obj].source)) && concept.properties[obj].source) {
-        sourceList.push(concept.properties[obj].source)
+      if (concept.properties[obj].source) {
+        sourceList.add(concept.properties[obj].source)
       }
     }
     for (const obj in concept.associations) {
-      if (!(sourceList.includes(concept.associations[obj].source)) && concept.associations[obj].source) {
-        sourceList.push(concept.associations[obj].source)
+      if (concept.associations[obj].source) {
+        sourceList.add(concept.associations[obj].source)
       }
     }
     for (const obj in concept.inverseAssociations) {
-      if (!(sourceList.includes(concept.inverseAssociations[obj].source)) && concept.inverseAssociations[obj].source) {
-        sourceList.push(concept.inverseAssociations[obj].source)
+      if (concept.inverseAssociations[obj].source) {
+        sourceList.add(concept.inverseAssociations[obj].source)
       }
     }
-    this.selectedSources = this.selectedSourcesFromSearch(sourceList);
-    return sourceList;
+
+    // If there is no overlap between sourceList and selectedSources, clear selectedSources
+    const intersection = [...sourceList].filter(x => this.selectedSources.has(x));
+    if (intersection.length == 0) {
+      this.toggleSelectedSource('All');
+    }
+
+    // Convert set to array and return
+    return [...sourceList];
   }
 
-  setSelectedSource(source) {
+  toggleSelectedSource(source) {
     // clear if All is selected or was last selected
     if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
       this.selectedSources.clear();
@@ -182,5 +172,18 @@ export class ConceptDisplayComponent implements OnInit {
     else {
       this.selectedSources.add(source);
     }
+  }
+
+
+  // Prep data for the sources= query param
+  getSelectedSourcesQueryParam() {
+    var result = {};
+    if (this.selectedSources.size == 1 && this.selectedSources.has('All')) {
+      result = {};
+    }
+    else if (this.selectedSources && this.selectedSources.size > 0) {
+      result = { sources: [...this.selectedSources].join(',') };
+    }
+    return result;
   }
 }

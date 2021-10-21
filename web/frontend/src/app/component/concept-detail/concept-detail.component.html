@@ -45,16 +45,16 @@
             <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology!='ncim'" class="w-10">Attribution</th>
+            <th *ngIf="!isMeta" class="w-10">Attribution</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-val>
           <ng-container>
-            <tr *ngIf="val.source && (getSelectedSources().has(val.source) || getSelectedSources().has('All'))">
+            <tr *ngIf="checkFilter(val)">
               <td>{{ val.definition }}</td>
               <td>{{ val.source }}</td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="terminology!='ncim'"><span *ngFor="let qual of val.qualifiers">
+              <td *ngIf="!isMeta"><span *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
             </tr>
           </ng-container>
@@ -85,7 +85,7 @@
             <th class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology!='ncim'" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+            <th *ngIf="!isMeta" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
           </tr>
@@ -93,12 +93,12 @@
         <ng-template pTemplate="body" let-synonym>
           <!-- Only display the entries that have a termgroup -->
           <ng-container>
-            <tr *ngIf="synonym.source && (getSelectedSources().has(synonym.source) || getSelectedSources().has('All'))">
+            <tr *ngIf="checkFilter(synonym)">
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
               <td>{{ synonym.code }}</td>
-              <td *ngIf="terminology!='ncim'">{{ synonym.subSource }}</td>
+              <td *ngIf="!isMeta">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
         </ng-template>
@@ -122,14 +122,14 @@
             <th class="w-50" [pSortableColumn]="'value'">Value
               <p-sortIcon [field]="'value'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology=='ncim'" class="w-30" [pSortableColumn]="'source'">Source
+            <th *ngIf="isMeta" class="w-30" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-property>
           <ng-container>
-            <tr *ngIf="property.source && (getSelectedSources().has(property.source) || getSelectedSources().has('All'))">
+            <tr *ngIf="checkFilter(property)">
               <td>{{property.type}}</td>
               <td><span [innerHTML]="checkExternalLink(property)"></span>
                 <span *ngIf="property.qualifiers && property.qualifiers.length > 0">
@@ -138,7 +138,7 @@
                   </span>
                 </span>
               </td>
-              <td *ngIf="terminology=='ncim'">{{property.source}}</td>
+              <td *ngIf="isMeta">{{property.source}}</td>
             </tr>
           </ng-container>
         </ng-template>

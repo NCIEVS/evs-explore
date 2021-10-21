@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
@@ -17,29 +16,28 @@ export class ConceptRelationshipComponent implements OnInit {
   @Input() urlBase: string;
   @Input() urlTarget: string
 
-  terminology = this.cookieService.get('term');
+  terminology: string = null;
+  isMeta: Boolean;
 
-  constructor(private cookieService: CookieService,
-    private conceptDisplayService: ConceptDisplayComponent,
-    private configService: ConfigurationService) { }
+  constructor(
+    private conceptDisplay: ConceptDisplayComponent,
+    private configService: ConfigurationService) {
+
+    this.terminology = configService.getTerminologyName();
+    this.isMeta = this.terminology == 'ncim';
+  }
 
   ngOnInit() {
   }
 
-  getSelectedSources(): Set<String> {
-    return this.conceptDisplayService.selectedSources;
-  }
-
-  getTerminology(): String {
-    return this.configService.getTerminology().terminology;
-  }
-
-  sourceParentCheck(parent): Boolean {
-    return ((parent.source == this.getSelectedSources() || this.getSelectedSources().has('All')));
-  }
-
-  sourceAssociationCheck(association): Boolean {
-    return (association.source == this.getSelectedSources() || this.getSelectedSources().has('All'));
+  checkFilter(item: any): Boolean {
+    return (
+      // no source field -> show
+      !item.hasOwnProperty('source')
+      // source is one of the selected ones
+      || this.conceptDisplay.selectedSources.has(item.source)
+      // All is selected
+      || this.conceptDisplay.selectedSources.has('All'));
   }
 
   customSort(event: SortEvent) {
@@ -53,4 +51,15 @@ export class ConceptRelationshipComponent implements OnInit {
     });
   }
 
+  // Prep data for the sources= query param
+  getSelectedSourcesQueryParam() {
+    var result = {};
+    if (this.conceptDisplay.selectedSources.size == 1 && this.conceptDisplay.selectedSources.has('All')) {
+      result = {};
+    }
+    else if (this.conceptDisplay.selectedSources && this.conceptDisplay.selectedSources.size > 0) {
+      result = { sources: [...this.conceptDisplay.selectedSources].join(',') };
+    }
+    return result;
+  }
 }

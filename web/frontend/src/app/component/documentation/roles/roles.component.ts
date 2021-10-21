@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
 
@@ -12,17 +11,18 @@ import { ConfigurationService } from './../../../service/configuration.service';
 export class RolesComponent implements OnInit {
 
   roles: any;
-  terminology = this.cookieService.get('term');
+  terminology: string = null;
 
   constructor(
-    private configService: ConfigurationService,
-    private cookieService: CookieService
-  ) { }
+    private configService: ConfigurationService
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getRoles(this.cookieService.get('term'))
+    this.configService.getRoles(this.terminology)
       .subscribe(response => {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));

@@ -3,8 +3,8 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
-import { TreeNode } from 'primeng/api';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 @Component({
   selector: 'app-subset-details',
@@ -30,13 +30,20 @@ export class SubsetDetailsComponent implements OnInit {
   subsetFormat: string;
   subsetLink: string;
   subsetNCItDefinition: string;
+  terminology: string;
 
   urlBase = '/concept';
   urlTarget = '_blank';
 
   constructor(private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
-    private cookieService: CookieService) { }
+    private cookieService: CookieService, private configService: ConfigurationService
+  ) {
+
+    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.terminology = this.configService.getTerminologyName();
+
+  }
 
   ngOnInit(): void {
 

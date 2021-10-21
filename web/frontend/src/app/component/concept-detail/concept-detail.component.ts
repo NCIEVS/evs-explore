@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
+import { ConfigurationService } from '../../service/configuration.service';
 
 // Component for displaying concept details
 @Component({
@@ -33,21 +33,34 @@ export class ConceptDetailComponent implements OnInit {
     ]
   )
 
-  terminology = this.cookieService.get('term');
+  terminology: string = null;
+  isMeta: Boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
-    private cookieService: CookieService,
-    private conceptDisplayService: ConceptDisplayComponent
-  ) { }
+    private conceptDisplay: ConceptDisplayComponent,
+    private configService: ConfigurationService
+  ) {
+
+    this.terminology = configService.getTerminologyName();
+    this.isMeta = this.terminology == 'ncim';
+  }
 
   // On initialization
   ngOnInit() {
     // implements OnInit
   }
 
-  getSelectedSources() {
-    return this.conceptDisplayService.selectedSources;
+  checkFilter(item: any): Boolean {
+    var flag = (
+      // no source field -> show
+      (this.terminology == 'ncit' && !item.hasOwnProperty('source') &&
+        this.conceptDisplay.selectedSources.has('NCI'))
+      // source is one of the selected ones
+      || this.conceptDisplay.selectedSources.has(item.source)
+      // All is selected
+      || this.conceptDisplay.selectedSources.has('All'));
+    return flag;
   }
 
   // Render links appropriately if they are defined in "external Links"

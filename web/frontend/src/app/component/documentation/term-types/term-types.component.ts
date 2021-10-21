@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from './../../../service/configuration.service';
 
 // Documentation of term types component
@@ -14,19 +13,19 @@ export class TermTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService,
-    private cookieService: CookieService
-  ) { }
+    private configService: ConfigurationService
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getTermTypes(this.cookieService.get('term'))
+    this.configService.getTermTypes(this.terminology)
       .subscribe(response => {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.terminology = this.cookieService.get('term');
   }
 
 }

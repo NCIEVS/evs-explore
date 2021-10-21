@@ -37,7 +37,7 @@
     <img class="main-site-logo" src="assets/images/EVSTile.png" />
     <span>EVS Explore
     </span>
-    <span style=" font-size: 0.575rem;">{{getVersionInfo()}}
+    <span style=" font-size: 0.575rem;">{{versionInfo}}
     </span>
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
@@ -46,8 +46,8 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item" *ngIf="getTerminologyName() != 'ncim'">
-        <a class="nav-link" routerLink="subsets" title="Display Subsets">Subsets</a>
+      <li class="nav-item" *ngIf="terminology != 'ncim'">
+        <a class="nav-link" [routerLink]="['subsets', terminology.terminology]" title="Display Subsets">Subsets</a>
       </li>
       <!--
       <li class="nav-item">
@@ -57,7 +57,7 @@
         <a class="nav-link" routerLink="conceptlist">Concept List</a>
       </li>
       -->
-      <li class="nav-item" *ngIf="getTerminologyName() != 'ncim'">
+      <li class="nav-item" *ngIf="terminology != 'ncim'">
         <a class="nav-link" routerLink="hierarchy/C12913" title="Display Concept Hierarchy">Hierarchy</a>
       </li>
       <li class="nav-item dropdown">
@@ -70,7 +70,8 @@
           <a class="dropdown-item" routerLink="roles" title="List of NCIt Roles">Roles</a>
           <a class="dropdown-item" routerLink="termtypes" title="List of NCIt Term Types">Term Types</a>
           <a class="dropdown-item" routerLink="sources" title="List of NCIt Sources">Sources</a>
-          <a class="dropdown-item" routerLink="definitiontypes" title="List of NCIt Definition Types">Definition Types</a>
+          <a class="dropdown-item" routerLink="definitiontypes" title="List of NCIt Definition Types">Definition
+            Types</a>
           <a class="dropdown-item" routerLink="synonymtypes" title="List of NCIt Synonym Types">Synonym Types</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" routerLink="alldocs" title="List of All NCIt Metadata Tables">All Metadata</a>
