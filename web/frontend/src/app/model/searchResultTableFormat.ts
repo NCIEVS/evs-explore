@@ -16,7 +16,7 @@ export class SearchResultTableFormat {
     searchResult: SearchResult,
     returnFields: string[],
     cookieService: CookieService,
-    private configService: ConfigurationService) {
+    private selectedSources: string[]) {
 
     // Write the search results response and let's see what up
     this.header = [];
@@ -71,11 +71,10 @@ export class SearchResultTableFormat {
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
           // console.log('  field = ', '.', field, '.');
-          let sourceList = configService.getSelectedSources();
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
             if (searchResult.concepts[i].definitions) {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
-                .filter(def => sourceList.has(def.source) || sourceList.size == 0);
+                .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length == 0);
             }
             if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100
               || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
@@ -89,7 +88,7 @@ export class SearchResultTableFormat {
           } else if (field === 'Synonyms') {
             if (searchResult.concepts[i].synonyms) {
               searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
-                .filter(syn => sourceList.has(syn.source) || sourceList.size == 0);
+                .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length == 0);
             }
             if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100
               || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
@@ -97,8 +96,9 @@ export class SearchResultTableFormat {
               data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
               data["synValue"] = data["collapsedSynonyms"];
             }
-            else
+            else {
               data["synValue"] = searchResult.concepts[i].getFullSynText();
+            }
             data['column' + count] = searchResult.concepts[i].getFullSynText();
           } else if (field === 'Role') {
             data['column' + count] = searchResult.concepts[i].getRolesText();
