@@ -2,6 +2,7 @@ import { TableHeader } from './tableHeader';
 import { TableData } from './tableData';
 import { SearchResult } from '../model/searchResult';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../service/configuration.service';
 
 // Search results table definition
 export class SearchResultTableFormat {
@@ -11,7 +12,11 @@ export class SearchResultTableFormat {
   data: TableData[];
 
   // Construct table format from search results
-  constructor(searchResult: SearchResult, returnFields: string[], cookieService: CookieService) {
+  constructor(
+    searchResult: SearchResult,
+    returnFields: string[],
+    cookieService: CookieService,
+    private configService: ConfigurationService) {
 
     // Write the search results response and let's see what up
     this.header = [];
@@ -66,11 +71,14 @@ export class SearchResultTableFormat {
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
           // console.log('  field = ', '.', field, '.');
-          let sourceList = cookieService.get('source').split(/[,\"]/) // allow for filtering sources
+          let sourceList = configService.getSelectedSources();
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
-            if (searchResult.concepts[i].definitions)
-              searchResult.concepts[i].definitions = searchResult.concepts[i].definitions.filter(def => sourceList.includes(def.source) || sourceList.includes("[]")); // filter by source
-            if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100 || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
+            if (searchResult.concepts[i].definitions) {
+              searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
+                .filter(def => sourceList.has(def.source) || sourceList.size == 0);
+            }
+            if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100
+              || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
               data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
               data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
               data["defValue"] = data["collapsedDefinitions"];
@@ -79,9 +87,12 @@ export class SearchResultTableFormat {
               data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
-            if (searchResult.concepts[i].synonyms)
-              searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms.filter(syn => sourceList.includes(syn.source) || sourceList.includes("[]")); // filter by source
-            if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100 || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
+            if (searchResult.concepts[i].synonyms) {
+              searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
+                .filter(syn => sourceList.has(syn.source) || sourceList.size == 0);
+            }
+            if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100
+              || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
               data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
               data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
               data["synValue"] = data["collapsedSynonyms"];

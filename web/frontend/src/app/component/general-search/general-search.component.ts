@@ -455,7 +455,7 @@ export class GeneralSearchComponent implements OnInit,
 
           // Build the search results table
           this.searchResultTableFormat = new SearchResultTableFormat(
-            new SearchResult(response), this.selectedPropertiesReturn.slice(), this.cookieService);
+            new SearchResult(response), this.selectedPropertiesReturn.slice(), this.cookieService, this.configService);
 
           this.hitsFound = this.searchResultTableFormat.total;
           this.timetaken = this.searchResultTableFormat.timeTaken;
