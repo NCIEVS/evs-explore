@@ -168,7 +168,8 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
-      this.selectedSources = sessionStorage.getItem('sources').split(',');
+      if (sessionStorage.getItem('sources').length > 0)
+        this.selectedSources = sessionStorage.getItem('sources').split(',');
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 
@@ -444,6 +445,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
+    console.log(this.selectedSources)
     this.searchCriteria.synonymSource = this.selectedSources;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
