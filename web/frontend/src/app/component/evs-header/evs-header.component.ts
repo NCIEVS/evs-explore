@@ -17,15 +17,16 @@ export class EvsHeaderComponent implements OnInit {
   ngOnInit() {
     console.log(this.versionInfo)
     this.terminology = this.configService.getTerminology();
+    console.log(this.terminology)
     if (this.terminology) {
-      this.versionInfo += this.getTerminologyTitle() + '(Version: ' + this.terminology.version
+      this.versionInfo = '(' + this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
         + '; Release Date: ' + this.terminology.date + ')';
       console.log(this.versionInfo)
     }
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
       if (this.terminology) {
-        this.versionInfo = this.getTerminologyTitle() + '(Version: ' + this.terminology.version
+        this.versionInfo = '(' + this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
           + '; Release Date: ' + this.terminology.date + ')';
         console.log(this.versionInfo)
       }
@@ -34,10 +35,10 @@ export class EvsHeaderComponent implements OnInit {
 
   getTerminologyTitle() {
     if (this.terminology.terminology == 'ncit') {
-      return 'NCIt Thesaurus: ';
+      return 'NCIt Thesaurus';
     }
     else if (this.terminology.terminology == 'ncim') {
-      return 'NCIm Metathesaurus: ';
+      return 'NCIm Metathesaurus';
     }
     else return null;
   }
