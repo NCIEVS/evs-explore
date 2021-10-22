@@ -50,7 +50,7 @@ export class GeneralSearchComponent implements OnInit,
   selectedConceptCode: string;
   displayDetail = false;
   // TODO: VERY NCIt specific
-  selectedPropertiesReturn: string[] = ['Preferred Name', 'Source Synonyms', 'Definitions', 'Semantic Type'];
+  selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
   displayText = false;
   displayTableFormat = true;
   avoidLazyLoading = true;
@@ -255,7 +255,7 @@ export class GeneralSearchComponent implements OnInit,
   // Reset filters and search type
   resetFilters(event) {
     console.log('resetFilters');
-    this.selectedPropertiesReturn = ['Preferred Name', 'Source Synonyms', 'Definitions', 'Semantic Type'];
+    this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
     sessionStorage.setItem('sources', '');
@@ -511,7 +511,7 @@ export class GeneralSearchComponent implements OnInit,
       this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
     }
     else {
-      this.selectedColumns = ["Highlights", "Preferred Name", "Definitions", "Code", "Source Synonyms"];
+      this.selectedColumns = ["Highlights", "Preferred Name", "Definitions", "Code", "Synonyms"];
       this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
 
     }
