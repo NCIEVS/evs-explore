@@ -361,7 +361,6 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
-    console.log(this.selectedTerm)
     console.log('onChangeTerminology', terminology);
     this.selectedTerm = this.termsAll.filter(term => term.label === terminology)[0].value;
     this.configService.setTerminology(this.selectedTerm);
