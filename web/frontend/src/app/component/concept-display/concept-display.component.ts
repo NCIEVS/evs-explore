@@ -40,7 +40,7 @@ export class ConceptDisplayComponent implements OnInit {
     'Concept_Status',
     'DEFINITION',
     'Display_Name',
-    'Synonyms',
+    'Source Synonyms',
     'GO_Annotation',
     'Maps_To',
     'Preferred_Name'

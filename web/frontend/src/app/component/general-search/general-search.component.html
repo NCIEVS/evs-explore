@@ -139,7 +139,7 @@
                 <tr>
                   <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
-                    {{col.header}}
+                    <span *ngIf='col.header=="Preferred Name" && this.selectedTerm.terminology == "ncit"'>NCIt </span>{{col.header}}
                   </th>
                 </tr>
 
@@ -169,7 +169,7 @@
                           *ngIf="rowData.retiredConcept === 'yes'">
                           (Retired Concept)</span></a>
                     </span>
-                    <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
+                    <span *ngSwitchCase="'Source Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
                       <span *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']">
                         &nbsp;...
                         <button class="link" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[ More
