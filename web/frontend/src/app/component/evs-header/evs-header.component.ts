@@ -15,18 +15,31 @@ export class EvsHeaderComponent implements OnInit {
   constructor(private configService: ConfigurationService) { }
 
   ngOnInit() {
+    console.log(this.versionInfo)
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
-      this.versionInfo = '(Version: ' + this.terminology.version
+      this.versionInfo += this.getTerminologyTitle() + '(Version: ' + this.terminology.version
         + '; Release Date: ' + this.terminology.date + ')';
+      console.log(this.versionInfo)
     }
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
       if (this.terminology) {
-        this.versionInfo = '(Version: ' + this.terminology.version
+        this.versionInfo = this.getTerminologyTitle() + '(Version: ' + this.terminology.version
           + '; Release Date: ' + this.terminology.date + ')';
+        console.log(this.versionInfo)
       }
     });
+  }
+
+  getTerminologyTitle() {
+    if (this.terminology.terminology == 'ncit') {
+      return 'NCIt Thesaurus: ';
+    }
+    else if (this.terminology.terminology == 'ncim') {
+      return 'NCIm Metathesaurus: ';
+    }
+    else return null;
   }
 
 
