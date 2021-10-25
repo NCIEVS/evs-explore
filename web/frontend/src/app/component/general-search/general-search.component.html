@@ -139,6 +139,8 @@
                 <tr>
                   <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
+                    <span *ngIf='col.header=="Preferred Name" && this.selectedTerm.terminology == "ncit"'>NCIt </span>
+                    <span *ngIf='col.header=="Synonyms" && this.selectedSources.length > 0'>Source </span>
                     {{col.header}}
                   </th>
                 </tr>

@@ -128,6 +128,7 @@ export class GeneralSearchComponent implements OnInit,
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
+    console.log(this.selectedTerm)
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
