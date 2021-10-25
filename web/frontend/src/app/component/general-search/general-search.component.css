@@ -60,6 +60,22 @@ em {
     cursor: pointer;
 }
 
+.divider{
+  width:5px;
+  height:auto;
+  display:inline-block;
+}
+
+.large-divider{
+  width:25px;
+  height:auto;
+  display:inline-block;
+}
+
+.terminology-button {
+  border-radius: 0px !important;
+}
+
 .ml3 {
     margin-left: 3px;
 }
