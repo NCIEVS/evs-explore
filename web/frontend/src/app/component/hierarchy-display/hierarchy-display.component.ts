@@ -120,6 +120,7 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         this.conceptWithRelationships = undefined;
+        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
         if ((this.activeIndex === 1 || this.activeIndex === 2) &&
           (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
           this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
