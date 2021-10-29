@@ -74,6 +74,8 @@ em {
 
 .terminology-button {
   border-radius: 0px !important;
+  background-color: #706f6f;
+  border-color: #706f6f;
 }
 
 .ml3 {

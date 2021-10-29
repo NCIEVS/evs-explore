@@ -147,7 +147,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
     <p-header class="bold-heading">
       Maps To
     </p-header>
@@ -181,6 +181,51 @@
             <td>{{ map.targetTermGroup }}</td>
             <td>{{ map.targetCode }}</td>
             <td>{{ map.targetTerminology }} {{ map.targetTerminologyVersion }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockMaps>None</ng-template>
+
+  </p-panel>
+  <p-panel [toggleable]="true" *ngIf="terminology=='ncim'">
+    <p-header class="bold-heading">
+      Mappings
+    </p-header>
+    <div class="table-responsive">
+      <p-table class="table table-striped table-bordered" [value]="concept.maps"
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
+        [customSort]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-10" [pSortableColumn]="'sourceCode'">Source Code
+              <p-sortIcon [field]="'sourceCode'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'sourceTerminology'">Source Terminology
+              <p-sortIcon [field]="'sourceTerminology'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'type'">Relationship to Target
+              <p-sortIcon [field]="'type'"></p-sortIcon>
+            </th>
+            <th class="w-10" [pSortableColumn]="'targetCode'">Target Code
+              <p-sortIcon [field]="'targetCode'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'targetTerminology'">Target Terminology
+              <p-sortIcon [field]="'targetTerminology'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'targetName'">Target Name
+              <p-sortIcon [field]="'targetName'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-map>
+          <tr>
+            <td>{{ map.sourceCode }}</td>
+            <td></td>
+            <td>{{ map.type }}</td>
+            <td>{{ map.targetCode }}</td>
+            <td>{{ map.targetTerminology }} {{ map.targetTerminologyVersion }}</td>
+            <td>{{ map.targetName }}</td>
           </tr>
         </ng-template>
       </p-table>
