@@ -2,7 +2,7 @@
   <as-split [direction]="direction">
     <as-split-area [size]="hierarchyPanelSize">
       <div class="hierarchy-div">
-        <div class="page-header">
+        <div class="page-header ui-coloring">
           Concept Hierarchy
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
@@ -25,9 +25,9 @@
     <as-split-area [size]="conceptPanelSize">
 
       <div class="hierarchy-div">
-        <div class="page-header">
+        <div class="page-header ui-coloring">
           {{ title }}
-          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
+          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton class="ui-button-coloring"
               type="button"></button></span>
         </div>
 
@@ -43,7 +43,7 @@
           </span>
         </div>
 
-        <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
+        <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)" class="ui-button-coloring">
           <p-tabPanel header="Terms And Properties">
             <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
           </p-tabPanel>

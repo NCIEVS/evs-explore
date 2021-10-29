@@ -170,3 +170,20 @@ body .alert-info {
 .ui-treetable .ui-treetable-toggler {
   top: 7%!important;
 }
+
+.ui-button-coloring {
+  border-radius: 0px !important;
+  background-color: #1c5e86 !important;
+  border-color: #1c5e86 !important;
+}
+
+.ui-coloring {
+  color: #1c5e86 !important;
+}
+
+.ui-tabview-selected.ui-state-active {
+  background-color: #1c5e86 !important;
+  border-color: #1c5e86 !important;
+}
+
+

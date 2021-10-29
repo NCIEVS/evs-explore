@@ -1,7 +1,7 @@
 <div class="container" *ngIf="definitionTypes">
   <div class="page-header">
-    <span>Definition Types</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+    <span class="ui-coloring">Definition Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
   <p *ngIf="definitionTypes && terminology=='ncit'">Here is a listing of NCIt definition types:</p>
   <p *ngIf="definitionTypes && terminology=='ncim'">Here is a listing of definition types:</p>
