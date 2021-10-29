@@ -403,3 +403,11 @@
 img, svg {
   vertical-align: middle;
 }
+
+a {
+  color: white !important;
+}
+
+.dropdown-links {
+  color: #212529 !important;
+}

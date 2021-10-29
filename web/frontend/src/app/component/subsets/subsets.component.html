@@ -15,7 +15,7 @@
           are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding
           standards.</p>
         <p>See the
-          <a routerLink="/subsetncit" target="_blank">
+          <a routerLink="/subsetncit" target="_blank" class="regular-link">
             NCI Thesaurus Subsets Page
           </a>
         </p>
@@ -27,7 +27,7 @@
               <td>
                 <div style="cursor: pointer; display:flex;">
                   <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                  <a [routerLink]="['/subset/', terminology, rowData.code]" target="_blank">
+                  <a [routerLink]="['/subset/', terminology, rowData.code]" target="_blank" class="regular-link">
                     <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-fw pi-blank"></i>
                     <i class="fa fa-external-link" style="margin-left:0.2em;"></i> {{rowData.label}}
                   </a>
