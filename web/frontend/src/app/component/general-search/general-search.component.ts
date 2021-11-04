@@ -138,7 +138,7 @@ export class GeneralSearchComponent implements OnInit,
       this.selectedSearchType = 'contains';
 
       // Set default selected sources to empty array
-      sessionStorage.setItem('sources', '');
+      this.configService.setSources('');
       this.selectedSources = [];
 
       // Set default term search to blank
@@ -169,8 +169,8 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
-      if (sessionStorage.getItem('sources').length > 0)
-        this.selectedSources = sessionStorage.getItem('sources').split(',');
+      if (this.configService.getSources() != null && this.configService.getSources().length > 0)
+        this.selectedSources = configService.getSources().split(',');
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 
@@ -232,7 +232,7 @@ export class GeneralSearchComponent implements OnInit,
   // Reset source
   resetSource() {
     console.log('resetSource');
-    sessionStorage.setItem('sources', '');
+    this.configService.setSources('');
     this.selectedSources = [];
     this.performSearch(this.termautosearch);
   }
@@ -258,7 +258,7 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
-    sessionStorage.setItem('sources', '');
+    this.configService.setSources('');
     this.selectedSources = [];
     console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSources);
   }
@@ -356,7 +356,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSources);
-    sessionStorage.setItem('sources', this.selectedSources.join(','));
+    this.configService.setSources(this.selectedSources.join(','));
     this.performSearch(this.termautosearch);
   }
 
@@ -385,7 +385,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle deselecting a source
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event, this.selectedSources);
-    sessionStorage.setItem('sources', this.selectedSources.join(','));
+    this.configService.setSources(this.selectedSources.join(','));
     this.performSearch(this.termautosearch);
   }
 
