@@ -27,6 +27,10 @@ export class WelcomeComponent implements AfterViewInit {
     return this.configService.getTerminology().terminology;
   }
 
+  getSubsetLink(): String {
+    return window.location.origin + "/subsets/" + this.getTerminology();
+  }
+
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.cookieService.set('hhsBanner', 'accepted', 90);
