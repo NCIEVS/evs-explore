@@ -2,6 +2,7 @@ import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core'
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from 'src/app/service/configuration.service';
+import { environment } from 'src/environments/environment';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -29,6 +30,10 @@ export class WelcomeComponent implements AfterViewInit {
 
   getSubsetLink(): String {
     return window.location.origin + "/subsets/" + this.getTerminology();
+  }
+
+  getApiURL() {
+    return environment.swagger;
   }
 
   open(content: TemplateRef<any>) {

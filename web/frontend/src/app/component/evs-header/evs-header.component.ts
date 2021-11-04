@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
-import { environment } from '../../../environments/environment';
 
 // Header component
 @Component({
@@ -43,11 +42,6 @@ export class EvsHeaderComponent implements OnInit {
     }
     else return null;
   }
-
-  getAPILink() {
-    return environment.swagger;
-  }
-
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks

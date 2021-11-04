@@ -47,9 +47,6 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href={{getAPILink()}} title="API">API</a>
-      </li>
       <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
         <a class="nav-link" [routerLink]="['subsets', terminology.terminology]" title="Display Subsets">Subsets</a>
       </li>
