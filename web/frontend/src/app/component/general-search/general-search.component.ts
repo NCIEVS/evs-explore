@@ -100,7 +100,6 @@ export class GeneralSearchComponent implements OnInit,
     // this.searchCriteria.type = route.snapshot.params['type'];
     // this.searchCriteria.property = route.snapshot.params['property'];
 
-    // console.log('window location = ', window.location.pathname);
     const path = '' + window.location.pathname;
 
     // Determine if we are on the welcome page
@@ -128,7 +127,6 @@ export class GeneralSearchComponent implements OnInit,
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
-    console.log(this.selectedTerm)
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
@@ -445,7 +443,6 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    console.log(this.selectedSources)
     this.searchCriteria.synonymSource = this.selectedSources;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
@@ -478,7 +475,6 @@ export class GeneralSearchComponent implements OnInit,
             });
             this.setDefaultSelectedColumns();
 
-            console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
 
@@ -514,7 +510,7 @@ export class GeneralSearchComponent implements OnInit,
       this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
 
     }
-    console.log(this.displayColumns)
+    console.log('  columns', this.displayColumns)
     this.selectedColumns = this.displayColumns.map(element => element.header);
   }
 
