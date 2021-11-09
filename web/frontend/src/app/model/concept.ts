@@ -109,7 +109,6 @@ export class Concept {
 
       for (let i = 0; i < input.associations.length; i++) {
         // Handle the RB/RN/RO ncim case 
-        console.log('XXX', this.terminology, input.associations[i].type);
         if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
           this.broader.push(new Relationship(input.associations[i]));
         } else if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {

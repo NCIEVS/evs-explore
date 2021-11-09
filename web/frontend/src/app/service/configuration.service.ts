@@ -18,6 +18,7 @@ export class ConfigurationService {
   private terminology = null;
   private terminologies: Array<any> = [];
   private subject: Subject<any>;
+  private sources: string = null;
 
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
@@ -51,6 +52,14 @@ export class ConfigurationService {
 
   setSubject(subject) {
     this.subject = subject;
+  }
+
+  getSources(): string {
+    return this.sources;
+  }
+
+  setSources(sources) {
+    this.sources = sources;
   }
 
   setConfigFromParameters(paramMap: ParamMap) {

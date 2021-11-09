@@ -24,12 +24,12 @@ export class ConceptDetailComponent implements OnInit {
       ['HGNC_ID', 'https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/'],
       ['miRBase_ID', 'http://www.mirbase.org/cgi-bin/mirna_entry.pl?acc='],
       ['NCI_Drug_Dictionary_ID', 'https://www.cancer.gov/publications/dictionaries/cancer-drug/def/'],
-      ['NCI_META_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code='],
+      ['NCI_META_CUI', window.location.origin + '/concept/ncim/'],
       ['NSC Number', ' https://dtp.cancer.gov/dtpstandard/servlet/dwindex?searchtype=NSC&outputformat=html&searchlist='],
       ['OMIM_Number', 'https://omim.org/entry/'],
       ['PubMedID_Primary_Reference', 'http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids='],
       ['Swiss_Prot', 'https://www.uniprot.org/uniprot/'],
-      ['UMLS_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&type=synonym&code=']
+      ['UMLS_CUI', window.location.origin + '/concept/ncim/']
     ]
   )
 

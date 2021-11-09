@@ -42,7 +42,6 @@ export class SearchResultTableFormat {
 
       let count = 2;
       for (let i = 0; i < returnFields.length; i++) {
-        console.debug('  field - ' + returnFields[i]);
         let tableHeader = null;
         // TODO: this is too specific to NCI and the property values, needs generalization
         if (returnFields[i] === 'Preferred Name' || returnFields[i] === 'Synonyms') {
@@ -70,7 +69,7 @@ export class SearchResultTableFormat {
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
-          // console.log('  field = ', '.', field, '.');
+
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
             if (searchResult.concepts[i].definitions) {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
@@ -146,7 +145,7 @@ export class SearchResultTableFormat {
           } else if (returnFields[k] === 'Preferred Name') {
             data['column' + count] = searchResult.concepts[i].getPreferredName();
           } else {
-            console.debug('NEED TO SUPPORT THIS', returnFields[k]);
+            console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }
           count++;
         }
