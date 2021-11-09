@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  productionHost: 'evsexplore.nci.nih.gov',
+  productionHost: 'explore.evs.cancer.gov',
   code: 'UA-150112876-3'
 };
 

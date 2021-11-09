@@ -128,7 +128,7 @@ export class GeneralSearchComponent implements OnInit,
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
-    console.log(this.selectedTerm)
+    console.log('xxx', this.selectedTerm)
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
@@ -169,8 +169,9 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
-      if (sessionStorage.getItem('sources').length > 0)
+      if (sessionStorage.getItem('sources') && sessionStorage.getItem('sources').length > 0) {
         this.selectedSources = sessionStorage.getItem('sources').split(',');
+      }
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 

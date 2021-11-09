@@ -123,26 +123,30 @@ export class ConceptDisplayComponent implements OnInit {
     this.location.replaceState('/hierarchy/' + this.conceptCode);
   }
 
+  keepSource(item: string): Boolean {
+    return item && item != 'NCIMTH' && item != 'MTH';
+  }
+
   getSourceList(concept) {
     var sourceList = new Set<string>();
     sourceList.add("All");
     for (const obj in concept.synonyms) {
-      if (concept.synonyms[obj].source) {
+      if (this.keepSource(concept.synonyms[obj].source)) {
         sourceList.add(concept.synonyms[obj].source)
       }
     }
     for (const obj in concept.properties) {
-      if (concept.properties[obj].source) {
+      if (this.keepSource(concept.properties[obj].source)) {
         sourceList.add(concept.properties[obj].source)
       }
     }
     for (const obj in concept.associations) {
-      if (concept.associations[obj].source) {
+      if (this.keepSource(concept.associations[obj].source)) {
         sourceList.add(concept.associations[obj].source)
       }
     }
     for (const obj in concept.inverseAssociations) {
-      if (concept.inverseAssociations[obj].source) {
+      if (this.keepSource(concept.inverseAssociations[obj].source)) {
         sourceList.add(concept.inverseAssociations[obj].source)
       }
     }
