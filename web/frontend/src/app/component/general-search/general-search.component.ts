@@ -100,7 +100,6 @@ export class GeneralSearchComponent implements OnInit,
     // this.searchCriteria.type = route.snapshot.params['type'];
     // this.searchCriteria.property = route.snapshot.params['property'];
 
-    // console.log('window location = ', window.location.pathname);
     const path = '' + window.location.pathname;
 
     // Determine if we are on the welcome page
@@ -128,7 +127,6 @@ export class GeneralSearchComponent implements OnInit,
 
     // Set selected terminology
     this.selectedTerm = configService.getTerminology();
-    console.log(this.selectedTerm)
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
@@ -138,7 +136,7 @@ export class GeneralSearchComponent implements OnInit,
       this.selectedSearchType = 'contains';
 
       // Set default selected sources to empty array
-      sessionStorage.setItem('sources', '');
+      this.configService.setSources('');
       this.selectedSources = [];
 
       // Set default term search to blank
@@ -169,8 +167,8 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
-      if (sessionStorage.getItem('sources').length > 0)
-        this.selectedSources = sessionStorage.getItem('sources').split(',');
+      if (this.configService.getSources() != null && this.configService.getSources().length > 0)
+        this.selectedSources = configService.getSources().split(',');
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 
@@ -232,7 +230,7 @@ export class GeneralSearchComponent implements OnInit,
   // Reset source
   resetSource() {
     console.log('resetSource');
-    sessionStorage.setItem('sources', '');
+    this.configService.setSources('');
     this.selectedSources = [];
     this.performSearch(this.termautosearch);
   }
@@ -258,7 +256,7 @@ export class GeneralSearchComponent implements OnInit,
     this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
     sessionStorage.setItem('searchType', this.selectedSearchType);
-    sessionStorage.setItem('sources', '');
+    this.configService.setSources('');
     this.selectedSources = [];
     console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSources);
   }
@@ -356,7 +354,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSources);
-    sessionStorage.setItem('sources', this.selectedSources.join(','));
+    this.configService.setSources(this.selectedSources.join(','));
     this.performSearch(this.termautosearch);
   }
 
@@ -385,7 +383,7 @@ export class GeneralSearchComponent implements OnInit,
   // Handle deselecting a source
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event, this.selectedSources);
-    sessionStorage.setItem('sources', this.selectedSources.join(','));
+    this.configService.setSources(this.selectedSources.join(','));
     this.performSearch(this.termautosearch);
   }
 
@@ -445,7 +443,6 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    console.log(this.selectedSources)
     this.searchCriteria.synonymSource = this.selectedSources;
     this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
@@ -478,7 +475,6 @@ export class GeneralSearchComponent implements OnInit,
             });
             this.setDefaultSelectedColumns();
 
-            console.log('cols' + JSON.stringify(this.cols));
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
 
@@ -514,7 +510,7 @@ export class GeneralSearchComponent implements OnInit,
       this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
 
     }
-    console.log(this.displayColumns)
+    console.log('  columns', this.displayColumns)
     this.selectedColumns = this.displayColumns.map(element => element.header);
   }
 
