@@ -65,7 +65,6 @@ export class ConceptDetailComponent implements OnInit {
 
   // Render links appropriately if they are defined in "external Links"
   checkExternalLink(property) {
-    console.log(window.location)
     if (this.externalLinks.has(property.type)) {
       let values = [];
       let link = this.externalLinks.get(property.type);

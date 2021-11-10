@@ -31,7 +31,6 @@ export class AssociationsComponent implements OnInit {
   }
 
   customSort(event: SortEvent) {
-    console.log(event)
     event.data.sort((data1, data2) => {
       let value1 = data1[event.field];
       let value2 = data2[event.field];

@@ -15,9 +15,7 @@ export class EvsHeaderComponent implements OnInit {
   constructor(private configService: ConfigurationService) { }
 
   ngOnInit() {
-    console.log(this.versionInfo)
     this.terminology = this.configService.getTerminology();
-    console.log(this.terminology)
     if (this.terminology) {
       this.versionInfo = '(' + this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
         + '; Release Date: ' + this.terminology.date + ')';

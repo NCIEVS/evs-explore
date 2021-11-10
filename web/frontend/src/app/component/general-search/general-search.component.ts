@@ -167,8 +167,9 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = sessionStorage.getItem('searchTerm');
-      if (this.configService.getSources() != null && this.configService.getSources().length > 0)
+      if (this.configService.getSources() != null && this.configService.getSources().length > 0) {
         this.selectedSources = configService.getSources().split(',');
+      }
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 

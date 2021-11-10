@@ -21,6 +21,9 @@ export class Concept {
   inverseRoles: Relationship[];
   associations: Relationship[];
   inverseAssociations: Relationship[];
+  broader: Relationship[];
+  narrower: Relationship[];
+  other: Relationship[];
   maps: Map[];
   subsetLink: string;
   synonymUniqueArray: any[];
@@ -100,8 +103,21 @@ export class Concept {
     // associations
     if (input.associations) {
       this.associations = new Array();
+      this.broader = new Array();
+      this.narrower = new Array();
+      this.other = new Array();
+
       for (let i = 0; i < input.associations.length; i++) {
-        this.associations.push(new Relationship(input.associations[i]));
+        // Handle the RB/RN/RO ncim case 
+        if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
+          this.broader.push(new Relationship(input.associations[i]));
+        } else if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
+          this.narrower.push(new Relationship(input.associations[i]));
+        } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
+          this.other.push(new Relationship(input.associations[i]));
+        } else {
+          this.associations.push(new Relationship(input.associations[i]));
+        }
       }
     }
 
@@ -441,32 +457,6 @@ export class Concept {
     return mapInfo;
   }
 
-  broaderConceptsExist(): boolean {
-    var assocs = this.associations;
-    for (let l = 0; l < assocs.length; l++) {
-      if (assocs[l].type == "RB")
-        return true;
-    }
-    return false;
-  }
-
-  narrowerConceptsExist(): boolean {
-    var assocs = this.associations;
-    for (let l = 0; l < assocs.length; l++) {
-      if (assocs[l].type == "RN")
-        return true;
-    }
-    return false;
-  }
-
-  otherConceptsExist(): boolean {
-    var assocs = this.associations;
-    for (let l = 0; l < assocs.length; l++) {
-      if (assocs[l].type != "RN" && assocs[l].type != "BR")
-        return true;
-    }
-    return false;
-  }
 
   // Default string representation is the name
   toString(): string {

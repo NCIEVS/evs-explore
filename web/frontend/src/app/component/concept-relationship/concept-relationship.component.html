@@ -32,9 +32,7 @@
               <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ parent.name }} </a>
             </td>
-            <td *ngIf="isMeta" class="w-20">{{ parent.qualifiers && parent.qualifiers[0].type == "RELA" ?
-              parent.qualifiers[0].value :
-              "" }}</td>
+            <td *ngIf="isMeta" class="w-20">{{ parent.rela }}</td>
             <td *ngIf="isMeta" class="w-20">{{ parent.source }}</td>
           </tr>
         </ng-template>
@@ -76,9 +74,7 @@
               <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ child.name }} </a>
             </td>
-            <td *ngIf="isMeta">{{ child.qualifiers && child.qualifiers[0].type == "RELA" ?
-              child.qualifiers[0].value :
-              "" }}</td>
+            <td *ngIf="isMeta">{{ child.rela }}</td>
             <td *ngIf="isMeta">{{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
@@ -171,14 +167,14 @@
       Broader Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
-          concept.associations && concept.broaderConceptsExist() == true;
+      <p-table [value]="concept.broader" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.broader;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -193,7 +189,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type == 'RB' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Broader" }}</td>
+            <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -254,14 +250,14 @@
       Narrower Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
-          concept.associations && concept.narrowerConceptsExist() == true;
+      <p-table [value]="concept.narrower" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.narrower;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -276,7 +272,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type == 'RN' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Narrower" }}</td>
+            <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -339,14 +335,14 @@
       Other Relationships
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
-          concept.associations && concept.otherConceptsExist() == true;
+      <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.other;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -361,7 +357,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="association.type != 'RB' && association.type != 'RN' && checkFilter(association)">
-            <td>{{ association.qualifiers ? association.qualifiers[0].value : "Other" }}</td>
+            <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"

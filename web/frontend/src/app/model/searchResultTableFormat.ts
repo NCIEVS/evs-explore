@@ -69,7 +69,7 @@ export class SearchResultTableFormat {
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
-          // console.log('  field = ', '.', field, '.');
+
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
             if (searchResult.concepts[i].definitions) {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
