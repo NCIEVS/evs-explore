@@ -36,7 +36,6 @@ export class GlobalErrorHandler extends ErrorHandler {
         this.notifyError(error.displayMessage);
       }
     } else {
-      //console.log('error***' + error.message);
       if (error.message.includes("Cannot read property 'version' of null")) {
         error.message = "Could not get configuration information from the backend. Either the database or evsrestapi is unaccessible";
       }

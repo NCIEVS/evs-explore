@@ -15,7 +15,6 @@ export class DisplayPipe implements PipeTransform {
 
   transform(value: any, field: string): string {
     if (field === 'Maps_To') {
-      console.log('Maps TO ' + value);
       let mapstos: any[];
       mapstos = value.split('<br><br>');
       let html = '';
@@ -23,7 +22,6 @@ export class DisplayPipe implements PipeTransform {
       html = html + '<button [pTooltip]="' + 'test' + '" type="button" class="btn btn-link">' + 'test' + '</button><br>';
 
       //html = html + 'test123';
-      // console.log(JSON.stringify(html));
       return html;
 
     } /*else if ( field === 'selectedFacet') {
