@@ -395,6 +395,26 @@
   color: #2f2f2f
 }
 
+.nav-menu>.nav-item:focus {
+  background-color: #fff;
+  color: #2f2f2f
+}
+
+.nav-item-title>.nav-item>a:focus {
+  background-color: #fff;
+  color: #2f2f2f
+}
+
+@media only screen and (min-width: 1025px)
+{
+  .sub-nav-mega a {
+    display: block;
+    list-style-type: none;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+}
+
 .main-site-logo {
   width: 45px;
   border-radius: 25%;
@@ -420,6 +440,44 @@ img, svg {
 
 .dropdown-links {
   color: #212529 !important;
+}
+
+.version-info {
+  color: #fff !important;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+.version-info:hover {
+  color: #fff !important;
+  background-color: #212529 !important;
+}
+
+.version-info:focus {
+  color: #fff !important;
+  background-color: #212529 !important;
+}
+
+.header-info {
+  height: 100px !important;
+}
+
+img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.push {
+  height: 100px !important
+}
+
+.header-row {
+  display: block
+}
+
+.header-img {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .nav-search-bar {
