@@ -28,10 +28,6 @@ export class WelcomeComponent implements AfterViewInit {
     return this.configService.getTerminology().terminology;
   }
 
-  getSubsetLink(): String {
-    return window.location.origin + "/subsets/" + this.getTerminology();
-  }
-
   getApiURL() {
     return environment.swagger;
   }
