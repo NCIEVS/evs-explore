@@ -29,7 +29,14 @@ export class WelcomeComponent implements AfterViewInit {
   }
 
   getSubsetLink(): String {
-    return window.location.origin + "/subsets/" + this.getTerminology();
+    return window.location.origin + this.onLocal() + "/subsets/" + this.getTerminology();
+  }
+
+  onLocal(): String {
+    if (window.location.pathname == "/welcome")
+      return "";
+    else
+      return "/evsexplore";
   }
 
   getApiURL() {
