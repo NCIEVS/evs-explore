@@ -2,16 +2,16 @@
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button routerLink="/search"
-          label="Back to Search" pButton type="button"></button></span>
+          label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
     </div>
     <p>{{ subsetNCItDefinition }}</p>
     <div *ngIf="subsetLink != null">
       Subset Download Link: <a href={{subsetLink}}>{{subsetLink}}</a>
     </div><br />
-    <div class="table-responsive">
-      <div class="row">
-        <div class="col-sm-4">
-          <div style="padding-bottom: 6px;">
+    <div class="table-responsive subset-table">
+      <div class="row search-row">
+        <div class="col-sm-4 search-bar">
+          <div>
             <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
               [(ngModel)]="termAutoSearch" [suggestions]="textSuggestions" (completeMethod)="search($event)"
               id="termauto" name="termauto" placeholder="Enter at least 3 letters of a term." [minLength]="3">
@@ -52,8 +52,8 @@
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
-                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]" target='urlTarget'><i
+                  class="fa fa-external-link" style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
             <td class="w-30">{{ value.name }}</td>
             <td class="w-30">
               <span *ngFor="let syn of value.getSynonymNames('NCI'); last as isLast">
@@ -90,11 +90,11 @@
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, titleCode ]" target='urlTarget'><i class="fa fa-external-link"
-                  style="margin-left:0.2em;"></i> {{ titleCode }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, terminology, titleCode ]" target='urlTarget'><i
+                  class="fa fa-external-link" style="margin-left:0.2em;"></i> {{ titleCode }}</a></td>
             <td class="w-20">{{titleDesc}}</td>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
-                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]" target='urlTarget'><i
+                  class="fa fa-external-link" style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
             <td class="w-20">{{value.name}}
             </td>
             <td class="w-20">
@@ -133,8 +133,8 @@
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr>
-            <td class="w-10"><a [routerLink]="[urlBase, value.code ]" target='urlTarget'><i class="fa fa-external-link"
-                  style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+            <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]" target='urlTarget'><i
+                  class="fa fa-external-link" style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
             <td class="w-15">
               <span *ngFor="let syn of value.getSynonymNames(subsetFormat); last as isLast">
                 <span>{{syn}} <span *ngIf="!isLast"><br /></span> </span>
@@ -167,3 +167,4 @@
     </div>
   </p-panel>
 </div>
+<p>&nbsp;</p>

@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { SearchCriteria } from './../model/searchCriteria';
 import { EvsError } from '../model/evsError';
+import { ConfigurationService } from './configuration.service';
 
 // Default HTTP Options
 const httpOptions = {
@@ -16,7 +17,10 @@ const httpOptions = {
 export class SearchTermService {
 
   // Construct search term service - inject HttpClient
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private configService: ConfigurationService
+  ) { }
 
   // Service for obtaining search results
   search(searchCriteria: SearchCriteria): Observable<any> {
@@ -26,7 +30,7 @@ export class SearchTermService {
     const param: any = {};
 
     // Setup search parameters (default terminology and include, for now)
-    param.terminology = searchCriteria.terminology;
+    param.terminology = this.configService.getTerminologyName();
     param.include = searchCriteria.include;
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;
@@ -84,7 +88,7 @@ export class SearchTermService {
     // }
 
     // Perform the HTTP call
-    return this.http.get(url,
+    return this.http.get(encodeURI(url),
       {
         responseType: 'json',
         params: param

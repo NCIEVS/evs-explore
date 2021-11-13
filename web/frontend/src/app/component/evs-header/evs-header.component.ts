@@ -8,12 +8,42 @@ import { ConfigurationService } from '../../service/configuration.service';
   styleUrls: ['./evs-header.component.css']
 })
 export class EvsHeaderComponent implements OnInit {
-  versionInfo = null;
-  constructor() { }
+  versionInfo = '';
+  terminology = null;
+  private subscription = null;
+
+  constructor(private configService: ConfigurationService) { }
 
   ngOnInit() {
-    this.versionInfo = '(Version: ' + ConfigurationService.terminology.version
-      + '; Release Date: ' + ConfigurationService.terminology.date + ')';
+    this.terminology = this.configService.getTerminology();
+    if (this.terminology) {
+      this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
+        + '; Release Date: ' + this.terminology.date;
+      console.log(this.versionInfo)
+    }
+    this.subscription = this.configService.getSubject().subscribe(terminology => {
+      this.terminology = terminology;
+      if (this.terminology) {
+        this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
+          + '; Release Date: ' + this.terminology.date;
+        console.log(this.versionInfo)
+      }
+    });
+  }
+
+  getTerminologyTitle() {
+    if (this.terminology.terminology == 'ncit') {
+      return 'NCI Thesaurus';
+    }
+    else if (this.terminology.terminology == 'ncim') {
+      return 'NCI Metathesaurus';
+    }
+    else return null;
+  }
+
+  ngOnDestroy() {
+    // unsubscribe to ensure no memory leaks
+    this.subscription.unsubscribe();
   }
 
 }

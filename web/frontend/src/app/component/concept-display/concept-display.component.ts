@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../../service/configuration.service';
+
 
 // Concept display component
 // BAC - looks like not used
@@ -21,6 +22,7 @@ export class ConceptDisplayComponent implements OnInit {
   conceptWithRelationships: Concept;
   hierarchyDisplay = '';
   title: string;
+  displayHierarchy: boolean;
 
   urlBase = '/concept';
   urlTarget = '_blank';
@@ -44,14 +46,23 @@ export class ConceptDisplayComponent implements OnInit {
     'Preferred_Name'
   ]
   properties: string[] = [];
+  sources: string[] = [];
+  selectedSources = null;
+  terminology: string;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
     private location: Location,
-    private cookieService: CookieService
-
+    private cookieService: CookieService,
+    private configService: ConfigurationService
   ) {
+
+    // Do this in the constructor so it's ready to go when this component is injected
+    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
+    this.selectedSources = this.configService.getSelectedSources();
+    this.terminology = this.configService.getTerminologyName();
   }
 
   ngOnInit() {
@@ -59,6 +70,8 @@ export class ConceptDisplayComponent implements OnInit {
     // Set active index based on cookie unless never set
     // then default to 0
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+
+    this.displayHierarchy = (this.configService.getTerminologyName() == 'ncim') ? false : true;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
@@ -70,29 +83,25 @@ export class ConceptDisplayComponent implements OnInit {
           }
         }
         // Then look up the concept
-        this.route.params.subscribe((params: any) => {
-          if (params.code) {
-            this.route.paramMap.pipe(
-              switchMap((params: ParamMap) =>
-                this.conceptDetailService
-                  .getConceptSummary(params.get('code'), 'summary,maps')
-              )
-            )
-              .subscribe((concept: any) => {
-                // and finally build the local state from it
-                this.conceptDetail = new Concept(concept);
-                this.conceptCode = concept.code;
-                this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-                this.conceptWithRelationships = undefined;
-                if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-                  (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-                  this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                    this.conceptWithRelationships = new Concept(response);
-                  });
-                }
-              })
-          }
-        });
+        this.conceptDetailService
+          .getConceptSummary(this.configService.getCode(), 'full')
+          .subscribe((concept: any) => {
+            // and finally build the local state from it
+            this.conceptDetail = new Concept(concept);
+            this.conceptCode = concept.code;
+            this.title = concept.name + ' ( Code - ' + concept.code + ' )';
+            this.conceptWithRelationships = undefined;
+            // Sort the source list (case insensitive)
+            this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
+              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
+              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+                this.conceptWithRelationships = new Concept(response);
+              });
+            }
+          })
+
       })
   }
 
@@ -112,5 +121,73 @@ export class ConceptDisplayComponent implements OnInit {
   // Reroute to hierarchy view
   openHierarchy() {
     this.location.replaceState('/hierarchy/' + this.conceptCode);
+  }
+
+  keepSource(item: string): Boolean {
+    return item && item != 'NCIMTH' && item != 'MTH';
+  }
+
+  getSourceList(concept) {
+    var sourceList = new Set<string>();
+    sourceList.add("All");
+    for (const obj in concept.synonyms) {
+      if (this.keepSource(concept.synonyms[obj].source)) {
+        sourceList.add(concept.synonyms[obj].source)
+      }
+    }
+    for (const obj in concept.properties) {
+      if (this.keepSource(concept.properties[obj].source)) {
+        sourceList.add(concept.properties[obj].source)
+      }
+    }
+    for (const obj in concept.associations) {
+      if (this.keepSource(concept.associations[obj].source)) {
+        sourceList.add(concept.associations[obj].source)
+      }
+    }
+    for (const obj in concept.inverseAssociations) {
+      if (this.keepSource(concept.inverseAssociations[obj].source)) {
+        sourceList.add(concept.inverseAssociations[obj].source)
+      }
+    }
+
+    // If there is no overlap between sourceList and selectedSources, clear selectedSources
+    const intersection = [...sourceList].filter(x => this.selectedSources.has(x));
+    if (intersection.length == 0) {
+      this.toggleSelectedSource('All');
+    }
+
+    // Convert set to array and return
+    return [...sourceList];
+  }
+
+  toggleSelectedSource(source) {
+    // clear if All is selected or was last selected
+    if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
+      this.selectedSources.clear();
+    }
+    if (this.selectedSources.has(source)) {
+      this.selectedSources.delete(source);
+      // reset to All if removing last selected source
+      if (this.selectedSources.size == 0) {
+        this.selectedSources.add("All");
+      }
+    }
+    else {
+      this.selectedSources.add(source);
+    }
+  }
+
+
+  // Prep data for the sources= query param
+  getSelectedSourcesQueryParam() {
+    var result = {};
+    if (this.selectedSources.size == 1 && this.selectedSources.has('All')) {
+      result = {};
+    }
+    else if (this.selectedSources && this.selectedSources.size > 0) {
+      result = { sources: [...this.selectedSources].join(',') };
+    }
+    return result;
   }
 }

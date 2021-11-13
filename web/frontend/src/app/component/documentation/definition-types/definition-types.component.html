@@ -1,11 +1,13 @@
 <div class="container" *ngIf="definitionTypes">
   <div class="page-header">
-    <span>Definition Types</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+    <span class="ui-coloring">Definition Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
-  <p>Here is a listing of NCIt definition types:</p>
+  <p *ngIf="definitionTypes && terminology=='ncit'">Here is a listing of NCIt definition types:</p>
+  <p *ngIf="definitionTypes && terminology=='ncim'">Here is a listing of definition types:</p>
   <div class="table-responsive" style="font-size:14px;">
-    <p-table class="table table-striped table-bordered" [value]="definitionTypes" sortMode="single" (sortFunction)="customSort($event)" [customSort]="true">
+    <p-table class="table table-striped table-bordered" [value]="definitionTypes" sortMode="single"
+      (sortFunction)="customSort($event)" [customSort]="true">
       <ng-template pTemplate="header">
         <tr>
           <th class="w-20" [pSortableColumn]="'code'">Code
@@ -25,4 +27,4 @@
     </p-table>
   </div>
 </div>
-<p>
+<p>&nbsp;</p>

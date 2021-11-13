@@ -2,7 +2,7 @@
 
 // Get base path (used by LoadingInterceptor)
 export function getBasePath() {
-    console.log('location path', location.pathname);
+    console.log('location path = ', location.pathname);
     // for war
     const basePath: string = location.pathname.split('/')[1] || '';
 

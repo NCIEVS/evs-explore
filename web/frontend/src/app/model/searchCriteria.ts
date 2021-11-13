@@ -1,8 +1,10 @@
+import { ConfigurationService } from "../service/configuration.service";
 
 // Search criteria - passed to SearchTermService
 export class SearchCriteria {
+
+  constructor(private configService: ConfigurationService) { }
   // default terminology - for now
-  terminology: string[] = ["ncit"];
   term: string;
   type: string;
   include: string = "summary,highlights,properties";

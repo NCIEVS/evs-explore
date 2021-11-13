@@ -2,7 +2,7 @@
   <as-split [direction]="direction">
     <as-split-area [size]="hierarchyPanelSize">
       <div class="hierarchy-div">
-        <div class="page-header">
+        <div class="page-header ui-coloring">
           Concept Hierarchy
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
@@ -23,13 +23,27 @@
       </div>
     </as-split-area>
     <as-split-area [size]="conceptPanelSize">
+
       <div class="hierarchy-div">
-        <div class="page-header">
+        <div class="page-header ui-coloring">
           {{ title }}
-          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
+          <span style="float:right"><button routerLink="/search" label="Back to Search" pButton class="ui-button-coloring"
               type="button"></button></span>
         </div>
-        <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
+
+        <div class="center">
+          <span *ngIf="sources.length > 1">
+            <span *ngFor="let source of sources; index as i">
+              <span *ngIf="i != 0"> | </span>
+              <a [routerLink]="" *ngIf="!selectedSources.has(source)"
+                (click)="toggleSelectedSource(source)">{{source}}</a>
+              <span class="pointer" *ngIf="selectedSources.has(source)"
+                (click)="toggleSelectedSource(source)"><b>{{source}}</b></span>
+            </span>
+          </span>
+        </div>
+
+        <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)" class="ui-button-coloring">
           <p-tabPanel header="Terms And Properties">
             <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
           </p-tabPanel>

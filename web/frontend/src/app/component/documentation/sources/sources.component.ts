@@ -11,24 +11,28 @@ export class SourcesComponent implements OnInit {
 
   synonymSources: any;
   definitionSources: any;
-
+  terminology: string;
   constructor(
     private configService: ConfigurationService
-  ) { }
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
-    this.configService.getSynonymSources('ncit')
+    this.configService.getSynonymSources(this.terminology)
       .subscribe(response => {
         this.synonymSources = response;
         this.synonymSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
 
-    this.configService.getDefinitionSources('ncit')
+    this.configService.getDefinitionSources(this.terminology)
       .subscribe(response => {
         this.definitionSources = response;
         this.definitionSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+
+    this.terminology = this.configService.getTerminology().terminology;
 
   }
 

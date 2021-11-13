@@ -16,6 +16,12 @@ This is how things run in production.
 
 Run `./gradlew clean build"` from the "web" folder.
 
+### Deploying to AWS servers
+
+The built application has an application.yml file that drives the proxy endpoint for the redirected
+calls to the teh API.  Make sure this environment variable is set correctly for the deployment env.
+
+
 ### Launching EVS-EXPLORE for development
 
 Install npm, ideally the version specified in package.json

@@ -11,15 +11,18 @@ import { ConfigurationService } from '../../../service/configuration.service';
 export class SynonymTypesComponent implements OnInit {
 
   synonymTypes: any;
+  terminology: string;
 
   constructor(
     private configService: ConfigurationService
-  ) { }
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded synonyminology
-    this.configService.getSynonymTypes('ncit')
+    this.configService.getSynonymTypes(this.terminology)
       .subscribe(response => {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
@@ -27,13 +30,12 @@ export class SynonymTypesComponent implements OnInit {
   }
 
   customSort(event: SortEvent) {
-    console.log(event)
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        if(value1 == undefined)
-          return 0;
-        return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 

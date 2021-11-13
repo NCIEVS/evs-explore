@@ -50,3 +50,41 @@ em {
     margin-left: 2px;
     margin-right: 2px;
 }
+
+.link {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.divider{
+  width:5px;
+  height:auto;
+  display:inline-block;
+}
+
+.large-divider{
+  width:25px;
+  height:auto;
+  display:inline-block;
+}
+
+
+.ui-button {
+  border-radius: 0px !important;
+  background-color: #1c5e86;
+  border-color: #1c5e86;
+}
+
+.terminology-button {
+  border-radius: 0px !important;
+  background-color: #706f6f;
+  border-color: #706f6f;
+}
+
+.ml3 {
+    margin-left: 3px;
+}

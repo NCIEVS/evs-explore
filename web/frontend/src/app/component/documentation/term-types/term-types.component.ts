@@ -10,15 +10,18 @@ import { ConfigurationService } from './../../../service/configuration.service';
 export class TermTypesComponent implements OnInit {
 
   termTypes: any;
+  terminology: string;
 
   constructor(
     private configService: ConfigurationService
-  ) { }
+  ) {
+    this.terminology = configService.getTerminologyName();
+  }
 
   // On initialization
   ngOnInit() {
     // NOTE: hardcoded terminology
-    this.configService.getTermTypes('ncit')
+    this.configService.getTermTypes(this.terminology)
       .subscribe(response => {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));

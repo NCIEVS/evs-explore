@@ -1,10 +1,11 @@
 <div class="container" *ngIf="associations">
   <div class="page-header">
-    <span>Associations</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+    <span class="ui-coloring">Associations</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
   <div class="table-responsive" style="font-size:14px;">
-    <p-table [value]="associations" sortMode="single" class="table table-striped table-bordered" (sortFunction)="customSort($event)" [customSort]="true">
+    <p-table [value]="associations" sortMode="single" class="table table-striped table-bordered"
+      (sortFunction)="customSort($event)" [customSort]="true">
       <ng-template pTemplate="header">
         <tr>
           <th class="w-10" [pSortableColumn]="'code'">Code
@@ -13,14 +14,14 @@
           <th class="w-20" [pSortableColumn]="'name'">Name
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th class="w-70">Definition</th>
+          <th *ngIf="terminology != 'ncim'" class="w-70">Definition</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-association>
         <tr>
           <td>{{ association.code }}</td>
           <td>{{ association.name }}</td>
-          <td><span *ngIf="
+          <td *ngIf="terminology != 'ncim'"><span *ngIf="
                 association.definitions &&
                 association.definitions.length > 0
                 ">{{ association.definitions[0].definition }}
@@ -30,4 +31,4 @@
     </p-table>
   </div>
 </div>
-<p>
+<p>&nbsp;</p>

@@ -21,8 +21,13 @@ export class Concept {
   inverseRoles: Relationship[];
   associations: Relationship[];
   inverseAssociations: Relationship[];
+  broader: Relationship[];
+  narrower: Relationship[];
+  other: Relationship[];
   maps: Map[];
   subsetLink: string;
+  synonymUniqueArray: any[];
+  definitionUniqueArray: any[];
 
   constructor(input: any) {
     Object.assign(this, input);
@@ -34,7 +39,7 @@ export class Concept {
         this.synonyms.push(synonym);
         // Add synonyms with "_Name" to properties
         if (synonym.type && synonym.type.endsWith('_Name') &&
-          synonym.type != 'Preferred Name' && synonym.type != 'Display_Name') {
+          synonym.type != 'Preferred Name' && synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
           var prop = new Property({});
           prop.type = synonym.type;
           prop.value = synonym.name;
@@ -98,8 +103,21 @@ export class Concept {
     // associations
     if (input.associations) {
       this.associations = new Array();
+      this.broader = new Array();
+      this.narrower = new Array();
+      this.other = new Array();
+
       for (let i = 0; i < input.associations.length; i++) {
-        this.associations.push(new Relationship(input.associations[i]));
+        // Handle the RB/RN/RO ncim case 
+        if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
+          this.broader.push(new Relationship(input.associations[i]));
+        } else if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
+          this.narrower.push(new Relationship(input.associations[i]));
+        } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
+          this.other.push(new Relationship(input.associations[i]));
+        } else {
+          this.associations.push(new Relationship(input.associations[i]));
+        }
       }
     }
 
@@ -141,14 +159,14 @@ export class Concept {
           '<font color="#428bca">' + this.highlight + '</font><br/>';
       }
     }
-    // synonyms
+    // synonyms - sort unique the display
     let headerFlag = false;
-    this.synonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
+    var uniqSynonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
       .map(name => {
         return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
       });
-    for (let i = 0; i < this.synonyms.length; i++) {
-      if (this.synonyms[i].highlight) {
+    for (let i = 0; i < uniqSynonyms.length; i++) {
+      if (uniqSynonyms[i].highlight) {
         if (!headerFlag) {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;
@@ -158,6 +176,7 @@ export class Concept {
     }
     // properties
     headerFlag = false;
+    this.properties = this.filterSetByUniqueObjects(this.properties);
     for (let i = 0; i < this.properties.length; i++) {
       if (this.properties[i].highlight) {
         if (!headerFlag) {
@@ -168,6 +187,14 @@ export class Concept {
       }
     }
     return text;
+  }
+
+  filterSetByUniqueObjects = function (set) {
+    var seen = {};
+    return set.filter(function (x) {
+      var key = JSON.stringify(x);
+      return !(key in seen) && (seen[key] = x);
+    });
   }
 
   // Return the preferred name
@@ -209,38 +236,83 @@ export class Concept {
   // Assemble text from all of the definitions together.
   getDefinitionsText(): string {
     var text: string = '';
+    var definitionUniqueArray = [];
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br><br>";
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br /><br />";
+        definitionUniqueArray.push((this.definitions[i].source ?
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition);
       }
     }
+    this.definitionUniqueArray = definitionUniqueArray;
     return text;
+  }
+
+  getPartialDefText(): string {
+    let defs = this.definitionUniqueArray;
+    var defsPartial = [];
+    var defsPartialLength = 0;
+    for (let i = 0; i < defs.length; i++) {
+      if (defs[i].length < 100 - defsPartialLength) {
+        defsPartial.push(defs[i]);
+        defsPartialLength += defs[i].length
+        if (i == 2) {
+          break;
+        }
+      }
+      else if (defs[i].length / 2 < 100 - defsPartialLength || i == 0) {
+        let halfString = defs[i].substring(0, defs[i].length / 2);
+        defsPartial.push(halfString);
+        break;
+      }
+    }
+    return defsPartial.join('<br />');
   }
 
   // Assemble text from all Synonyms together
   getFullSynText(): string {
-    let syns = this.getFullSyns();
-    let synonymUniqueArray = [];
+    let syns = this.getAllSynonymNames();
+    let uniqSynonyms = [];
     for (let i = 0; i < syns.length; i++) {
-      if (!synonymUniqueArray.map(function (c) {
+      if (!uniqSynonyms.map(function (c) {
         return c.toLowerCase();
       }).includes(syns[i].toLowerCase())) {
-        synonymUniqueArray.push(syns[i]);
+        uniqSynonyms.push(syns[i]);
       }
     }
-    return synonymUniqueArray.join('<br>');
+    this.synonymUniqueArray = uniqSynonyms;
+    return uniqSynonyms.join('<br />');
 
   }
 
+  getPartialSynText(): string {
+    let syns = this.synonymUniqueArray;
+    var synonymPartial = [];
+    var synonymPartialLength = 0;
+    for (let i = 0; i < syns.length; i++) {
+      if (syns[i].length < 100 - synonymPartialLength) {
+        synonymPartial.push(syns[i]);
+        synonymPartialLength += syns[i].length
+        if (i == 2) {
+          break;
+        }
+      }
+      else if (syns[i].length / 2 < 100 - synonymPartialLength || i == 0) {
+        let halfString = syns[i].substring(0, syns[i].length / 2);
+        synonymPartial.push(halfString + '...');
+        break;
+      }
+    }
+    return synonymPartial.join('<br />');
+  }
+
   // Return Synonyms as an array
-  getFullSyns(): string[] {
+  getAllSynonymNames(): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'FULL_SYN') {
-          syns.push(this.synonyms[i].name);
-        }
+        syns.push(this.synonyms[i].name);
       }
     }
     return syns;
@@ -266,6 +338,17 @@ export class Concept {
     // case-insensitive sort
     syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
+  }
+
+  getSemanticType(): any {
+    let semTypes = [];
+    if (this.properties.length > 0) {
+      for (let i = 0; i < this.properties.length; i++) {
+        if (this.properties[i].type == "Semantic_Type")
+          semTypes.push(this.properties[i].value + "<br />");
+      }
+      return semTypes;
+    }
   }
 
   // Returns SubsetLink if it exists
@@ -373,6 +456,7 @@ export class Concept {
     }
     return mapInfo;
   }
+
 
   // Default string representation is the name
   toString(): string {

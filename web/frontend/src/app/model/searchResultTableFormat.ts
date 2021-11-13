@@ -1,6 +1,8 @@
 import { TableHeader } from './tableHeader';
 import { TableData } from './tableData';
 import { SearchResult } from '../model/searchResult';
+import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../service/configuration.service';
 
 // Search results table definition
 export class SearchResultTableFormat {
@@ -10,7 +12,11 @@ export class SearchResultTableFormat {
   data: TableData[];
 
   // Construct table format from search results
-  constructor(searchResult: SearchResult, returnFields: string[]) {
+  constructor(
+    searchResult: SearchResult,
+    returnFields: string[],
+    cookieService: CookieService,
+    private selectedSources: string[]) {
 
     // Write the search results response and let's see what up
     this.header = [];
@@ -36,13 +42,14 @@ export class SearchResultTableFormat {
 
       let count = 2;
       for (let i = 0; i < returnFields.length; i++) {
-        console.debug('  field - ' + returnFields[i]);
         let tableHeader = null;
         // TODO: this is too specific to NCI and the property values, needs generalization
         if (returnFields[i] === 'Preferred Name' || returnFields[i] === 'Synonyms') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else if (returnFields[i] === 'Definitions') {
           tableHeader = new TableHeader('column' + count, returnFields[i], '300px');
+        } else if (returnFields[i] === 'Semantic Type') {
+          tableHeader = new TableHeader('column' + count, returnFields[i], '150px');
         } else {
           tableHeader = new TableHeader('column' + count, returnFields[i], '250px');
         }
@@ -58,13 +65,39 @@ export class SearchResultTableFormat {
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
+        data.semanticType = searchResult.concepts[i].getSemanticType().join("");
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
-          // console.log('  field = ', '.', field, '.');
-          if (field === 'Definitions' || field === 'ALT_DEFINITION') {
+
+          if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
+            if (searchResult.concepts[i].definitions) {
+              searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
+                .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length == 0);
+            }
+            if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100
+              || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
+              data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
+              data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
+              data["defValue"] = data["collapsedDefinitions"];
+            }
+            else
+              data["defValue"] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
+            if (searchResult.concepts[i].synonyms) {
+              searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
+                .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length == 0);
+            }
+            if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100
+              || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
+              data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
+              data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
+              data["synValue"] = data["collapsedSynonyms"];
+            }
+            else {
+              data["synValue"] = searchResult.concepts[i].getFullSynText();
+            }
             data['column' + count] = searchResult.concepts[i].getFullSynText();
           } else if (field === 'Role') {
             data['column' + count] = searchResult.concepts[i].getRolesText();
@@ -112,11 +145,10 @@ export class SearchResultTableFormat {
           } else if (returnFields[k] === 'Preferred Name') {
             data['column' + count] = searchResult.concepts[i].getPreferredName();
           } else {
-            console.debug('NEED TO SUPPORT THIS', returnFields[k]);
+            console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }
           count++;
         }
-
         this.data.push(data);
       }
 

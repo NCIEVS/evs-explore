@@ -5,17 +5,22 @@ import { catchError } from 'rxjs/operators';
 import { EvsError } from '../model/evsError';
 import { TreeNode } from 'primeng/api';
 import { Concept } from '../model/concept';
+import { ConfigurationService } from './configuration.service';
 
 // Service for loading concept information
 @Injectable()
 export class ConceptDetailService {
 
-  constructor(private http: HttpClient) { }
+  terminology: string = null;
+
+  constructor(
+    private http: HttpClient,
+    private configService: ConfigurationService
+  ) { }
 
   // Get concept with summary includes
   getConceptSummary(conceptCode: string, include: string): Observable<any> {
-    // "ncit" is hardcoded for now, read maps for concept detail
-    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=' + include,
+    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include),
       {
         responseType: 'json',
         params: {
@@ -31,8 +36,7 @@ export class ConceptDetailService {
 
   // Get properties
   getProperties(): Observable<any> {
-    // ncit is hardcoded
-    return this.http.get('/api/v1/metadata/ncit/properties',
+    return this.http.get(encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/properties'),
       {
         responseType: 'json',
       }
@@ -46,8 +50,7 @@ export class ConceptDetailService {
 
   // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
   getRelationships(conceptCode: string) {
-    // "ncit" is hardcoded
-    return this.http.get('/api/v1/concept/ncit/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith',
+    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith'),
       {
         responseType: 'json',
         params: {
@@ -64,49 +67,48 @@ export class ConceptDetailService {
 
   // Get hierarchy data (either paths from root, or children)
   getHierarchyData(code: string) {
-    const url = '/api/v1/concept/ncit/' + code + '/subtree';
-    return this.http.get(url)
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree';
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
   }
 
   // Get hierarchy data for children of specified code.
   getHierarchyChildData(code: string) {
-    const url = '/api/v1/concept/ncit/' + code + '/subtree/children';
-    return this.http.get(url)
+    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children');
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
   }
 
   // Get Value Set Top Level
-  getSubsetTopLevel(){
-    const url = '/api/v1/metadata/ncit/subsets?include=minimal'
-    return this.http.get(url)
+  getSubsetTopLevel() {
+    const url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subsets?include=minimal');
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
   }
 
   // Get Value Set Top Level
-  getSubsetDetails(code: string){
-    const url = '/api/v1/concept/ncit/subsetMembers/' + code;
-    return this.http.get(url)
+  getSubsetDetails(code: string) {
+    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/subsetMembers/' + code);
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
   }
 
-  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""){
-    var url = '/api/v1/concept/ncit/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize;
-    if(searchTerm != "")
-      url += "&term="+searchTerm;
-    console.log(url);
-    return this.http.get(url)
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = "") {
+    var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
+    if (searchTerm != "")
+      url += "&term=" + searchTerm;
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
   }
 
-  getSubsetInfo(code: string, include: string){
-    var url = '/api/v1/metadata/ncit/subset/' + code + '?include=' + include;
-    return this.http.get(url)
+  getSubsetInfo(code: string, include: string) {
+    var url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subset/' + code + '?include=' + include);
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
   }

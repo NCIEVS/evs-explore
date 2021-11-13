@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConceptDetailService } from './../../service/concept-detail.service';
@@ -7,6 +7,7 @@ import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 @Component({
   selector: 'subsets',
@@ -18,7 +19,6 @@ export class SubsetsComponent implements OnInit {
 
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
-  activeIndex = 0
   subsetCode: string;
   subsetDetail: Concept;
   subsetWithRelationships: Concept;
@@ -29,6 +29,7 @@ export class SubsetsComponent implements OnInit {
   selectedNodes: TreeNode[] = [];
   title: string;
   expand = true;
+  terminology: string;
 
   urlBase = "/subsets"
   urlTarget = '_blank'
@@ -42,30 +43,20 @@ export class SubsetsComponent implements OnInit {
     private route: ActivatedRoute,
     private cookieService: CookieService,
     private http: HttpClient,
-    private router: Router
-  ) { }
+    private router: Router,
+    private configService: ConfigurationService
+  ) {
+
+    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.terminology = this.configService.getTerminologyName();
+  }
 
   ngOnInit() {
-    // Set active index based on cookie unless never set
-    // then default to 0
-    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
 
     this.updateDisplaySize();
     this.getPathInHierarchy();
   }
 
-  // Handler for tabs changing in the hierarchy view.
-  handleChange($event) {
-    this.activeIndex = $event.index;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    if (($event.index === 1 || $event.index === 2) &&
-      (this.subsetWithRelationships === undefined || this.subsetWithRelationships == null)) {
-      this.subsetDetailService.getRelationships(this.subsetCode).subscribe(response => {
-        this.subsetWithRelationships = new Concept(response);
-      });
-    }
-  }
 
   updateDisplaySize = () => {
     let bodyHeight = document.documentElement.scrollHeight

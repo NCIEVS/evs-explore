@@ -25,19 +25,26 @@
           <div class="col-sm-6">
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
               <p-multiSelect autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
-                [options]="sourcesAll" [(ngModel)]="selectedSource" name="sourceSearch" defaultLabel="Source"
+                [options]="sourcesAll" [(ngModel)]="selectedSources" name="sourceSearch" defaultLabel="Source"
                 [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false"
                 [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
               </p-multiSelect>
-              <!-- not needed because [showToggleAll]=true above
-              <button type="button" pButton icon="fa fa-undo" (click)="resetSource();" pTooltip="Reset" label="reset"
-                tooltipPosition="bottom"></button> -->
+
               <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
                 (click)="onResetSearch($event)" pTooltip="Click to reset the search" label="Reset Search"
                 tooltipPosition="bottom"></button>
+
+              <div class="large-divider"></div>
+              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncit'"
+                (click)="onChangeTerminology('ncit')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
+                label="NCIt" tooltipPosition="bottom"></button>
+              <div class="divider"></div>
+              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncim'"
+                (click)="onChangeTerminology('ncim')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
+                label="NCIm" tooltipPosition="bottom"></button>
             </div>
 
 
@@ -74,8 +81,8 @@
 
           </div>
           <div class="col-sm-6" style="padding-top:3px;">
-            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSource && selectedSource.length > 0"
-              [(ngModel)]="selectedSource" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
+            <p-chips (keydown)="onChipsKeyEvent($event)" *ngIf="selectedSources && selectedSources.length > 0"
+              [(ngModel)]="selectedSources" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
               addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}
@@ -138,8 +145,9 @@
                 <tr>
                   <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
+                    <span *ngIf='col.header=="Preferred Name" && selectedTerm.terminology == "ncit"'>NCIt </span>
+                    <span *ngIf='col.header=="Synonyms" && selectedSources.length > 0'>Source </span>
                     {{col.header}}
-
                   </th>
                 </tr>
 
@@ -160,14 +168,40 @@
                           pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
-                    <span *ngSwitchCase="'Code'">
-                      <a target="_blank" *ngIf="rowData.retiredConcept === 'no'"
-                        [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
-                        {{rowData[col.field]}}</a>
-                      <a target="_blank" *ngIf="rowData.retiredConcept === 'yes'"
-                        [routerLink]="['/concept/', rowData['column1'] ]"><i class="fa fa-external-link"></i> &nbsp;
-                        {{rowData[col.field]}} (Retired Concept) </a>
+                    <span pTooltip="Open concept details in new tab" *ngSwitchCase="'Code'">
+                      <a target="_blank" [routerLink]="['/concept/', selectedTerm.terminology, rowData['column1'] ]"
+                        [queryParams]="getSelectedSourcesQueryParam()"><i class="fa fa-external-link"></i></a>
+                      <a target="_blank" class="ml3"
+                        [routerLink]="['/concept', selectedTerm.terminology, rowData['column1'] ]"
+                        [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}<span
+                          *ngIf="rowData.retiredConcept === 'yes'">
+                          (Retired Concept)</span></a>
                     </span>
+                    <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
+                      <span *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[ More
+                          ]</button>
+                      </span>
+                      <span *ngIf="rowData['synValue'] == rowData['expandedSynonyms']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[ Less
+                          ]</button>
+                      </span>
+                    </span>
+                    <span *ngSwitchCase="'Definitions'"><span [innerHTML]="rowData['defValue']"></span>
+                      <span *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['defValue'] = rowData['expandedDefinitions']">[ More
+                          ]</button>
+                      </span>
+                      <span *ngIf="rowData['defValue'] == rowData['expandedDefinitions']">
+                        &nbsp;...
+                        <button class="link" (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[ Less
+                          ]</button>
+                      </span>
+                    </span>
+                    <span *ngSwitchCase="'Semantic Type'" [innerHTML]="rowData['semanticType']"></span>
                     <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
                         (click)="onSelectConceptCode(rowData['column1'])">{{rowData[col.field]}}</a></span>-->
                     <!--  <div *ngSwitchCase="'Maps_To'" [innerHTML]="rowData[col.field] | transformDisplay:'Maps_To'"></div>-->

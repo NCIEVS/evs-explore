@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
+import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
+import { ConfigurationService } from '../../service/configuration.service';
 
 // Component for displaying concept details
 @Component({
@@ -22,22 +24,43 @@ export class ConceptDetailComponent implements OnInit {
       ['HGNC_ID', 'https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/'],
       ['miRBase_ID', 'http://www.mirbase.org/cgi-bin/mirna_entry.pl?acc='],
       ['NCI_Drug_Dictionary_ID', 'https://www.cancer.gov/publications/dictionaries/cancer-drug/def/'],
-      ['NCI_META_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&code='],
+      ['NCI_META_CUI', window.location.origin + '/concept/ncim/'],
       ['NSC Number', ' https://dtp.cancer.gov/dtpstandard/servlet/dwindex?searchtype=NSC&outputformat=html&searchlist='],
       ['OMIM_Number', 'https://omim.org/entry/'],
       ['PubMedID_Primary_Reference', 'http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids='],
       ['Swiss_Prot', 'https://www.uniprot.org/uniprot/'],
-      ['UMLS_CUI', 'https://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI%20MetaThesaurus&type=synonym&code=']
+      ['UMLS_CUI', window.location.origin + '/concept/ncim/']
     ]
   )
 
+  terminology: string = null;
+  isMeta: Boolean;
+
   constructor(
-    private sanitizer: DomSanitizer
-  ) { }
+    private sanitizer: DomSanitizer,
+    private conceptDisplay: ConceptDisplayComponent,
+    private configService: ConfigurationService
+  ) {
+
+    this.terminology = configService.getTerminologyName();
+    this.isMeta = this.terminology == 'ncim';
+  }
 
   // On initialization
   ngOnInit() {
     // implements OnInit
+  }
+
+  checkFilter(item: any): Boolean {
+    var flag = (
+      // no source field -> show
+      (this.terminology == 'ncit' && !item.hasOwnProperty('source') &&
+        this.conceptDisplay.selectedSources.has('NCI'))
+      // source is one of the selected ones
+      || this.conceptDisplay.selectedSources.has(item.source)
+      // All is selected
+      || this.conceptDisplay.selectedSources.has('All'));
+    return flag;
   }
 
   // Render links appropriately if they are defined in "external Links"
@@ -53,13 +76,12 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   customSort(event: SortEvent) {
-    console.log(event)
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        if(value1 == undefined)
-          return 0;
-        return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
