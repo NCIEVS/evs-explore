@@ -1,7 +1,7 @@
 <div class="container" *ngIf="synonymTypes">
   <div class="page-header">
-    <span>Synonym Types</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"></button></span>
+    <span class="ui-coloring">Synonym Types</span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
   <p *ngIf="synonymTypes && terminology=='ncit'">Here is a listing of NCIt synonym types:</p>
   <p *ngIf="synonymTypes && terminology=='ncim'">Here is a listing of NCIm synonym types:</p>

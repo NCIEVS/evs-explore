@@ -1,95 +1,50 @@
+<header class="push" role="banner">
+  <div id="nvcgSlSiteBanner" class="row header-row">
+    <div class="slot-item only-SI nci-logo-pages large-12 columns">
+      <a href="/"><img src="assets/images/nci.png" alt="National Cancer Institute" class="header-img"></a>
+    </div>
+  </div>
+</header>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top nciHeader">
-  <a class="navbar-brand active" href="https://www.cancer.gov/" target="_blank">NATIONAL CANCER INSTITUTE - CANCER.GOV
-  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nciCollapse"
     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="nciCollapse">
-    <ul class="navbar-nav ml-auto">
+  <div id="nciCollapse">
+    <ul class="menu nav-menu nav-item-title">
       <li class="nav-item">
-        <a class="nav-link" href="https://www.cancer.gov/about-cancer" target="_blank">About Cancer
-        </a>
+        <a class="nav-link nav-link-list" routerLink="/welcome"><i class="fa fa-home"></i> Home </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://www.cancer.gov/research" target="_blank">Research
-        </a>
+      <li class="nav-item version-info">
+        <span class="nav-link-list">{{versionInfo}}</span>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://www.cancer.gov/grants-training" target="_blank">Grants & Training
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://www.cancer.gov/news-events" target="_blank">News & Events
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://www.cancer.gov/about-nci" target="_blank">About NCI
-        </a>
-      </li>
-    </ul>
-  </div>
-</nav>
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark sharedDataApplicationHeader">
-  <a class="navbar-brand active" routerLink="/welcome"><i class="fa fa-home"></i> </a>
 
-  <a class="navbar-brand active" routerLink="/welcome">
-    <img class="main-site-logo" src="assets/images/EVSTile.png" />
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <span>EVS Explore
-    </span>
-    <span>&emsp;{{versionInfo}}
-    </span>
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav ml-auto">
       <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
-        <a class="nav-link" [routerLink]="['subsets', terminology.terminology]" title="Display Subsets">Subsets</a>
+        <a class="nav-link nav-link-list" [routerLink]="['subsets', terminology.terminology]" title="Display Subsets">Subsets</a>
       </li>
-      <!--
-      <li class="nav-item">
-        <a class="nav-link" routerLink="mappings" title="Display Mappings">Mappings</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="conceptlist">Concept List</a>
-      </li>
-      -->
       <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
-        <a class="nav-link" routerLink="hierarchy/C12913" title="Display Concept Hierarchy">Hierarchy</a>
+        <a class="nav-link nav-link-list" routerLink="hierarchy/C12913" title="Display Concept Hierarchy">Hierarchy</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown" aria-haspopup="true"
+        <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false" title="Display Documentation">Documentation</a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpMenu">
-          <a class="dropdown-item" routerLink="associations" title="List of NCIt Associations">Associations</a>
-          <a class="dropdown-item" routerLink="properties" title="List of NCIt Properties">Properties</a>
-          <a class="dropdown-item" routerLink="qualifiers" title="List of NCIt Qualifiers">Qualifiers</a>
-          <a class="dropdown-item" routerLink="roles" title="List of NCIt Roles">Roles</a>
-          <a class="dropdown-item" routerLink="termtypes" title="List of NCIt Term Types">Term Types</a>
-          <a class="dropdown-item" routerLink="sources" title="List of NCIt Sources">Sources</a>
-          <a class="dropdown-item" routerLink="definitiontypes" title="List of NCIt Definition Types">Definition
+        <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">
+          <a class="dropdown-item dropdown-links" routerLink="associations" title="List of NCIt Associations">Associations</a>
+          <a class="dropdown-item dropdown-links" routerLink="properties" title="List of NCIt Properties">Properties</a>
+          <a class="dropdown-item dropdown-links" routerLink="qualifiers" title="List of NCIt Qualifiers">Qualifiers</a>
+          <a class="dropdown-item dropdown-links" routerLink="roles" title="List of NCIt Roles">Roles</a>
+          <a class="dropdown-item dropdown-links" routerLink="termtypes" title="List of NCIt Term Types">Term Types</a>
+          <a class="dropdown-item dropdown-links" routerLink="sources" title="List of NCIt Sources">Sources</a>
+          <a class="dropdown-item dropdown-links" routerLink="definitiontypes" title="List of NCIt Definition Types">Definition
             Types</a>
-          <a class="dropdown-item" routerLink="synonymtypes" title="List of NCIt Synonym Types">Synonym Types</a>
+          <a class="dropdown-item dropdown-links" routerLink="synonymtypes" title="List of NCIt Synonym Types">Synonym Types</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" routerLink="alldocs" title="List of All NCIt Metadata Tables">All Metadata</a>
+          <a class="dropdown-item dropdown-links" routerLink="alldocs" title="List of All NCIt Metadata Tables">All Metadata</a>
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="overview" title="Help">Help</a>
+        <a class="nav-link nav-link-list" routerLink="overview" title="Help">Help</a>
       </li>
-      <!--
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="helpMenu" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false" title="Display Help Menu">Help</a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpMenu">
-          <a class="dropdown-item" routerLink="overview" title="Overview of EVS Explore">Overview</a>
-        </div>
-      </li>-->
-
     </ul>
   </div>
 </nav>

@@ -5,9 +5,9 @@
         <div class="page-header">
           Subsets
           <button label="Expand All" (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton
-            type="button"></button>
+            type="button" class="ui-button-coloring"></button>
           <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
-              type="button"></button></span>
+              type="button" class="ui-button-coloring"></button></span>
         </div>
         <p>View subsets organized by standards category or source terminology. Standards categories group the subsets
           supporting them; all other labels lead to the home pages of actual subsets or source terminologies. Search or
@@ -15,7 +15,7 @@
           are subsets of NCI Thesaurus that are developed jointly with EVS partners as federal and international coding
           standards.</p>
         <p>See the
-          <a routerLink="/subsetncit" target="_blank">
+          <a routerLink="/subsetncit" target="_blank" class="regular-link">
             NCI Thesaurus Subsets Page
           </a>
         </p>
@@ -27,7 +27,7 @@
               <td>
                 <div style="cursor: pointer; display:flex;">
                   <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                  <a [routerLink]="['/subset/', terminology, rowData.code]" target="_blank">
+                  <a [routerLink]="['/subset/', terminology, rowData.code]" target="_blank" class="regular-link">
                     <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-fw pi-blank"></i>
                     <i class="fa fa-external-link" style="margin-left:0.2em;"></i> {{rowData.label}}
                   </a>
