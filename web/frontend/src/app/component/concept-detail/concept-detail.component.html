@@ -97,7 +97,11 @@
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
-              <td>{{ synonym.code }}</td>
+              <td><a *ngIf="terminology == 'ncim' && synonym.source == 'NCI' && synonym.code"
+                  [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code }}</a>
+                <span *ngIf="terminology != 'ncim' || synonym.source != 'NCI' || !synonym.code">{{ synonym.code }}
+                </span>
+              </td>
               <td *ngIf="!isMeta">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
