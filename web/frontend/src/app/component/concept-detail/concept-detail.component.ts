@@ -70,7 +70,7 @@ export class ConceptDetailComponent implements OnInit {
       let link = this.externalLinks.get(property.type);
       let value = '';
       if (property.type in ["NCI_META_CUI", "UMLS_CUI"]) {
-        value = '<a [routerLink]="concept/ncim/' + property.value + '" target="_blank">' + property.value + '</a>';
+        value = '<a [routerLink]="/concept/ncim/' + property.value + '" target="_blank">' + property.value + '</a>';
       }
       else {
         value = '<a href="' + link + property.value + '" target="_blank">' + property.value + '</a>';
