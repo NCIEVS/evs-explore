@@ -135,7 +135,10 @@
           <ng-container>
             <tr *ngIf="checkFilter(property)">
               <td>{{property.type}}</td>
-              <td><span [innerHTML]="checkExternalLink(property)"></span>
+              <td>
+              <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
+                  <a [routerLink]="['/concept/ncim/' + property.value]" target=_blank>{{property.value}}</a></span>
+              <span *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'" [innerHTML]="checkExternalLink(property)"></span>
                 <span *ngIf="property.qualifiers && property.qualifiers.length > 0">
                   <span *ngFor="let qual of property.qualifiers">
                     <br />&nbsp;&nbsp;{{ qual.type }} = {{ qual.value }}
