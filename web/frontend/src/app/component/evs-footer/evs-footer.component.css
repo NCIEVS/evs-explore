@@ -41,6 +41,7 @@ body {
 }
 
 .site-footer * {
+  background: #123e57;
   color: #fff;
   font-family: Noto Sans,Century Gothic,Arial,sans-serif;
   text-align: center;
