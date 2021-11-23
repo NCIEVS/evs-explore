@@ -478,12 +478,10 @@ img {
   display: inline-block;
   vertical-align: middle;
   width: 60%;
-  height: 58px;
+  height: 100px;
 }
 
 .columns {
-  padding-top: 1.3125em;
-  padding-bottom: 1.3125em;
   width: 100%;
   float: left
 }
