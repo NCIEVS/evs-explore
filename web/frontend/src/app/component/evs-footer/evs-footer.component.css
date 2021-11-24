@@ -57,7 +57,7 @@ body {
   justify-content: center;
 }
 
-.site-footer__agencies li:nth-child(2n):after {
+.site-footer__agencies li:nth-child(4n):after {
   display: none;
 }
 

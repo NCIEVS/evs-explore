@@ -1,3 +1,7 @@
+.container {
+    min-height: 400px;
+}
+
 em {
     background-color: lightyellow;
 }
@@ -27,10 +31,10 @@ em {
 }
 
 .announcements-header {
-    color: #337ab7!important;
-    font-size: 14px!important;
+    color: #337ab7 !important;
+    font-size: 14px !important;
     padding-bottom: 0px;
-    border-bottom: 1px solid #ccc!important;
+    border-bottom: 1px solid #ccc !important;
     margin-bottom: 5px;
     cursor: pointer;
 }
@@ -52,37 +56,37 @@ em {
 }
 
 .link {
-    background: none!important;
+    background: none !important;
     border: none;
-    padding: 0!important;
+    padding: 0 !important;
     color: #069;
     text-decoration: underline;
     cursor: pointer;
 }
 
-.divider{
-  width:5px;
-  height:auto;
-  display:inline-block;
+.divider {
+    width: 5px;
+    height: auto;
+    display: inline-block;
 }
 
-.large-divider{
-  width:25px;
-  height:auto;
-  display:inline-block;
+.large-divider {
+    width: 25px;
+    height: auto;
+    display: inline-block;
 }
 
 
 .ui-button {
-  border-radius: 0px !important;
-  background-color: #1c5e86;
-  border-color: #1c5e86;
+    border-radius: 0px !important;
+    background-color: #1c5e86;
+    border-color: #1c5e86;
 }
 
 .terminology-button {
-  border-radius: 0px !important;
-  background-color: #706f6f;
-  border-color: #706f6f;
+    border-radius: 0px !important;
+    background-color: #706f6f;
+    border-color: #706f6f;
 }
 
 .ml3 {

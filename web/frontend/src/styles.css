@@ -86,6 +86,7 @@ body .alert-info {
   margin-bottom: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  min-height: 400px;
 }
 
 .prime-dropdown-override {
@@ -100,7 +101,7 @@ body .alert-info {
   box-shadow: 0 1px 12px 0 #ecf2f8;
   border-radius: 3px;
   border: 1px solid #ecf2f8;
-  padding: 1em!important;
+  padding: 1em !important;
 }
 
 .ui-tabview .ui-tabview-panel {
@@ -168,7 +169,7 @@ body .alert-info {
 }
 
 .ui-treetable .ui-treetable-toggler {
-  top: 7%!important;
+  top: 7% !important;
 }
 
 .ui-button-coloring {
