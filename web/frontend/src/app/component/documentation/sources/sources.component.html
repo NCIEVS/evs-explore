@@ -1,10 +1,11 @@
 <div class="container">
   <div class="page-header">
     <span class="ui-coloring">Sources</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"
+        class="ui-button-coloring"></button></span>
   </div>
 
-  <p>Synonym Sources</p>
+  <p>Information about synonym sources</p>
   <div class="table-responsive" style="font-size:14px;">
     <p-table class="table table-striped table-bordered" [value]="synonymSources" sortMode="single">
       <ng-template pTemplate="header">
@@ -27,7 +28,7 @@
   </div>
   <p>&nbsp;</p>
 
-  <p>Definition Sources</p>
+  <p>Information about definition sources</p>
   <div class="table-responsive" style="font-size:14px;">
     <p-table class="table table-striped table-bordered" [value]="definitionSources" sortMode="single">
       <ng-template pTemplate="header">

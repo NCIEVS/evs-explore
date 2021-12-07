@@ -1,8 +1,10 @@
 <div class="container" *ngIf="roles">
   <div class="page-header">
     <span class="ui-coloring">Roles</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"
+        class="ui-button-coloring"></button></span>
   </div>
+  <p>Information about role types</p>
   <div class="table-responsive" style="font-size:14px;">
     <p-table [value]="roles" sortMode="single" class="table table-striped table-bordered"
       *ngIf="roles && roles.length > 0;else elseBlockDefinitions" (sortFunction)="customSort($event)"
@@ -15,14 +17,14 @@
           <th class="w-20" [pSortableColumn]="'name'">Name
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th *ngIf="terminology != 'ncim'" class="w-70">Description</th>
+          <th class="w-70">Description</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-role>
         <tr>
           <td>{{ role.code }}</td>
           <td>{{ role.name }}</td>
-          <td *ngIf="terminology != 'ncim'"> <span *ngIf="
+          <td> <span *ngIf="
                 role.definitions &&
                 role.definitions.length > 0
                 ">{{ role.definitions[0].definition }}

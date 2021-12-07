@@ -27,6 +27,7 @@ table a:hover {
   border-bottom: 1px solid #ccc !important;
 }
 
+
 p-dialog .ui-dialog {
   overflow: scroll;
   max-height: 70%;
