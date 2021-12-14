@@ -16,6 +16,10 @@ buildscript {
     }
 }
 
+// Fix for log4j vulnerability, remove when updating spring boot version
+ext['log4j2.version'] = '2.15.0'
+
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'war'
