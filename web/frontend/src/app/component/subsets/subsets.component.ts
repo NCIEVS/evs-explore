@@ -195,9 +195,11 @@ export class SubsetsComponent implements OnInit {
   }
 
   performSubsetSearch(string = "") {
+    document.getElementById("expandOrCollapseButton").setAttribute("disabled", "disabled");
     if (string == "") { // reset search
       this.subsetautosearch = '';
       sessionStorage.setItem("subsetSearch", this.subsetautosearch);
+      document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
       this.ngOnInit();
       return;
     }
