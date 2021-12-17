@@ -8,6 +8,7 @@ import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'subsets',
@@ -23,10 +24,13 @@ export class SubsetsComponent implements OnInit {
   subsetDetail: Concept;
   subsetWithRelationships: Concept;
   direction = 'horizontal';
+  filteredHierarchy: TreeNode[]
   hierarchyDisplay = "";
-  hierarchyData: TreeNode[]
+  hierarchyData: TreeNode[];
+  origHierarchyData: TreeNode[];
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
+  subsetSuggestions: string[] = [];
   title: string;
   expand = true;
   terminology: string;
@@ -74,6 +78,7 @@ export class SubsetsComponent implements OnInit {
       .then(nodes => {
 
         this.hierarchyData = <TreeNode[]>nodes;
+        this.origHierarchyData = Object.create(this.hierarchyData);
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, false);
         }
@@ -83,7 +88,6 @@ export class SubsetsComponent implements OnInit {
             this.scrollToSelectionTableTree(this.selectedNodes[0]);
           }, 100);
         }
-
       });
   }
 
@@ -169,27 +173,63 @@ export class SubsetsComponent implements OnInit {
   }
 
 
-  expandOrCollapseAllNodes(hierarchyData, element, level = 0) {
+  expandOrCollapseAllNodes(hierarchyData, level = 0) {
     if (this.expand) {
       for (let i = 0; i < hierarchyData.length; i++) {
         if (hierarchyData[i].children.length > 0) {
           this.getTreeTableChildrenNodes(hierarchyData[i].children);
-          this.expandOrCollapseAllNodes(hierarchyData[i].children, undefined, level + 1);
+          this.expandOrCollapseAllNodes(hierarchyData[i].children, level + 1);
           hierarchyData[i].expanded = true;
         }
       }
       if (level == 0) { // make sure everything is finished
         this.expand = false;
-        element.textContent = "Collapse All"
+        document.getElementById("expandOrCollapseButton").textContent = "Collapse All";
       }
     }
     else {
       // TODO: figure out how collapsing works
       this.ngOnInit()
       this.expand = true;
-      element.textContent = "Expand All"
+      document.getElementById("expandOrCollapseButton").textContent = "Expand All";
     }
   }
-}
 
+  performSubsetSearch(string = "") {
+    this.filteredHierarchy = [];
+    this.hierarchyData = this.origHierarchyData;
+    this.hierarchyData.forEach(element => {
+      var newTn = this.performSubsetSearchHelper(element, string);
+      if (newTn) {
+        this.filteredHierarchy.push(element);
+      }
+    });
+    this.subsetSuggestions = []; // deal with the spinner
+    if (string == "") { // reset search
+      this.subsetautosearch = '';
+      sessionStorage.setItem("subsetSearch", this.subsetautosearch);
+      this.ngOnInit();
+      return;
+    }
+    this.hierarchyData = this.filteredHierarchy;
+  }
+
+  performSubsetSearchHelper(tn, string) {
+    var newChildren = new Array();
+    if (tn.children) {
+      tn.children.forEach(element => {
+        var newChild = this.performSubsetSearchHelper(element, string);
+        if (newChild) {
+          newChildren.push(newChild);
+        }
+      });
+    }
+    if (newChildren.length != 0 || !tn.name.toLowerCase().includes(string.toLowerCase())) {
+      tn.children = newChildren;
+      tn.expanded = true;
+    }
+    return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
+  }
+
+}
 
