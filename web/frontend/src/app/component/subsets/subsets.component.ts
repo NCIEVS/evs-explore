@@ -76,9 +76,8 @@ export class SubsetsComponent implements OnInit {
   getPathInHierarchy() {
     this.subsetDetailService.getSubsetTopLevel()
       .then(nodes => {
-
         this.hierarchyData = <TreeNode[]>nodes;
-        this.origHierarchyData = Object.create(this.hierarchyData);
+        this.origHierarchyData = this.hierarchyData;
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, false);
         }
@@ -196,8 +195,14 @@ export class SubsetsComponent implements OnInit {
   }
 
   performSubsetSearch(string = "") {
+    if (string == "") { // reset search
+      this.subsetautosearch = '';
+      sessionStorage.setItem("subsetSearch", this.subsetautosearch);
+      this.ngOnInit();
+      return;
+    }
     this.filteredHierarchy = [];
-    this.hierarchyData = this.origHierarchyData;
+    this.hierarchyData = JSON.parse(JSON.stringify(this.origHierarchyData));
     this.hierarchyData.forEach(element => {
       var newTn = this.performSubsetSearchHelper(element, string);
       if (newTn) {
@@ -205,12 +210,6 @@ export class SubsetsComponent implements OnInit {
       }
     });
     this.subsetSuggestions = []; // deal with the spinner
-    if (string == "") { // reset search
-      this.subsetautosearch = '';
-      sessionStorage.setItem("subsetSearch", this.subsetautosearch);
-      this.ngOnInit();
-      return;
-    }
     this.hierarchyData = this.filteredHierarchy;
   }
 
