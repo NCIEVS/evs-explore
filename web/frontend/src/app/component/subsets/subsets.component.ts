@@ -172,27 +172,28 @@ export class SubsetsComponent implements OnInit {
   }
 
 
-  expandOrCollapseAllNodes(hierarchyData, level = 0) {
+  expandOrCollapseAllNodes(hierarchyData, element, level = 0) {
     if (this.expand) {
       for (let i = 0; i < hierarchyData.length; i++) {
         if (hierarchyData[i].children.length > 0) {
           this.getTreeTableChildrenNodes(hierarchyData[i].children);
-          this.expandOrCollapseAllNodes(hierarchyData[i].children, level + 1);
+          this.expandOrCollapseAllNodes(hierarchyData[i].children, undefined, level + 1);
           hierarchyData[i].expanded = true;
         }
       }
       if (level == 0) { // make sure everything is finished
         this.expand = false;
-        document.getElementById("expandOrCollapseButton").textContent = "Collapse All";
+        element.textContent = "Collapse All"
       }
     }
     else {
       // TODO: figure out how collapsing works
       this.ngOnInit()
       this.expand = true;
-      document.getElementById("expandOrCollapseButton").textContent = "Expand All";
+      element.textContent = "Expand All"
     }
   }
+
 
   performSubsetSearch(string = "") {
     document.getElementById("expandOrCollapseButton").setAttribute("disabled", "disabled");
