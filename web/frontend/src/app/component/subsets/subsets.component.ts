@@ -198,15 +198,8 @@ export class SubsetsComponent implements OnInit {
   }
 
 
-  performSubsetSearch(string = "") {
+  performSubsetSearch(string) {
     document.getElementById("expandOrCollapseButton").setAttribute("disabled", "disabled");
-    if (string == "") { // reset search
-      this.subsetautosearch = '';
-      sessionStorage.setItem("subsetSearch", this.subsetautosearch);
-      document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
-      this.ngOnInit();
-      return;
-    }
     this.filteredHierarchy = [];
     this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
     this.hierarchyData.forEach(element => {
@@ -235,6 +228,13 @@ export class SubsetsComponent implements OnInit {
       tn.expanded = true;
     }
     return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
+  }
+
+  resetSearch() {
+    this.subsetautosearch = '';
+    sessionStorage.setItem("subsetSearch", this.subsetautosearch);
+    document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
+    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
   }
 
 }

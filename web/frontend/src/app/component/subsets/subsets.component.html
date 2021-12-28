@@ -25,7 +25,7 @@
             placeholder="Enter at least 3 letters of a subset." [minLength]="3">
           </p-autoComplete>
           <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton icon="fa fa-undo"
-                (click)="performSubsetSearch()" pTooltip="Click to reset the search" label="Reset Search"
+                (click)="resetSearch()" pTooltip="Click to reset the search" label="Reset Search"
                 tooltipPosition="bottom"></button>
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
