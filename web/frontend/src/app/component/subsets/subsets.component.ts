@@ -27,7 +27,6 @@ export class SubsetsComponent implements OnInit {
   filteredHierarchy: TreeNode[]
   hierarchyDisplay = "";
   hierarchyData: TreeNode[];
-  origHierarchyData: TreeNode[];
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
   subsetSuggestions: string[] = [];
@@ -35,6 +34,8 @@ export class SubsetsComponent implements OnInit {
   expand = true;
   terminology: string;
   subsetsFound = true;
+
+  static origHierarchyData: TreeNode[];
 
   urlBase = "/subsets"
   urlTarget = '_blank'
@@ -79,10 +80,10 @@ export class SubsetsComponent implements OnInit {
     this.subsetDetailService.getSubsetTopLevel()
       .then(nodes => {
         this.hierarchyData = <TreeNode[]>nodes;
-        this.origHierarchyData = this.hierarchyData;
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, false);
         }
+        SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
         this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
           setTimeout(() => {
@@ -207,7 +208,7 @@ export class SubsetsComponent implements OnInit {
       return;
     }
     this.filteredHierarchy = [];
-    this.hierarchyData = JSON.parse(JSON.stringify(this.origHierarchyData));
+    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
     this.hierarchyData.forEach(element => {
       var newTn = this.performSubsetSearchHelper(element, string);
       if (newTn) {
