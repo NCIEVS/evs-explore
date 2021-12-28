@@ -34,6 +34,7 @@ export class SubsetsComponent implements OnInit {
   title: string;
   expand = true;
   terminology: string;
+  subsetsFound = true;
 
   urlBase = "/subsets"
   urlTarget = '_blank'
@@ -59,6 +60,7 @@ export class SubsetsComponent implements OnInit {
 
     this.updateDisplaySize();
     this.getPathInHierarchy();
+    this.subsetsFound = true;
   }
 
 
@@ -213,6 +215,7 @@ export class SubsetsComponent implements OnInit {
       }
     });
     this.subsetSuggestions = []; // deal with the spinner
+    this.subsetsFound = (this.filteredHierarchy.length > 0);
     this.hierarchyData = this.filteredHierarchy;
   }
 
