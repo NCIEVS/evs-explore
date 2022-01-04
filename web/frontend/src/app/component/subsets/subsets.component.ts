@@ -8,6 +8,7 @@ import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'subsets',
@@ -23,13 +24,18 @@ export class SubsetsComponent implements OnInit {
   subsetDetail: Concept;
   subsetWithRelationships: Concept;
   direction = 'horizontal';
+  filteredHierarchy: TreeNode[]
   hierarchyDisplay = "";
-  hierarchyData: TreeNode[]
+  hierarchyData: TreeNode[];
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
+  subsetSuggestions: string[] = [];
   title: string;
   expand = true;
   terminology: string;
+  subsetsFound = true;
+
+  static origHierarchyData: TreeNode[];
 
   urlBase = "/subsets"
   urlTarget = '_blank'
@@ -55,6 +61,7 @@ export class SubsetsComponent implements OnInit {
 
     this.updateDisplaySize();
     this.getPathInHierarchy();
+    this.subsetsFound = true;
   }
 
 
@@ -72,18 +79,17 @@ export class SubsetsComponent implements OnInit {
   getPathInHierarchy() {
     this.subsetDetailService.getSubsetTopLevel()
       .then(nodes => {
-
         this.hierarchyData = <TreeNode[]>nodes;
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, false);
         }
+        SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
         this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
           setTimeout(() => {
             this.scrollToSelectionTableTree(this.selectedNodes[0]);
           }, 100);
         }
-
       });
   }
 
@@ -190,6 +196,48 @@ export class SubsetsComponent implements OnInit {
       element.textContent = "Expand All"
     }
   }
-}
 
+
+  performSubsetSearch(string) {
+    document.getElementById("expandOrCollapseButton").setAttribute("disabled", "disabled");
+    this.filteredHierarchy = [];
+    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
+    this.hierarchyData.forEach(element => {
+      var newTn = this.performSubsetSearchHelper(element, string);
+      if (newTn) {
+        this.filteredHierarchy.push(element);
+      }
+    });
+    this.subsetSuggestions = []; // deal with the spinner
+    this.subsetsFound = (this.filteredHierarchy.length > 0);
+    this.hierarchyData = this.filteredHierarchy;
+  }
+
+  performSubsetSearchHelper(tn, string) {
+    var newChildren = new Array();
+    if (tn.children) {
+      tn.children.forEach(element => {
+        var newChild = this.performSubsetSearchHelper(element, string);
+        if (newChild) {
+          newChildren.push(newChild);
+        }
+      });
+    }
+    if (newChildren.length != 0 || !tn.name.toLowerCase().includes(string.toLowerCase())) {
+      tn.children = newChildren;
+      tn.expanded = true;
+    }
+    return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
+  }
+
+  resetSearch() {
+    this.subsetautosearch = '';
+    sessionStorage.setItem("subsetSearch", this.subsetautosearch);
+    document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
+    document.getElementById("expandOrCollapseButton").innerHTML = "Expand All";
+    this.expand = true;
+    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
+  }
+
+}
 
