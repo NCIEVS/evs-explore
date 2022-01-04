@@ -234,6 +234,8 @@ export class SubsetsComponent implements OnInit {
     this.subsetautosearch = '';
     sessionStorage.setItem("subsetSearch", this.subsetautosearch);
     document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
+    document.getElementById("expandOrCollapseButton").innerHTML = "Expand All";
+    this.expand = true;
     this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
   }
 
