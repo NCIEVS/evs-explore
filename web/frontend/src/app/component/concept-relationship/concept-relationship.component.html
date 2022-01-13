@@ -188,7 +188,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RB' && checkFilter(association)">
+          <tr *ngIf="association.type == 'RN' && checkFilter(association)">
             <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -271,7 +271,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type == 'RN' && checkFilter(association)">
+          <tr *ngIf="association.type == 'RB' && checkFilter(association)">
             <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
@@ -356,7 +356,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="association.type != 'RB' && association.type != 'RN' && checkFilter(association)">
+          <tr *ngIf=" association.type != 'RN' && checkFilter(association)">
             <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
