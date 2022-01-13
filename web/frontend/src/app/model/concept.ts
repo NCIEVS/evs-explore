@@ -108,13 +108,16 @@ export class Concept {
       this.other = new Array();
 
       for (let i = 0; i < input.associations.length; i++) {
+        console.log('xxx', this.terminology, input.associations[i]);
         // Handle the RB/RN/RO ncim case 
         // This seems backwards but an RB means "broader than" so the
         // related concept is actually narrower than the current one
         if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
           this.broader.push(new Relationship(input.associations[i]));
+          console.log('yyy');
         } else if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
           this.narrower.push(new Relationship(input.associations[i]));
+          console.log('zzz');
         } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
           this.other.push(new Relationship(input.associations[i]));
         } else {
