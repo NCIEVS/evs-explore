@@ -19,6 +19,7 @@ export class ConceptDetailComponent implements OnInit {
     [
       ['CAS_Registry', 'https://chem.nlm.nih.gov/chemidplus/rn/'],
       ['CHEBI_ID', 'http://www.ebi.ac.uk/chebi/advancedSearchFT.do?searchString='],
+      ['ClinVar_Variation_ID', 'https://www.ncbi.nlm.nih.gov/clinvar/variation/'],
       ['EntrezGene_ID', 'http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&amp;cmd=ShowDetailView&amp;TermToSearch='],
       ['GenBank_Accession_Number', 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=search&amp;term=+'],
       ['HGNC_ID', 'https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/'],
