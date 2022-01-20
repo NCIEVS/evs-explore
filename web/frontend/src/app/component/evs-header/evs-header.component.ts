@@ -38,6 +38,9 @@ export class EvsHeaderComponent implements OnInit {
     else if (this.terminology.terminology == 'ncim') {
       return 'NCI Metathesaurus';
     }
+    else if (this.terminology.terminology == 'mdr') {
+      return 'MedDRA';
+    }
     else return null;
   }
 

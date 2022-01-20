@@ -118,7 +118,7 @@ export class GeneralSearchComponent implements OnInit,
     // Populate terms list from application metadata
     this.termsAll = configService.getTerminologies().map(element => {
       return {
-        label: element.terminology,
+        label: element.metadata.uiLabel,
         value: element
       };
     });
@@ -361,11 +361,43 @@ export class GeneralSearchComponent implements OnInit,
 
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
-    console.log('onChangeTerminology', terminology);
-    this.selectedTerm = this.termsAll.filter(term => term.label === terminology)[0].value;
+    if (terminology.value.metadata.licenseText) {
+      if (this.checkLicenseText(terminology.value.metadata.licenseText, terminology.value.terminology) == false) {
+        return;
+      }
+    }
+    console.log(terminology.value.metadata.uiLabel)
+    console.log('onChangeTerminology', terminology.value.terminology);
+    this.selectedTerm = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerm);
     this.loadAllSources();
     this.router.navigate(['/welcome']); // reset to the welcome page
+  }
+
+  checkLicenseText(licenseText, terminology) {
+    if ((this.cookieService.check('mdrLicense') && terminology == "mdr") ||
+      (this.cookieService.check('ncitLicense') && terminology == "ncit") ||
+      (this.cookieService.check('ncimLicense') && terminology == "ncim")) {
+      return true;
+    }
+    if (confirm(licenseText)) {
+      if (terminology == "mdr") {
+        this.cookieService.set('mdrLicense', 'accepted', 365);
+        return true;
+      }
+      else if (terminology == "ncim") {
+        this.cookieService.set('ncimLicense', 'accepted', 365);
+        return true;
+      }
+      else if (terminology == "ncit") {
+        this.cookieService.set('ncitLicense', 'accepted', 365);
+        return true;
+      }
+      else {
+        return false;
+      }
+
+    }
   }
 
   loadAllSources() {
