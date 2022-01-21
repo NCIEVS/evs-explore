@@ -99,7 +99,7 @@
               <td>{{ synonym.termGroup }}</td>
               <td><a *ngIf="terminology != 'ncit' && synonym.source == 'NCI' && synonym.code"
                   [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code }}</a>
-                  <a *ngIf="terminology == 'mdr' && synonym.source == 'MDR' && synonym.code"
+                  <a *ngIf="terminology != 'mdr' && synonym.source == 'MDR' && synonym.code"
                   [routerLink]="['/concept/mdr/', synonym.code]" target="_blank">{{ synonym.code }}</a>
                 <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{ synonym.code }}
                 </span>
