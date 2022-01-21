@@ -366,7 +366,6 @@ export class GeneralSearchComponent implements OnInit,
         return;
       }
     }
-    console.log(terminology.value.metadata.uiLabel)
     console.log('onChangeTerminology', terminology.value.terminology);
     this.selectedTerm = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerm);
@@ -396,7 +395,6 @@ export class GeneralSearchComponent implements OnInit,
       else {
         return false;
       }
-
     }
   }
 
