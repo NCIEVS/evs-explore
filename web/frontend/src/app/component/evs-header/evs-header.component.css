@@ -846,3 +846,7 @@ html.nav-moving #mega-nav {
 #mega-nav .nav-item-title {
   position: relative
 }
+
+.hierarchyButton {
+  cursor: pointer
+}
