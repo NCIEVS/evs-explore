@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: 'concept/:terminology/:code', component: ConceptDisplayComponent },
   { path: 'concept/:code', redirectTo: 'concept/ncit/:code' },
   { path: 'hierarchy/:terminology/:code', component: HierarchyDisplayComponent },
-  { path: 'hierarchy/:code', redirectTo: 'hierarchy/ncit/:code' },
+  { path: 'hierarchy/:code', redirectTo: 'hierarchy/:terminology/:code' },
   { path: 'subset/:terminology/:code', component: SubsetDetailsComponent },
   { path: 'subset/:code', redirectTo: 'subset/ncit/:code' },
   { path: 'mappings', component: MappingsComponent },
