@@ -24,7 +24,7 @@
 
           <div class="col-sm-6">
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
-              <p-multiSelect autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
+              <p-multiSelect *ngIf="selectedTerm.terminology == 'ncit' || selectedTerm.terminology == 'ncim'" autoWidth="false" [showToggleAll]="true" dropdownIcon="pi pi-caret-down"
                 [options]="sourcesAll" [(ngModel)]="selectedSources" name="sourceSearch" defaultLabel="Source"
                 [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false"
                 [resetFilterOnHide]="true">
@@ -38,8 +38,13 @@
                 tooltipPosition="bottom"></button>
 
               <div class="large-divider"></div>
-
-              <p-dropdown [style]="{'padding-top':'1px','padding-bottom':'1px'}" styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerm" (onChange)="onChangeTerminology($event)"></p-dropdown>
+              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncit'"
+                (click)="onChangeTerminology('ncit')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
+                label="NCIt" tooltipPosition="bottom"></button>
+              <div class="divider"></div>
+              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncim'"
+                (click)="onChangeTerminology('ncim')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
+                label="NCIm" tooltipPosition="bottom"></button>
             </div>
 
 
