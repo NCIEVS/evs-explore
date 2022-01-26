@@ -29,7 +29,7 @@
     </p-table>
   </div>
 
-  <p *ngIf="terminology != 'ncim'">*Note on special rules governing NCI PT, HD, and AQ term types: Each concept should
+  <p *ngIf="terminology == 'ncit'">*Note on special rules governing NCI PT, HD, and AQ term types: Each concept should
     have one, and only one, term
     coded with one of these three values. The NCI Preferred Term is always taken from one of the NCI terms, normally
     that with a type of PT (Preferred Term). However, in special cases, a concept will not have a PT term, but instead,

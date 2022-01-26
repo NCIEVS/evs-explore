@@ -6,7 +6,7 @@
     </span>
     <span style="float:right" class="ui-button-back-to-search"><button routerLink="/search" label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
-  <div class="center">
+  <div *ngIf="terminology == 'ncit' || terminology == 'ncim'" class="center">
     <span *ngIf="sources.length > 1">
       <span *ngFor="let source of sources; index as i">
         <span *ngIf="i != 0"> | </span>

@@ -23,7 +23,7 @@
         <a class="nav-link nav-link-list" [routerLink]="['subsets', terminology.terminology]" title="Display Subsets">Subsets</a>
       </li>
       <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
-        <a class="nav-link nav-link-list" routerLink="hierarchy/C12913" title="Display Concept Hierarchy">Hierarchy</a>
+        <a class="nav-link nav-link-list" (click)="hierarchyRoute(terminology.terminology)" title="Display Concept Hierarchy">Hierarchy</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown" aria-haspopup="true"
