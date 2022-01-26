@@ -38,13 +38,7 @@
                 tooltipPosition="bottom"></button>
 
               <div class="large-divider"></div>
-              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncit'"
-                (click)="onChangeTerminology('ncit')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
-                label="NCIt" tooltipPosition="bottom"></button>
-              <div class="divider"></div>
-              <button class='terminology-button' type="button" pButton [disabled]="selectedTerm.terminology == 'ncim'"
-                (click)="onChangeTerminology('ncim')" pTooltip="Set terminology to {{selectedTerm.terminology.name}}"
-                label="NCIm" tooltipPosition="bottom"></button>
+              <p-dropdown [style]="{'padding-top':'1px','padding-bottom':'1px'}" styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerm" (onChange)="onChangeTerminology($event)"></p-dropdown>
             </div>
 
 
