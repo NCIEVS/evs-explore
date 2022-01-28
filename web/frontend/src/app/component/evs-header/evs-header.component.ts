@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
+import { ConceptDetailService } from 'src/app/service/concept-detail.service';
+import { Router } from '@angular/router';
 
 // Header component
 @Component({
@@ -12,20 +15,23 @@ export class EvsHeaderComponent implements OnInit {
   terminology = null;
   private subscription = null;
 
-  constructor(private configService: ConfigurationService) { }
+  constructor(private http: HttpClient,
+    private configService: ConfigurationService,
+    private conceptDetail: ConceptDetailService,
+    public router: Router) { }
 
   ngOnInit() {
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
-        + '; Release Date: ' + this.terminology.date;
+        + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
       console.log(this.versionInfo)
     }
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
       if (this.terminology) {
         this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
-          + '; Release Date: ' + this.terminology.date;
+          + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
         console.log(this.versionInfo)
       }
     });
@@ -38,7 +44,18 @@ export class EvsHeaderComponent implements OnInit {
     else if (this.terminology.terminology == 'ncim') {
       return 'NCI Metathesaurus';
     }
+    else if (this.terminology.terminology == 'mdr') {
+      return 'MedDRA';
+    }
     else return null;
+  }
+
+  hierarchyRoute(terminology) {
+    var firstRoot = null;
+    this.conceptDetail.getRoots(terminology).subscribe(response => {
+      firstRoot = response[0].code;
+      this.router.navigate(['/hierarchy/' + terminology + "/" + firstRoot]);
+    });
   }
 
   ngOnDestroy() {

@@ -113,4 +113,20 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
+  getRoots(terminology: string) {
+    var url = '/api/v1/concept/' + this.configService.getTerminology().terminology + '/roots';
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: "true"
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch terminology roots = '));
+      })
+    );
+  }
+
 }
