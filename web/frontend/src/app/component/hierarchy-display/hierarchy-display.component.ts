@@ -28,6 +28,7 @@ export class HierarchyDisplayComponent implements OnInit {
   hierarchyData: TreeNode[]
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
+  terminology: any;
   title: string;
 
   urlBase = "/hierarchy"
@@ -59,6 +60,7 @@ export class HierarchyDisplayComponent implements OnInit {
     // Set active index based on cookie unless never set
     // then default to 0
     this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+    this.terminology = this.configService.getTerminologyName();
 
     this.updateDisplaySize();
 
