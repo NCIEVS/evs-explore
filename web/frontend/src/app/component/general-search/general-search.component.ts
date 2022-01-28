@@ -247,12 +247,12 @@ export class GeneralSearchComponent implements OnInit,
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
     this.clearSearchText(event);
-    this.resetFilters(event);
+    this.resetFilters();
     this.router.navigate(['/welcome']);
   }
 
   // Reset filters and search type
-  resetFilters(event) {
+  resetFilters() {
     console.log('resetFilters');
     this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
@@ -369,6 +369,7 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onChangeTerminology', terminology.value.terminology);
     this.selectedTerm = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerm);
+    this.resetFilters();
     this.loadAllSources();
     this.router.navigate(['/welcome']); // reset to the welcome page
   }
