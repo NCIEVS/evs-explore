@@ -18,6 +18,7 @@ export class ConceptRelationshipComponent implements OnInit {
 
   terminology: string = null;
   isMeta: Boolean;
+  isSingleNcim: Boolean;
 
   constructor(
     private conceptDisplay: ConceptDisplayComponent,
@@ -25,6 +26,7 @@ export class ConceptRelationshipComponent implements OnInit {
 
     this.terminology = configService.getTerminologyName();
     this.isMeta = this.terminology == 'ncim';
+    this.isSingleNcim = this.terminology == 'mdr';
   }
 
   ngOnInit() {

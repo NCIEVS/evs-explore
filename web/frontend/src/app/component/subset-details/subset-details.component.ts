@@ -56,7 +56,7 @@ export class SubsetDetailsComponent implements OnInit {
           this.fullSubsetList = nodes["concepts"];
           this.usedSubsetList = new Array<Concept>();
           this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc));
+            this.usedSubsetList.push(new Concept(conc, this.configService));
           });
           //this.usedSubsetList = this.fullSubsetList;
           var synonymMap = new Array<Map<string, string>>();
@@ -73,7 +73,7 @@ export class SubsetDetailsComponent implements OnInit {
         )
       )
         .subscribe((response: any) => {
-          var subsetDetail = new Concept(response);
+          var subsetDetail = new Concept(response, this.configService);
           this.titleDesc = subsetDetail.name;
           let ContSource = subsetDetail.properties.filter(item => item.type == 'Contributing_Source');
           if (ContSource.length == 1) {
@@ -108,7 +108,7 @@ export class SubsetDetailsComponent implements OnInit {
           this.fullSubsetList = nodes["concepts"];
           this.usedSubsetList = new Array<Concept>();
           this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc));
+            this.usedSubsetList.push(new Concept(conc, this.configService));
           });
 
           //          this.usedSubsetList = this.fullSubsetList;
@@ -155,7 +155,7 @@ export class SubsetDetailsComponent implements OnInit {
           this.fullSubsetList = nodes["concepts"];
           this.usedSubsetList = new Array<Concept>();
           this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc));
+            this.usedSubsetList.push(new Concept(conc, this.configService));
           });
 
           //          this.usedSubsetList = this.fullSubsetList;

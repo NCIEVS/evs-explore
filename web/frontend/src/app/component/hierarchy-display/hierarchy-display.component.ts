@@ -67,7 +67,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.conceptDetailService
       .getConceptSummary(this.configService.getCode(), 'summary,maps')
       .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response);
+        this.conceptDetail = new Concept(response, this.configService);
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         // Sort the source list (case insensitive)
@@ -76,7 +76,7 @@ export class HierarchyDisplayComponent implements OnInit {
         if ((this.activeIndex === 1 || this.activeIndex === 2) &&
           (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
           this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response);
+            this.conceptWithRelationships = new Concept(response, this.configService);
           });
         }
         this.getPathInHierarchy();
@@ -92,7 +92,7 @@ export class HierarchyDisplayComponent implements OnInit {
     if (($event.index === 1 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptWithRelationships = new Concept(response);
+        this.conceptWithRelationships = new Concept(response, this.configService);
       });
     }
   }
@@ -118,7 +118,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.conceptDetailService
       .getConceptSummary(event.code, 'summary,maps')
       .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response);
+        this.conceptDetail = new Concept(response, this.configService);
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
         this.conceptWithRelationships = undefined;
@@ -126,7 +126,7 @@ export class HierarchyDisplayComponent implements OnInit {
         if ((this.activeIndex === 1 || this.activeIndex === 2) &&
           (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
           this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response);
+            this.conceptWithRelationships = new Concept(response, this.configService);
           });
         }
 

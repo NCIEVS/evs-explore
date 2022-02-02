@@ -17,7 +17,7 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th *ngIf="isMeta" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
+            <th *ngIf="isMeta || isSingleNcim" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th *ngIf="isMeta" class="w-20" [pSortableColumn]="'source'">Source
@@ -32,7 +32,7 @@
               <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ parent.name }} </a>
             </td>
-            <td *ngIf="isMeta" class="w-20">{{ parent.rela }}</td>
+            <td *ngIf="isMeta || isSingleNcim" class="w-20">{{ parent.rela }}</td>
             <td *ngIf="isMeta" class="w-20">{{ parent.source }}</td>
           </tr>
         </ng-template>
@@ -59,7 +59,7 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="isMeta" [pSortableColumn]="'rela'">Relationship Attribute
+            <th class="w-30" *ngIf="isMetaisMeta || isSingleNcim" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-30" *ngIf="isMeta" [pSortableColumn]="'source'">Source
@@ -74,7 +74,7 @@
               <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ child.name }} </a>
             </td>
-            <td *ngIf="isMeta">{{ child.rela }}</td>
+            <td *ngIf="isMetaisMeta || isSingleNcim">{{ child.rela }}</td>
             <td *ngIf="isMeta">{{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
@@ -137,8 +137,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -150,7 +150,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.type }}</td>
+            <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -218,8 +218,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -231,7 +231,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-irole>
           <tr>
-            <td>{{ irole.type }}</td>
+            <td>{{ irole.rela }}</td>
             <td>{{ irole.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, irole.relatedCode ]"
@@ -302,8 +302,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -315,7 +315,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-iassociation>
           <tr>
-            <td>{{ iassociation.type }}</td>
+            <td>{{ iassociation.rela }}</td>
             <td>{{ iassociation.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, iassociation.relatedCode ]"
@@ -383,8 +383,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'type'">Relationship
-              <p-sortIcon [field]="'type'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'rela'">Relationship
+              <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -396,7 +396,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.type }}</td>
+            <td>{{ association.rela }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
