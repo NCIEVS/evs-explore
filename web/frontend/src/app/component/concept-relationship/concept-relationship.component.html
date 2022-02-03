@@ -151,7 +151,7 @@
         <ng-template pTemplate="body" let-association>
           <tr>
             <td>{{ association.rela }}
-              <div *ngIf="associacion.smqQualifiers">
+              <div *ngIf="association.smqQualifiers != null">
                 <div *ngFor="let qual of association.smqQualifiers">
                   <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
                 </div>
@@ -322,8 +322,8 @@
         <ng-template pTemplate="body" let-iassociation>
           <tr>
             <td>{{ iassociation.rela }}
-              <div *ngIf="associacion.smqQualifiers">
-                <div *ngFor="let qual of association.smqQualifiers">
+              <div *ngIf="iassociation.smqQualifiers != null">
+                <div *ngFor="let qual of iassociation.smqQualifiers">
                   <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
                 </div>
               </div>
