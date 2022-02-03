@@ -150,7 +150,13 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.rela }}</td>
+            <td>{{ association.rela }}
+              <div *ngIf="associacion.smqQualifiers">
+                <div *ngFor="let qual of association.smqQualifiers">
+                  <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
+                </div>
+              </div>
+            </td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
@@ -315,7 +321,13 @@
         </ng-template>
         <ng-template pTemplate="body" let-iassociation>
           <tr>
-            <td>{{ iassociation.rela }}</td>
+            <td>{{ iassociation.rela }}
+              <div *ngIf="associacion.smqQualifiers">
+                <div *ngFor="let qual of association.smqQualifiers">
+                  <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
+                </div>
+              </div>
+            </td>
             <td>{{ iassociation.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, iassociation.relatedCode ]"

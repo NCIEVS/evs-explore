@@ -8,6 +8,7 @@ export class Relationship {
   relatedName: string;
   source: string
   highlight: string;
+  smqQualifiers: any;
 
   // Construct a concept reference from json input
   constructor(input: any,
@@ -16,8 +17,12 @@ export class Relationship {
     Object.assign(this, input);
     console.log(input)
 
-    if (input.qualifiers)
-      var relaqualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
+    var relaqualifier = null;
+    if (input.qualifiers) {
+      relaqualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
+      this.smqQualifiers = input.qualifiers.filter(function (item) { return item.type.includes('SMQ'); });
+    }
+
 
     // Handle UMLS relationships
     // This seems backwards but RB means "broader than" which means the
