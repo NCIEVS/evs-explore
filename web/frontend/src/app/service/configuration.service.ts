@@ -185,7 +185,7 @@ export class ConfigurationService {
       );
   }
 
-  // Load term types
+  // Load term groups
   getTermTypes(terminology: string): Observable<any> {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termTypes'),
       {
@@ -194,7 +194,7 @@ export class ConfigurationService {
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch term types = ' + terminology));
+          return observableThrowError(new EvsError(error, 'Could not fetch term groups = ' + terminology));
         })
       );
   }

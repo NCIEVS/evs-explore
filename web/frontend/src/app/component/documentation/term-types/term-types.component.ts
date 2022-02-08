@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from './../../../service/configuration.service';
 
-// Documentation of term types component
+// Documentation of term groups component
 @Component({
   selector: 'app-term-types',
   templateUrl: './term-types.component.html',
