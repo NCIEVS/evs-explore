@@ -27,6 +27,8 @@ export class ConceptDisplayComponent implements OnInit {
   urlBase = '/concept';
   urlTarget = '_blank';
   hierarchyButtonLabel = 'Open in Hierarchy';
+  isMeta: Boolean;
+  isSingleNcim: Boolean;
 
   /*
    * The properties that are excluded are handled differently
@@ -63,6 +65,8 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
+    this.isMeta = this.terminology == 'ncim';
+    this.isSingleNcim = this.terminology == 'mdr';
   }
 
   ngOnInit() {
@@ -87,7 +91,7 @@ export class ConceptDisplayComponent implements OnInit {
           .getConceptSummary(this.configService.getCode(), 'full')
           .subscribe((concept: any) => {
             // and finally build the local state from it
-            this.conceptDetail = new Concept(concept);
+            this.conceptDetail = new Concept(concept, this.configService);
             this.conceptCode = concept.code;
             this.title = concept.name + ' ( Code - ' + concept.code + ' )';
             this.conceptWithRelationships = undefined;
@@ -97,7 +101,7 @@ export class ConceptDisplayComponent implements OnInit {
             if ((this.activeIndex === 1 || this.activeIndex === 2) &&
               (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
               this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                this.conceptWithRelationships = new Concept(response);
+                this.conceptWithRelationships = new Concept(response, this.configService);
               });
             }
           })
@@ -113,7 +117,7 @@ export class ConceptDisplayComponent implements OnInit {
     if (($event.index === 1 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptWithRelationships = new Concept(response);
+        this.conceptWithRelationships = new Concept(response, this.configService);
       });
     }
   }

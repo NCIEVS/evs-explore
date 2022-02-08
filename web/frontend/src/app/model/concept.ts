@@ -4,6 +4,7 @@ import { Synonym } from './synonym';
 import { Relationship } from './relationship';
 import { Map } from './map';
 import { ConceptReference } from './conceptRef';
+import { ConfigurationService } from '../service/configuration.service';
 // import { isNgTemplate } from '@angular/compiler';
 
 // MatchConcept Details - UI Component
@@ -29,7 +30,7 @@ export class Concept {
   synonymUniqueArray: any[];
   definitionUniqueArray: any[];
 
-  constructor(input: any) {
+  constructor(input: any, configService: ConfigurationService) {
     Object.assign(this, input);
     if (input.synonyms) {
       this.synonyms = new Array();
@@ -88,7 +89,7 @@ export class Concept {
     if (input.roles) {
       this.roles = new Array();
       for (let i = 0; i < input.roles.length; i++) {
-        this.roles.push(new Relationship(input.roles[i]));
+        this.roles.push(new Relationship(input.roles[i], configService));
       }
     }
 
@@ -96,7 +97,7 @@ export class Concept {
     if (input.inverseRoles) {
       this.inverseRoles = new Array();
       for (let i = 0; i < input.inverseRoles.length; i++) {
-        this.inverseRoles.push(new Relationship(input.inverseRoles[i]));
+        this.inverseRoles.push(new Relationship(input.inverseRoles[i], configService));
       }
     }
 
@@ -108,20 +109,17 @@ export class Concept {
       this.other = new Array();
 
       for (let i = 0; i < input.associations.length; i++) {
-        console.log('xxx', this.terminology, input.associations[i]);
-        // Handle the RB/RN/RO ncim case 
+        // Handle the RB/RN/RO ncim case
         // This seems backwards but an RB means "broader than" so the
         // related concept is actually narrower than the current one
         if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
-          this.broader.push(new Relationship(input.associations[i]));
-          console.log('yyy');
+          this.broader.push(new Relationship(input.associations[i], configService));
         } else if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
-          this.narrower.push(new Relationship(input.associations[i]));
-          console.log('zzz');
+          this.narrower.push(new Relationship(input.associations[i], configService));
         } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
-          this.other.push(new Relationship(input.associations[i]));
+          this.other.push(new Relationship(input.associations[i], configService));
         } else {
-          this.associations.push(new Relationship(input.associations[i]));
+          this.associations.push(new Relationship(input.associations[i], configService));
         }
       }
     }
@@ -130,7 +128,7 @@ export class Concept {
     if (input.inverseAssociations) {
       this.inverseAssociations = new Array();
       for (let i = 0; i < input.inverseAssociations.length; i++) {
-        this.inverseAssociations.push(new Relationship(input.inverseAssociations[i]));
+        this.inverseAssociations.push(new Relationship(input.inverseAssociations[i], configService));
       }
     }
 
