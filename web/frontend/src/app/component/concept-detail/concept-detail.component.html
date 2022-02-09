@@ -16,8 +16,8 @@
             <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr>
-            <td *ngIf="terminology=='ncit'" class="w-25">NCI Thesaurus Code:</td>
-            <td *ngIf="terminology!='ncit'" class="w-25">Code:</td>
+            <td *ngIf="configService.isSingleSource() && configService.isRdf()" class="w-25">NCI Thesaurus Code:</td>
+            <td *ngIf="configService.isSingleSource() && configService.isRdf()" class="w-25">Code:</td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
@@ -45,7 +45,7 @@
             <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="!isMeta" class="w-10">Attribution</th>
+            <th *ngIf="configService.isRrf() || configService.isSingleSource()" class="w-10">Attribution</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-val>
@@ -54,7 +54,7 @@
               <td>{{ val.definition }}</td>
               <td>{{ val.source }}</td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="!isMeta"><span *ngFor="let qual of val.qualifiers">
+              <td *ngIf="configService.isRrf() || configService.isSingleSource()"><span *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
             </tr>
           </ng-container>
@@ -85,7 +85,7 @@
             <th class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="!isMeta" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+            <th *ngIf="configService.isRrf() || configService.isSingleSource()" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
           </tr>
@@ -97,9 +97,9 @@
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
-              <td><a *ngIf="terminology != 'ncit' && synonym.source == 'NCI' && synonym.code"
+              <td><a *ngIf="!(configService.isSingleSource() && configService.isRdf()) && synonym.source == 'NCI' && synonym.code"
                   [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code }}</a>
-                  <a *ngIf="terminology != 'mdr' && synonym.source == 'MDR' && synonym.code"
+                  <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
                   [routerLink]="['/concept/mdr/', synonym.code]" target="_blank">{{ synonym.code }}</a>
                 <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{ synonym.code }}
                 </span>
@@ -128,7 +128,7 @@
             <th class="w-50" [pSortableColumn]="'value'">Value
               <p-sortIcon [field]="'value'"></p-sortIcon>
             </th>
-            <th *ngIf="isMeta" class="w-30" [pSortableColumn]="'source'">Source
+            <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-30" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -149,7 +149,7 @@
                   </span>
                 </span>
               </td>
-              <td *ngIf="isMeta">{{property.source}}</td>
+              <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{property.source}}</td>
             </tr>
           </ng-container>
         </ng-template>
@@ -158,7 +158,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncit'">
+  <p-panel [toggleable]="true" *ngIf="configService.isSingleSource() && configService.isRdf()">
     <p-header class="bold-heading">
       Maps To
     </p-header>
@@ -199,7 +199,7 @@
     <ng-template #elseBlockMaps>None</ng-template>
 
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="terminology=='ncim'">
+  <p-panel [toggleable]="true" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Mappings
     </p-header>
