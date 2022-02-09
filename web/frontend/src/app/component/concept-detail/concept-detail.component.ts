@@ -33,7 +33,6 @@ export class ConceptDetailComponent implements OnInit {
   )
 
   terminology: string = null;
-  isMeta: Boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -42,7 +41,6 @@ export class ConceptDetailComponent implements OnInit {
   ) {
 
     this.terminology = configService.getTerminologyName();
-    this.isMeta = this.terminology == 'ncim';
   }
 
   // On initialization

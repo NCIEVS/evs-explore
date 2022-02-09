@@ -104,7 +104,7 @@
                 <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{ synonym.code }}
                 </span>
               </td>
-              <td *ngIf="!isMeta">{{ synonym.subSource }}</td>
+              <td *ngIf="!(configService.isMultiSource() && configService.isRrf())">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
         </ng-template>

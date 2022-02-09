@@ -17,14 +17,12 @@ export class ConceptRelationshipComponent implements OnInit {
   @Input() urlTarget: string
 
   terminology: string = null;
-  isMeta: Boolean;
 
   constructor(
     private conceptDisplay: ConceptDisplayComponent,
     private configService: ConfigurationService) {
 
     this.terminology = configService.getTerminologyName();
-    this.isMeta = this.terminology == 'ncim';
   }
 
   ngOnInit() {

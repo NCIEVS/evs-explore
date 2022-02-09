@@ -17,10 +17,10 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th *ngIf="isMeta" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
+            <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
-            <th *ngIf="isMeta" class="w-20" [pSortableColumn]="'source'">Source
+            <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -32,8 +32,8 @@
               <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ parent.name }} </a>
             </td>
-            <td *ngIf="isMeta" class="w-20">{{ parent.rela }}</td>
-            <td *ngIf="isMeta" class="w-20">{{ parent.source }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20">{{ parent.rela }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20">{{ parent.source }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -59,10 +59,10 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="isMeta" [pSortableColumn]="'rela'">Relationship Attribute
+            <th class="w-30" *ngIf="configService.isMultiSource() && configService.isRrf()" [pSortableColumn]="'rela'">Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="isMeta" [pSortableColumn]="'source'">Source
+            <th class="w-30" *ngIf="configService.isMultiSource() && configService.isRrf()" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -74,8 +74,8 @@
               <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]='urlTarget'>{{ child.name }} </a>
             </td>
-            <td *ngIf="isMeta">{{ child.rela }}</td>
-            <td *ngIf="isMeta">{{ child.source ? child.source : "" }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{ child.rela }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -83,7 +83,7 @@
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="!isMeta">
+  <p-panel [toggleable]="true" *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Role Relationships
       <span class="small-heading">
@@ -123,7 +123,7 @@
     <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="!isMeta">
+  <p-panel [toggleable]="true" *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Associations
       <span class="small-heading">
@@ -162,7 +162,7 @@
     </div>
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="isMeta">
+  <p-panel [toggleable]="true" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Broader Concepts
     </p-header>
@@ -204,7 +204,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="!isMeta">
+  <p-panel [toggleable]="true" *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Incoming Role Relationships
       <span class="small-heading">
@@ -245,7 +245,7 @@
       None
     </ng-template>
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="isMeta">
+  <p-panel [toggleable]="true" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Narrower Concepts
     </p-header>
@@ -288,7 +288,7 @@
     </ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true" *ngIf="!isMeta">
+  <p-panel [toggleable]="true" *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Incoming Associations
       <span class="small-heading">
@@ -330,7 +330,7 @@
       None
     </ng-template>
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="isMeta">
+  <p-panel [toggleable]="true" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Other Relationships
     </p-header>
@@ -372,7 +372,7 @@
       None
     </ng-template>
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="!isMeta">
+  <p-panel [toggleable]="true" *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Disjoint With
     </p-header>
