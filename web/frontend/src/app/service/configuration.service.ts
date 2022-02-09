@@ -62,6 +62,22 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
+  isRdf() {
+    return this.getTerminology().metadata['loader'] == 'rdf';
+  }
+
+  isRrf() {
+    return this.getTerminology().metadata['loader'] == 'rrf';
+  }
+
+  isSingleSource() {
+    return this.getTerminology().metadata['sourceCt'] == 1;
+  }
+
+  isMultiSource() {
+    return this.getTerminology().metadata['sourceCt'] >= 1;
+  }
+
   setConfigFromParameters(paramMap: ParamMap) {
     if (paramMap.get('code')) {
       this.code = paramMap.get('code');
