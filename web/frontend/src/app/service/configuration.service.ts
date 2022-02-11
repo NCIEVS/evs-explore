@@ -75,7 +75,7 @@ export class ConfigurationService {
   }
 
   isMultiSource() {
-    return this.getTerminology().metadata['sourceCt'] >= 1;
+    return this.getTerminology().metadata['sourceCt'] > 1;
   }
 
   setConfigFromParameters(paramMap: ParamMap) {

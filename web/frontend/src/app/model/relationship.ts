@@ -15,7 +15,6 @@ export class Relationship {
     private configService: ConfigurationService
   ) {
     Object.assign(this, input);
-    console.log(input)
 
     var relaqualifier = null;
     if (input.qualifiers) {
