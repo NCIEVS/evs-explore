@@ -83,10 +83,10 @@
             <th class="w-5" [pSortableColumn]="'termGroup'">Type
               <p-sortIcon [field]="'termGroup'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology=='mdr" class="w-10" [pSortableColumn]="'code'">Code
+            <th *ngIf="terminology!='mdr'" class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="terminology=='mdr'" class="w-10" [pSortableColumn]="'subSource'">Subsource
+            <th *ngIf="terminology!='mdr'" class="w-10" [pSortableColumn]="'subSource'">Subsource
               Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
@@ -99,7 +99,8 @@
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
-              <td><a *ngIf="terminology != 'ncit' && synonym.source == 'NCI' && synonym.code"
+              <td *ngIf="terminology!='mdr'"><a
+                  *ngIf="terminology != 'ncit' && synonym.source == 'NCI' && synonym.code"
                   [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code
                   }}</a>
                 <a *ngIf="terminology != 'mdr' && synonym.source == 'MDR' && synonym.code"
@@ -110,7 +111,7 @@
                   synonym.code }}
                 </span>
               </td>
-              <td *ngIf="!isMeta">{{ synonym.subSource }}</td>
+              <td *ngIf="terminology!='mdr'">{{ synonym.subSource }}</td>
             </tr>
           </ng-container>
         </ng-template>
