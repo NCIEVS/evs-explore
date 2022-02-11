@@ -34,7 +34,8 @@
       Definitions
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single"
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions"
+        sortMode="single"
         *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions"
         (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
@@ -69,8 +70,8 @@
       Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.synonyms" (sortFunction)="customSort($event)"
-        [customSort]="true">
+      <p-table class="table table-striped table-bordered" [value]="concept.synonyms"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-60" [pSortableColumn]="'name'">Term
@@ -82,10 +83,11 @@
             <th class="w-5" [pSortableColumn]="'termGroup'">Type
               <p-sortIcon [field]="'termGroup'"></p-sortIcon>
             </th>
-            <th class="w-10" [pSortableColumn]="'code'">Code
+            <th *ngIf="terminology=='mdr" class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="!isMeta" class="w-10" [pSortableColumn]="'subSource'">Subsource Name
+            <th *ngIf="terminology=='mdr'" class="w-10" [pSortableColumn]="'subSource'">Subsource
+              Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
           </tr>
@@ -98,10 +100,14 @@
               <td>{{ synonym.source }}</td>
               <td>{{ synonym.termGroup }}</td>
               <td><a *ngIf="terminology != 'ncit' && synonym.source == 'NCI' && synonym.code"
-                  [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code }}</a>
-                  <a *ngIf="terminology != 'mdr' && synonym.source == 'MDR' && synonym.code"
-                  [routerLink]="['/concept/mdr/', synonym.code]" target="_blank">{{ synonym.code }}</a>
-                <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{ synonym.code }}
+                  [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code
+                  }}</a>
+                <a *ngIf="terminology != 'mdr' && synonym.source == 'MDR' && synonym.code"
+                  [routerLink]="['/concept/mdr/', synonym.code]" target="_blank">{{ synonym.code
+                  }}</a>
+                <span
+                  *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
+                  synonym.code }}
                 </span>
               </td>
               <td *ngIf="!isMeta">{{ synonym.subSource }}</td>
@@ -139,7 +145,8 @@
               <td>{{property.type}}</td>
               <td>
                 <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
-                  <a [routerLink]="['/concept/ncim/' + property.value]" target=_blank>{{property.value}}</a></span>
+                  <a [routerLink]="['/concept/ncim/' + property.value]"
+                    target=_blank>{{property.value}}</a></span>
                 <span
                   *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'"
                   [innerHTML]="checkExternalLink(property)"></span>
@@ -164,8 +171,8 @@
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'targetName'">Target Name
@@ -205,8 +212,8 @@
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10" [pSortableColumn]="'sourceCode'">Source Code
