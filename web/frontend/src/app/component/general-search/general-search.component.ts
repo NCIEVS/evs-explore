@@ -491,7 +491,7 @@ export class GeneralSearchComponent implements OnInit,
 
           // Build the search results table
           this.searchResultTableFormat = new SearchResultTableFormat(
-            new SearchResult(response), this.selectedPropertiesReturn.slice(), this.cookieService, this.selectedSources);
+            new SearchResult(response, this.configService), this.selectedPropertiesReturn.slice(), this.cookieService, this.selectedSources);
 
           this.hitsFound = this.searchResultTableFormat.total;
           this.timetaken = this.searchResultTableFormat.timeTaken;
@@ -522,7 +522,7 @@ export class GeneralSearchComponent implements OnInit,
     } else {
       this.loadedMultipleConcept = false;
       this.noMatchedConcepts = true;
-      this.searchResult = new SearchResult({ 'total': 0 });
+      this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
       this.reportData = [];
       this.displayTableFormat = false;
 

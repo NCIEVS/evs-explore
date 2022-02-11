@@ -8,12 +8,14 @@ export class ConceptReference {
   // Construct a concept reference from json input
   constructor(input: any) {
     Object.assign(this, input);
-    if (input.qualifiers && input.qualifiers[0].type == 'RELA') {
-      this.rela = input.qualifiers[0].value;
-    } else {
-      this.rela = '';
+    if (input.qualifiers) {
+      var relaqualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
+      if (relaqualifier && relaqualifier.type == 'RELA') {
+        this.rela = relaqualifier.value;
+      } else {
+        this.rela = '';
+      }
     }
   }
-
 }
 

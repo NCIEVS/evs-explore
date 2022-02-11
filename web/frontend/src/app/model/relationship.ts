@@ -1,3 +1,5 @@
+import { ConfigurationService } from '../service/configuration.service';
+
 // Relationship Details - UI Component
 export class Relationship {
   type: string;
@@ -6,21 +8,44 @@ export class Relationship {
   relatedName: string;
   source: string
   highlight: string;
+  smqQualifiers: any;
 
   // Construct a concept reference from json input
-  constructor(input: any) {
+  constructor(input: any,
+    private configService: ConfigurationService
+  ) {
     Object.assign(this, input);
+    console.log(input)
+
+    var relaqualifier = null;
+    if (input.qualifiers) {
+      relaqualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
+      this.smqQualifiers = input.qualifiers.filter(function (item) { return item.type.includes('SMQ'); });
+    }
+
 
     // Handle UMLS relationships
-    // This seems backwards but RB means "broader than" which means the 
+    // This seems backwards but RB means "broader than" which means the
     // related code is "narrower" than the current concept.
     if (input.type == 'RB') {
-      this.rela = input.qualifiers ? input.qualifiers[0].value : "Narrower"
+      // If we're showing "Narrower Concepts" table
+      if (configService.getTerminology().abbreviation == 'ncim') {
+        this.rela = relaqualifier ? relaqualifier.value : "Narrower"
+      }
+      // If we're showing "Associations" table
+      else {
+        this.rela = relaqualifier ? relaqualifier.value : "Broader"
+      }
     } else if (input.type == 'RN') {
-      this.rela = input.qualifiers ? input.qualifiers[0].value : "Broader"
+      if (configService.getTerminology().abbreviation == 'ncim') {
+        this.rela = relaqualifier ? relaqualifier.value : "Broader"
+      }
+      // If we're showing "Associations" table
+      else {
+        this.rela = relaqualifier ? relaqualifier.value : "Narrower"
+      }
     } else if (input.type.startsWith('R')) {
-      this.rela = input.qualifiers ? input.qualifiers[0].value : "Other"
+      this.rela = relaqualifier ? relaqualifier.value : "Other"
     }
   }
 }
-
