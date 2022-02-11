@@ -32,7 +32,7 @@ export class SearchTermService {
     // Setup search parameters (default terminology and include, for now)
     param.terminology = this.configService.getTerminologyName();
     param.include = searchCriteria.include;
-    param.term = encodeURI(searchCriteria.term);
+    param.term = searchCriteria.term;
     param.type = searchCriteria.type;
 
     // Paging parameters
@@ -88,7 +88,7 @@ export class SearchTermService {
     // }
 
     // Perform the HTTP call
-    return this.http.get((url),
+    return this.http.get(encodeURI(url),
       {
         responseType: 'json',
         params: param
