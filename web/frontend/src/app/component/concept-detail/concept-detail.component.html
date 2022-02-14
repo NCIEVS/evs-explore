@@ -48,7 +48,7 @@
             <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isRrf() || configService.isSingleSource()" class="w-10">
+            <th *ngIf="configService.isRdf() || configService.isSingleSource()" class="w-10">
               Attribution</th>
           </tr>
         </ng-template>
@@ -58,7 +58,7 @@
               <td>{{ val.definition }}</td>
               <td>{{ val.source }}</td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="configService.isRrf() || configService.isSingleSource()"><span
+              <td *ngIf="configService.isRdf() || configService.isSingleSource()"><span
                   *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
             </tr>
