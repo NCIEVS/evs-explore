@@ -16,9 +16,9 @@
             <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr>
-            <td *ngIf="configService.isSingleSource() && configService.isRdf()" class="w-25">NCI
+            <td *ngIf="terminology=='ncit'" class="w-25">NCI
               Thesaurus Code:</td>
-            <td *ngIf="configService.isSingleSource() && configService.isRdf()" class="w-25">Code:
+            <td *ngIf="terminology=='ncit'" class="w-25">Code:
             </td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
