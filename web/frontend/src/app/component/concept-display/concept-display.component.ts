@@ -27,8 +27,6 @@ export class ConceptDisplayComponent implements OnInit {
   urlBase = '/concept';
   urlTarget = '_blank';
   hierarchyButtonLabel = 'Open in Hierarchy';
-  isMeta: Boolean;
-  isSingleNcim: Boolean;
 
   /*
    * The properties that are excluded are handled differently
@@ -65,8 +63,6 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
-    this.isMeta = this.terminology == 'ncim';
-    this.isSingleNcim = this.terminology == 'mdr';
   }
 
   ngOnInit() {

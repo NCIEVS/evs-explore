@@ -20,7 +20,7 @@
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
 
-      <li class="nav-item" *ngIf="configService.isRdf() && configService.isSingleSource()">
+      <li class="nav-item" *ngIf="terminology.terminology == 'ncit'">
         <a class="nav-link nav-link-list" [routerLink]="['subsets', terminology.terminology]"
           title="Display Subsets">Subsets</a>
       </li>

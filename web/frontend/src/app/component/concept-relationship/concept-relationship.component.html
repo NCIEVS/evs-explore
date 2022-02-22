@@ -243,7 +243,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'rela'">Relationship
-              <p-sortIcon [field]="'rela'"></p-sortIcon>
+              <p-sortIcon [field]="'type'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -255,7 +255,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-irole>
           <tr>
-            <td>{{ irole.rela }}</td>
+            <td>{{ irole.type }}</td>
             <td>{{ irole.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, irole.relatedCode ]"
