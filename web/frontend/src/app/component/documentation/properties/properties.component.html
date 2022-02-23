@@ -1,36 +1,36 @@
 <div class="container" *ngIf="properties">
-  <div class="page-header">
-    <span class="ui-coloring">Properties</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-  </div>
-  <p>Information about property types</p>
-  <div class="table-responsive" style="font-size:14px;">
-    <p-table [value]="properties" sortMode="single" class="table table-striped table-bordered"
-      (sortFunction)="customSort($event)" [customSort]="true">
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-10" [pSortableColumn]="'code'">Code
-            <p-sortIcon [field]="'code'"></p-sortIcon>
-          </th>
-          <th class="w-20" [pSortableColumn]="'name'">Name
-            <p-sortIcon [field]="'name'"></p-sortIcon>
-          </th>
-          <th class="w-70">Definition</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-property>
-        <tr>
-          <td>{{ property.code }}</td>
-          <td>{{ property.name }}</td>
-          <td><span *ngIf="
+    <div class="page-header">
+        <span class="ui-coloring">Properties</span>
+        <span style="float:right"><button routerLink="/search" label="New Search" pButton
+                type="button" class="ui-button-coloring"></button></span>
+    </div>
+    <p>Information about property types</p>
+    <div class="table-responsive" style="font-size:14px;">
+        <p-table [value]="properties" sortMode="single" class="table table-striped table-bordered"
+            (sortFunction)="customSort($event)" [customSort]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-10" [pSortableColumn]="'code'">Code
+                        <p-sortIcon [field]="'code'"></p-sortIcon>
+                    </th>
+                    <th class="w-20" [pSortableColumn]="'name'">Name
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                    <th class="w-70">Definition</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-property>
+                <tr>
+                    <td>{{ property.code }}</td>
+                    <td>{{ property.name }}</td>
+                    <td><span *ngIf="
                 property.definitions &&
                 property.definitions.length > 0
                 ">{{ property.definitions[0].definition }}
-            </span></td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+                        </span></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 <p>&nbsp;</p>
