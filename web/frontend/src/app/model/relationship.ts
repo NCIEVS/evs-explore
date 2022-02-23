@@ -26,9 +26,10 @@ export class Relationship {
     // Handle UMLS relationships
     // This seems backwards but RB means "broader than" which means the
     // related code is "narrower" than the current concept.
+
     if (input.type == 'RB') {
       // If we're showing "Narrower Concepts" table
-      if (configService.getTerminology().abbreviation == 'ncim') {
+      if (configService.getTerminology().terminology == 'ncim') {
         this.rela = relaqualifier ? relaqualifier.value : "Narrower"
       }
       // If we're showing "Associations" table
@@ -36,7 +37,7 @@ export class Relationship {
         this.rela = relaqualifier ? relaqualifier.value : "Broader"
       }
     } else if (input.type == 'RN') {
-      if (configService.getTerminology().abbreviation == 'ncim') {
+      if (configService.getTerminology().terminology == 'ncim') {
         this.rela = relaqualifier ? relaqualifier.value : "Broader"
       }
       // If we're showing "Associations" table

@@ -18,8 +18,8 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20"
-              [pSortableColumn]="'rela'">Relationship Attribute
+            <th *ngIf="configService.isRrf()" class="w-20" [pSortableColumn]="'rela'">Relationship
+              Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20"
@@ -36,7 +36,7 @@
                 [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ parent.name
                 }} </a>
             </td>
-            <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20">{{
+            <td *ngIf="configService.isRrf()" class="w-20">{{
               parent.rela }}</td>
             <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20">{{
               parent.source }}</td>
@@ -66,8 +66,8 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="configService.isMultiSource() && configService.isRrf()"
-              [pSortableColumn]="'rela'">Relationship Attribute
+            <th class="w-30" *ngIf="configService.isRrf()" [pSortableColumn]="'rela'">Relationship
+              Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-30" *ngIf="configService.isMultiSource() && configService.isRrf()"
@@ -84,7 +84,7 @@
                 [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ child.name }}
               </a>
             </td>
-            <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{ child.rela }}</td>
+            <td *ngIf="configService.isRrf()">{{ child.rela }}</td>
             <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{ child.source ?
               child.source : "" }}</td>
           </tr>
@@ -151,8 +151,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'rela'">Relationship
-              <p-sortIcon [field]="'rela'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -164,7 +164,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.rela }}
+            <td>{{ association.type }}
               <div *ngIf="association.smqQualifiers != null">
                 <div *ngFor="let qual of association.smqQualifiers">
                   <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -330,8 +330,8 @@
         " (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'rela'">Relationship
-              <p-sortIcon [field]="'rela'"></p-sortIcon>
+            <th class="w-30" [pSortableColumn]="'type'">Relationship
+              <p-sortIcon [field]="'type'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'relatedCode'">Related Code
               <p-sortIcon [field]="'relatedCode'"></p-sortIcon>
@@ -343,7 +343,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-iassociation>
           <tr>
-            <td>{{ iassociation.rela }}
+            <td>{{ iassociation.type }}
               <div *ngIf="iassociation.smqQualifiers != null">
                 <div *ngFor="let qual of iassociation.smqQualifiers">
                   <p class="smqEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
