@@ -25,7 +25,7 @@ export class ConceptDisplayComponent implements OnInit {
   displayHierarchy: boolean;
 
   urlBase = '/concept';
-  urlTarget = '_blank';
+  urlTarget = '_top';
   hierarchyButtonLabel = 'Open in Hierarchy';
   isMeta: Boolean;
   isSingleNcim: Boolean;
