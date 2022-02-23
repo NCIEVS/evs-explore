@@ -174,7 +174,7 @@ export class Concept {
           text += '<strong>Synonyms</strong>:<br/>';
           headerFlag = true;
         }
-        text += '<font color="#428bca">' + this.synonyms[i].highlight + '</font><br/>';
+        text += '<font color="#428bca">' + uniqSynonyms[i].highlight + '</font><br/>';
       }
     }
     // properties
@@ -187,6 +187,18 @@ export class Concept {
           headerFlag = true;
         }
         text += '<font color="#428bca">' + this.properties[i].type + ' - ' + this.properties[i].highlight + '</font><br/>';
+      }
+    }
+    // definitions
+    headerFlag = false;
+    this.definitions = this.filterSetByUniqueObjects(this.definitions);
+    for (let i = 0; i < this.definitions.length; i++) {
+      if (this.definitions[i].highlight) {
+        if (!headerFlag) {
+          text += '<strong>Definitions</strong>:<br/>';
+          headerFlag = true;
+        }
+        text += '<font color="#428bca">' + this.definitions[i].type + ' - ' + this.definitions[i].highlight + '</font><br/>';
       }
     }
     return text;
