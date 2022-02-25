@@ -32,7 +32,7 @@ export class HierarchyDisplayComponent implements OnInit {
   title: string;
 
   urlBase = "/hierarchy"
-  urlTarget = '_blank'
+  urlTarget = '_top'
 
   conceptPanelSize = "70.0"
   hierarchyPanelSize = "30.0"

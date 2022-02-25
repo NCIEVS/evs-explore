@@ -4,7 +4,8 @@
       Parent Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.parents" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.parents" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.parents &&
             concept.parents.length > 0;
           else elseBlockParentConcept
@@ -17,7 +18,8 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th *ngIf="isMeta || isSingleNcim" class="w-20" [pSortableColumn]="'rela'">Relationship Attribute
+            <th *ngIf="isMeta || isSingleNcim" class="w-20" [pSortableColumn]="'rela'">Relationship
+              Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th *ngIf="isMeta" class="w-20" [pSortableColumn]="'source'">Source
@@ -29,8 +31,9 @@
           <tr *ngIf="checkFilter(parent)">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
-              <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
-                [target]='urlTarget'>{{ parent.name }} </a>
+              <a [routerLink]="[urlBase, terminology, parent.code]"
+                [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ parent.name
+                }} </a>
             </td>
             <td *ngIf="isMeta || isSingleNcim" class="w-20">{{ parent.rela }}</td>
             <td *ngIf="isMeta" class="w-20">{{ parent.source }}</td>
@@ -46,7 +49,8 @@
       Child Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.children" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.children" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.children &&
             concept.children.length > 0;
           else elseBlockChildConcept
@@ -59,7 +63,8 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="isMetaisMeta || isSingleNcim" [pSortableColumn]="'rela'">Relationship Attribute
+            <th class="w-30" *ngIf="isMetaisMeta || isSingleNcim" [pSortableColumn]="'rela'">
+              Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-30" *ngIf="isMeta" [pSortableColumn]="'source'">Source
@@ -71,8 +76,9 @@
           <tr *ngIf="checkFilter(child)">
             <td>{{ child.code }}</td>
             <td>
-              <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
-                [target]='urlTarget'>{{ child.name }} </a>
+              <a [routerLink]="[urlBase, terminology, child.code]"
+                [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ child.name }}
+              </a>
             </td>
             <td *ngIf="isMetaisMeta || isSingleNcim">{{ child.rela }}</td>
             <td *ngIf="isMeta">{{ child.source ? child.source : "" }}</td>
@@ -91,7 +97,8 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered"
+        *ngIf="
           concept.roles && concept.roles.length > 0;
           else elseBlockRole
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -113,8 +120,9 @@
             <td>{{ role.type }}</td>
             <td>{{ role.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, terminology, role.relatedCode ]" [queryParams]="getSelectedSourcesQueryParam()"
-                target='urlTarget'>{{ role.relatedName }}</a>
+              <a [routerLink]="[urlBase, terminology, role.relatedCode ]"
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                role.relatedName }}</a>
             </td>
           </tr>
         </ng-template>
@@ -131,7 +139,8 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.associations" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.associations && concept.associations.length > 0;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -160,7 +169,8 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                association.relatedName }}</a>
             </td>
           </tr>
         </ng-template>
@@ -173,7 +183,8 @@
       Broader Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.broader" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.broader" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.broader;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -199,7 +210,8 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
           </tr>
@@ -218,7 +230,8 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.inverseRoles" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseRoles" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.inverseRoles && concept.inverseRoles.length > 0;
           else elseBlockIncomingRole
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -241,7 +254,8 @@
             <td>{{ irole.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, irole.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ irole.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                irole.relatedName }}</a>
             </td>
           </tr>
         </ng-template>
@@ -256,7 +270,8 @@
       Narrower Concepts
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.narrower" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.narrower" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.narrower;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -282,7 +297,8 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
           </tr>
@@ -302,7 +318,8 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.inverseAssociations" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseAssociations" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.inverseAssociations && concept.inverseAssociations.length > 0;
           else elseBlockIncomingAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -331,7 +348,8 @@
             <td>{{ iassociation.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, iassociation.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ iassociation.relatedName
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                iassociation.relatedName
                 }}</a>
             </td>
           </tr>
@@ -347,7 +365,8 @@
       Other Relationships
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered"
+        *ngIf="
           concept.other;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -373,7 +392,8 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
           </tr>
@@ -389,7 +409,8 @@
       Disjoint With
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.disjointWith" sortMode="single"
+        class="table table-striped table-bordered" *ngIf="
           concept.disjointWith && concept.disjointWith.length > 0;
           else elseBlockDisjointAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -412,7 +433,8 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{ association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                association.relatedName }}</a>
             </td>
           </tr>
         </ng-template>

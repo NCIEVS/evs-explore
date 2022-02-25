@@ -1,59 +1,61 @@
 <div class="container">
-  <div class="page-header">
-    <span class="ui-coloring">Sources</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-  </div>
+    <div class="page-header">
+        <span class="ui-coloring">Sources</span>
+        <span style="float:right"><button routerLink="/search" label="New Search" pButton
+                type="button" class="ui-button-coloring"></button></span>
+    </div>
 
-  <p>Information about synonym sources</p>
-  <div class="table-responsive" style="font-size:14px;">
-    <p-table class="table table-striped table-bordered" [value]="synonymSources" sortMode="single">
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-20" [pSortableColumn]="'code'">Name
-            <p-sortIcon [field]="'code'"></p-sortIcon>
-          </th>
-          <th class="w-80" [pSortableColumn]="'name'">Description
-            <p-sortIcon [field]="'name'"></p-sortIcon>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-source>
-        <tr>
-          <td>{{ source.code }}</td>
-          <td>{{ source.name }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-  <p>&nbsp;</p>
+    <p>Information about synonym sources</p>
+    <div class="table-responsive" style="font-size:14px;">
+        <p-table class="table table-striped table-bordered" [value]="synonymSources"
+            sortMode="single">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-20" [pSortableColumn]="'code'">Name
+                        <p-sortIcon [field]="'code'"></p-sortIcon>
+                    </th>
+                    <th class="w-80" [pSortableColumn]="'name'">Description
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-source>
+                <tr>
+                    <td>{{ source.code }}</td>
+                    <td>{{ source.name }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <p>&nbsp;</p>
 
-  <p>Information about definition sources</p>
-  <div class="table-responsive" style="font-size:14px;">
-    <p-table class="table table-striped table-bordered" [value]="definitionSources" sortMode="single">
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-20" [pSortableColumn]="'code'">Name
-            <p-sortIcon [field]="'code'"></p-sortIcon>
-          </th>
-          <th class="w-80" [pSortableColumn]="'name'">Description
-            <p-sortIcon [field]="'name'"></p-sortIcon>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-source>
-        <tr>
-          <td>{{ source.code }}</td>
-          <td>{{ source.name }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+    <p>Information about definition sources</p>
+    <div class="table-responsive" style="font-size:14px;">
+        <p-table class="table table-striped table-bordered" [value]="definitionSources"
+            sortMode="single">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-20" [pSortableColumn]="'code'">Name
+                        <p-sortIcon [field]="'code'"></p-sortIcon>
+                    </th>
+                    <th class="w-80" [pSortableColumn]="'name'">Description
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-source>
+                <tr>
+                    <td>{{ source.code }}</td>
+                    <td>{{ source.name }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 
-  <!-- if/when definition sources are searchable via explore, list them here -->
+    <!-- if/when definition sources are searchable via explore, list them here -->
 
-  <p>
-    <!--*any footnotes go here.-->
-  </p>
+    <p>
+        <!--*any footnotes go here.-->
+    </p>
 </div>
 <p>&nbsp;</p>

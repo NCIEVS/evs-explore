@@ -38,7 +38,7 @@ export class SubsetsComponent implements OnInit {
   static origHierarchyData: TreeNode[];
 
   urlBase = "/subsets"
-  urlTarget = '_blank'
+  urlTarget = '_top'
 
   conceptPanelSize = "70.0"
   subsetPanelSize = "30.0"
