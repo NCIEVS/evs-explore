@@ -33,7 +33,7 @@ export class SubsetDetailsComponent implements OnInit {
   terminology: string;
 
   urlBase = '/concept';
-  urlTarget = '_blank';
+  urlTarget = '_top';
 
   constructor(private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,

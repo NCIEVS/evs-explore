@@ -1,48 +1,48 @@
 <div class="container" *ngIf="termTypes">
-  <div class="page-header">
-    <span class="ui-coloring">Term Groups</span>
-    <span style="float:right"><button routerLink="/search" label="Back to Search" pButton
-        type="button" class="ui-button-coloring"></button></span>
-  </div>
-  <p *ngIf="termTypes && terminology == 'ncit'">NCI Thesaurus Term Groups use 2- or 3-character
-    abbreviations to code the
-    nature of each term associated with a
-    concept. Here is a listing of the term group codes and their meanings:</p>
-  <p *ngIf="terminology != 'ncit'">Information about term groups</p>
-  <div class="table-responsive" style="font-size:14px;">
-    <p-table class="table table-striped table-bordered" [value]="termTypes" sortMode="single">
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-20" [pSortableColumn]="'code'">Name
-            <p-sortIcon [field]="'code'"></p-sortIcon>
-          </th>
-          <th class="w-80" [pSortableColumn]="'name'">Description
-            <p-sortIcon [field]="'name'"></p-sortIcon>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-tty>
-        <tr>
-          <td>{{ tty.code }}</td>
-          <td>{{ tty.name }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+    <div class="page-header">
+        <span class="ui-coloring">Term Groups</span>
+        <span style="float:right"><button routerLink="/search" label="New Search" pButton
+                type="button" class="ui-button-coloring"></button></span>
+    </div>
+    <p *ngIf="termTypes && terminology == 'ncit'">NCI Thesaurus Term Groups use 2- or 3-character
+        abbreviations to code the
+        nature of each term associated with a
+        concept. Here is a listing of the term group codes and their meanings:</p>
+    <p *ngIf="terminology == 'ncim'">Information about term groups</p>
+    <div class="table-responsive" style="font-size:14px;">
+        <p-table class="table table-striped table-bordered" [value]="termTypes" sortMode="single">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-20" [pSortableColumn]="'code'">Name
+                        <p-sortIcon [field]="'code'"></p-sortIcon>
+                    </th>
+                    <th class="w-80" [pSortableColumn]="'name'">Description
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tty>
+                <tr>
+                    <td>{{ tty.code }}</td>
+                    <td>{{ tty.name }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 
-  <p *ngIf="terminology == 'ncit'">*Note on special rules governing NCI PT, HD, and AQ term groups:
-    Each concept should
-    have one, and only one, term
-    coded with one of these three values. The NCI Preferred Term is always taken from one of the NCI
-    terms, normally
-    that with a type of PT (Preferred Term). However, in special cases, a concept will not have a PT
-    term, but instead,
-    will have either an HD (Header) term or an AQ term. These tags are considered equivalent to PT
-    by the software. This
-    means that a concept may have only as single NCI PT, or HD, or AQ term. In those cases where
-    multiple antiquated
-    terms are needed for a concept which is itself coded as antiquated, one should be tagged AQ and
-    the rest tagged AQS.
-  </p>
+    <p *ngIf="terminology == 'ncit'">*Note on special rules governing NCI PT, HD, and AQ term
+        groups: Each concept should
+        have one, and only one, term
+        coded with one of these three values. The NCI Preferred Term is always taken from one of the
+        NCI terms, normally
+        that with a type of PT (Preferred Term). However, in special cases, a concept will not have
+        a PT term, but instead,
+        will have either an HD (Header) term or an AQ term. These tags are considered equivalent to
+        PT by the software. This
+        means that a concept may have only as single NCI PT, or HD, or AQ term. In those cases where
+        multiple antiquated
+        terms are needed for a concept which is itself coded as antiquated, one should be tagged AQ
+        and the rest tagged AQS.
+    </p>
 </div>
 <p>&nbsp;</p>
