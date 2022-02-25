@@ -29,6 +29,8 @@ export class Concept {
   subsetLink: string;
   synonymUniqueArray: any[];
   definitionUniqueArray: any[];
+  uniqDefs: any[];
+  uniqProps: any[];
 
   constructor(input: any, configService: ConfigurationService) {
     Object.assign(this, input);
@@ -168,37 +170,43 @@ export class Concept {
       .map(name => {
         return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
       });
-    for (let i = 0; i < uniqSynonyms.length; i++) {
-      if (uniqSynonyms[i].highlight) {
-        if (!headerFlag) {
-          text += '<strong>Synonyms</strong>:<br/>';
-          headerFlag = true;
+    if (uniqSynonyms) {
+      for (let i = 0; i < uniqSynonyms.length; i++) {
+        if (uniqSynonyms[i].highlight) {
+          if (!headerFlag) {
+            text += '<strong>Synonyms</strong>:<br/>';
+            headerFlag = true;
+          }
+          text += '<font color="#428bca">' + uniqSynonyms[i].highlight + '</font><br/>';
         }
-        text += '<font color="#428bca">' + uniqSynonyms[i].highlight + '</font><br/>';
       }
     }
     // properties
     headerFlag = false;
-    this.properties = this.filterSetByUniqueObjects(this.properties);
-    for (let i = 0; i < this.properties.length; i++) {
-      if (this.properties[i].highlight) {
-        if (!headerFlag) {
-          text += '<strong>Properties</strong>:<br/>';
-          headerFlag = true;
+    this.uniqProps = this.filterSetByUniqueObjects(this.properties);
+    if (this.uniqProps) {
+      for (let i = 0; i < this.uniqProps.length; i++) {
+        if (this.uniqProps[i].highlight) {
+          if (!headerFlag) {
+            text += '<strong>Properties</strong>:<br/>';
+            headerFlag = true;
+          }
+          text += '<font color="#428bca">' + this.uniqProps[i].type + ' - ' + this.uniqProps[i].highlight + '</font><br/>';
         }
-        text += '<font color="#428bca">' + this.properties[i].type + ' - ' + this.properties[i].highlight + '</font><br/>';
       }
     }
     // definitions
     headerFlag = false;
-    this.definitions = this.filterSetByUniqueObjects(this.definitions);
-    for (let i = 0; i < this.definitions.length; i++) {
-      if (this.definitions[i].highlight) {
-        if (!headerFlag) {
-          text += '<strong>Definitions</strong>:<br/>';
-          headerFlag = true;
+    this.uniqDefs = (this.definitions != undefined ? this.filterSetByUniqueObjects(this.definitions) : null);
+    if (this.uniqDefs) {
+      for (let i = 0; i < this.uniqDefs.length; i++) {
+        if (this.uniqDefs[i].highlight) {
+          if (!headerFlag) {
+            text += '<strong>Definitions</strong>:<br/>';
+            headerFlag = true;
+          }
+          text += '<font color="#428bca">' + this.uniqDefs[i].type + ' - ' + this.uniqDefs[i].highlight + '</font><br/>';
         }
-        text += '<font color="#428bca">' + this.definitions[i].type + ' - ' + this.definitions[i].highlight + '</font><br/>';
       }
     }
     return text;
