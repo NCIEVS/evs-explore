@@ -78,14 +78,14 @@
         (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-60" [pSortableColumn]="'name'">Term
+            <th class="w-50" [pSortableColumn]="'name'">Term
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-15" [pSortableColumn]="'source'">Source
+            <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th class="w-5" [pSortableColumn]="'termGroup'">Type
-              <p-sortIcon [field]="'termGroup'"></p-sortIcon>
+            <th class="w-15" [pSortableColumn]="'type'">Type
+              <p-sortIcon [field]="'type'"></p-sortIcon>
             </th>
             <th *ngIf="configService.isMultiSource()" class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
@@ -102,7 +102,7 @@
             <tr *ngIf="checkFilter(synonym)">
               <td>{{ synonym.name }}</td>
               <td>{{ synonym.source }}</td>
-              <td>{{ synonym.termGroup }}</td>
+              <td>{{ synonym.type }}</td>
               <td *ngIf="configService.isMultiSource()"><a
                   *ngIf="!(configService.isSingleSource() && configService.isRdf()) && synonym.source == 'NCI' && synonym.code"
                   [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code
