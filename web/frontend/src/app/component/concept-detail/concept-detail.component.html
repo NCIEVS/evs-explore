@@ -105,10 +105,10 @@
               <td>{{ synonym.type }}</td>
               <td *ngIf="configService.isMultiSource()"><a
                   *ngIf="!(configService.isSingleSource() && configService.isRdf()) && synonym.source == 'NCI' && synonym.code"
-                  [routerLink]="['/concept/ncit/', synonym.code]" target="_blank">{{ synonym.code
+                  [routerLink]="['/concept/ncit/', synonym.code]" target="_top">{{ synonym.code
                   }}</a>
                 <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
-                  [routerLink]="['/concept/mdr/', synonym.code]" target="_blank">{{ synonym.code
+                  [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{ synonym.code
                   }}</a>
                 <span
                   *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
@@ -153,7 +153,7 @@
               <td>
                 <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
                   <a [routerLink]="['/concept/ncim/' + property.value]"
-                    target=_blank>{{property.value}}</a></span>
+                    target=_top>{{property.value}}</a></span>
                 <span
                   *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'"
                   [innerHTML]="checkExternalLink(property)"></span>

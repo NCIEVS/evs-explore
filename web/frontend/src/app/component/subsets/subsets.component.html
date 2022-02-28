@@ -20,7 +20,7 @@
                     federal and international coding
                     standards.</p>
                 <p>See the
-                    <a routerLink="/subsetncit" target="_blank" class="regular-link">
+                    <a routerLink="/subsetncit" target="_top" class="regular-link">
                         NCI Thesaurus Subsets Page
                     </a>
                 </p>
@@ -48,7 +48,7 @@
                                 <div style="cursor: pointer; display:flex;">
                                     <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                                     <a [routerLink]="['/subset/', terminology, rowData.code]"
-                                        target="_blank" class="regular-link">
+                                        target="_top" class="regular-link">
                                         <i *ngIf="rowData.root && rowNode.node.children.length == 0"
                                             class="pi pi-fw pi-blank"></i>
                                         <i class="fa fa-external-link"
