@@ -1,40 +1,39 @@
 <div class="hierarchy-div">
-    <div class="page-header ui-coloring">
-        {{ title }}
-        <span *ngIf="displayHierarchy"> -- <button
-                [routerLink]="['/hierarchy', terminology, conceptCode]"
-                [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel"
-                pButton type="button"></button>
-        </span>
-        <span style="float:right" class="ui-button-back-to-search"><button routerLink="/search"
-                label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
-    </div>
-    <div *ngIf="terminology == 'ncit' || terminology == 'ncim'" class="center">
-        <span *ngIf="sources.length > 1">
-            <span *ngFor="let source of sources; index as i">
-                <span *ngIf="i != 0"> | </span>
-                <a [routerLink]="" *ngIf="!selectedSources.has(source)"
-                    (click)="toggleSelectedSource(source)">{{source}}</a>
-                <span class="pointer" *ngIf="selectedSources.has(source)"
-                    (click)="toggleSelectedSource(source)"><b>{{source}}</b></span>
-            </span>
-        </span>
-    </div>
-    <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
-        <p-tabPanel header="Terms And Properties">
-            <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-        </p-tabPanel>
-        <p-tabPanel header="Relationships">
-            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
-                [urlTarget]="urlTarget">
-            </app-concept-relationship>
-        </p-tabPanel>
-        <p-tabPanel header="View All">
-            <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
-                [urlTarget]="urlTarget">
-            </app-concept-relationship>
-        </p-tabPanel>
-    </p-tabView>
-
+  <div class="page-header ui-coloring">
+    {{ title }}
+    <span *ngIf="displayHierarchy"> -- <button
+        [routerLink]="['/hierarchy', terminology, conceptCode]"
+        [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
+        type="button"></button>
+    </span>
+    <span style="float:right" class="ui-button-back-to-search"><button routerLink="/search"
+        label="Back to Search" pButton type="button" class="ui-button-coloring"></button></span>
+  </div>
+  <div *ngIf="configService.isMultiSource()" class="center">
+    <span *ngIf="sources.length > 1">
+      <span *ngFor="let source of sources; index as i">
+        <span *ngIf="i != 0"> | </span>
+        <a [routerLink]="" *ngIf="!selectedSources.has(source)"
+          (click)="toggleSelectedSource(source)">{{source}}</a>
+        <span class="pointer" *ngIf="selectedSources.has(source)"
+          (click)="toggleSelectedSource(source)"><b>{{source}}</b></span>
+      </span>
+    </span>
+  </div>
+  <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
+    <p-tabPanel header="Terms And Properties">
+      <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+    </p-tabPanel>
+    <p-tabPanel header="Relationships">
+      <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
+        [urlTarget]="urlTarget">
+      </app-concept-relationship>
+    </p-tabPanel>
+    <p-tabPanel header="View All">
+      <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+      <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
+        [urlTarget]="urlTarget">
+      </app-concept-relationship>
+    </p-tabPanel>
+  </p-tabView>
 </div>
