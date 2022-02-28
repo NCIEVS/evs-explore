@@ -88,7 +88,7 @@ export class GeneralSearchComponent implements OnInit,
   // get the parameters for the search
   constructor(private searchTermService: SearchTermService,
     private conceptDetailService: ConceptDetailService,
-    private configService: ConfigurationService,
+    public configService: ConfigurationService,
     private cookieService: CookieService,
     private route: ActivatedRoute, public router: Router) {
 

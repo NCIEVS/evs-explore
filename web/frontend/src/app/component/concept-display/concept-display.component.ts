@@ -55,7 +55,7 @@ export class ConceptDisplayComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private cookieService: CookieService,
-    private configService: ConfigurationService
+    public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected

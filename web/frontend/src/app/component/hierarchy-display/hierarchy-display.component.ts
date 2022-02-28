@@ -46,7 +46,7 @@ export class HierarchyDisplayComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private cookieService: CookieService,
-    private configService: ConfigurationService
+    public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
