@@ -93,6 +93,11 @@ export class ConceptDisplayComponent implements OnInit {
             this.conceptWithRelationships = undefined;
             // Sort the source list (case insensitive)
             this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+            // make sure All is at the front
+            if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
+              this.sources.splice(this.sources.indexOf("All"), 1);
+              this.sources.unshift("All");
+            }
 
             if ((this.activeIndex === 1 || this.activeIndex === 2) &&
               (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
