@@ -1,66 +1,63 @@
 <div id="hierarchyTableDisplay" class="container">
-    <as-split [direction]="direction">
-        <as-split-area [size]="subsetPanelSize">
-            <div class="hierarchy-div">
-                <div class="page-header">
-                    Subsets
-                    <button id="expandOrCollapseButton" label="Expand All"
-                        (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton
-                        type="button" class="ui-button-coloring"></button>
-                    <span style="float:right"><button routerLink="/search" label="New Search"
-                            pButton type="button" class="ui-button-coloring"></button></span>
+  <as-split [direction]="direction">
+    <as-split-area [size]="subsetPanelSize">
+      <div class="hierarchy-div">
+        <div class="page-header">
+          Subsets
+          <button id="expandOrCollapseButton" label="Expand All"
+            (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton type="button"
+            class="ui-button-coloring expandAll"></button>
+          <span class="newSearch"><button routerLink="/search" label="New Search" pButton
+              type="button" class="ui-button-coloring"></button></span>
+        </div>
+        <p>View subsets organized by standards category or source terminology. Standards
+          categories group the subsets
+          supporting them; all other labels lead to the home pages of actual subsets or
+          source terminologies. Search or
+          browse a subset from its home page to find which ones contain a particular code
+          or term. Many of these subsets
+          are subsets of NCI Thesaurus that are developed jointly with EVS partners as
+          federal and international coding
+          standards.</p>
+        <p>See the
+          <a routerLink="/subsetncit" target="_top" class="regular-link">
+            NCI Thesaurus Subsets Page
+          </a>
+        </p>
+        <div style="padding-bottom: 6px;">
+          Search: <p-autoComplete [style]="{'width':'30%'}" [inputStyle]="{'width':'100%'}"
+            [delay]="800" [(ngModel)]="subsetautosearch" [suggestions]="subsetSuggestions"
+            (completeMethod)="performSubsetSearch($event.query)"
+            placeholder="Enter at least 3 letters of a subset." [minLength]="3">
+          </p-autoComplete>
+          <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton
+            icon="fa fa-undo" (click)="resetSearch()" pTooltip="Click to reset the search"
+            label="Reset Search" tooltipPosition="bottom"></button>
+        </div>
+        <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
+          [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
+          (onNodeExpand)="treeTableNodeExpand($event)"
+          (onNodeCollapse)="treeTableNodeCollapse($event)">
+          <ng-template pTemplate="body" let-rowNode let-rowData="rowData"
+            *ngIf="subsetsFound == true">
+            <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
+              [ngClass]="{'treenode-highlight': rowData.highlight}">
+              <td>
+                <div style="cursor: pointer; display:flex;">
+                  <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                  <a [routerLink]="['/subset/', terminology, rowData.code]" target="_top"
+                    class="regular-link">
+                    <i *ngIf="rowData.root && rowNode.node.children.length == 0"
+                      class="pi pi-fw pi-blank"></i>
+                    <i class="fa fa-external-link" style="margin-left:0.2em;"></i> {{rowData.label}}
+                  </a>
                 </div>
-                <p>View subsets organized by standards category or source terminology. Standards
-                    categories group the subsets
-                    supporting them; all other labels lead to the home pages of actual subsets or
-                    source terminologies. Search or
-                    browse a subset from its home page to find which ones contain a particular code
-                    or term. Many of these subsets
-                    are subsets of NCI Thesaurus that are developed jointly with EVS partners as
-                    federal and international coding
-                    standards.</p>
-                <p>See the
-                    <a routerLink="/subsetncit" target="_top" class="regular-link">
-                        NCI Thesaurus Subsets Page
-                    </a>
-                </p>
-                <div style="padding-bottom: 6px;">
-                    Search: <p-autoComplete [style]="{'width':'30%'}"
-                        [inputStyle]="{'width':'100%'}" [delay]="800" [(ngModel)]="subsetautosearch"
-                        [suggestions]="subsetSuggestions"
-                        (completeMethod)="performSubsetSearch($event.query)"
-                        placeholder="Enter at least 3 letters of a subset." [minLength]="3">
-                    </p-autoComplete>
-                    <button styleClass="ui-button-info" class="ui-button-coloring" type="button"
-                        pButton icon="fa fa-undo" (click)="resetSearch()"
-                        pTooltip="Click to reset the search" label="Reset Search"
-                        tooltipPosition="bottom"></button>
-                </div>
-                <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none"
-                    dataKey="code" [(selection)]="selectedNode" [scrollable]="true"
-                    scrollHeight="800px" (onNodeExpand)="treeTableNodeExpand($event)"
-                    (onNodeCollapse)="treeTableNodeCollapse($event)">
-                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData"
-                        *ngIf="subsetsFound == true">
-                        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
-                            [ngClass]="{'treenode-highlight': rowData.highlight}">
-                            <td>
-                                <div style="cursor: pointer; display:flex;">
-                                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                                    <a [routerLink]="['/subset/', terminology, rowData.code]"
-                                        target="_top" class="regular-link">
-                                        <i *ngIf="rowData.root && rowNode.node.children.length == 0"
-                                            class="pi pi-fw pi-blank"></i>
-                                        <i class="fa fa-external-link"
-                                            style="margin-left:0.2em;"></i> {{rowData.label}}
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-treeTable>
-                <p *ngIf="subsetsFound == false">No Subsets Found</p>
-            </div>
-        </as-split-area>
-    </as-split>
+              </td>
+            </tr>
+          </ng-template>
+        </p-treeTable>
+        <p *ngIf="subsetsFound == false">No Subsets Found</p>
+      </div>
+    </as-split-area>
+  </as-split>
 </div>
