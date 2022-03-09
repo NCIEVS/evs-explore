@@ -3,6 +3,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { environment } from 'src/environments/environment';
+import { Title } from '@angular/platform-browser';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -15,13 +16,14 @@ export class WelcomeComponent implements AfterViewInit {
 
   // Constructor
   constructor(private modalService: NgbModal, private cookieService: CookieService,
-    private configService: ConfigurationService) { }
+    private configService: ConfigurationService, private titleService: Title) { }
 
   // Post initialization
   ngAfterViewInit() {
     if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }
+    this.titleService.setTitle("EVS Explore");
   }
 
   getTerminology(): String {
