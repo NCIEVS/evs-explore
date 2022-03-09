@@ -257,8 +257,9 @@
       </p-table>
     </div>
     <ng-template #elseBlockMaps>None</ng-template>
-
   </p-panel>
-  <br />
-
+  <div
+    *ngIf="(configService.isSingleSource() && configService.isRdf()) || (configService.isMultiSource() && configService.isRrf())">
+    <br>
+  </div>
 </div>
