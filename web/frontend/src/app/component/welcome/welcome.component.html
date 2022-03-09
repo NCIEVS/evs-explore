@@ -19,17 +19,25 @@
               <h4 class="modal-title" id="modal-basic-title">Notice</h4>
             </div>
             <div class="modal-body">
-              <p> You are accessing a US Government website which may contain information that must be protected
+              <p> You are accessing a US Government website which may contain information that must
+                be protected
                 under
-                the US Privacy Act or other sensitive information and is intended for Government authorized use only.
+                the US Privacy Act or other sensitive information and is intended for Government
+                authorized use only.
               </p>
-              <p> Unauthorized attempts to upload information, change information, or use of this website may result
-                in disciplinary action, civil, and/or criminal penalties. Unauthorized users of this website should have
-                no expectation of privacy regarding any communications or data processed by this website.</p>
-              <p>Anyone accessing this website expressly consents to monitoring of their actions and all
+              <p> Unauthorized attempts to upload information, change information, or use of this
+                website may result
+                in disciplinary action, civil, and/or criminal penalties. Unauthorized users of this
+                website should have
+                no expectation of privacy regarding any communications or data processed by this
+                website.</p>
+              <p>Anyone accessing this website expressly consents to monitoring of their actions and
+                all
                 communications
-                or data transiting or stored on related to this website and is advised that if such monitoring reveals
-                possible evidence of criminal activity, NIH may provide that evidence to law enforcement officials.</p>
+                or data transiting or stored on related to this website and is advised that if such
+                monitoring reveals
+                possible evidence of criminal activity, NIH may provide that evidence to law
+                enforcement officials.</p>
             </div>
             <div class="modal-footer">
               <form action="" (submit)="modal.close()" method="POST">
@@ -44,9 +52,11 @@
             administrative activities.
           </p>
           <p *ngIf="getTerminology() == 'ncim'">
-            NCI Metathesaurus (NCIm) is a wide-ranging biomedical terminology database that covers most terminologies
+            NCI Metathesaurus (NCIm) is a wide-ranging biomedical terminology database that covers
+            most terminologies
             used by NCI
-            for clinical care, translational and basic research, and public information and administrative activities.
+            for clinical care, translational and basic research, and public information and
+            administrative activities.
           </p>
           <br>
           <div *ngIf="getTerminology() == 'ncit'" class="welcome-title-small">
@@ -60,46 +70,60 @@
               Stable, unique codes for biomedical concepts.
             </li>
             <li>
-              Preferred terms, synonyms, research codes, external source codes, and other information.
+              Preferred terms, synonyms, research codes, external source codes, and other
+              information.
             </li>
             <li>
               Over 100,000 textual definitions.
             </li>
             <li>
-              Over 400,000 cross-links between concepts, providing formal logic-based definition of many concepts.
+              Over 400,000 cross-links between concepts, providing formal logic-based definition of
+              many concepts.
             </li>
             <li>
-              Extensive content integrated from NCI and other partners, much available as separate NCIt <a
-                [routerLink]="['/subsets', getTerminology()]" target="_blank" class="regular-link">subsets</a>
+              Extensive content integrated from NCI and other partners, much available as separate
+              NCIt <a [routerLink]="['/subsets', getTerminology()]" target="_top"
+                class="regular-link">subsets</a>
             </li>
             <li>
               Updated frequently by a team of subject matter experts.
             </li>
           </ul>
           <ul *ngIf="getTerminology() == 'ncim'">
-            <li>Maps 8,000,000 terms from more than 100 sources into 3,600,000 biomedical concepts that represent their
+            <li>Maps 8,000,000 terms from more than 100 sources into 3,600,000 biomedical concepts
+              that represent their
               meaning.</li>
-            <li>Displays preferred terms, synonyms, definitions, and other information from each source.</li>
+            <li>Displays preferred terms, synonyms, definitions, and other information from each
+              source.</li>
             <li>More than 24,000,000 cross-links between content elements.</li>
-            <li>Updated frequently by a team of biomedical terminology and subject matter experts.</li>
+            <li>Updated frequently by a team of biomedical terminology and subject matter experts.
+            </li>
           </ul>
 
           <p *ngIf="getTerminology() == 'ncit'">
-            NCIt is a widely recognized standard for biomedical coding and reference, used by a broad variety of public
+            NCIt is a widely recognized standard for biomedical coding and reference, used by a
+            broad variety of public
             and private partners both nationally
-            and internationally including the Clinical Data Interchange Standards Consortium Terminology (CDISC), the
+            and internationally including the Clinical Data Interchange Standards Consortium
+            Terminology (CDISC), the
             U.S. Food and Drug Administration (FDA),
-            the Federal Medication Terminologies (FMT), and the National Council for Prescription Drug Programs (NCPDP).
+            the Federal Medication Terminologies (FMT), and the National Council for Prescription
+            Drug Programs (NCPDP).
           </p>
           <p *ngIf="getTerminology() == 'ncim'">
-            NCIm contains most public domain terminologies from the National Library of Medicine's <a
-              href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank" alt="UMLS Metathesaurus">UMLS
-              Metathesaurus</a>, as well as many other biomedical terminologies created by or of interest to NCI and its
-            partners. Some proprietary terminologies are included, with permission, and have restrictions on their use
-            (see <a href="https://ncim.nci.nih.gov/ncimbrowser/pages/source_help_info.jsf" target="_blank"
-              alt="details">details</a>). The current version of the NCI Metathesaurus, based on the UMLS build <a
-              href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Changes+Over+Time" target="_blank"
-              alt="2021AA">2021AA</a>, covers up to National Cancer Institute Thesaurus, 21.06e.
+            NCIm contains most public domain terminologies from the National Library of Medicine's
+            <a href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank"
+              alt="UMLS Metathesaurus">UMLS
+              Metathesaurus</a>, as well as many other biomedical terminologies created by or of
+            interest to NCI and its
+            partners. Some proprietary terminologies are included, with permission, and have
+            restrictions on their use
+            (see <a href="https://ncim.nci.nih.gov/ncimbrowser/pages/source_help_info.jsf"
+              target="_blank" alt="details">details</a>). The current version of the NCI
+            Metathesaurus, based on the UMLS build <a
+              href="https://wiki.nci.nih.gov/display/EVS/NCI+Metathesaurus+Changes+Over+Time"
+              target="_blank" alt="2021AA">2021AA</a>, covers up to National Cancer Institute
+            Thesaurus, 21.06e.
           </p>
 
           <p *ngIf="getTerminology() == 'ncit'">
@@ -123,25 +147,34 @@
 
           <p *ngIf="getTerminology() == 'ncit'">
             NCIt Terms of Service:
-            <a href="https://evs.nci.nih.gov/ftp1/NCI_Thesaurus/ThesaurusTermsofUse.htm" target="_blank"
-              class="regular-link">
+            <a href="https://evs.nci.nih.gov/ftp1/NCI_Thesaurus/ThesaurusTermsofUse.htm"
+              target="_blank" class="regular-link">
               https://evs.nci.nih.gov/ftp1/NCI_Thesaurus/ThesaurusTermsofUse.htm
             </a>
           </p>
 
           <p *ngIf="getTerminology() == 'mdr'">
-            Medical Dictionary for Regulatory Activities Terminology (MedDRA) is an international standard terminology used to classify adverse event information associated with the use of biopharmaceuticals and other medical products. MedDRA was developed under the auspices of the International Conference on Harmonization of Technical Requirements for Registration of Pharmaceuticals for Human Use (ICH). The International Federation of Pharmaceutical Manufacturers and Associations (IFPMA) owns MedDRA as trustee for ICH, and the Maintenance and Support Services Organization (MSSO) serves as the repository, maintainer, and distributor.
+            Medical Dictionary for Regulatory Activities Terminology (MedDRA) is an international
+            standard terminology used to classify adverse event information associated with the use
+            of biopharmaceuticals and other medical products. MedDRA was developed under the
+            auspices of the International Conference on Harmonization of Technical Requirements for
+            Registration of Pharmaceuticals for Human Use (ICH). The International Federation of
+            Pharmaceutical Manufacturers and Associations (IFPMA) owns MedDRA as trustee for ICH,
+            and the Maintenance and Support Services Organization (MSSO) serves as the repository,
+            maintainer, and distributor.
           </p>
 
           <p *ngIf="getTerminology() == 'mdr'">
-            Source Home Page: <a href="http://www.meddra.org" target="_blank"
-            class="regular-link">
-            http://www.meddra.org
-          </a>
+            Source Home Page: <a href="http://www.meddra.org" target="_blank" class="regular-link">
+              http://www.meddra.org
+            </a>
           </p>
 
           <p *ngIf="getTerminology() == 'mdr'">
-            The MedDRA terminology is licensed for NCI work and may be viewed on NCI browsers. All other uses are prohibited, unless covered by separate subscription to MedDRA from the MedDRA MSSO (see http://www.meddra.org) or contact at mssohelp@meddra.org, 877.258.8280, or 7575 Colshire Drive McLean Virginia, 22102.
+            The MedDRA terminology is licensed for NCI work and may be viewed on NCI browsers. All
+            other uses are prohibited, unless covered by separate subscription to MedDRA from the
+            MedDRA MSSO (see http://www.meddra.org) or contact at mssohelp@meddra.org, 877.258.8280,
+            or 7575 Colshire Drive McLean Virginia, 22102.
           </p>
 
         </div>
@@ -151,12 +184,14 @@
               <tr valign="top">
                 <td>
                   <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">
-                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS" border="0" />
+                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS"
+                      border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">NCI Enterprise
+                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS"
+                    class="regular-link">NCI Enterprise
                     Vocabulary Services</a>:
                   Terminology resources and services for NCI and the biomedical community.
                 </td>
@@ -191,15 +226,15 @@
               -->
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
-                    alt="NCI Metathesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads"
+                    target="_blank" alt="NCI Metathesaurus" class="regular-link">
                     <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
-                    alt="NCI Metathesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads"
+                    target="_blank" alt="NCI Metathesaurus" class="regular-link">
 
                     NCI Metathesaurus</a>:
                   Comprehensive database of 6,700,000 terms from over 85 terminologies.
@@ -207,31 +242,33 @@
               </tr>
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
                     <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
 
                     NCI Thesaurus</a>:
-                  Reference terminology for NCI, NCI Metathesaurus and NCI informatics infrastructure.
+                  Reference terminology for NCI, NCI Metathesaurus and NCI informatics
+                  infrastructure.
                 </td>
               </tr>
               <tr valign="top">
                 <td>
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
-                    alt="NCI Terminology Resources" class="regular-link">
-                    <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources" border="0" />
+                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary"
+                    target="_blank" alt="NCI Terminology Resources" class="regular-link">
+                    <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources"
+                      border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
-                    alt="NCI Terminology Resources" class="regular-link">
+                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary"
+                    target="_blank" alt="NCI Terminology Resources" class="regular-link">
 
                     NCI Terminology Resources</a>:
                   More information on NCI dictionaries and resources.
@@ -240,8 +277,8 @@
               <tr valign="top">
                 <td>
                   <a href="{{getApiURL()}}" target="_blank" alt="API">
-                    <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0" width="38"
-                      height="38" />
+                    <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0"
+                      width="38" height="38" />
                   </a>
                 </td>
                 <td width="3px;"></td>
@@ -250,9 +287,10 @@
                     Swagger API Documentation</a>:
                   View documentation for the EVS REST API providing data to this application.
 
-                  Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK" target="_blank"
-                    class="regular-link">
-                    evsrestapi-client-SDK</a> project for code examples for interacting with the API.
+                  Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK"
+                    target="_blank" class="regular-link">
+                    evsrestapi-client-SDK</a> project for code examples for interacting with the
+                  API.
                 </td>
               </tr>
             </tbody>
