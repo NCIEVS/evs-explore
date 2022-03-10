@@ -1,68 +1,68 @@
 <div id="hierarchyTableDisplay" style="height: 800px; width: 100%;">
-  <as-split [direction]="direction">
-    <as-split-area [size]="hierarchyPanelSize">
-      <div class="hierarchy-div">
-        <div class="page-header ui-coloring">
-          Concept Hierarchy
-        </div>
-        <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
-          [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
-          (onNodeExpand)="treeTableNodeExpand($event)"
-          (onNodeCollapse)="treeTableNodeCollapse($event)"
-          (onNodeSelect)="treeTableNodeSelected(selectedNode)">
-          <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
-              [ngClass]="{'treenode-highlight': rowData.highlight}">
-              <td>
-                <div style="cursor: pointer; display:flex;">
-                  <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                  {{rowData.label}}
+    <as-split [direction]="direction">
+        <as-split-area [size]="hierarchyPanelSize">
+            <div class="hierarchy-div">
+                <div class="page-header ui-coloring">
+                    Concept Hierarchy
                 </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-treeTable>
-      </div>
-    </as-split-area>
-    <as-split-area [size]="conceptPanelSize">
+                <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single"
+                    dataKey="code" [(selection)]="selectedNode" [scrollable]="true"
+                    scrollHeight="800px" (onNodeExpand)="treeTableNodeExpand($event)"
+                    (onNodeCollapse)="treeTableNodeCollapse($event)"
+                    (onNodeSelect)="treeTableNodeSelected(selectedNode)">
+                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
+                            [ngClass]="{'treenode-highlight': rowData.highlight}">
+                            <td>
+                                <div style="cursor: pointer; display:flex;">
+                                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                                    {{rowData.label}}
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-treeTable>
+            </div>
+        </as-split-area>
+        <as-split-area [size]="conceptPanelSize">
 
-      <div class="hierarchy-div">
-        <div class="page-header ui-coloring">
-          {{ title }}
-          <span style="float:right"><button routerLink="/search" label="New Search" pButton
-              class="ui-button-coloring" type="button"></button></span>
-        </div>
+            <div class="hierarchy-div">
+                <div class="page-header ui-coloring">
+                    {{ title }}
+                    <span style="float:right"><button routerLink="/welcome" label="New Search"
+                            pButton class="ui-button-coloring" type="button"></button></span>
+                </div>
 
-        <div *ngIf="configService.isMultiSource()" class="center">
-          <span *ngIf="sources.length > 1">
-            <span *ngFor="let source of sources; index as i">
-              <span *ngIf="i != 0"> | </span>
-              <a [routerLink]="" *ngIf="!selectedSources.has(source)"
-                (click)="toggleSelectedSource(source)">{{source}}</a>
-              <span class="pointer" *ngIf="selectedSources.has(source)"
-                (click)="toggleSelectedSource(source)"><b>{{source}}</b></span>
-            </span>
-          </span>
-        </div>
+                <div *ngIf="configService.isMultiSource()" class="center">
+                    <span *ngIf="sources.length > 1">
+                        <span *ngFor="let source of sources; index as i">
+                            <span *ngIf="i != 0"> | </span>
+                            <a [routerLink]="" *ngIf="!selectedSources.has(source)"
+                                (click)="toggleSelectedSource(source)">{{source}}</a>
+                            <span class="pointer" *ngIf="selectedSources.has(source)"
+                                (click)="toggleSelectedSource(source)"><b>{{source}}</b></span>
+                        </span>
+                    </span>
+                </div>
 
-        <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)"
-          class="ui-button-coloring">
-          <p-tabPanel header="Terms And Properties">
-            <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-          </p-tabPanel>
-          <p-tabPanel header="Relationships">
-            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
-              [urlTarget]="urlTarget">
-            </app-concept-relationship>
-          </p-tabPanel>
-          <p-tabPanel header="View All">
-            <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-            <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
-              [urlTarget]="urlTarget">
-            </app-concept-relationship>
-          </p-tabPanel>
-        </p-tabView>
-      </div>
-    </as-split-area>
-  </as-split>
+                <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)"
+                    class="ui-button-coloring">
+                    <p-tabPanel header="Terms And Properties">
+                        <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+                    </p-tabPanel>
+                    <p-tabPanel header="Relationships">
+                        <app-concept-relationship [concept]="conceptWithRelationships"
+                            [urlBase]="urlBase" [urlTarget]="urlTarget">
+                        </app-concept-relationship>
+                    </p-tabPanel>
+                    <p-tabPanel header="View All">
+                        <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+                        <app-concept-relationship [concept]="conceptWithRelationships"
+                            [urlBase]="urlBase" [urlTarget]="urlTarget">
+                        </app-concept-relationship>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+        </as-split-area>
+    </as-split>
 </div>
