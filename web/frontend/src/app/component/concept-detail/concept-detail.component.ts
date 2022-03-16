@@ -4,6 +4,8 @@ import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { ConfigurationService } from '../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
+import { ignoreElements } from 'rxjs-compat/operator/ignoreElements';
 
 // Component for displaying concept details
 @Component({
@@ -33,11 +35,13 @@ export class ConceptDetailComponent implements OnInit {
   )
 
   terminology: string = null;
+  titleSet = false;
 
   constructor(
     private sanitizer: DomSanitizer,
     private conceptDisplay: ConceptDisplayComponent,
-    private configService: ConfigurationService
+    private configService: ConfigurationService,
+    private titleService: Title
   ) {
 
     this.terminology = configService.getTerminologyName();
@@ -49,6 +53,8 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   checkFilter(item: any): Boolean {
+    if (!this.titleSet && this.concept)
+      this.setTitle();
     var flag = (
       // no source field -> show
       (this.terminology == 'ncit' && !item.hasOwnProperty('source') &&
@@ -81,6 +87,11 @@ export class ConceptDetailComponent implements OnInit {
         return 0;
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
+  }
+
+  public setTitle() {
+    this.titleService.setTitle(this.concept.code + " - " + this.concept.name);
+    this.titleSet = true;
   }
 
 }

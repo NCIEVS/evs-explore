@@ -1,5 +1,5 @@
 // Angular Modules
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 // import { Injector, ModuleWithProviders } from '@angular/core';
@@ -158,6 +158,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     CookieService,
     NotificationService,
     CommonDataService,
+    Title,
     MessageService,
     LoaderService,
     ConceptDetailService,

@@ -2,7 +2,7 @@
     <p-panel [showHeader]="false">
         <div class="page-header" style="margin-bottom: 0.2em">
             Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button
-                    routerLink="/search" label="New Search" pButton type="button"
+                    routerLink="/welcome" label="New Search" pButton type="button"
                     class="ui-button-coloring"></button></span>
         </div>
         <p>{{ subsetNCItDefinition }}</p>
@@ -59,8 +59,10 @@
                 <ng-template pTemplate="body" let-value let-i="rowIndex">
                     <tr>
                         <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]"
-                                target='urlTarget'><i class="fa fa-external-link"
-                                    style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+                                target='_top'>
+                                <!-- <i class="fa fa-external-link"
+                                    style="margin-left:0.2em;"></i> --> {{ value.code }}
+                            </a></td>
                         <td class="w-30">{{ value.name }}</td>
                         <td class="w-30">
                             <span *ngFor="let syn of value.getSynonymNames('NCI'); last as isLast">
@@ -101,12 +103,16 @@
                 <ng-template pTemplate="body" let-value let-i="rowIndex">
                     <tr>
                         <td class="w-10"><a [routerLink]="[urlBase, terminology, titleCode ]"
-                                target='urlTarget'><i class="fa fa-external-link"
-                                    style="margin-left:0.2em;"></i> {{ titleCode }}</a></td>
+                                target='_top'>
+                                <!-- <i class="fa fa-external-link"
+                                  style="margin-left:0.2em;"></i> --> {{ titleCode }}
+                            </a></td>
                         <td class="w-20">{{titleDesc}}</td>
                         <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]"
-                                target='urlTarget'><i class="fa fa-external-link"
-                                    style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+                                target='_top'>
+                                <!-- <i class="fa fa-external-link"
+                                  style="margin-left:0.2em;"></i> --> {{ value.code }}
+                            </a></td>
                         <td class="w-20">{{value.name}}
                         </td>
                         <td class="w-20">
@@ -149,8 +155,10 @@
                 <ng-template pTemplate="body" let-value let-i="rowIndex">
                     <tr>
                         <td class="w-10"><a [routerLink]="[urlBase, terminology, value.code ]"
-                                target='urlTarget'><i class="fa fa-external-link"
-                                    style="margin-left:0.2em;"></i> {{ value.code }}</a></td>
+                                target='_top'>
+                                <!-- <i class="fa fa-external-link"
+                                  style="margin-left:0.2em;"></i> --> {{ value.code }}
+                            </a></td>
                         <td class="w-15">
                             <span
                                 *ngFor="let syn of value.getSynonymNames(subsetFormat); last as isLast">

@@ -232,6 +232,7 @@ export class GeneralSearchComponent implements OnInit,
   resetSource() {
     console.log('resetSource');
     this.configService.setSources('');
+    this.cookieService.set('sources', '');
     this.selectedSources = [];
     this.performSearch(this.termautosearch);
   }

@@ -59,6 +59,7 @@ export class ConfigurationService {
   }
 
   setSources(sources) {
+    this.cookieService.set('sources', sources);
     this.sources = sources;
   }
 
@@ -120,6 +121,9 @@ export class ConfigurationService {
     if (!term) {
       this.cookieService.set('term', 'ncit')
       term = 'ncit';
+    }
+    if (this.cookieService.get('sources')) {
+      this.setSources(this.cookieService.get('sources'));
     }
 
     // defining subject object for subscription

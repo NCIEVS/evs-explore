@@ -5,6 +5,7 @@ import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-subset-details',
@@ -33,11 +34,11 @@ export class SubsetDetailsComponent implements OnInit {
   terminology: string;
 
   urlBase = '/concept';
-  urlTarget = '_top';
 
   constructor(private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
-    private cookieService: CookieService, private configService: ConfigurationService
+    private cookieService: CookieService, private configService: ConfigurationService,
+    private titleService: Title
   ) {
 
     this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
@@ -92,6 +93,7 @@ export class SubsetDetailsComponent implements OnInit {
               break;
             }
           }
+          this.setTitle();
         });
     });
   }
@@ -171,6 +173,10 @@ export class SubsetDetailsComponent implements OnInit {
         }
       });
     this.textSuggestions = [];
+  }
+
+  setTitle() {
+    this.titleService.setTitle(this.titleCode + " - " + this.titleDesc)
   }
 
 }

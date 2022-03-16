@@ -57,9 +57,10 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Set active index based on cookie unless never set
-    // then default to 0
-    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
+
+    this.activeIndex = 0;
+    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
+
     this.terminology = this.configService.getTerminologyName();
 
     this.updateDisplaySize();
