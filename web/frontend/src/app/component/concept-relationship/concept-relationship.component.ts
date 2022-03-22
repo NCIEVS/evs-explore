@@ -27,7 +27,7 @@ export class ConceptRelationshipComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.conceptDisplay.collapseChange.subscribe(change => {
+    this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
     })
   }

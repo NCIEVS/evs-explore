@@ -51,7 +51,7 @@ export class ConceptDetailComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // implements OnInit
-    this.conceptDisplay.collapseChange.subscribe(change => {
+    this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
     })
   }
