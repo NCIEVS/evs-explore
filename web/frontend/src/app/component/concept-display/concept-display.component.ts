@@ -101,13 +101,6 @@ export class ConceptDisplayComponent implements OnInit {
               this.sources.splice(this.sources.indexOf("All"), 1);
               this.sources.unshift("All");
             }
-
-            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                this.conceptWithRelationships = new Concept(response, this.configService);
-              });
-            }
           })
 
       })
