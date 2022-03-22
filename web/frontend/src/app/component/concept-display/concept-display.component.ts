@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { Subject } from 'rxjs';
 
 
 // Concept display component
@@ -15,6 +16,7 @@ import { ConfigurationService } from '../../service/configuration.service';
   styleUrls: ['./concept-display.component.css']
 })
 export class ConceptDisplayComponent implements OnInit {
+  collapseChange: Subject<boolean> = new Subject();
 
   activeIndex = 0;
   conceptCode: string;
@@ -49,6 +51,7 @@ export class ConceptDisplayComponent implements OnInit {
   sources: string[] = [];
   selectedSources = null;
   terminology: string;
+  collapsed: boolean = false;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -194,4 +197,14 @@ export class ConceptDisplayComponent implements OnInit {
     }
     return result;
   }
+
+  expandCollapseTables() {
+    this.collapsed = !this.collapsed;
+    this.collapseChange.next(this.collapsed);
+  }
+
+  expandCollapseText() {
+    return this.collapsed ? "Expand All" : "Collapse All"
+  }
+
 }

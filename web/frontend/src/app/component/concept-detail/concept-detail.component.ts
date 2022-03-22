@@ -36,6 +36,7 @@ export class ConceptDetailComponent implements OnInit {
 
   terminology: string = null;
   titleSet = false;
+  collapsed: boolean = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -50,6 +51,9 @@ export class ConceptDetailComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // implements OnInit
+    this.conceptDisplay.collapseChange.subscribe(change => {
+      this.collapsed = change;
+    })
   }
 
   checkFilter(item: any): Boolean {

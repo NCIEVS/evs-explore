@@ -17,6 +17,7 @@ export class ConceptRelationshipComponent implements OnInit {
   @Input() urlTarget: string
 
   terminology: string = null;
+  collapsed: boolean = false;
 
   constructor(
     private conceptDisplay: ConceptDisplayComponent,
@@ -26,6 +27,9 @@ export class ConceptRelationshipComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.conceptDisplay.collapseChange.subscribe(change => {
+      this.collapsed = change;
+    })
   }
 
   checkFilter(item: any): Boolean {

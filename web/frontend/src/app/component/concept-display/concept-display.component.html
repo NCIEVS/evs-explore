@@ -2,12 +2,15 @@
   <div class="page-header ui-coloring">
     {{ title }}
     <span *ngIf="displayHierarchy"> -- <button
-        [routerLink]="['/hierarchy', terminology, conceptCode]"
+        [routerLink]="['/hierarchy', terminology, conceptCode]" class="ui-button-coloring"
         [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
         type="button"></button>
     </span>
     <span style="float:right" class="ui-button-back-to-search"><button routerLink="/search"
         label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button (click)="expandCollapseTables()"
+        label={{expandCollapseText()}} pButton type="button"
+        class="ui-button-coloring"></button></span>
   </div>
   <div *ngIf="configService.isMultiSource()" class="center">
     <span *ngIf="sources.length > 1">
