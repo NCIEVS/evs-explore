@@ -66,7 +66,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.updateDisplaySize();
 
     this.conceptDetailService
-      .getConceptSummary(this.configService.getCode(), 'summary,maps')
+      .getConceptSummary(this.configService.getCode(), 'summary')
       .subscribe((response: any) => {
         this.conceptDetail = new Concept(response, this.configService);
         this.conceptCode = this.conceptDetail.code;
@@ -77,13 +77,6 @@ export class HierarchyDisplayComponent implements OnInit {
         if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
           this.sources.splice(this.sources.indexOf("All"), 1);
           this.sources.unshift("All");
-        }
-        this.conceptWithRelationships = undefined;
-        if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-          (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response, this.configService);
-          });
         }
         this.getPathInHierarchy();
       });
@@ -122,7 +115,7 @@ export class HierarchyDisplayComponent implements OnInit {
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
     this.conceptDetailService
-      .getConceptSummary(event.code, 'summary,maps')
+      .getConceptSummary(event.code, 'summary')
       .subscribe((response: any) => {
         this.conceptDetail = new Concept(response, this.configService);
         this.conceptCode = this.conceptDetail.code;
@@ -133,12 +126,6 @@ export class HierarchyDisplayComponent implements OnInit {
         if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
           this.sources.splice(this.sources.indexOf("All"), 1);
           this.sources.unshift("All");
-        }
-        if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-          (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response, this.configService);
-          });
         }
 
         this.getPathInHierarchy();

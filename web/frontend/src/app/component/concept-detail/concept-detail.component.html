@@ -31,7 +31,7 @@
     </div>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Definitions
     </p-header>
@@ -69,7 +69,7 @@
     <ng-template #elseBlockDefinitions>None</ng-template>
   </p-panel>
   <br />
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Synonyms & Abbreviations
     </p-header>
@@ -125,7 +125,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true">
+  <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Other Properties
     </p-header>
@@ -173,7 +173,8 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" *ngIf="configService.isSingleSource() && configService.isRdf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed"
+    *ngIf="configService.isSingleSource() && configService.isRdf()">
     <p-header class="bold-heading">
       Maps To
     </p-header>
@@ -214,7 +215,8 @@
     <ng-template #elseBlockMaps>None</ng-template>
 
   </p-panel>
-  <p-panel [toggleable]="true" *ngIf="configService.isMultiSource() && configService.isRrf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed"
+    *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Mappings
     </p-header>

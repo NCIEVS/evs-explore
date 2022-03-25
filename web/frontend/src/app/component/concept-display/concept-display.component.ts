@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { Subject } from 'rxjs';
 
 
 // Concept display component
@@ -15,6 +16,7 @@ import { ConfigurationService } from '../../service/configuration.service';
   styleUrls: ['./concept-display.component.css']
 })
 export class ConceptDisplayComponent implements OnInit {
+  expandCollapseChange: Subject<boolean> = new Subject();
 
   activeIndex = 0;
   conceptCode: string;
@@ -49,6 +51,8 @@ export class ConceptDisplayComponent implements OnInit {
   sources: string[] = [];
   selectedSources = null;
   terminology: string;
+  collapsed: boolean = false;
+  collapsedText: string = "Collapse All";
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -96,13 +100,6 @@ export class ConceptDisplayComponent implements OnInit {
             if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
               this.sources.splice(this.sources.indexOf("All"), 1);
               this.sources.unshift("All");
-            }
-
-            if ((this.activeIndex === 1 || this.activeIndex === 2) &&
-              (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-              this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-                this.conceptWithRelationships = new Concept(response, this.configService);
-              });
             }
           })
 
@@ -194,4 +191,11 @@ export class ConceptDisplayComponent implements OnInit {
     }
     return result;
   }
+
+  expandCollapseTables() {
+    this.collapsed = !this.collapsed;
+    this.collapsedText = this.collapsed ? 'Expand All' : 'Collapse All';
+    this.expandCollapseChange.next(this.collapsed);
+  }
+
 }
