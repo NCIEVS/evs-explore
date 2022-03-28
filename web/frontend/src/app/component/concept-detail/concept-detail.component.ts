@@ -83,6 +83,14 @@ export class ConceptDetailComponent implements OnInit {
     }
   }
 
+  bypassHTML(value) {
+    if (!value)
+      return null;
+    if (value.search("<") == -1 || value.search(">") == -1)
+      return value;
+    return this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
       let value1 = data1[event.field];
