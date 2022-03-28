@@ -55,8 +55,8 @@
         <ng-template pTemplate="body" let-val>
           <ng-container>
             <tr *ngIf="checkFilter(val)">
-              <td>{{ val.definition }}</td>
-              <td>{{ val.source }}</td>
+              <td [innerHtml]="bypassHTML(val.definition)"></td>
+              <td [innerHtml]="bypassHTML(val.source)"></td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
               <td *ngIf="configService.isRdf() || configService.isSingleSource()"><span
                   *ngFor="let qual of val.qualifiers">
