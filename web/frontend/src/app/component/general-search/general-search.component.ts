@@ -116,6 +116,14 @@ export class GeneralSearchComponent implements OnInit,
       this.welcomePage = false;
     }
 
+    // Set selected terminology
+    if (queryParams && queryParams.get('terminology') != undefined) {
+      this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
+      this.configService.setTerminology(this.selectedTerm);
+    }
+    else
+      this.selectedTerm = configService.getTerminology();
+
     // Set paging parameters
     this.resetPaging();
 
@@ -131,14 +139,6 @@ export class GeneralSearchComponent implements OnInit,
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-
-    // Set selected terminology
-    if (queryParams && queryParams.get('terminology') != undefined) {
-      this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
-      this.configService.setTerminology(this.selectedTerm);
-    }
-    else
-      this.selectedTerm = configService.getTerminology();
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
