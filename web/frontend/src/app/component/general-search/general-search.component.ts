@@ -94,6 +94,14 @@ export class GeneralSearchComponent implements OnInit,
 
     // Instantiate new search criteria
     this.searchCriteria = new SearchCriteria(configService);
+    var queryParams = new URLSearchParams(window.location.search);
+    if (queryParams) {
+      this.searchCriteria.term = queryParams.get('term');
+      this.searchCriteria.type = queryParams.get('type');
+    }
+    else {
+      this.searchCriteria.term = this.selectedTerm;
+    }
 
     // TODO: re-enable this?
     // this.searchCriteria.term = route.snapshot.params['term'];
@@ -132,7 +140,6 @@ export class GeneralSearchComponent implements OnInit,
     if (this.welcomePage) {
 
       // Set default search to "contains"
-      sessionStorage.setItem('searchType', 'contains');
       this.selectedSearchType = 'contains';
 
       // Set default selected sources to empty array
@@ -141,20 +148,13 @@ export class GeneralSearchComponent implements OnInit,
 
       // Set default term search to blank
       this.termautosearch = '';
-      sessionStorage.setItem('searchTerm', this.termautosearch);
     }
 
     // Otherwise, recover search type from session storage
     else {
 
       // Restore search type
-      if (this.selectedSearchType === null || this.selectedSearchType === undefined) {
-        if ((sessionStorage.getItem('searchType') !== null) && (sessionStorage.getItem('searchType') !== undefined)) {
-          this.selectedSearchType = sessionStorage.getItem('searchType');
-        } else {
-          this.selectedSearchType = 'contains';
-        }
-      }
+      this.selectedSearchType = this.searchCriteria.type;
 
       // Compute "showMoreSearchOption" state
       if (this.selectedSearchType === 'phrase' ||
@@ -166,7 +166,7 @@ export class GeneralSearchComponent implements OnInit,
       }
 
       // Reset term to search
-      this.termautosearch = sessionStorage.getItem('searchTerm');
+      this.termautosearch = this.searchCriteria.term;
       if (this.configService.getSources() != null && this.configService.getSources().length > 0) {
         this.selectedSources = configService.getSources().split(',');
       }
@@ -219,7 +219,6 @@ export class GeneralSearchComponent implements OnInit,
   clearSearchText(event) {
     console.log('clear search text');
     this.termautosearch = '';
-    sessionStorage.setItem('searchTerm', this.termautosearch);
   }
 
   // Reset paging
@@ -257,7 +256,6 @@ export class GeneralSearchComponent implements OnInit,
     console.log('resetFilters');
     this.selectedPropertiesReturn = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
     this.selectedSearchType = 'contains';
-    sessionStorage.setItem('searchType', this.selectedSearchType);
     this.configService.setSources('');
     this.selectedSources = [];
     console.log('reset filters', this.selectedPropertiesReturn, this.selectedSearchType, this.selectedSources);
@@ -296,7 +294,14 @@ export class GeneralSearchComponent implements OnInit,
     this.currentPage = 1;
     this.resetTable();
     this.selectedSearchType = event;
-    sessionStorage.setItem('searchType', this.selectedSearchType);
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
     this.performSearch(this.termautosearch);
   }
 
@@ -307,8 +312,6 @@ export class GeneralSearchComponent implements OnInit,
     // Navigate from welcome page
     if (path.includes('welcome')) {
       console.log('window location (search) = ', window.location.pathname);
-      sessionStorage.setItem('searchTerm', event.query);
-      this.router.navigate(['/search']);
     }
 
     else {
@@ -322,10 +325,16 @@ export class GeneralSearchComponent implements OnInit,
         // TODO: this is not ideal, the page size should be controlled by a service
         this.searchCriteria.pageSize = this.dtSearch.rows;
       }
-
-      sessionStorage.setItem('searchTerm', event.query);
-      this.performSearch(event.query);
     }
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
+    this.performSearch(event.query);
 
     this.selectedTerm = this.configService.getTerminology();
 
@@ -350,6 +359,14 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onSubmitSearch', this.termautosearch);
     this.currentPage = 1;
     this.resetPaging();
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
     this.performSearch(this.termautosearch);
   }
 
@@ -357,6 +374,14 @@ export class GeneralSearchComponent implements OnInit,
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSources);
     this.configService.setSources(this.selectedSources.join(','));
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
     this.performSearch(this.termautosearch);
   }
 
@@ -368,6 +393,7 @@ export class GeneralSearchComponent implements OnInit,
       }
     }
     console.log('onChangeTerminology', terminology.value.terminology);
+    this.searchCriteria.term = terminology.value.terminology;
     this.selectedTerm = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerm);
     this.resetFilters();
@@ -417,6 +443,14 @@ export class GeneralSearchComponent implements OnInit,
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event, this.selectedSources);
     this.configService.setSources(this.selectedSources.join(','));
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
     this.performSearch(this.termautosearch);
   }
 
@@ -429,6 +463,14 @@ export class GeneralSearchComponent implements OnInit,
       const fromRecord = event.first;
       this.searchCriteria.fromRecord = fromRecord;
       this.searchCriteria.pageSize = event.rows;
+      this.router.navigate(['/search'], {
+        queryParams: {
+          terminology: this.configService.getTerminologyName(),
+          term: event.query,
+          type: this.selectedSearchType,
+          source: this.configService.getSources() ? this.configService.getSources() : ""
+        }
+      });
       this.performSearch(this.termautosearch);
     }
 
@@ -439,6 +481,14 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onPerformSearch', this.termautosearch);
     this.avoidLazyLoading = true; // don't see any reason for lazy loading here
     this.resetTable();
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.configService.getSources() ? this.configService.getSources() : ""
+      }
+    });
     this.performSearch(this.termautosearch);
   }
 
@@ -450,6 +500,7 @@ export class GeneralSearchComponent implements OnInit,
 
   // Perform the search
   performSearch(term) {
+
     if (term == null || term.length < 3) {
       if (!this.firstSearchFlag) {
         console.log('skip search - first search has not happened, reroute to /welcome', term);
