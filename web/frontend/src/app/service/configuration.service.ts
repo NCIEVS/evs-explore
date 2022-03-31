@@ -41,6 +41,7 @@ export class ConfigurationService {
   }
 
   // filter out terminologies that shouldn't be in the list on the search page
+  // mostly just the weekly ncit that's loaded
   terminologySearchListFilter(term) {
     if (term.terminology != 'ncit')
       return true;
@@ -49,7 +50,7 @@ export class ConfigurationService {
     return false;
   }
 
-  getTerminologyByName(name) {
+  getTerminologyByName(name) { // reverse search terminology by short name
     var terms = this.terminologies.filter(this.terminologySearchListFilter);
     for (var term in terms) {
       if (terms[term].terminology == name) {

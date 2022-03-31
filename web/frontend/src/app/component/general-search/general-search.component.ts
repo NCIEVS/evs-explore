@@ -95,10 +95,10 @@ export class GeneralSearchComponent implements OnInit,
     // Instantiate new search criteria
     this.searchCriteria = new SearchCriteria(configService);
     var queryParams = new URLSearchParams(window.location.search);
-    if (queryParams && queryParams.get('term') != undefined) {
+    if (queryParams && queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
       this.searchCriteria.term = queryParams.get('term');
       this.searchCriteria.type = queryParams.get('type');
-      if (queryParams.get('source') != "")
+      if (queryParams.get('source') != "") // safety check against there being no sources selected
         this.selectedSources = queryParams.get('source').split(',');
     }
 
@@ -117,11 +117,11 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     // Set selected terminology
-    if (queryParams && queryParams.get('terminology') != undefined) {
+    if (queryParams && queryParams.get('terminology') != undefined) { // set if there's something from the url
       this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
       this.configService.setTerminology(this.selectedTerm);
     }
-    else
+    else // set if there's nothing from the url
       this.selectedTerm = configService.getTerminology();
 
     // Set paging parameters
