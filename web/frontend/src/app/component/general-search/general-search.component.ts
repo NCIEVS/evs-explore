@@ -95,9 +95,11 @@ export class GeneralSearchComponent implements OnInit,
     // Instantiate new search criteria
     this.searchCriteria = new SearchCriteria(configService);
     var queryParams = new URLSearchParams(window.location.search);
-    if (queryParams) {
+    if (queryParams && queryParams.get('term') != undefined) {
       this.searchCriteria.term = queryParams.get('term');
       this.searchCriteria.type = queryParams.get('type');
+      if (queryParams.get('source') != "")
+        this.selectedSources = queryParams.get('source').split(',');
     }
 
     // TODO: re-enable this?
@@ -131,8 +133,9 @@ export class GeneralSearchComponent implements OnInit,
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
 
     // Set selected terminology
-    if (queryParams) {
+    if (queryParams && queryParams.get('terminology') != undefined) {
       this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
+      this.configService.setTerminology(this.selectedTerm);
     }
     else
       this.selectedTerm = configService.getTerminology();
