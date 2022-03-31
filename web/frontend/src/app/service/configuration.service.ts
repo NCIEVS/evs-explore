@@ -40,6 +40,14 @@ export class ConfigurationService {
     return this.terminologies;
   }
 
+  getTerminologyByName(name) {
+    for (var term in this.terminologies) {
+      if (this.terminologies[term].terminology == name) {
+        return this.terminologies[term];
+      }
+    }
+  }
+
   setTerminology(terminology) {
     this.terminology = terminology;
     this.cookieService.set('term', terminology.terminology);

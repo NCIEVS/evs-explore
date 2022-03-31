@@ -99,9 +99,6 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.term = queryParams.get('term');
       this.searchCriteria.type = queryParams.get('type');
     }
-    else {
-      this.searchCriteria.term = this.selectedTerm;
-    }
 
     // TODO: re-enable this?
     // this.searchCriteria.term = route.snapshot.params['term'];
@@ -134,7 +131,11 @@ export class GeneralSearchComponent implements OnInit,
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
 
     // Set selected terminology
-    this.selectedTerm = configService.getTerminology();
+    if (queryParams) {
+      this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
+    }
+    else
+      this.selectedTerm = configService.getTerminology();
 
     // Set up defaults in session storage if welcome page
     if (this.welcomePage) {
