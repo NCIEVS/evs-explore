@@ -40,10 +40,20 @@ export class ConfigurationService {
     return this.terminologies;
   }
 
+  // filter out terminologies that shouldn't be in the list on the search page
+  terminologySearchListFilter(term) {
+    if (term.terminology != 'ncit')
+      return true;
+    if (term.tags && "monthly" in term.tags && term.latest == true)
+      return true;
+    return false;
+  }
+
   getTerminologyByName(name) {
-    for (var term in this.terminologies) {
-      if (this.terminologies[term].terminology == name) {
-        return this.terminologies[term];
+    var terms = this.terminologies.filter(this.terminologySearchListFilter);
+    for (var term in terms) {
+      if (terms[term].terminology == name) {
+        return terms[term];
       }
     }
   }
