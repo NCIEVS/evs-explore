@@ -178,7 +178,7 @@
                           (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
-                    <span pTooltip="Open concept details in new tab" *ngSwitchCase="'Code'">
+                    <span pTooltip="Open concept details" *ngSwitchCase="'Code'">
                       <a target="_top"
                         [routerLink]="['/concept/', selectedTerm.terminology, rowData['column1'] ]"
                         [queryParams]="getSelectedSourcesQueryParam()">
