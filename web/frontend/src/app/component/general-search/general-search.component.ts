@@ -2,7 +2,7 @@ import { Component, Input, OnInit, AfterViewInit, ViewChild, ViewEncapsulation, 
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart } from '@angular/router';
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
 import { SearchResult } from './../../model/searchResult';
@@ -11,6 +11,7 @@ import { SearchTermService } from './../../service/search-term.service';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -66,9 +67,7 @@ export class GeneralSearchComponent implements OnInit,
   selectRows: TableData[];
   pageinationcount: string;
   pageSize = 10;
-
-  // page parameters
-  currentPage = 1;
+  queryParams: any;
 
   selectedPropertiesSearch: string[] = [];
   propertiesReturn = null;
@@ -92,15 +91,19 @@ export class GeneralSearchComponent implements OnInit,
     private cookieService: CookieService,
     private route: ActivatedRoute, public router: Router) {
 
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe((event: NavigationStart) => {
+        if (event.restoredState) {
+          this.setUpQueryParams();
+          this.loadQueryUrl();
+          this.performSearch(this.termautosearch);
+        }
+      });
+
     // Instantiate new search criteria
     this.searchCriteria = new SearchCriteria(configService);
-    var queryParams = new URLSearchParams(window.location.search);
-    if (queryParams && queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
-      this.searchCriteria.term = queryParams.get('term');
-      this.searchCriteria.type = queryParams.get('type');
-      if (queryParams.get('source') != "") // safety check against there being no sources selected
-        this.selectedSources = queryParams.get('source').split(',');
-    }
+    this.setUpQueryParams();
 
     // TODO: re-enable this?
     // this.searchCriteria.term = route.snapshot.params['term'];
@@ -117,8 +120,8 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     // Set selected terminology
-    if (queryParams && queryParams.get('terminology') != undefined) { // set if there's something from the url
-      this.selectedTerm = configService.getTerminologyByName(queryParams.get('terminology'));
+    if (this.queryParams && this.queryParams.get('terminology') != undefined) { // set if there's something from the url
+      this.selectedTerm = configService.getTerminologyByName(this.queryParams.get('terminology'));
       this.configService.setTerminology(this.selectedTerm);
     }
     else // set if there's nothing from the url
@@ -171,13 +174,32 @@ export class GeneralSearchComponent implements OnInit,
 
       // Reset term to search
       this.termautosearch = this.searchCriteria.term;
-      if (this.configService.getSources() != null && this.configService.getSources().length > 0) {
-        this.selectedSources = configService.getSources().split(',');
-      }
       console.log('  re-perform search');
       this.performSearch(this.termautosearch);
 
     }
+  }
+
+  setUpQueryParams() {
+    this.queryParams = null;
+    this.queryParams = new URLSearchParams(window.location.search);
+    if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
+      this.searchCriteria.term = this.queryParams.get('term');
+      this.searchCriteria.type = this.queryParams.get('type');
+      if (this.queryParams.get('source') != "") // safety check against there being no sources selected
+        this.selectedSources = this.queryParams.get('source').split(',');
+    }
+  }
+
+  loadQueryUrl() {
+    this.router.navigate(['/search'], {
+      queryParams: {
+        terminology: this.configService.getTerminologyName(),
+        term: this.termautosearch,
+        type: this.selectedSearchType,
+        source: this.queryParams.get('source') ? this.queryParams.get('source') : ""
+      }
+    });
   }
 
   // filter out terminologies that shouldn't be in the list on the search page
@@ -240,14 +262,6 @@ export class GeneralSearchComponent implements OnInit,
     this.performSearch(this.termautosearch);
   }
 
-  // Reset term
-  resetTerm() {
-    console.log('resetTerm');
-    this.selectedTerm = this.configService.getTerminology();
-    this.configService.setTerminology(this.selectedTerm);
-    this.performSearch(this.termautosearch);
-  }
-
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
     this.clearSearchText(event);
@@ -295,17 +309,9 @@ export class GeneralSearchComponent implements OnInit,
   // Handle search type changing
   changeSearchType(event) {
     console.log('changeSearchType', event);
-    this.currentPage = 1;
-    this.resetTable();
     this.selectedSearchType = event;
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
+    this.queryParams.set('type', event);
+    this.loadQueryUrl();
     this.performSearch(this.termautosearch);
   }
 
@@ -330,15 +336,8 @@ export class GeneralSearchComponent implements OnInit,
         this.searchCriteria.pageSize = this.dtSearch.rows;
       }
     }
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
-    this.performSearch(event.query);
+    this.setUpQueryParams();
+    this.loadQueryUrl();
 
     this.selectedTerm = this.configService.getTerminology();
 
@@ -361,31 +360,17 @@ export class GeneralSearchComponent implements OnInit,
   // get the results based on the parameters
   onSubmitSearch() {
     console.log('onSubmitSearch', this.termautosearch);
-    this.currentPage = 1;
     this.resetPaging();
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
-    this.performSearch(this.termautosearch);
+    this.setUpQueryParams();
+    this.loadQueryUrl();
   }
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSources);
     this.configService.setSources(this.selectedSources.join(','));
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
+    this.queryParams.set('source', this.configService.getSources());
+    this.loadQueryUrl();
     this.performSearch(this.termautosearch);
   }
 
@@ -447,14 +432,8 @@ export class GeneralSearchComponent implements OnInit,
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event, this.selectedSources);
     this.configService.setSources(this.selectedSources.join(','));
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
+    this.queryParams.set('source', this.configService.getSources());
+    this.loadQueryUrl();
     this.performSearch(this.termautosearch);
   }
 
@@ -467,15 +446,8 @@ export class GeneralSearchComponent implements OnInit,
       const fromRecord = event.first;
       this.searchCriteria.fromRecord = fromRecord;
       this.searchCriteria.pageSize = event.rows;
-      this.router.navigate(['/search'], {
-        queryParams: {
-          terminology: this.configService.getTerminologyName(),
-          term: event.query,
-          type: this.selectedSearchType,
-          source: this.configService.getSources() ? this.configService.getSources() : ""
-        }
-      });
-      this.performSearch(this.termautosearch);
+      this.setUpQueryParams();
+      this.loadQueryUrl();
     }
 
   }
@@ -485,15 +457,8 @@ export class GeneralSearchComponent implements OnInit,
     console.log('onPerformSearch', this.termautosearch);
     this.avoidLazyLoading = true; // don't see any reason for lazy loading here
     this.resetTable();
-    this.router.navigate(['/search'], {
-      queryParams: {
-        terminology: this.configService.getTerminologyName(),
-        term: this.termautosearch,
-        type: this.selectedSearchType,
-        source: this.configService.getSources() ? this.configService.getSources() : ""
-      }
-    });
-    this.performSearch(this.termautosearch);
+    this.setUpQueryParams();
+    this.loadQueryUrl();
   }
 
   // Set columns
@@ -532,7 +497,7 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     this.searchCriteria.synonymSource = this.selectedSources;
-    this.searchCriteria.type = this.selectedSearchType;
+    this.searchCriteria.type = this.queryParams.get('type');
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
