@@ -97,6 +97,7 @@ export class GeneralSearchComponent implements OnInit,
         if (event.restoredState) {
           this.setUpQueryParams();
           this.loadQueryUrl();
+          this.termautosearch = this.searchCriteria.term;
           this.performSearch(this.termautosearch);
         }
       });
