@@ -356,15 +356,6 @@ export class GeneralSearchComponent implements OnInit,
     this.loadedMultipleConcept = false;
   }
 
-  // TODO: is this used?
-  // get the results based on the parameters
-  onSubmitSearch() {
-    console.log('onSubmitSearch', this.termautosearch);
-    this.resetPaging();
-    this.setUpQueryParams();
-    this.loadQueryUrl();
-  }
-
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event, this.selectedSources);
