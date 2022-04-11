@@ -178,7 +178,6 @@ export class GeneralSearchComponent implements OnInit,
   }
 
   setUpQueryParams() {
-    this.queryParams = null;
     this.queryParams = new URLSearchParams(window.location.search);
     if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
       this.searchCriteria.term = this.queryParams.get('term');
@@ -200,8 +199,8 @@ export class GeneralSearchComponent implements OnInit,
         terminology: this.configService.getTerminologyName(),
         term: this.termautosearch,
         type: this.selectedSearchType,
-        fromRecord: this.searchCriteria.fromRecord,
-        pageSize: this.searchCriteria.pageSize,
+        fromRecord: this.searchCriteria.fromRecord ? this.searchCriteria.fromRecord : 0,
+        pageSize: this.searchCriteria.pageSize ? this.searchCriteria.pageSize : 10,
         source: this.queryParams.get('source') ? this.queryParams.get('source') : ""
       }
     });
@@ -322,9 +321,11 @@ export class GeneralSearchComponent implements OnInit,
 
   // Perform search
   search(event) {
+    // save current path before going to search url
     const path = '' + window.location.pathname;
+    this.loadQueryUrl();
 
-    // Navigate from welcome page
+    // Navigating from welcome page
     if (path.includes('welcome')) {
       console.log('window location (search) = ', window.location.pathname);
     }
@@ -338,11 +339,8 @@ export class GeneralSearchComponent implements OnInit,
         // TODO: this is not ideal, the page size should be controlled by a service
         this.searchCriteria.pageSize = this.dtSearch.rows;
       }
+      this.performSearch(this.termautosearch);
     }
-    this.setUpQueryParams();
-    this.loadQueryUrl();
-    this.performSearch(this.termautosearch);
-
     this.selectedTerm = this.configService.getTerminology();
 
   }
@@ -477,7 +475,7 @@ export class GeneralSearchComponent implements OnInit,
     }
 
     this.searchCriteria.synonymSource = this.selectedSources;
-    this.searchCriteria.type = this.queryParams.get('type');
+    this.searchCriteria.type = this.selectedSearchType;
     this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
