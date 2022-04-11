@@ -322,11 +322,10 @@ export class GeneralSearchComponent implements OnInit,
     // Navigate from welcome page
     if (path.includes('welcome')) {
       console.log('window location (search) = ', window.location.pathname);
+      this.avoidLazyLoading = true;
     }
 
     else {
-      // This prevents the double-search from happening on a new query
-      this.avoidLazyLoading = true;
 
       if (this.dtSearch !== null && this.dtSearch !== undefined) {
         this.dtSearch.reset();
@@ -448,6 +447,7 @@ export class GeneralSearchComponent implements OnInit,
       this.searchCriteria.pageSize = event.rows;
       this.setUpQueryParams();
       this.loadQueryUrl();
+      this.performSearch(this.termautosearch);
     }
 
   }
