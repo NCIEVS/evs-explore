@@ -54,7 +54,6 @@ export class GeneralSearchComponent implements OnInit,
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
   displayText = false;
   displayTableFormat = true;
-  avoidLazyLoading = true;
   showMoreSearchOption = false;
 
   // Table
@@ -328,7 +327,6 @@ export class GeneralSearchComponent implements OnInit,
     // Navigate from welcome page
     if (path.includes('welcome')) {
       console.log('window location (search) = ', window.location.pathname);
-      this.avoidLazyLoading = true;
     }
 
     else {
@@ -343,6 +341,7 @@ export class GeneralSearchComponent implements OnInit,
     }
     this.setUpQueryParams();
     this.loadQueryUrl();
+    this.performSearch(this.termautosearch);
 
     this.selectedTerm = this.configService.getTerminology();
 
@@ -433,29 +432,13 @@ export class GeneralSearchComponent implements OnInit,
     this.performSearch(this.termautosearch);
   }
 
-  // Handle lazy loading of table
-  onLazyLoadData(event) {
-    console.log('onLazyLoadData', this.avoidLazyLoading, event);
-    if (this.avoidLazyLoading) {
-      this.avoidLazyLoading = false;
-    } else {
-      const fromRecord = event.first;
-      this.searchCriteria.fromRecord = fromRecord;
-      this.searchCriteria.pageSize = event.rows;
-      this.setUpQueryParams();
-      this.loadQueryUrl();
-      this.performSearch(this.termautosearch);
-    }
-
-  }
-
   // Handler for clicking the "Search" button
   onPerformSearch() {
     console.log('onPerformSearch', this.termautosearch);
-    this.avoidLazyLoading = true; // don't see any reason for lazy loading here
     this.resetTable();
     this.setUpQueryParams();
     this.loadQueryUrl();
+    this.performSearch(this.termautosearch);
   }
 
   // Set columns
