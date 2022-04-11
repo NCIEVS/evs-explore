@@ -128,9 +128,6 @@ export class GeneralSearchComponent implements OnInit,
     else // set if there's nothing from the url
       this.selectedTerm = configService.getTerminology();
 
-    // Set paging parameters
-    this.resetPaging();
-
     // Populate sources list from application metadata
     this.loadAllSources();
 
@@ -187,6 +184,12 @@ export class GeneralSearchComponent implements OnInit,
     if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
       this.searchCriteria.term = this.queryParams.get('term');
       this.searchCriteria.type = this.queryParams.get('type');
+      if (this.queryParams.get('fromRecord')) {
+        this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
+      }
+      if (this.queryParams.get('pageSize')) {
+        this.pageSize = parseInt(this.queryParams.get('pageSize'));
+      }
       if (this.queryParams.get('source') != "") // safety check against there being no sources selected
         this.selectedSources = this.queryParams.get('source').split(',');
     }
@@ -198,6 +201,8 @@ export class GeneralSearchComponent implements OnInit,
         terminology: this.configService.getTerminologyName(),
         term: this.termautosearch,
         type: this.selectedSearchType,
+        fromRecord: this.searchCriteria.fromRecord,
+        pageSize: this.searchCriteria.pageSize,
         source: this.queryParams.get('source') ? this.queryParams.get('source') : ""
       }
     });
