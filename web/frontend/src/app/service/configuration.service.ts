@@ -225,8 +225,8 @@ export class ConfigurationService {
   }
 
   // Load term groups
-  getTermTypes(terminology: string): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termTypes'),
+  getTermGroups(terminology: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termGroups'),
       {
         responseType: 'json',
       }

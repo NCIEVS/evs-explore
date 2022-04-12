@@ -466,7 +466,7 @@ export class Concept {
           '<strong>relationshipToTarget:</strong> ' +
           maptos[l].type +
           ' || ' +
-          '<strong>targetTermType:</strong> ' +
+          '<strong>targetTermGroup:</strong> ' +
           maptos[l].targetTermGroup +
           ' || ' +
           '<strong>targetCode:</strong> ' +

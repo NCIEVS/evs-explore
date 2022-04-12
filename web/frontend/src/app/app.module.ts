@@ -45,7 +45,7 @@ import { OverviewComponent } from './component/documentation/overview/overview.c
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { DefinitionTypesComponent } from './component/documentation/definition-types/definition-types.component';
 import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
-import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
+import { TermGroupsComponent } from './component/documentation/term-groups/term-groups.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { WelcomeComponent } from './component/welcome/welcome.component';
 import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
@@ -112,7 +112,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     RolesComponent,
     DefinitionTypesComponent,
     SynonymTypesComponent,
-    TermTypesComponent,
+    TermGroupsComponent,
     SourcesComponent,
     WelcomeComponent,
     AutofocusDirective,
