@@ -176,7 +176,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
       this.searchCriteria.term = this.queryParams.get('term');
       this.searchCriteria.type = this.queryParams.get('type');
-      this.selectedTerminology = this.queryParams.get('terminology');
+      this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
       if (this.queryParams.get('fromRecord')) {
         this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
       }
@@ -194,7 +194,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     console.log('load query url');
     this.router.navigate(['/search'], {
       queryParams: {
-        terminology: this.selectedTerminology,
+        terminology: this.selectedTerminology.terminology,
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord ? this.searchCriteria.fromRecord : 0,
@@ -255,7 +255,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.resetFilters();
     this.router.navigate(['/welcome'], {
       queryParams: {
-        terminology: this.selectedTerminology
+        terminology: this.selectedTerminology.terminology
       }
     });
   }
@@ -302,14 +302,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // Navigating from welcome page
     if (path.includes('welcome')) {
       console.log('window location (search) = ', window.location.pathname);
+      this.setUpQueryParams();
     }
 
-    else {
-
-      this.resetTable();
-      this.loadQueryUrl();
-      this.performSearch();
-    }
+    this.resetTable();
+    this.loadQueryUrl();
+    this.performSearch();
 
   }
 
@@ -318,6 +316,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     console.log('onChangeSource', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetTable();
+    this.queryParams.set('source', this.searchCriteria.synonymSource.join(','))
     this.loadQueryUrl();
     this.performSearch();
   }
@@ -380,6 +379,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     console.log('onSourceSelectDeselect', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetTable();
+    this.queryParams.set('source', this.searchCriteria.synonymSource.join(','))
     this.loadQueryUrl();
     this.performSearch();
   }
@@ -425,7 +425,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
-      this.searchCriteria.terminology = this.selectedTerminology;
+      this.searchCriteria.terminology = this.selectedTerminology.terminology;
       // call search term service
       this
         .searchTermService
