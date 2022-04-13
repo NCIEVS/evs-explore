@@ -1,9 +1,9 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
-import { ConfigurationService } from 'src/app/service/configuration.service';
 import { environment } from 'src/environments/environment';
 import { Title } from '@angular/platform-browser';
+import { GeneralSearchComponent } from '../general-search/general-search.component';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -16,7 +16,7 @@ export class WelcomeComponent implements AfterViewInit {
 
   // Constructor
   constructor(private modalService: NgbModal, private cookieService: CookieService,
-    private configService: ConfigurationService, private titleService: Title) { }
+    private generalSearchComponent: GeneralSearchComponent, private titleService: Title) { }
 
   // Post initialization
   ngAfterViewInit() {
@@ -27,7 +27,7 @@ export class WelcomeComponent implements AfterViewInit {
   }
 
   getTerminology(): String {
-    return this.configService.getTerminology().terminology;
+    return this.generalSearchComponent.selectedTerminology.terminology ? this.generalSearchComponent.selectedTerminology.terminology : 'ncit';
   }
 
   getApiURL() {
