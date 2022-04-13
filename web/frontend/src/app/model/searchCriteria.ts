@@ -18,7 +18,7 @@ export class SearchCriteria {
 
   // Render as a string
   toString(): string {
-    return this.term.toString() + ', ' + this.type + ', ' + this.synonymSource + ', ' + ((this.fromRecord / this.pageSize) + 1);
+    return this.term.toString() + ', ' + this.type + ', ' + this.synonymSource + ', ' + this.fromRecord + ',' + this.pageSize;
   }
 
   // Reset to defaults

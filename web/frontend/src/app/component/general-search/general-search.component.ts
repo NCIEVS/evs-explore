@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewEncapsulation, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewEncapsulation, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
@@ -31,7 +31,10 @@ import { Title } from '@angular/platform-browser';
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy,
   AfterViewInit {
-  @ViewChild('dtSearch', { static: false }) public dtSearch: Table;
+
+  // Set dtSearch and handle case where the ngIf conditions change
+  // When accessing dtSearch, need to use setTimeout()
+  @ViewChild('dtSearch', { static: false }) dtSearch: Table;
   @Input() welcomePage: boolean;
   @ViewChild('termauto', { static: false }) termauto: AutoComplete;
 
@@ -48,6 +51,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
   displayTableFormat = true;
   showMoreSearchOption = false;
+  avoidLazyLoading = false;
 
   // For possible future use
   textSuggestions: string[] = [];
@@ -66,7 +70,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   selectedPropertiesSearch: string[] = [];
   propertiesReturn = null;
-  hitsFound = 0;
+  totalRecords = 0;
   timetaken = '';
   loading: boolean;
   showMore = true;
@@ -85,25 +89,9 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   constructor(private searchTermService: SearchTermService,
     public configService: ConfigurationService,
     private cookieService: CookieService,
+    private changeDetector: ChangeDetectorRef,
     public router: Router,
     private titleService: Title) {
-
-    // Set up listener for back/forward browser events
-    this.routeListener =
-      this.router.events
-        .pipe(filter((event) => event instanceof NavigationStart))
-        .subscribe((event: NavigationStart) => {
-          if (event.restoredState) {
-
-            this.resetTable();
-            this.setUpQueryParams();
-            this.performSearch();
-          }
-        });
-
-    // Instantiate new search criteria and load from query params
-    this.searchCriteria = new SearchCriteria(configService);
-    this.setUpQueryParams();
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -112,6 +100,25 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     } else {
       this.welcomePage = false;
     }
+
+    if (!this.welcomePage) {
+      // Set up listener for back/forward browser events
+      this.routeListener =
+        this.router.events
+          .pipe(filter((event) => event instanceof NavigationStart))
+          .subscribe((event: NavigationStart) => {
+            if (event.restoredState && event.url.indexOf('/welcome') == -1) {
+              this.configFromQueryParams();
+              this.avoidLazyLoading = true;
+              this.performSearch();
+            }
+          });
+    }
+
+    // Instantiate new search criteria and load from query params
+    this.searchCriteria = new SearchCriteria(configService);
+    this.configFromQueryParams();
+
 
     // Set selected terminology - if there's something from the url
     if (this.queryParams && this.queryParams.get('terminology') != undefined) {
@@ -136,42 +143,34 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
 
-    // Set up defaults in session storage if welcome page
-    if (this.welcomePage) {
-      this.resetFilters();
-    }
-
-    // Otherwise, recover search from query params
-    else {
-
-      this.setUpQueryParams();
-      this.loadQueryUrl();
-      this.performSearch();
-
-    }
   }
 
   // On init, print console message
   ngOnInit() {
     console.log('search component initialized');
-
   }
 
   // Unsubscribe
   ngOnDestroy() {
     console.log('search component destroyed');
     // unsubscribe to ensure no memory leaks
-    this.routeListener.unsubscribe();
+    if (!this.welcomePage) {
+      this.routeListener.unsubscribe();
+    }
   }
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('after view initialized', this.dtSearch);
+    console.log('after view initialized');
     setTimeout(() => this.termauto.focusInput());
+    if (!this.welcomePage) {
+      this.avoidLazyLoading = true;
+      this.performSearch();
+    }
   }
 
   // Set state variables from the query parameters
-  setUpQueryParams() {
+  configFromQueryParams() {
     this.queryParams = new URLSearchParams(window.location.search);
     console.log('setup query params', this.queryParams);
     if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
@@ -190,8 +189,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // Route to a search URL (which should perform the search)
-  loadQueryUrl() {
-    console.log('load query url');
+  setQueryUrl() {
+    console.log('set query url');
     this.router.navigate(['/search'], {
       queryParams: {
         terminology: this.configService.getTerminologyName(),
@@ -199,7 +198,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord ? this.searchCriteria.fromRecord : 0,
         pageSize: this.searchCriteria.pageSize ? this.searchCriteria.pageSize : 10,
-        source: this.queryParams.get('source') ? this.queryParams.get('source') : ""
+        source: this.searchCriteria.synonymSource ? this.searchCriteria.synonymSource.join(',') : ''
       }
     });
     this.titleService.setTitle('EVS Explore - ' + this.searchCriteria.toString());
@@ -251,24 +250,27 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
-    this.clearSearchText(event);
-    this.resetFilters();
     this.router.navigate(['/welcome']);
-  }
-
-  // Reset filters and search type
-  resetFilters() {
-    console.log('reset filters');
-    this.searchCriteria.reset();
-    this.configService.setSources('');
   }
 
   // Reset the search table
   resetTable() {
-    console.log('resetTable');
+    console.log('resetTable', this.dtSearch);
     this.resetPaging();
     if (this.dtSearch !== null && this.dtSearch !== undefined) {
       this.dtSearch.reset();
+    }
+  }
+
+  // Load table data
+  loadDataLazily(event) {
+    if (this.avoidLazyLoading) {
+      this.avoidLazyLoading = false;
+    } else {
+      this.searchCriteria.fromRecord = event.first;
+      this.searchCriteria.pageSize = event.rows;
+      this.setQueryUrl();
+      this.performSearch();
     }
   }
 
@@ -285,37 +287,27 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   changeSearchType(event) {
     console.log('changeSearchType', event);
     this.searchCriteria.type = event;
-    this.resetTable();
-    this.loadQueryUrl();
+    this.resetPaging();
+    this.setQueryUrl();
     this.performSearch();
   }
 
   // Perform search
   search(event) {
-    // save current path before going to search url
-    const path = '' + window.location.pathname;
-
-    // Navigating from welcome page
-    if (path.includes('welcome')) {
-      console.log('window location (search) = ', window.location.pathname);
-    }
-
-    else {
-
-      this.resetTable();
-      this.loadQueryUrl();
+    console.log('search', event);
+    this.resetPaging();
+    this.setQueryUrl();
+    if (!this.welcomePage) {
       this.performSearch();
     }
-    this.selectedTerminology = this.configService.getTerminology();
-
   }
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSource(event) {
     console.log('onChangeSource', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
-    this.resetTable();
-    this.loadQueryUrl();
+    this.resetPaging();
+    this.setQueryUrl();
     this.performSearch();
   }
 
@@ -330,9 +322,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.searchCriteria.term = terminology.value.terminology;
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
-    this.resetFilters();
-    this.loadAllSources();
-    this.router.navigate(['/welcome']); // reset to the welcome page
+    // reset to the welcome page
+    this.router.navigate(['/welcome']);
   }
 
   checkLicenseText(licenseText, terminology) {
@@ -377,17 +368,16 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   onSourceSelectDeselect(event) {
     console.log('onSourceSelectDeselect', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
-    this.resetTable();
-    this.loadQueryUrl();
+    this.resetPaging();
+    this.setQueryUrl();
     this.performSearch();
   }
 
   // Handler for clicking the "Search" button
   onPerformSearch() {
-    console.log('onPerformSearch');
-
-    this.resetTable();
-    this.loadQueryUrl();
+    console.log('onPerformSeach');
+    this.resetPaging();
+    this.setQueryUrl();
     this.performSearch();
   }
 
@@ -434,11 +424,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
           this.searchResultTableFormat = new SearchResultTableFormat(
             new SearchResult(response, this.configService), this.selectedPropertiesReturn.slice(), this.cookieService, this.searchCriteria.synonymSource);
 
-          this.hitsFound = this.searchResultTableFormat.total;
+          this.totalRecords = this.searchResultTableFormat.total;
           this.timetaken = this.searchResultTableFormat.timeTaken;
 
-          if (this.hitsFound > 0) {
-            this.title = 'Found ' + this.hitsFound + ' concepts in ' + this.timetaken + ' ms';
+          if (this.totalRecords > 0) {
+            this.title = 'Found ' + this.totalRecords + ' concepts in ' + this.timetaken + ' ms';
             this.cols = [...this.searchResultTableFormat.header];
             this.multiSelectCols = this.cols.map(element => {
               return {
@@ -454,6 +444,14 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
+            // detect changes if not a destroyed view, then set paging
+            if (!this.changeDetector['destroyed']) {
+              this.changeDetector.detectChanges();
+              if (this.dtSearch && this.dtSearch.first != this.searchCriteria.fromRecord) {
+                this.dtSearch.first = this.searchCriteria.fromRecord
+              }
+            }
+
           } else {
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
