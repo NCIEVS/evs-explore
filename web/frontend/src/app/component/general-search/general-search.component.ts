@@ -461,6 +461,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
           }
+          this.loading = false;
+          this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
         });
     } else {
@@ -469,9 +471,10 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
       this.reportData = [];
       this.displayTableFormat = false;
+      this.loading = false;
+      this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
     }
-    this.loading = false;
   }
 
   // Set default selected columns
