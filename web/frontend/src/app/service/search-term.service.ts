@@ -30,7 +30,7 @@ export class SearchTermService {
     const param: any = {};
 
     // Setup search parameters (default terminology and include, for now)
-    param.terminology = this.configService.getTerminologyName();
+    param.terminology = searchCriteria.terminology;
     param.include = searchCriteria.include;
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;
