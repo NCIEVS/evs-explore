@@ -121,6 +121,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     else {
       this.selectedTerminology = this.configService.getTerminologyByName('ncit');
     }
+    this.configService.setTerminology(this.selectedTerminology);
 
     // Populate sources list from application metadata
     this.loadAllSources();
@@ -177,6 +178,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchCriteria.term = this.queryParams.get('term');
       this.searchCriteria.type = this.queryParams.get('type');
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
+      this.configService.setTerminology(this.selectedTerminology);
       if (this.queryParams.get('fromRecord')) {
         this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
       }
@@ -331,6 +333,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     console.log('onChangeTerminology', terminology.value.terminology);
     this.searchCriteria.term = terminology.value.terminology;
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
+    this.configService.setTerminology(this.selectedTerminology);
     this.resetFilters();
     this.loadAllSources();
     this.router.navigate(['/welcome']); // reset to the welcome page
