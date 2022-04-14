@@ -74,7 +74,11 @@ export class ConceptDisplayComponent implements OnInit {
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    this.displayHierarchy = (this.configService.getTerminologyName() == 'ncim') ? false : true;
+    // TODO: this should be based on terminology metadata
+    console.log('xxx', window.location.pathname);
+    this.displayHierarchy = (
+      window.location.pathname.indexOf('hierarchy') == -1 &&
+      this.configService.getTerminologyName() != 'ncim') ? true : false;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()

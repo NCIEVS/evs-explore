@@ -1,8 +1,7 @@
 <header class="push" role="banner">
     <div id="nvcgSlSiteBanner" class="row header-row">
         <div class="slot-item only-SI nci-logo-pages large-12 columns">
-            <a href="/"><img src="assets/images/EVSLogo.png" alt="National Cancer Institute"
-                    class="header-img"></a>
+            <a href="/"><img src="assets/images/EVSLogo.png" alt="National Cancer Institute" class="header-img"></a>
         </div>
     </div>
 </header>
@@ -15,36 +14,31 @@
         <ul class="menu nav-menu nav-item-title">
             <li class="nav-item">
                 <a class="nav-link nav-link-list" [routerLink]="['/welcome']"
-                    [queryParams]="{terminology: terminology}"><i class="fa fa-home"></i> Home </a>
+                    [queryParams]="{terminology: terminology.terminology}"><i class="fa fa-home"></i> Home </a>
             </li>
             <li class="nav-item version-info">
                 <span class="nav-link-list">{{versionInfo}}</span>
             </li>
 
             <li class="nav-item" *ngIf="terminology.terminology == 'ncit'">
-                <a class="nav-link nav-link-list"
-                    [routerLink]="['subsets', terminology.terminology]"
+                <a class="nav-link nav-link-list" [routerLink]="['subsets', terminology.terminology]"
                     title="Display Subsets">Subsets</a>
             </li>
             <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
-                <a class="nav-link nav-link-list hierarchyButton"
-                    (click)="hierarchyRoute(terminology.terminology)"
+                <a class="nav-link nav-link-list hierarchyButton" (click)="hierarchyRoute(terminology.terminology)"
                     title="Display Concept Hierarchy">Hierarchy</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                    title="Display Documentation">Documentation</a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-links"
-                    aria-labelledby="helpMenu">
+                <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" title="Display Documentation">Documentation</a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">
                     <a class="dropdown-item dropdown-links" routerLink="associations"
                         title="List of NCIt Associations">Associations</a>
                     <a class="dropdown-item dropdown-links" routerLink="properties"
                         title="List of NCIt Properties">Properties</a>
                     <a class="dropdown-item dropdown-links" routerLink="qualifiers"
                         title="List of NCIt Qualifiers">Qualifiers</a>
-                    <a class="dropdown-item dropdown-links" routerLink="roles"
-                        title="List of NCIt Roles">Roles</a>
+                    <a class="dropdown-item dropdown-links" routerLink="roles" title="List of NCIt Roles">Roles</a>
                     <a class="dropdown-item dropdown-links" routerLink="termgroups"
                         title="List of NCIt Term Groups">Term
                         Groups</a>

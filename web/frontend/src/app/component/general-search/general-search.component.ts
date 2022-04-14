@@ -101,19 +101,26 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.welcomePage = false;
     }
 
-    if (!this.welcomePage) {
-      // Set up listener for back/forward browser events
-      this.routeListener =
-        this.router.events
-          .pipe(filter((event) => event instanceof NavigationStart))
-          .subscribe((event: NavigationStart) => {
-            if (event.restoredState && event.url.indexOf('/welcome') == -1) {
+    // Set up listener for back/forward browser events
+    this.routeListener =
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationStart))
+        .subscribe((event: NavigationStart) => {
+          if (event.restoredState) {
+            // Handle the search page
+            if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
               this.avoidLazyLoading = true;
               this.performSearch();
             }
-          });
-    }
+            // Handle the welcome page
+            else if (event.url.indexOf('/welcome') != -1) {
+              this.configFromQueryParams();
+            }
+            // Otherwise, we're navigating back to somthing else
+            // and this component should be destroyed
+          }
+        });
 
     // Instantiate new search criteria and load from query params
     this.searchCriteria = new SearchCriteria(configService);
@@ -173,18 +180,30 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   configFromQueryParams() {
     this.queryParams = new URLSearchParams(window.location.search);
     console.log('setup query params', this.queryParams);
-    if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
-      this.searchCriteria.term = this.queryParams.get('term');
-      this.searchCriteria.type = this.queryParams.get('type');
+
+    // Setup terminology for both /welcome and /search pages
+    if (this.queryParams.get('terminology')) {
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
       this.configService.setTerminology(this.selectedTerminology);
+    } else {
+      this.selectedTerminology = this.configService.getTerminologyByName('ncit');
+      this.configService.setTerminology(this.selectedTerminology);
+    }
+
+    // set search criteria if there's stuff from the url
+    if (this.queryParams && this.queryParams.get('term') != undefined) {
+      this.searchCriteria.term = this.queryParams.get('term');
+      if (this.queryParams.get('type')) {
+        this.searchCriteria.type = this.queryParams.get('type');
+      }
       if (this.queryParams.get('fromRecord')) {
         this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
       }
       if (this.queryParams.get('pageSize')) {
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
       }
-      if (this.queryParams.get('source') != "") // safety check against there being no sources selected
+      // safety check against there being no sources selected
+      if (this.queryParams.get('source') != "")
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
     }
 
@@ -319,17 +338,21 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
+    console.log('onChangeTerminology', terminology.value.terminology);
     if (terminology.value.metadata.licenseText) {
       if (this.checkLicenseText(terminology.value.metadata.licenseText, terminology.value.terminology) == false) {
         return;
       }
     }
-    console.log('onChangeTerminology', terminology.value.terminology);
-    this.searchCriteria.term = terminology.value.terminology;
+    this.searchCriteria.term = '';
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
     // reset to the welcome page
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['/welcome'], {
+      queryParams: {
+        terminology: this.selectedTerminology.terminology
+      }
+    });
   }
 
   checkLicenseText(licenseText, terminology) {
@@ -399,7 +422,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (this.searchCriteria.term == null || this.searchCriteria.term.length < 3) {
       if (!this.firstSearchFlag) {
         console.log('skip search - first search has not happened, reroute to /welcome', this.searchCriteria.term);
-        this.router.navigate(['/welcome']);
+        this.router.navigate(['/welcome'], {
+          queryParams: {
+            terminology: this.selectedTerminology.terminology
+          }
+        });
       }
       console.log('skip search - not enough characters in term', this.searchCriteria.term);
       return;
