@@ -123,12 +123,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // Set selected terminology - if there's something from the url
     if (this.queryParams && this.queryParams.get('terminology') != undefined) {
       this.selectedTerminology = configService.getTerminologyByName(this.queryParams.get('terminology'));
-      this.configService.setTerminology(this.selectedTerminology);
     }
     // set if there's nothing from the url
     else {
-      this.selectedTerminology = configService.getTerminology();
+      this.selectedTerminology = this.configService.getTerminologyByName('ncit');
     }
+    this.configService.setTerminology(this.selectedTerminology);
 
     // Populate sources list from application metadata
     this.loadAllSources();
@@ -176,6 +176,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (this.queryParams && this.queryParams.get('term') != undefined) { // set search criteria if there's stuff from the url
       this.searchCriteria.term = this.queryParams.get('term');
       this.searchCriteria.type = this.queryParams.get('type');
+      this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
+      this.configService.setTerminology(this.selectedTerminology);
       if (this.queryParams.get('fromRecord')) {
         this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
       }
@@ -193,7 +195,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     console.log('set query url');
     this.router.navigate(['/search'], {
       queryParams: {
-        terminology: this.configService.getTerminologyName(),
+        terminology: this.selectedTerminology.terminology,
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord ? this.searchCriteria.fromRecord : 0,
@@ -250,7 +252,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['/welcome'], {
+      queryParams: {
+        terminology: this.selectedTerminology.terminology
+      }
+    });
   }
 
   // Reset the search table
@@ -352,7 +358,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   loadAllSources() {
-    this.configService.getSynonymSources(this.configService.getTerminologyName())
+    this.configService.getSynonymSources(this.selectedTerminology.terminology)
       .subscribe(response => {
         this.sourcesAll = response.map(element => {
           return {
@@ -413,6 +419,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
+      this.searchCriteria.terminology = this.selectedTerminology.terminology;
       // call search term service
       this
         .searchTermService
@@ -456,6 +463,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
           }
+          this.loading = false;
+          this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
         });
     } else {
@@ -464,9 +473,10 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
       this.reportData = [];
       this.displayTableFormat = false;
+      this.loading = false;
+      this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
     }
-    this.loading = false;
   }
 
   // Set default selected columns

@@ -1,8 +1,9 @@
 <div class="container" *ngIf="synonymTypes">
     <div class="page-header">
         <span class="ui-coloring">Synonym Types</span>
-        <span style="float:right"><button routerLink="/welcome" label="New Search" pButton
-                type="button" class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+                class="ui-button-coloring"></button></span>
     </div>
     <p>Information about synonym types</p>
     <div class="table-responsive" style="font-size:14px;">

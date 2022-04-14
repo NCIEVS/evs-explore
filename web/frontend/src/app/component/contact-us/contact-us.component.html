@@ -1,8 +1,9 @@
 <div class="container">
     <div class="page-header">
         <span>Contact Us</span>
-        <span style="float:right"><button routerLink="/welcome" label="New Search" pButton
-                type="button" class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+                class="ui-button-coloring"></button></span>
     </div>
 
     <div class="row" style="padding-top: 4px;">

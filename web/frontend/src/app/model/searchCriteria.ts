@@ -6,6 +6,7 @@ export class SearchCriteria {
   constructor(private configService: ConfigurationService) { }
   term: string = '';
   type: string = 'contains';
+  terminology: string;
   include: string = 'summary,highlights,properties';
   property: string[] = [];
   definitionSource: string[];
