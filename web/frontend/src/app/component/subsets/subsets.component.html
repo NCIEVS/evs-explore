@@ -7,8 +7,9 @@
           <button id="expandOrCollapseButton" label="Expand All"
             (click)="expandOrCollapseAllNodes(hierarchyData, $event.target)" pButton type="button"
             class="ui-button-coloring expandAll"></button>
-          <span class="newSearch"><button routerLink="/welcome" label="New Search" pButton
-              type="button" class="ui-button-coloring"></button></span>
+          <span class="newSearch"><button [routerLink]="['/welcome']"
+              [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+              class="ui-button-coloring"></button></span>
         </div>
         <p>View subsets organized by standards category or source terminology. Standards
           categories group the subsets

@@ -1,407 +1,408 @@
 <div class="container">
-  <a name="#top"></a>
-  <div class="page-header">
-    <span class="ui-coloring">Help</span>
-    <span style="float:right"><button routerLink="/welcome" label="New Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-  </div>
-  Simple information on using this application. Use links below or scroll down for more
-  information.
-  <ul>
-    <li><a href="overview#introduction">Introduction</a></li>
-    <li><a href="overview#welcome">EVS Explore Welcome Page</a></li>
-    <li><a href="overview#search">Using the Search Box</a></li>
-    <li><a href="overview#search-results">Search Results</a></li>
-    <!-- Searching Other/Multiple Versions of a Terminology
+    <a name="#top"></a>
+    <div class="page-header">
+        <span class="ui-coloring">Help</span>
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+                class="ui-button-coloring"></button></span>
+    </div>
+    Simple information on using this application. Use links below or scroll down for more
+    information.
+    <ul>
+        <li><a href="overview#introduction">Introduction</a></li>
+        <li><a href="overview#welcome">EVS Explore Welcome Page</a></li>
+        <li><a href="overview#search">Using the Search Box</a></li>
+        <li><a href="overview#search-results">Search Results</a></li>
+        <!-- Searching Other/Multiple Versions of a Terminology
   Advanced Search -->
-    <li><a href="overview#concept-details">Concept Details</a></li>
-    <li><a href="overview#subsets">Subsets</a></li>
-    <li><a href="overview#hierarchy">Hierarchy</a></li>
-    <li><a href="overview#documentation">Metadata Documentation</a></li>
-    <!-- Value Sets, Mappings -->
-  </ul>
+        <li><a href="overview#concept-details">Concept Details</a></li>
+        <li><a href="overview#subsets">Subsets</a></li>
+        <li><a href="overview#hierarchy">Hierarchy</a></li>
+        <li><a href="overview#documentation">Metadata Documentation</a></li>
+        <!-- Value Sets, Mappings -->
+    </ul>
 
-  <a name="introduction"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Introduction</h4>
-  </span>
-  <p> NCI Enterprise Vocabulary Services (EVS) provides terminology content, tools, and services
-    to NCI and the
-    biomedical research community.
-  </p>
-  <ul>
-    <li>For browser support or suggestions, use the <a href="contact"> Contact Us page.</a></li>
-    <li>For all EVS resources, services and contacts, see the EVS Web site <a
-        href="https://evs.nci.nih.gov/">https://evs.nci.nih.gov</a>.</li>
-  </ul>
-  <p>
-    EVS Explore Browser provides a consistent, user-friendly tool to browse, search and retrieve
-    content
-    from NCI Thesaurus (NCIt). For information on new features and known issues, see <a
-      href="https://github.com/NCIEVS/evs-explore/blob/master/web/frontend/CHANGELOG.md">EVS
-      Explore Browser
-      change log</a>.
-  </p>
-  This help file provides basic information about how to use the EVS Explore Browser effectively,
-  as well as links to
-  additional information elsewhere. The following typeface font conventions are used for
-  describing search and the
-  browser interface:
-  <ul>
-    <li><b>Bold</b>: Browser links, buttons, page tabs, and drop-down boxes.</li>
-    <li><span class="tt">Fixed Width</span>: Search strings.</li>
-    <li><i>Italics</i>: Concept terms.</li>
-  </ul>
+    <a name="introduction"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Introduction</h4>
+    </span>
+    <p> NCI Enterprise Vocabulary Services (EVS) provides terminology content, tools, and services
+        to NCI and the
+        biomedical research community.
+    </p>
+    <ul>
+        <li>For browser support or suggestions, use the <a href="contact"> Contact Us page.</a></li>
+        <li>For all EVS resources, services and contacts, see the EVS Web site <a
+                href="https://evs.nci.nih.gov/">https://evs.nci.nih.gov</a>.</li>
+    </ul>
+    <p>
+        EVS Explore Browser provides a consistent, user-friendly tool to browse, search and retrieve
+        content
+        from NCI Thesaurus (NCIt). For information on new features and known issues, see <a
+            href="https://github.com/NCIEVS/evs-explore/blob/master/web/frontend/CHANGELOG.md">EVS
+            Explore Browser
+            change log</a>.
+    </p>
+    This help file provides basic information about how to use the EVS Explore Browser effectively,
+    as well as links to
+    additional information elsewhere. The following typeface font conventions are used for
+    describing search and the
+    browser interface:
+    <ul>
+        <li><b>Bold</b>: Browser links, buttons, page tabs, and drop-down boxes.</li>
+        <li><span class="tt">Fixed Width</span>: Search strings.</li>
+        <li><i>Italics</i>: Concept terms.</li>
+    </ul>
 
-  <a name="welcome"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>EVS Explore Welcome Page</h4>
-  </span>
-  <p>
-    When a user first visits the EVS Explore Browser, the experience begins with a welcome page
-    on which users will be
-    asked to accept the HHS notice regarding usage of government systems. Following the
-    acceptance of the HHS notice,
-    this page describes content available in this application as well as links to other useful
-    resources.
-  </p>
-  <p>
-    The functional features of the welcome page include the
-    <a href="overview#search" aria-label="Scroll to search"><b>Search Box</b></a> (and search
-    controls),
-    features available from the header toolbar, including: direct link to the <b>Hierarchy
-      view</b>, metadata
-    <b>Documentation</b> pages, and access to this <b>Help</b> page.
-  </p>
+    <a name="welcome"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>EVS Explore Welcome Page</h4>
+    </span>
+    <p>
+        When a user first visits the EVS Explore Browser, the experience begins with a welcome page
+        on which users will be
+        asked to accept the HHS notice regarding usage of government systems. Following the
+        acceptance of the HHS notice,
+        this page describes content available in this application as well as links to other useful
+        resources.
+    </p>
+    <p>
+        The functional features of the welcome page include the
+        <a href="overview#search" aria-label="Scroll to search"><b>Search Box</b></a> (and search
+        controls),
+        features available from the header toolbar, including: direct link to the <b>Hierarchy
+            view</b>, metadata
+        <b>Documentation</b> pages, and access to this <b>Help</b> page.
+    </p>
 
-  <a name="search"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Using the Search Box</h4>
-  </span>
-  <p>
-    The <b>Search Box</b> is located in the upper left of the EVS Explore Browser welcome page.
-    You can also get to
-    the search box from the search results pages by clicking the <b>New Search</b> button. There
-    are a number
-    of controls that can be used to fine-tune searches.
-  </p>
+    <a name="search"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Using the Search Box</h4>
+    </span>
+    <p>
+        The <b>Search Box</b> is located in the upper left of the EVS Explore Browser welcome page.
+        You can also get to
+        the search box from the search results pages by clicking the <b>New Search</b> button. There
+        are a number
+        of controls that can be used to fine-tune searches.
+    </p>
 
-  <ul>
-    <li><b>Input Box:</b> Enter a string containing at least 3 characters that you want to
-      search for.
-      <ul>
-        <li>Search is not case sensitive (e.g., <span class="tt">aids</span> will match
-          concepts containing <i>aids</i>,
-          <i>Aids</i>, and <i>AIDS</i>).
+    <ul>
+        <li><b>Input Box:</b> Enter a string containing at least 3 characters that you want to
+            search for.
+            <ul>
+                <li>Search is not case sensitive (e.g., <span class="tt">aids</span> will match
+                    concepts containing <i>aids</i>,
+                    <i>Aids</i>, and <i>AIDS</i>).
+                </li>
+                <li>There are no wildcard characters. All characters are matched literally (e.g.,
+                    searching for <b>Starts
+                        With</b>
+                    <span class="tt"> NAT2*</span> will
+                    match <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
+                </li>
+                <li>There is no need to surround search terms with quotes as they will be ignored
+                    during the search.</li>
+                <li>Searching can be done using one word or multiple words.</li>
+                <li>The search is generally performed against the code, all of the names and
+                    synonyms, all of the concept
+                    definitions, and all of the property values. The indexing is designed so that
+                    the most relevant data fields
+                    are searchable and should produce results.</li>
+            </ul>
+
         </li>
-        <li>There are no wildcard characters. All characters are matched literally (e.g.,
-          searching for <b>Starts
-            With</b>
-          <span class="tt"> NAT2*</span> will
-          match <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
-        </li>
-        <li>There is no need to surround search terms with quotes as they will be ignored
-          during the search.</li>
-        <li>Searching can be done using one word or multiple words.</li>
-        <li>The search is generally performed against the code, all of the names and
-          synonyms, all of the concept
-          definitions, and all of the property values. The indexing is designed so that
-          the most relevant data fields
-          are searchable and should produce results.</li>
-      </ul>
 
-    </li>
+        <li><b>Match type radio buttons</b> determine how your search string (entered into the
+            <b>Input Box</b>) will be
+            matched.
+            <ul>
+                <li><b>Contains</b> is the default type. It performs a search that looks for any
+                    words typed, favoring results
+                    with more words matched and with words matched in order.</li>
+                <li><b>Exact Match</b> performs a search that looks for matches containing the exact
+                    strings in the order they
+                    were entered.</li>
+                <li><b>Starts With</b> performs a search that looks for matches starting with all of
+                    the search words entered in
+                    the specified order.</li>
+                <li><b>Phrase</b> performs a search that looks for matches containing all search
+                    words entered in the specified
+                    order (but does not require the match to be at the beginning of the concept or
+                    an exact match). Searches in
+                    this mode will also find all results returned by the same search using <b>Exact
+                        Match</b> or <b>Starts
+                        With</b>.</li>
+                <li><b>Fuzzy</b> performs a search that looks for any words typed and for fuzzy
+                    variants of those words,
+                    favoring results with more words matched, and with words matched in order.</li>
+                <li><b>AND</b> performs a search that looks for matches containing all of the words
+                    that were entered in any
+                    order.</li>
+                <li><b>OR</b> performs a search that looks for matches containing any of the words
+                    entered. Searches in this
+                    mode will also find all results returned by the same search using <b>ALL</b>.
+                </li>
+            </ul>
+        </li>
+        <li><b>Source</b> drop-down allows searches to be restricted to those concepts having a
+            synonym with "synonym
+            source"
+            matching one of the selected entries in the drop-down. For example, selecting <span
+                class="tt">CDISC</span> will
+            only return concepts with a CDISC synonym</li>
+        <li><b>Search</b> button starts a search.</li>
+        <li><b>New Search</b> button resets all search parameters and returns to the <a
+                href="overview#welcome" aria-label="Scroll to welcome page">Welcome Page</a>.</li>
+    </ul>
 
-    <li><b>Match type radio buttons</b> determine how your search string (entered into the
-      <b>Input Box</b>) will be
-      matched.
-      <ul>
-        <li><b>Contains</b> is the default type. It performs a search that looks for any
-          words typed, favoring results
-          with more words matched and with words matched in order.</li>
-        <li><b>Exact Match</b> performs a search that looks for matches containing the exact
-          strings in the order they
-          were entered.</li>
-        <li><b>Starts With</b> performs a search that looks for matches starting with all of
-          the search words entered in
-          the specified order.</li>
-        <li><b>Phrase</b> performs a search that looks for matches containing all search
-          words entered in the specified
-          order (but does not require the match to be at the beginning of the concept or
-          an exact match). Searches in
-          this mode will also find all results returned by the same search using <b>Exact
-            Match</b> or <b>Starts
-            With</b>.</li>
-        <li><b>Fuzzy</b> performs a search that looks for any words typed and for fuzzy
-          variants of those words,
-          favoring results with more words matched, and with words matched in order.</li>
-        <li><b>AND</b> performs a search that looks for matches containing all of the words
-          that were entered in any
-          order.</li>
-        <li><b>OR</b> performs a search that looks for matches containing any of the words
-          entered. Searches in this
-          mode will also find all results returned by the same search using <b>ALL</b>.
+    <a name="search-results"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Search Results</h4>
+    </span>
+    <p>
+        When a search is performed, <b>Search Results</b> are displayed with some basic concept
+        information
+        and a link to load a dedicated view for just that one concept. Clicking this link opens that
+        view
+        in a new window. Other details:
+    </p>
+    <ul>
+        <li>All matching concepts are returned.</li>
+        <li>Results are listed from best match to weakest. For example, a <b>Contains</b> search on
+            <span class="tt">Bone</span> returns the exact match <i>Bone</i> at the top,
+            followed by concepts where one of two words match (e.g., <i>Mouse Bone</i>), followed by
+            concepts having less
+            relevance.
         </li>
-      </ul>
-    </li>
-    <li><b>Source</b> drop-down allows searches to be restricted to those concepts having a
-      synonym with "synonym
-      source"
-      matching one of the selected entries in the drop-down. For example, selecting <span
-        class="tt">CDISC</span> will
-      only return concepts with a CDISC synonym</li>
-    <li><b>Search</b> button starts a search.</li>
-    <li><b>New Search</b> button resets all search parameters and returns to the <a
-        href="overview#welcome" aria-label="Scroll to welcome page">Welcome Page</a>.</li>
-  </ul>
+        <li>The total number of search results found along with the search time in milliseconds is
+            shown at the top of the
+            search results table.</li>
+        <li>When a search is performed, it looks for matches among a variety of fields found in the
+            concept, including the
+            preferred name of concept, the code, synonyms of the concept, the definitions of the
+            concept, and the property
+            values of the concept. For this reason, the results will include matches to data fields
+            other than the preferred
+            name of the concept.
+        </li>
+        <li>Search results are paged, with a default page size of 10. This can be adjusted using the
+            page size control found
+            at both the top and bottom of the search results table. The same control will also allow
+            you to navigate to the
+            next page of results (or the previous page where appropriate).
+        </li>
+        <li>By default, the search results table shows the highlights icon, the concept code, the
+            preferred name, synonyms,
+            and definitions. The <b>Search Result Details</b> drop-down can be clicked to reveal a
+            control that allows you
+            to select which of the data columns should be shown in the <b>Search Results</b>
+            display.
+        </li>
+        <li>The first column of the <b>Search Results</b> table contains an icon. When clicked, it
+            reveals a panel beneath
+            the
+            corresponding search result that shows highlighted portions of the concept that were
+            matched to the search text
+            provided.</li>
+        <li>If a concept is retired, this will be indicated by the phrase "Retired Concept" next to
+            the name of the concept
+            in the Results listing.
+        </li>
+        <li>A <b>New Search</b> button appears in the upper right when you leave the results page to
+            view
+            concept details. Clicking that button will return you to the standard search view.
+        </li>
+    </ul>
 
-  <a name="search-results"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Search Results</h4>
-  </span>
-  <p>
-    When a search is performed, <b>Search Results</b> are displayed with some basic concept
-    information
-    and a link to load a dedicated view for just that one concept. Clicking this link opens that
-    view
-    in a new window. Other details:
-  </p>
-  <ul>
-    <li>All matching concepts are returned.</li>
-    <li>Results are listed from best match to weakest. For example, a <b>Contains</b> search on
-      <span class="tt">Bone</span> returns the exact match <i>Bone</i> at the top,
-      followed by concepts where one of two words match (e.g., <i>Mouse Bone</i>), followed by
-      concepts having less
-      relevance.
-    </li>
-    <li>The total number of search results found along with the search time in milliseconds is
-      shown at the top of the
-      search results table.</li>
-    <li>When a search is performed, it looks for matches among a variety of fields found in the
-      concept, including the
-      preferred name of concept, the code, synonyms of the concept, the definitions of the
-      concept, and the property
-      values of the concept. For this reason, the results will include matches to data fields
-      other than the preferred
-      name of the concept.
-    </li>
-    <li>Search results are paged, with a default page size of 10. This can be adjusted using the
-      page size control found
-      at both the top and bottom of the search results table. The same control will also allow
-      you to navigate to the
-      next page of results (or the previous page where appropriate).
-    </li>
-    <li>By default, the search results table shows the highlights icon, the concept code, the
-      preferred name, synonyms,
-      and definitions. The <b>Search Result Details</b> drop-down can be clicked to reveal a
-      control that allows you
-      to select which of the data columns should be shown in the <b>Search Results</b>
-      display.
-    </li>
-    <li>The first column of the <b>Search Results</b> table contains an icon. When clicked, it
-      reveals a panel beneath
-      the
-      corresponding search result that shows highlighted portions of the concept that were
-      matched to the search text
-      provided.</li>
-    <li>If a concept is retired, this will be indicated by the phrase "Retired Concept" next to
-      the name of the concept
-      in the Results listing.
-    </li>
-    <li>A <b>New Search</b> button appears in the upper right when you leave the results page to
-      view
-      concept details. Clicking that button will return you to the standard search view.
-    </li>
-  </ul>
+    <a name="concept-details"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Concept Details</h4>
+    </span>
+    <p>
+        Detailed information on a selected concept is shown when that concept code is clicked in the
+        <b>Search Results</b>.
+        The concept detail view is loaded into a new tab for display.
+    </p>
+    <p>The top of this view shows the preferred name and concept code along with an <b>Open in
+            Hierarchy</b> button.
+        Clicking on that button will open the <a href="overview#hierarchy"
+            aria-label="Scroll to hierarchy">hierarchy
+            view</a>.
+    </p>
+    <p>Below that, there are three tabs: <b>Terms and Properties</b>, <b>Relationships</b>, and
+        <b>View
+            All</b>. The application remembers your last selection among these three tabs and will
+        default to that view until
+        you change it. The contents of these tabs are described below.
+    </p>
+    <ul>
+        <li><b>Terms and Properties</b> shows detailed information about the terms and properties of
+            the concept being show.
+            This information is broken down into five tables.
+            <ul>
+                <li>The first table shows top level information about the concept, including the
+                    preferred name, the display
+                    name, the label, and the concept code.</li>
+                <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
+                    includes columns for the
+                    definition text, the source of the definition, and any associated
+                    attribution(s).</li>
+                <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
+                    concept in a sortable table.
+                    This table includes columns for the term, the sub-source, the term group, the
+                    sub-source code, and the
+                    sub-source name.</li>
+                <li><b>Other Properties</b> shows other properties associated with the concept in a
+                    sortable table. This table
+                    includes columns for the property type and value. In some cases, property values
+                    may be linked out to external
+                    data sources that provide additional information about those values. For
+                    example, a "CAS_Registry" property
+                    will have its value linked out to <a
+                        href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
+                    display the data attached to the identifier by the original source, in this case
+                    an NIH ChemID.
+                </li>
+                <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other
+                    terminologies in a sortable table. This table includes
+                    columns for the target name, relationship to target, target term group, target
+                    code, and the target terminology
+                    (and the target terminology version if available).</li>
+            </ul>
 
-  <a name="concept-details"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Concept Details</h4>
-  </span>
-  <p>
-    Detailed information on a selected concept is shown when that concept code is clicked in the
-    <b>Search Results</b>.
-    The concept detail view is loaded into a new tab for display.
-  </p>
-  <p>The top of this view shows the preferred name and concept code along with an <b>Open in
-      Hierarchy</b> button.
-    Clicking on that button will open the <a href="overview#hierarchy"
-      aria-label="Scroll to hierarchy">hierarchy
-      view</a>.
-  </p>
-  <p>Below that, there are three tabs: <b>Terms and Properties</b>, <b>Relationships</b>, and
-    <b>View
-      All</b>. The application remembers your last selection among these three tabs and will
-    default to that view until
-    you change it. The contents of these tabs are described below.
-  </p>
-  <ul>
-    <li><b>Terms and Properties</b> shows detailed information about the terms and properties of
-      the concept being show.
-      This information is broken down into five tables.
-      <ul>
-        <li>The first table shows top level information about the concept, including the
-          preferred name, the display
-          name, the label, and the concept code.</li>
-        <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
-          includes columns for the
-          definition text, the source of the definition, and any associated
-          attribution(s).</li>
-        <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
-          concept in a sortable table.
-          This table includes columns for the term, the sub-source, the term group, the
-          sub-source code, and the
-          sub-source name.</li>
-        <li><b>Other Properties</b> shows other properties associated with the concept in a
-          sortable table. This table
-          includes columns for the property type and value. In some cases, property values
-          may be linked out to external
-          data sources that provide additional information about those values. For
-          example, a "CAS_Registry" property
-          will have its value linked out to <a
-            href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
-          display the data attached to the identifier by the original source, in this case
-          an NIH ChemID.
         </li>
-        <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other
-          terminologies in a sortable table. This table includes
-          columns for the target name, relationship to target, target term group, target
-          code, and the target terminology
-          (and the target terminology version if available).</li>
-      </ul>
+        <li><b>Relationships</b> shows information about related concepts. This information is
+            broken down into several
+            tables. Clicking on the preferred name of a related concept will launch a new browser
+            tab with the concept details
+            for that related concept.
+            <ul>
+                <li><b>Parent Concepts</b> shows basic information about parent concepts in a
+                    sortable table. This table
+                    includes columns for code and preferred name.
+                </li>
+                <li><b>Child Concepts</b> shows basic information about child concepts in a sortable
+                    table. This table includes
+                    columns for code and preferred name.
+                </li>
+                <li><b>Role Relationships</b> shows basic information about asserted or inherited
+                    role relationships, pointing
+                    from the current concept to other concepts in a sortable table. This table
+                    includes columns for code and
+                    preferred name.
+                </li>
+                <li><b>Associations</b> shows basic information about associations pointing from the
+                    current concept to other
+                    concepts in a sortable table. This table includes columns for code and preferred
+                    name.
+                </li>
+                <li><b>Incoming Role Relationships</b> shows basic information about asserted or
+                    inherited role relationships,
+                    pointing from other concepts to the current concept in a sortable table. This
+                    table includes columns for code
+                    and preferred name.
+                </li>
+                <li><b>Incoming Associations</b> shows basic information about associations pointing
+                    from other concepts to the
+                    current concept in a sortable table. This table includes columns for code and
+                    preferred name.
+                </li>
+                <li><b>Disjoint With</b> shows basic information about disjointness assertions
+                    between this concept and other
+                    concepts.
+                </li>
+            </ul>
 
-    </li>
-    <li><b>Relationships</b> shows information about related concepts. This information is
-      broken down into several
-      tables. Clicking on the preferred name of a related concept will launch a new browser
-      tab with the concept details
-      for that related concept.
-      <ul>
-        <li><b>Parent Concepts</b> shows basic information about parent concepts in a
-          sortable table. This table
-          includes columns for code and preferred name.
         </li>
-        <li><b>Child Concepts</b> shows basic information about child concepts in a sortable
-          table. This table includes
-          columns for code and preferred name.
-        </li>
-        <li><b>Role Relationships</b> shows basic information about asserted or inherited
-          role relationships, pointing
-          from the current concept to other concepts in a sortable table. This table
-          includes columns for code and
-          preferred name.
-        </li>
-        <li><b>Associations</b> shows basic information about associations pointing from the
-          current concept to other
-          concepts in a sortable table. This table includes columns for code and preferred
-          name.
-        </li>
-        <li><b>Incoming Role Relationships</b> shows basic information about asserted or
-          inherited role relationships,
-          pointing from other concepts to the current concept in a sortable table. This
-          table includes columns for code
-          and preferred name.
-        </li>
-        <li><b>Incoming Associations</b> shows basic information about associations pointing
-          from other concepts to the
-          current concept in a sortable table. This table includes columns for code and
-          preferred name.
-        </li>
-        <li><b>Disjoint With</b> shows basic information about disjointness assertions
-          between this concept and other
-          concepts.
-        </li>
-      </ul>
+        <li><b>View All</b> combines the content of both views listed above into a single view.</li>
+    </ul>
 
-    </li>
-    <li><b>View All</b> combines the content of both views listed above into a single view.</li>
-  </ul>
+    <a name="subsets"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Subsets</h4>
+    </span>
+    <p>The <b>Subset View</b> of EVS Explore supports the browsing of subsets, which are flat lists
+        of member concepts intended for specific coding purposes. </p>
+    <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top
+        banner.
+    </p>
+    <p>
+        In this view, there is a hierarchical view of the available subsets. Clicking on the <i
+            class="pi pi-fw pi-chevron-right"></i> to the left of a subset entry expands the view
+        to show its children. The <b>Expand All</b> button near the page title will fully expand
+        the tree to reveal all available subsets.
+    </p>
+    <p>
+        An individual subset can be selected by clicking on a row. This opens up a new window
+        containing the <b>Subset Details View</b>. This view provides some information about
+        the subset itself, including the code, the name, and the definition. If available, a link
+        to download the subset from the FTP site is also provided.
+    </p>
+    <p>
+        Below that is a table with details of the individual members of the subset. The exact format
+        of this table varies slightly across different subsets. It provides basic high-level
+        information
+        about each member including information like the code, various names and synonyms, and one
+        or more
+        definitions for that member. At the top of this table is a <b>Search Box</b> that can be
+        used
+        to restrict to only those member concepts whose contents are matches to the search text
+        provided.
+        Click the <b>Reset</b> button to clear any search text and retrieve the full list.
+    </p>
 
-  <a name="subsets"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Subsets</h4>
-  </span>
-  <p>The <b>Subset View</b> of EVS Explore supports the browsing of subsets, which are flat lists
-    of member concepts intended for specific coding purposes. </p>
-  <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top
-    banner.
-  </p>
-  <p>
-    In this view, there is a hierarchical view of the available subsets. Clicking on the <i
-      class="pi pi-fw pi-chevron-right"></i> to the left of a subset entry expands the view
-    to show its children. The <b>Expand All</b> button near the page title will fully expand
-    the tree to reveal all available subsets.
-  </p>
-  <p>
-    An individual subset can be selected by clicking on a row. This opens up a new window
-    containing the <b>Subset Details View</b>. This view provides some information about
-    the subset itself, including the code, the name, and the definition. If available, a link
-    to download the subset from the FTP site is also provided.
-  </p>
-  <p>
-    Below that is a table with details of the individual members of the subset. The exact format
-    of this table varies slightly across different subsets. It provides basic high-level
-    information
-    about each member including information like the code, various names and synonyms, and one
-    or more
-    definitions for that member. At the top of this table is a <b>Search Box</b> that can be
-    used
-    to restrict to only those member concepts whose contents are matches to the search text
-    provided.
-    Click the <b>Reset</b> button to clear any search text and retrieve the full list.
-  </p>
+    <a name="hierarchy"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Hierarchy</h4>
+    </span>
+    <p>The hierarchy view is enabled by clicking on the <b>Open in Hierarchy</b> button when viewing
+        <a href="overview#concept-details" aria-label="Scroll to concept details">concept details
+        </a> or by clicking on the <b>Hierarchy</b> link in the top banner.
+    </p>
+    <p>
+        In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display
+        opened
+        to reveal the full path from the root level of the tree to the currently selected concept.
+        The entry for the current concept is highlighted and all sibling concepts and ancestor
+        concepts
+        are also shown in as represented in the hierarchy of the terminology. The page will
+        automatically
+        scroll to the selected concept in this view.
+    </p>
+    <p>
+        Clicking on the <i class="pi pi-fw pi-chevron-right"></i> to the left of a concept in this
+        view triggers a call to
+        look up and display its child concepts.
+    </p>
+    <p>Clicking on a concept itself will change the focus of the display to that concept and load
+        the
+        corresponding concept detail information for that concept on the right side of the display.
+    </p>
 
-  <a name="hierarchy"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Hierarchy</h4>
-  </span>
-  <p>The hierarchy view is enabled by clicking on the <b>Open in Hierarchy</b> button when viewing
-    <a href="overview#concept-details" aria-label="Scroll to concept details">concept details
-    </a> or by clicking on the <b>Hierarchy</b> link in the top banner.
-  </p>
-  <p>
-    In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display
-    opened
-    to reveal the full path from the root level of the tree to the currently selected concept.
-    The entry for the current concept is highlighted and all sibling concepts and ancestor
-    concepts
-    are also shown in as represented in the hierarchy of the terminology. The page will
-    automatically
-    scroll to the selected concept in this view.
-  </p>
-  <p>
-    Clicking on the <i class="pi pi-fw pi-chevron-right"></i> to the left of a concept in this
-    view triggers a call to
-    look up and display its child concepts.
-  </p>
-  <p>Clicking on a concept itself will change the focus of the display to that concept and load
-    the
-    corresponding concept detail information for that concept on the right side of the display.
-  </p>
-
-  <a name="documentation"></a>
-  <span>
-    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
-    <h4>Metadata Documentation</h4>
-  </span>
-  <p>
-    Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a
-    number of sub-entries
-    for the various kinds of metadata, including: Associations, Properties, Qualifiers, Roles,
-    Term Groups, Sources,
-    Synonym Types, and Definition Types.
-  </p>
-  <p>
-    Choosing any of these items loads a sortable two or three-column table with the codes,
-    names,
-    and definitions of the metadata elements of the specified type.</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
+    <a name="documentation"></a>
+    <span>
+        <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+        <h4>Metadata Documentation</h4>
+    </span>
+    <p>
+        Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a
+        number of sub-entries
+        for the various kinds of metadata, including: Associations, Properties, Qualifiers, Roles,
+        Term Groups, Sources,
+        Synonym Types, and Definition Types.
+    </p>
+    <p>
+        Choosing any of these items loads a sortable two or three-column table with the codes,
+        names,
+        and definitions of the metadata elements of the specified type.</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
 </div>

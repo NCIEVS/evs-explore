@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Documentation overview component
 // BAC - looks like not used
@@ -10,10 +11,12 @@ import { Router } from '@angular/router';
 })
 export class OverviewComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  terminology: string;
+
+  constructor(private router: Router, private configService: ConfigurationService) { }
 
   ngOnInit() {
-    // n/a
+    this.terminology = this.configService.getTerminologyName();
   }
 
   scrollToTop() {

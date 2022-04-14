@@ -1,8 +1,9 @@
 <div class="container">
     <div class="page-header">
         <span class="ui-coloring">Sources</span>
-        <span style="float:right"><button routerLink="/welcome" label="New Search" pButton
-                type="button" class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+                class="ui-button-coloring"></button></span>
     </div>
 
     <p>Information about synonym sources</p>
