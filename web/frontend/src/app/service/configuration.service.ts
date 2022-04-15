@@ -40,6 +40,25 @@ export class ConfigurationService {
     return this.terminologies;
   }
 
+  // filter out terminologies that shouldn't be in the list on the search page
+  // mostly just the weekly ncit that's loaded
+  terminologySearchListFilter(term) {
+    if (term.terminology != 'ncit')
+      return true;
+    if (term.tags && "monthly" in term.tags && term.latest == true)
+      return true;
+    return false;
+  }
+
+  getTerminologyByName(name) { // reverse search terminology by short name
+    var terms = this.terminologies.filter(this.terminologySearchListFilter);
+    for (var term in terms) {
+      if (terms[term].terminology == name) {
+        return terms[term];
+      }
+    }
+  }
+
   setTerminology(terminology) {
     this.terminology = terminology;
     this.cookieService.set('term', terminology.terminology);

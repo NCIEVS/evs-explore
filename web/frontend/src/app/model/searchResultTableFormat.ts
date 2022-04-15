@@ -144,8 +144,8 @@ export class SearchResultTableFormat {
 
           } else if (returnFields[k] === 'Preferred Name') {
             data['column' + count] = searchResult.concepts[i].getPreferredName();
-          } else {
-            console.log('NEED TO SUPPORT THIS', returnFields[k]);
+            // } else {
+            //   console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }
           count++;
         }

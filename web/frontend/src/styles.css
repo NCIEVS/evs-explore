@@ -1,4 +1,6 @@
-table a:link, table a:visited, table a:active {
+table a:link,
+table a:visited,
+table a:active {
   color: #06c;
   text-decoration: none;
 }
@@ -8,7 +10,8 @@ table a:hover {
   text-decoration: underline;
 }
 
-.table td, .table th {
+.table td,
+.table th {
   padding: .25rem;
 }
 
@@ -43,7 +46,8 @@ p-dialog .ui-dialog {
   background-color: transparent;
 }
 
-img, svg {
+img,
+svg {
   vertical-align: middle;
 }
 
@@ -51,7 +55,10 @@ img, svg {
   margin-right: 5px;
 }
 
-[type=reset], [type=submit], button, html [type=button] {
+[type=reset],
+[type=submit],
+button,
+html [type=button] {
   -webkit-appearance: initial;
 }
 
@@ -190,4 +197,8 @@ body .alert-info {
 
 .regular-link {
   color: #319fbe !important;
+}
+
+.ui-table-scrollable-header-box {
+  margin-right: 17px
 }

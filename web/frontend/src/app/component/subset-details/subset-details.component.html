@@ -2,7 +2,8 @@
     <p-panel [showHeader]="false">
         <div class="page-header" style="margin-bottom: 0.2em">
             Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button
-                    routerLink="/welcome" label="New Search" pButton type="button"
+                    [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+                    label="New Search" pButton type="button"
                     class="ui-button-coloring"></button></span>
         </div>
         <p>{{ subsetNCItDefinition }}</p>

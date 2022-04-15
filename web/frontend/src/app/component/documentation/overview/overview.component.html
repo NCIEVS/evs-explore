@@ -2,8 +2,9 @@
     <a name="#top"></a>
     <div class="page-header">
         <span class="ui-coloring">Help</span>
-        <span style="float:right"><button routerLink="/welcome" label="New Search" pButton
-                type="button" class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
+                class="ui-button-coloring"></button></span>
     </div>
     Simple information on using this application. Use links below or scroll down for more
     information.
@@ -154,7 +155,7 @@
                 class="tt">CDISC</span> will
             only return concepts with a CDISC synonym</li>
         <li><b>Search</b> button starts a search.</li>
-        <li><b>Reset Search</b> button resets all search parameters and returns to the <a
+        <li><b>New Search</b> button resets all search parameters and returns to the <a
                 href="overview#welcome" aria-label="Scroll to welcome page">Welcome Page</a>.</li>
     </ul>
 

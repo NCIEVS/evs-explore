@@ -1,7 +1,8 @@
 <div class="container" *ngIf="termGroups">
     <div class="page-header">
         <span class="ui-coloring">Term Groups</span>
-        <span style="float:right"><button routerLink="/welcome" label="New Search" pButton type="button"
+        <span style="float:right"><button [routerLink]="['/welcome']"
+                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
                 class="ui-button-coloring"></button></span>
     </div>
     <p *ngIf="termGroups && terminology == 'ncit'">NCI Thesaurus Term Groups use 2- or 3-character
