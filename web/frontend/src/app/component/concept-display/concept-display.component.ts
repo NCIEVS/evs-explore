@@ -161,7 +161,7 @@ export class ConceptDisplayComponent implements OnInit {
     if (intersection.length == 0) {
       this.toggleSelectedSource('All');
     }
-
+    this.selectedSources = new Set([...this.selectedSources].filter(x => intersection.includes(x)));
     // Convert set to array and return
     return [...sourceList];
   }
