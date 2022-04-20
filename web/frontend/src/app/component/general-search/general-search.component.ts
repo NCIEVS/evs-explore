@@ -110,7 +110,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
-              this.avoidLazyLoading = true;
               this.performSearch();
             }
             // Handle the welcome page
@@ -289,6 +288,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Load table data
   loadDataLazily(event) {
+    console.log('loadDataLazily', event, this.avoidLazyLoading);
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
