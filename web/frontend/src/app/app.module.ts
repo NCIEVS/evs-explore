@@ -60,6 +60,7 @@ import { AppComponent } from './app.component';
 import { NotificationComponent } from './component/notifications/notifications.component';
 import { ErrorComponent } from './component/error/error.component';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
+import { EvsApiComponent } from './component/evs-api/evs-api.component';
 import { EvsHeaderComponent } from './component/evs-header/evs-header.component';
 import { EvsFooterComponent } from './component/evs-footer/evs-footer.component';
 import { LoaderComponent } from './component/loader/loader.component';
@@ -91,6 +92,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
 @NgModule({
   declarations: [
     AppComponent,
+    EvsApiComponent,
     EvsHeaderComponent,
     EvsFooterComponent,
     NotificationComponent,
@@ -120,7 +122,8 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     AlldocsComponent,
     ContactUsComponent,
     SubsetDetailsComponent,
-    SubsetNcitComponent
+    SubsetNcitComponent,
+    EvsApiComponent
   ],
   imports: [
     NgbModule,

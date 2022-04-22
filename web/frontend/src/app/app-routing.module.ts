@@ -20,6 +20,7 @@ import { SubsetDetailsComponent } from './component/subset-details/subset-detail
 import { SynonymTypesComponent } from './component/documentation/synonym-types/synonym-types.component';
 import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
 import { SubsetNcitComponent } from './component/documentation/subset-ncit/subset-ncit.component';
+import { EvsApiComponent } from './component/evs-api/evs-api.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -48,6 +49,7 @@ const routes: Routes = [
   { path: 'subsetncit', component: SubsetNcitComponent },
   { path: 'contact', component: ContactUsComponent },
   { path: 'error', component: ErrorComponent },
+  { path: 'evsapi', component: EvsApiComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
