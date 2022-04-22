@@ -2,7 +2,7 @@ plugins {
   id "com.moowork.node" version "1.2.0"
 }
 
-version = '1.7.0.RELEASE'
+version = '1.6.0.RELEASE'
 
 node {
   version = '12.6.0'
