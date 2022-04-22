@@ -1,7 +1,6 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from 'src/environments/environment';
 import { Title } from '@angular/platform-browser';
 import { GeneralSearchComponent } from '../general-search/general-search.component';
 
@@ -28,10 +27,6 @@ export class WelcomeComponent implements AfterViewInit {
 
   getTerminology(): String {
     return this.generalSearchComponent.selectedTerminology.terminology ? this.generalSearchComponent.selectedTerminology.terminology : 'ncit';
-  }
-
-  getApiURL() {
-    return environment.swagger;
   }
 
   open(content: TemplateRef<any>) {
