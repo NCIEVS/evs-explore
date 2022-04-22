@@ -14,12 +14,7 @@ export class EvsApiComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("EVS Explore API");
-    this.apiUrl = this.sanitizer.bypassSecurityTrustUrl(environment.swagger);
-    //this.apiUrl = this.sanitizer.bypassSecurityTrustUrl('https://api-evsrest.nci.nih.gov/swagger-ui.html');
-  }
-
-  getApiUrl() {
-    return this.apiUrl;
+    this.apiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.swagger);
   }
 
 }
