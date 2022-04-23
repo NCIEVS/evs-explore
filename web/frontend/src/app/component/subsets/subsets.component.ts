@@ -34,14 +34,13 @@ export class SubsetsComponent implements OnInit {
   expand = true;
   terminology: string;
   subsetsFound = true;
+  expandLabel = 'Expand All';
+  expandDisabled = false;
 
   static origHierarchyData: TreeNode[];
 
   urlBase = "/subsets"
   urlTarget = '_top'
-
-  conceptPanelSize = "70.0"
-  subsetPanelSize = "30.0"
 
   constructor(
     private subsetDetailService: ConceptDetailService,
@@ -59,20 +58,8 @@ export class SubsetsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.updateDisplaySize();
     this.getPathInHierarchy();
     this.subsetsFound = true;
-  }
-
-
-  updateDisplaySize = () => {
-    let bodyHeight = document.documentElement.scrollHeight
-    document.getElementById('hierarchyTableDisplay').style.height = bodyHeight + "px";
-    /*
-     * Adjust the size of the hierarchy display
-    */
-    let tableHeight = bodyHeight;
-    this.hierarchyTable.scrollHeight = (tableHeight - 200) + "px";
   }
 
   // Gets path in the hierarchy and scrolls to the active node
@@ -84,7 +71,6 @@ export class SubsetsComponent implements OnInit {
           this.setTreeTableProperties(node, false);
         }
         SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
-        this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
           setTimeout(() => {
             this.scrollToSelectionTableTree(this.selectedNodes[0]);
@@ -174,43 +160,50 @@ export class SubsetsComponent implements OnInit {
     }
   }
 
+  // Handle "expand all" or "collapse all"
+  expandOrCollapseAllNodes(hierarchyData, level = 0) {
+    this.hierarchyTable.loading = true;
+    setTimeout(() => this.expandOrCollapseAllNodesHelper(hierarchyData, level));
+  }
 
-  expandOrCollapseAllNodes(hierarchyData, element, level = 0) {
-    if (this.expand) {
-      for (let i = 0; i < hierarchyData.length; i++) {
-        if (hierarchyData[i].children.length > 0) {
-          this.getTreeTableChildrenNodes(hierarchyData[i].children);
-          this.expandOrCollapseAllNodes(hierarchyData[i].children, undefined, level + 1);
-          hierarchyData[i].expanded = true;
-        }
-      }
-      if (level == 0) { // make sure everything is finished
-        this.expand = false;
-        element.textContent = "Collapse All"
+  expandOrCollapseAllNodesHelper(hierarchyData, level = 0) {
+    for (let i = 0; i < hierarchyData.length; i++) {
+      if (hierarchyData[i].children.length > 0) {
+        this.getTreeTableChildrenNodes(hierarchyData[i].children);
+        this.expandOrCollapseAllNodesHelper(hierarchyData[i].children, level + 1);
+        // hierarchyData[i].expanded = true;
+        hierarchyData[i].expanded = this.expand;
       }
     }
-    else {
-      // TODO: figure out how collapsing works
-      this.ngOnInit()
-      this.expand = true;
-      element.textContent = "Expand All"
+    // Only trigger this for the top-level call
+    if (level == 0) {
+      this.expand = !this.expand;
+      if (!this.expand) {
+        this.expandLabel = 'Collapse All';
+      } else {
+        this.expandLabel = 'Expand All';
+      }
+      this.hierarchyTable.loading = false;
     }
   }
 
-
   performSubsetSearch(string) {
-    document.getElementById("expandOrCollapseButton").setAttribute("disabled", "disabled");
-    this.filteredHierarchy = [];
-    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
-    this.hierarchyData.forEach(element => {
-      var newTn = this.performSubsetSearchHelper(element, string);
-      if (newTn) {
-        this.filteredHierarchy.push(element);
-      }
+    this.hierarchyTable.loading = true;
+    setTimeout(() => {
+      this.expandDisabled = true;
+      this.filteredHierarchy = [];
+      this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
+      this.hierarchyData.forEach(element => {
+        var newTn = this.performSubsetSearchHelper(element, string);
+        if (newTn) {
+          this.filteredHierarchy.push(element);
+        }
+      });
+      this.subsetSuggestions = []; // deal with the spinner
+      this.subsetsFound = (this.filteredHierarchy.length > 0);
+      this.hierarchyData = this.filteredHierarchy;
+      this.hierarchyTable.loading = false;
     });
-    this.subsetSuggestions = []; // deal with the spinner
-    this.subsetsFound = (this.filteredHierarchy.length > 0);
-    this.hierarchyData = this.filteredHierarchy;
   }
 
   performSubsetSearchHelper(tn, string) {
@@ -233,9 +226,9 @@ export class SubsetsComponent implements OnInit {
   resetSearch() {
     this.subsetautosearch = '';
     sessionStorage.setItem("subsetSearch", this.subsetautosearch);
-    document.getElementById("expandOrCollapseButton").removeAttribute("disabled");
-    document.getElementById("expandOrCollapseButton").innerHTML = "Expand All";
     this.expand = true;
+    this.expandLabel = 'Expand All';
+    this.expandDisabled = false;
     this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
   }
 

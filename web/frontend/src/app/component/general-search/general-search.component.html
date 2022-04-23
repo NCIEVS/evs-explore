@@ -6,10 +6,10 @@
         <div class="row">
           <div class="col-sm-4">
             <div style="padding-top: 6px;">
-              <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
-                [delay]="800" [(ngModel)]="searchCriteria.term" [suggestions]="textSuggestions"
-                (completeMethod)="search($event)" id="termauto" name="termauto"
-                placeholder="Enter concept code or at least 3 letters of a term." [minLength]="3">
+              <p-autoComplete #termauto [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
+                [(ngModel)]="searchCriteria.term" [suggestions]="textSuggestions" (completeMethod)="search($event)"
+                id="termauto" name="termauto" placeholder="Enter concept code or at least 3 letters of a term."
+                [minLength]="3">
               </p-autoComplete>
 
             </div>
@@ -17,31 +17,29 @@
           </div>
           <div class="col-sm-2">
             <div class="ui-inputgroup" style="padding-top: 6px;">
-              <button type="button" pButton label="Search" icon="fa fa-search"
-                (click)="onPerformSearch();" [disabled]="searchCriteria.term.length < 3"></button>
+              <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"
+                [disabled]="searchCriteria.term.length < 3"></button>
             </div>
           </div>
 
           <div class="col-sm-6">
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
-              <p-multiSelect *ngIf="configService.isMultiSource()" autoWidth="false"
-                [showToggleAll]="true" dropdownIcon="pi pi-caret-down" [options]="sourcesAll"
-                [(ngModel)]="searchCriteria.synonymSource" name="sourceSearch" defaultLabel="Source"
-                [filter]="true" (onChange)="onChangeSource($event)" [displaySelectedLabel]="false"
-                [resetFilterOnHide]="true">
+              <p-multiSelect *ngIf="configService.isMultiSource()" autoWidth="false" [showToggleAll]="true"
+                dropdownIcon="pi pi-caret-down" [options]="sourcesAll" [(ngModel)]="searchCriteria.synonymSource"
+                name="sourceSearch" defaultLabel="Source" [filter]="true" (onChange)="onChangeSource($event)"
+                [displaySelectedLabel]="false" [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
               </p-multiSelect>
 
               <button styleClass="ui-button-info" type="button" pButton icon="fa fa-undo"
-                (click)="onResetSearch($event)" pTooltip="Click to reset the search"
-                label="New Search" tooltipPosition="bottom"></button>
+                (click)="onResetSearch($event)" pTooltip="Click to start new search" label="New Search"
+                tooltipPosition="bottom"></button>
 
               <div class="large-divider"></div>
-              <p-dropdown [style]="{'padding-top':'1px','padding-bottom':'1px'}"
-                styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerminology"
-                (onChange)="onChangeTerminology($event)">
+              <p-dropdown [style]="{'padding-top':'1px','padding-bottom':'1px'}" styleClass="ui-button-info"
+                [options]="termsAll" [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
               </p-dropdown>
             </div>
 
@@ -58,9 +56,8 @@
             <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
               [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('match')">
             </p-radioButton>
-            <p-radioButton class="radio-padding" name="searchtype" value="startsWith"
-              label="Starts With" [(ngModel)]="searchCriteria.type"
-              (onClick)="changeSearchType('startsWith')"></p-radioButton>
+            <p-radioButton class="radio-padding" name="searchtype" value="startsWith" label="Starts With"
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('startsWith')"></p-radioButton>
             <p-button icon="pi pi-angle-double-right" (onClick)="toggleShowMoreSearchOptions()"
               *ngIf="!showMoreSearchOption" pTooltip="Click to show all search types">
             </p-button><span *ngIf="showMoreSearchOption">
@@ -87,8 +84,8 @@
           <div class="col-sm-6" style="padding-top:3px;">
             <p-chips (keydown)="onChipsKeyEvent($event)"
               *ngIf="searchCriteria.synonymSource && searchCriteria.synonymSource.length > 0"
-              [(ngModel)]="searchCriteria.synonymSource" (onRemove)="onSourceSelectDeselect($event)"
-              addOnTab="false" addOnBlur="false">
+              [(ngModel)]="searchCriteria.synonymSource" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
+              addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}
               </ng-template>
@@ -120,10 +117,9 @@
 
               <!--<p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Highlights"
                 offLabel="Hide Highlights" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>-->
-              <p-multiSelect [showToggleAll]="false" dropdownIcon="pi pi-caret-down"
-                [options]="multiSelectCols" [(ngModel)]="selectedColumns" name="columnNames"
-                defaultLabel="Search Result Details" [filter]="false" (onChange)="setColumns()"
-                [displaySelectedLabel]="false" [style]="{minWidth: '200px'}">
+              <p-multiSelect [showToggleAll]="false" dropdownIcon="pi pi-caret-down" [options]="multiSelectCols"
+                [(ngModel)]="selectedColumns" name="columnNames" defaultLabel="Search Result Details" [filter]="false"
+                (onChange)="setColumns()" [displaySelectedLabel]="false" [style]="{minWidth: '200px'}">
               </p-multiSelect>
 
             </div>
@@ -136,10 +132,9 @@
         <div class="row" style="margin-bottom:10px;padding-top:5px;">
           <div class="col-sm-12">
 
-            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner"
-              [columns]="displayColumns" [value]="reportData" [paginator]="true"
-              [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3" [rows]="pageSize"
-              [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
+            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns"
+              [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3"
+              [rows]="pageSize" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
               [totalRecords]="totalRecords" paginatorPosition="both" [lazy]="true"
               (onLazyLoad)="loadDataLazily($event)">
 
@@ -154,8 +149,7 @@
                 <tr>
                   <!--<th style="width: 1.8em"></th>-->
                   <th *ngFor="let col of columns">
-                    <span
-                      *ngIf='col.header=="Preferred Name" && selectedTerminology.terminology == "ncit"'>NCIt
+                    <span *ngIf='col.header=="Preferred Name" && selectedTerminology.terminology == "ncit"'>NCIt
                     </span>
                     <span *ngIf='col.header=="Synonyms"'>Source </span>
                     {{col.header}}
@@ -174,11 +168,9 @@
                   </td>-->
                   <td *ngFor="let col of columns;let idx=index" [ngSwitch]="col && col.header">
                     <span *ngSwitchCase="'Highlights'">
-                      <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0"
-                        [pRowToggler]="rowData">
+                      <a href="#" *ngIf="columns.length > 0 && rowData.highlight.length != 0" [pRowToggler]="rowData">
                         <i [ngClass]="rowData.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                          pTooltip="Click to show/hide highlights"
-                          (click)="rowData.expanded=!rowData.expanded"></i>
+                          pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
                     <span pTooltip="Open concept details" *ngSwitchCase="'Code'">
@@ -196,34 +188,28 @@
                     <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
                       <span *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']">
                         &nbsp;...
-                        <button class="link"
-                          (click)="rowData['synValue'] = rowData['expandedSynonyms']">[ More
+                        <button class="link" (click)="rowData['synValue'] = rowData['expandedSynonyms']">[ More
                           ]</button>
                       </span>
                       <span *ngIf="rowData['synValue'] == rowData['expandedSynonyms']">
                         &nbsp;...
-                        <button class="link"
-                          (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[ Less
+                        <button class="link" (click)="rowData['synValue'] = rowData['collapsedSynonyms']">[ Less
                           ]</button>
                       </span>
                     </span>
-                    <span *ngSwitchCase="'Definitions'"><span
-                        [innerHTML]="rowData['defValue']"></span>
+                    <span *ngSwitchCase="'Definitions'"><span [innerHTML]="rowData['defValue']"></span>
                       <span *ngIf="rowData['defValue'] == rowData['collapsedDefinitions']">
                         &nbsp;...
-                        <button class="link"
-                          (click)="rowData['defValue'] = rowData['expandedDefinitions']">[ More
+                        <button class="link" (click)="rowData['defValue'] = rowData['expandedDefinitions']">[ More
                           ]</button>
                       </span>
                       <span *ngIf="rowData['defValue'] == rowData['expandedDefinitions']">
                         &nbsp;...
-                        <button class="link"
-                          (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[ Less
+                        <button class="link" (click)="rowData['defValue'] = rowData['collapsedDefinitions']">[ Less
                           ]</button>
                       </span>
                     </span>
-                    <span *ngSwitchCase="'Semantic Type'"
-                      [innerHTML]="rowData['semanticType']"></span>
+                    <span *ngSwitchCase="'Semantic Type'" [innerHTML]="rowData['semanticType']"></span>
                     <!-- <span *ngSwitchCase="'Label'"><a href="javascript:void(0)"
                         (click)="onSelectConceptCode(rowData['column1'])">{{rowData[col.field]}}</a></span>-->
                     <!--  <div *ngSwitchCase="'Maps_To'" [innerHTML]="rowData[col.field] | transformDisplay:'Maps_To'"></div>-->
