@@ -24,16 +24,16 @@
     </span>
   </div>
   <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
-    <p-tabPanel header="Terms and Properties">
+    <p-tabPanel header="View All">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-    </p-tabPanel>
-    <p-tabPanel header="Relationships">
       <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
         [urlTarget]="urlTarget">
       </app-concept-relationship>
     </p-tabPanel>
-    <p-tabPanel header="View All">
+    <p-tabPanel header="Terms and Properties">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+    </p-tabPanel>
+    <p-tabPanel header="Relationships">
       <app-concept-relationship [concept]="conceptWithRelationships" [urlBase]="urlBase"
         [urlTarget]="urlTarget">
       </app-concept-relationship>
