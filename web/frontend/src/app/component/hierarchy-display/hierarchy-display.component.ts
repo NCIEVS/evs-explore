@@ -135,7 +135,7 @@ export class HierarchyDisplayComponent implements OnInit {
         this.selectedNodes = [];
         this.resetTreeTableNodes();
         this.updateDisplaySize();
-        this.location.replaceState("/hierarchy/" + this.conceptCode);
+        this.location.replaceState("/hierarchy/" + this.terminology + "/" + this.conceptCode);
       });
   }
 
