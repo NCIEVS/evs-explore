@@ -71,7 +71,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activeIndex = 0;
+    this.activeIndex = 1;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
     // TODO: this should be based on terminology metadata
