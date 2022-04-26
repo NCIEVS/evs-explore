@@ -78,6 +78,9 @@ export class HierarchyDisplayComponent implements OnInit {
           this.sources.splice(this.sources.indexOf("All"), 1);
           this.sources.unshift("All");
         }
+        this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+          this.conceptWithRelationships = new Concept(response, this.configService);
+        });
         this.getPathInHierarchy();
       });
 
@@ -88,7 +91,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.activeIndex = $event.index;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    if (($event.index === 1 || $event.index === 2) &&
+    if (($event.index === 0 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
         this.conceptWithRelationships = new Concept(response, this.configService);
@@ -120,12 +123,16 @@ export class HierarchyDisplayComponent implements OnInit {
         this.conceptDetail = new Concept(response, this.configService);
         this.conceptCode = this.conceptDetail.code;
         this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        this.conceptWithRelationships = undefined;
         this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
         // make sure All is at the front
         if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
           this.sources.splice(this.sources.indexOf("All"), 1);
           this.sources.unshift("All");
+        }
+        if (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null) {
+          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+            this.conceptWithRelationships = new Concept(response, this.configService);
+          });
         }
 
         this.getPathInHierarchy();

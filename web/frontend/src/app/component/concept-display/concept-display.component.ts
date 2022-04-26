@@ -71,7 +71,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activeIndex = 1;
+    this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
     // TODO: this should be based on terminology metadata
@@ -96,7 +96,6 @@ export class ConceptDisplayComponent implements OnInit {
             this.conceptDetail = new Concept(concept, this.configService);
             this.conceptCode = concept.code;
             this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-            this.conceptWithRelationships = undefined;
             // Sort the source list (case insensitive)
             this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
             // make sure All is at the front
@@ -104,6 +103,9 @@ export class ConceptDisplayComponent implements OnInit {
               this.sources.splice(this.sources.indexOf("All"), 1);
               this.sources.unshift("All");
             }
+            this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+              this.conceptWithRelationships = new Concept(response, this.configService);
+            });
           })
 
       })
@@ -114,7 +116,7 @@ export class ConceptDisplayComponent implements OnInit {
     this.activeIndex = $event.index;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    if (($event.index === 1 || $event.index === 2) &&
+    if (($event.index === 0 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
         this.conceptWithRelationships = new Concept(response, this.configService);
