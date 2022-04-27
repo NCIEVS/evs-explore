@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -54,9 +54,12 @@ export class ConceptDisplayComponent implements OnInit {
   collapsed: boolean = false;
   collapsedText: string = "Collapse All";
 
+  subscription = null;
+
   constructor(
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private cookieService: CookieService,
     public configService: ConfigurationService
@@ -67,6 +70,17 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+
+    this.subscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Trick the Router into believing it's last link wasn't previously loaded
+        this.router.navigated = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -109,6 +123,12 @@ export class ConceptDisplayComponent implements OnInit {
           })
 
       })
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   // Respond to things like changes in tabs

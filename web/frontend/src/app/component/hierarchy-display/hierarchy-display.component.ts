@@ -175,9 +175,7 @@ export class HierarchyDisplayComponent implements OnInit {
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
-    this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]).then(() => {
-      window.location.reload();
-    });
+    this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]);
   }
 
   // Gets path in the hierarchy and scrolls to the active node
