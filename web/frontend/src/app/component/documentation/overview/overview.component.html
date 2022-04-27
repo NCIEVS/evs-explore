@@ -2,9 +2,8 @@
     <a name="#top"></a>
     <div class="page-header">
         <span class="ui-coloring">Help</span>
-        <span style="float:right"><button [routerLink]="['/welcome']"
-                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-                class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+                label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
     </div>
     Simple information on using this application. Use links below or scroll down for more
     information.
@@ -151,12 +150,12 @@
         <li><b>Source</b> drop-down allows searches to be restricted to those concepts having a
             synonym with "synonym
             source"
-            matching one of the selected entries in the drop-down. For example, selecting <span
-                class="tt">CDISC</span> will
+            matching one of the selected entries in the drop-down. For example, selecting <span class="tt">CDISC</span>
+            will
             only return concepts with a CDISC synonym</li>
         <li><b>Search</b> button starts a search.</li>
-        <li><b>New Search</b> button resets all search parameters and returns to the <a
-                href="overview#welcome" aria-label="Scroll to welcome page">Welcome Page</a>.</li>
+        <li><b>New Search</b> button resets all search parameters and returns to the <a href="overview#welcome"
+                aria-label="Scroll to welcome page">Welcome Page</a>.</li>
     </ul>
 
     <a name="search-results"></a>
@@ -231,8 +230,7 @@
     </p>
     <p>The top of this view shows the preferred name and concept code along with an <b>Open in
             Hierarchy</b> button.
-        Clicking on that button will open the <a href="overview#hierarchy"
-            aria-label="Scroll to hierarchy">hierarchy
+        Clicking on that button will open the <a href="overview#hierarchy" aria-label="Scroll to hierarchy">hierarchy
             view</a>.
     </p>
     <p>Below that, there are three tabs: <b>Terms and Properties</b>, <b>Relationships</b>, and
@@ -255,7 +253,7 @@
                     attribution(s).</li>
                 <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
                     concept in a sortable table.
-                    This table includes columns for the term, the sub-source, the term group, the
+                    This table includes columns for the term, the sub-source, the term type, the
                     sub-source code, and the
                     sub-source name.</li>
                 <li><b>Other Properties</b> shows other properties associated with the concept in a
@@ -264,14 +262,14 @@
                     may be linked out to external
                     data sources that provide additional information about those values. For
                     example, a "CAS_Registry" property
-                    will have its value linked out to <a
-                        href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
+                    will have its value linked out to <a href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a>
+                    to
                     display the data attached to the identifier by the original source, in this case
                     an NIH ChemID.
                 </li>
                 <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other
                     terminologies in a sortable table. This table includes
-                    columns for the target name, relationship to target, target term group, target
+                    columns for the target name, relationship to target, target term type, target
                     code, and the target terminology
                     (and the target terminology version if available).</li>
             </ul>
@@ -396,7 +394,7 @@
         Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a
         number of sub-entries
         for the various kinds of metadata, including: Associations, Properties, Qualifiers, Roles,
-        Term Groups, Sources,
+        Term Types, Sources,
         Synonym Types, and Definition Types.
     </p>
     <p>

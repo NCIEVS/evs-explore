@@ -4,7 +4,7 @@ export class Map {
   targetCode: string;
   targetName: string;
   targetTerminology: string;
-  targetTermGroup: string;
+  targetTermType: string;
   highlight: string;
 
   // Construct a concept reference from json input
