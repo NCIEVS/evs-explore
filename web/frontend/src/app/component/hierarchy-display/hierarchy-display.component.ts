@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
+import { filter, switchMap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
@@ -41,22 +41,38 @@ export class HierarchyDisplayComponent implements OnInit {
   sources: string[] = [];
   selectedSources = null;
 
+  // Manage subscriptions
+  routeListener = null;
+
   constructor(
     private conceptDetailService: ConceptDetailService,
     private location: Location,
     private route: ActivatedRoute,
+    private router: Router,
     private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
-    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
-    this.selectedSources = this.configService.getSelectedSources();
+    this.configSetup()
 
+    // Set up listener for back/forward browser events
+    this.routeListener =
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationStart))
+        .subscribe((event: NavigationStart) => {
+          // don't do this if we're not going between hierarchies
+          if (window.location.pathname.split("/").length >= 4 && window.location.pathname.includes("/hierarchy")) {
+            console.log("handleNavigate", window.location.pathname.split("/")[3]);
+            this.configSetup();
+            this.handleNavigate(this.configService.getCode());
+          }
+        });
   }
 
   ngOnInit() {
+
+    console.log("ngOnInit");
 
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
@@ -84,6 +100,48 @@ export class HierarchyDisplayComponent implements OnInit {
         this.getPathInHierarchy();
       });
 
+  }
+
+  // Unsubscribe
+  ngOnDestroy() {
+    console.log('search component destroyed');
+    // unsubscribe to ensure no memory leaks
+    this.routeListener.unsubscribe();
+  }
+
+  configSetup() {
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.configService.setConfigFromQuery(window.location.search);
+    this.selectedSources = this.configService.getSelectedSources();
+  }
+
+  handleNavigate(code) {
+    this.conceptDetailService
+      .getConceptSummary(code, 'summary')
+      .subscribe((response: any) => {
+        this.conceptDetail = new Concept(response, this.configService);
+        this.conceptCode = this.conceptDetail.code;
+        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
+        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        // make sure All is at the front
+        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
+          this.sources.splice(this.sources.indexOf("All"), 1);
+          this.sources.unshift("All");
+        }
+        if (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null) {
+          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
+            this.conceptWithRelationships = new Concept(response, this.configService);
+          });
+        }
+
+        this.getPathInHierarchy();
+        for (let i = 0; i < this.selectedNodes.length; i++) {
+          this.selectedNodes[i]['highlight'] = false;
+        }
+        this.selectedNodes = [];
+        this.resetTreeTableNodes();
+        this.updateDisplaySize();
+      });
   }
 
   // Handler for tabs changing in the hierarchy view.
@@ -117,33 +175,9 @@ export class HierarchyDisplayComponent implements OnInit {
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
-    this.conceptDetailService
-      .getConceptSummary(event.code, 'summary')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response, this.configService);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        // make sure All is at the front
-        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-          this.sources.splice(this.sources.indexOf("All"), 1);
-          this.sources.unshift("All");
-        }
-        if (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null) {
-          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response, this.configService);
-          });
-        }
-
-        this.getPathInHierarchy();
-        for (let i = 0; i < this.selectedNodes.length; i++) {
-          this.selectedNodes[i]['highlight'] = false;
-        }
-        this.selectedNodes = [];
-        this.resetTreeTableNodes();
-        this.updateDisplaySize();
-        this.location.replaceState("/hierarchy/" + this.terminology + "/" + this.conceptCode);
-      });
+    this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]).then(() => {
+      window.location.reload();
+    });
   }
 
   // Gets path in the hierarchy and scrolls to the active node

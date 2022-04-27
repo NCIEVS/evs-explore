@@ -98,7 +98,8 @@ export class ConfigurationService {
     return this.getTerminology().metadata['sourceCt'] > 1;
   }
 
-  setConfigFromParameters(paramMap: ParamMap) {
+  setConfigFromQuery(query: string) {
+    const paramMap = new URLSearchParams(query);
     if (paramMap.get('code')) {
       this.code = paramMap.get('code');
     }
@@ -121,6 +122,15 @@ export class ConfigurationService {
         this.selectedSources.delete('All');
       }
     }
+  }
+
+  setConfigFromPathname(path: string) {
+    const splitPath = path.split("/");
+    this.code = splitPath[3];
+    var terminology = this.terminologies.filter(t =>
+      t.latest && t.terminology == splitPath[2]
+      && (splitPath[2] != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+    this.setTerminology(terminology);
   }
 
   getCode(): string {

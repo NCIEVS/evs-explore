@@ -63,8 +63,8 @@ export class ConceptDisplayComponent implements OnInit {
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
-    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
   }

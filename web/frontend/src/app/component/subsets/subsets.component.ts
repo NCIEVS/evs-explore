@@ -52,7 +52,7 @@ export class SubsetsComponent implements OnInit {
     private configService: ConfigurationService
   ) {
 
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
   }
 
