@@ -5,7 +5,7 @@ export class Synonym {
   name: string;
   source: string;
   subSource: string;
-  termGroup: string;
+  termType: string;
   type: string;
 
   // Construct a concept reference from json input

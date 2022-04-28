@@ -2,9 +2,8 @@
   <a name="#top"></a>
   <div class="page-header">
     <span class="ui-coloring">Help</span>
-    <span style="float:right"><button [routerLink]="['/welcome']"
-        [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
+    <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+        label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
   </div>
   Simple information on using this application. Use links below or scroll down for more
   information.
@@ -152,12 +151,11 @@
     <li><b>Source</b> drop-down allows searches to be restricted to those concepts having a
       synonym with "synonym
       source"
-      matching one of the selected entries in the drop-down. For example, selecting <span
-        class="tt">CDISC</span> will
+      matching one of the selected entries in the drop-down. For example, selecting <span class="tt">CDISC</span> will
       only return concepts with a CDISC synonym</li>
     <li><b>Search</b> button starts a search.</li>
-    <li><b>New Search</b> button resets all search parameters and returns to the <a
-        href="overview#welcome" aria-label="Scroll to welcome page">Welcome Page</a>.</li>
+    <li><b>New Search</b> button resets all search parameters and returns to the <a href="overview#welcome"
+        aria-label="Scroll to welcome page">Welcome Page</a>.</li>
   </ul>
 
   <a name="search-results"></a>
@@ -232,8 +230,7 @@
   </p>
   <p>The top of this view shows the preferred name and concept code along with an <b>Open in
       Hierarchy</b> button.
-    Clicking on that button will open the <a href="overview#hierarchy"
-      aria-label="Scroll to hierarchy">hierarchy
+    Clicking on that button will open the <a href="overview#hierarchy" aria-label="Scroll to hierarchy">hierarchy
       view</a>.
   </p>
   <p>Below that, there are three tabs: <b>Terms and Properties</b>, <b>Relationships</b>, and
@@ -256,7 +253,7 @@
           attribution(s).</li>
         <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
           concept in a sortable table.
-          This table includes columns for the term, the sub-source, the term group, the
+          This table includes columns for the term, the sub-source, the term type, the
           sub-source code, and the
           sub-source name.</li>
         <li><b>Other Properties</b> shows other properties associated with the concept in a
@@ -265,54 +262,39 @@
           may be linked out to external
           data sources that provide additional information about those values. For
           example, a "CAS_Registry" property
-          will have its value linked out to <a
-            href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
+          will have its value linked out to <a href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
           display the data attached to the identifier by the original source, in this case
           an NIH ChemID.
         </li>
-        <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other
-          terminologies in a sortable table. This table includes
-          columns for the target name, relationship to target, target term group, target
-          code, and the target terminology
-          (and the target terminology version if available).</li>
+        <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other terminologies in a sortable table.
+          This table includes columns for the target name, relationship to target, target term type, target code, and
+          the target terminology (and the target terminology version if available).</li>
       </ul>
 
     </li>
     <li><b>Relationships</b> shows information about related concepts. This information is
-      broken down into several
-      tables. Clicking on the preferred name of a related concept will launch a new browser
-      tab with the concept details
-      for that related concept.
+      broken down into several tables. Clicking on the preferred name of a related concept will launch a new browser tab
+      with the concept details for that related concept.
       <ul>
-        <li><b>Parent Concepts</b> shows basic information about parent concepts in a
-          sortable table. This table
+        <li><b>Parent Concepts</b> shows basic information about parent concepts in a sortable table. This table
           includes columns for code and preferred name.
         </li>
-        <li><b>Child Concepts</b> shows basic information about child concepts in a sortable
-          table. This table includes
+        <li><b>Child Concepts</b> shows basic information about child concepts in a sortable table. This table includes
           columns for code and preferred name.
         </li>
-        <li><b>Role Relationships</b> shows basic information about asserted or inherited
-          role relationships, pointing
-          from the current concept to other concepts in a sortable table. This table
-          includes columns for code and
+        <li><b>Role Relationships</b> shows basic information about asserted or inherited role relationships, pointing
+          from the current concept to other concepts in a sortable table. This table includes columns for code and
           preferred name.
         </li>
-        <li><b>Associations</b> shows basic information about associations pointing from the
-          current concept to other
-          concepts in a sortable table. This table includes columns for code and preferred
-          name.
+        <li><b>Associations</b> shows basic information about associations pointing from the current concept to other
+          concepts in a sortable table. This table includes columns for code and preferred name.
         </li>
-        <li><b>Incoming Role Relationships</b> shows basic information about asserted or
-          inherited role relationships,
-          pointing from other concepts to the current concept in a sortable table. This
-          table includes columns for code
+        <li><b>Incoming Role Relationships</b> shows basic information about asserted or inherited role relationships,
+          pointing from other concepts to the current concept in a sortable table. This table includes columns for code
           and preferred name.
         </li>
-        <li><b>Incoming Associations</b> shows basic information about associations pointing
-          from other concepts to the
-          current concept in a sortable table. This table includes columns for code and
-          preferred name.
+        <li><b>Incoming Associations</b> shows basic information about associations pointing from other concepts to the
+          current concept in a sortable table. This table includes columns for code and preferred name.
         </li>
         <li><b>Disjoint With</b> shows basic information about disjointness assertions
           between this concept and other
@@ -331,8 +313,7 @@
   </span>
   <p>The <b>Subset View</b> of EVS Explore supports the browsing of subsets, which are flat lists
     of member concepts intended for specific coding purposes. </p>
-  <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top
-    banner.
+  <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top banner.
   </p>
   <p>
     In this view, there is a hierarchical view of the available subsets. Clicking on the <i
@@ -349,14 +330,10 @@
   <p>
     Below that is a table with details of the individual members of the subset. The exact format
     of this table varies slightly across different subsets. It provides basic high-level
-    information
-    about each member including information like the code, various names and synonyms, and one
-    or more
-    definitions for that member. At the top of this table is a <b>Search Box</b> that can be
-    used
-    to restrict to only those member concepts whose contents are matches to the search text
-    provided.
-    Click the <b>Reset</b> button to clear any search text and retrieve the full list.
+    information about each member including information like the code, various names and synonyms, and one
+    or more definitions for that member. At the top of this table is a <b>Search Box</b> that can be
+    used to restrict to only those member concepts whose contents are matches to the search text
+    provided. Click the <b>Reset</b> button to clear any search text and retrieve the full list.
   </p>
 
   <a name="hierarchy"></a>
@@ -369,23 +346,17 @@
     </a> or by clicking on the <b>Hierarchy</b> link in the top banner.
   </p>
   <p>
-    In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display
-    opened
-    to reveal the full path from the root level of the tree to the currently selected concept.
-    The entry for the current concept is highlighted and all sibling concepts and ancestor
-    concepts
-    are also shown in as represented in the hierarchy of the terminology. The page will
-    automatically
-    scroll to the selected concept in this view.
+    In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display opened to reveal the full
+    path from the root level of the tree to the currently selected concept. The entry for the current concept is
+    highlighted and all sibling concepts and ancestor concepts are also shown in as represented in the hierarchy of the
+    terminology. The page will automatically scroll to the selected concept in this view.
   </p>
   <p>
     Clicking on the <i class="pi pi-fw pi-chevron-right"></i> to the left of a concept in this
-    view triggers a call to
-    look up and display its child concepts.
+    view triggers a call to look up and display its child concepts.
   </p>
-  <p>Clicking on a concept itself will change the focus of the display to that concept and load
-    the
-    corresponding concept detail information for that concept on the right side of the display.
+  <p>Clicking on a concept itself will change the focus of the display to that concept and load the corresponding
+    concept detail information for that concept on the right side of the display.
   </p>
 
   <a name="documentation"></a>
@@ -394,16 +365,13 @@
     <h4>Metadata Documentation</h4>
   </span>
   <p>
-    Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a
-    number of sub-entries
+    Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a number of sub-entries
     for the various kinds of metadata, including: Associations, Properties, Qualifiers, Roles,
-    Term Groups, Sources,
-    Synonym Types, and Definition Types.
+    Term Types, Sources, Synonym Types, and Definition Types.
   </p>
   <p>
     Choosing any of these items loads a sortable two or three-column table with the codes,
-    names,
-    and definitions of the metadata elements of the specified type.</p>
+    names, and definitions of the metadata elements of the specified type.</p>
   <p>&nbsp;</p>
   <p>&nbsp;</p>
 </div>

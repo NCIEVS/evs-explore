@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TermGroupsComponent } from './term-groups.component';
+import { TermTypesComponent } from './term-types.component';
 
-// Testing for TermGroupssComponent (default tests)
-describe('TermGroupsComponent', () => {
-  let component: TermGroupsComponent;
-  let fixture: ComponentFixture<TermGroupsComponent>;
+// Testing for TermTypesComponent (default tests)
+describe('TermTypesComponent', () => {
+  let component: TermTypesComponent;
+  let fixture: ComponentFixture<TermTypesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TermGroupsComponent]
+      declarations: [TermTypesComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TermGroupsComponent);
+    fixture = TestBed.createComponent(TermTypesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
