@@ -342,11 +342,11 @@ export class Concept {
   }
 
   // Return unique ynonym names for a specified source
-  getSynonymNames(source: string, termGroup: string): string[] {
+  getSynonymNames(source: string, termType: string): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (termGroup != null && this.synonyms[i].termGroup != termGroup) {
+        if (termType != null && this.synonyms[i].termType != termType) {
           continue;
         }
         if (source != null && this.synonyms[i].source != source) {
