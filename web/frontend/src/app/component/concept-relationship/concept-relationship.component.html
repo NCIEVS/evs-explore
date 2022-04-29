@@ -33,7 +33,7 @@
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, terminology, parent.code]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ parent.name
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ parent.name
                 }} </a>
             </td>
             <td *ngIf="configService.isRrf()" class="w-20">{{
@@ -81,7 +81,7 @@
             <td>{{ child.code }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, child.code]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]='urlTarget'>{{ child.name }}
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ child.name }}
               </a>
             </td>
             <td *ngIf="configService.isRrf()">{{ child.rela }}</td>
@@ -127,7 +127,7 @@
             <td>{{ role.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, role.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 role.relatedName }}</a>
             </td>
           </tr>
@@ -176,7 +176,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 association.relatedName }}</a>
             </td>
           </tr>
@@ -224,7 +224,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
@@ -269,7 +269,7 @@
             <td>{{ irole.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, irole.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 irole.relatedName }}</a>
             </td>
           </tr>
@@ -319,7 +319,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
@@ -371,7 +371,7 @@
             <td>{{ iassociation.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, iassociation.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 iassociation.relatedName
                 }}</a>
             </td>
@@ -423,7 +423,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
@@ -465,7 +465,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" target='urlTarget'>{{
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
                 association.relatedName }}</a>
             </td>
           </tr>
