@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
-import { filter, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
@@ -41,33 +40,15 @@ export class HierarchyDisplayComponent implements OnInit {
   sources: string[] = [];
   selectedSources = null;
 
-  // Manage subscriptions
-  routeListener = null;
-
   constructor(
     private conceptDetailService: ConceptDetailService,
-    private location: Location,
-    private route: ActivatedRoute,
     private router: Router,
     private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
-    this.configSetup()
-
-    // Set up listener for back/forward browser events
-    this.routeListener =
-      this.router.events
-        .pipe(filter((event) => event instanceof NavigationStart))
-        .subscribe((event: NavigationStart) => {
-          // don't do this if we're not going between hierarchies
-          if (window.location.pathname.split("/").length >= 4 && window.location.pathname.includes("/hierarchy")) {
-            console.log("handleNavigate", window.location.pathname.split("/")[3]);
-            this.configSetup();
-            this.handleNavigate(this.configService.getCode());
-          }
-        });
+    this.configSetup();
   }
 
   ngOnInit() {
@@ -77,71 +58,27 @@ export class HierarchyDisplayComponent implements OnInit {
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    this.terminology = this.configService.getTerminologyName();
-
     this.updateDisplaySize();
 
-    this.conceptDetailService
-      .getConceptSummary(this.configService.getCode(), 'summary')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response, this.configService);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        // Sort the source list (case insensitive)
-        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        // make sure All is at the front
-        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-          this.sources.splice(this.sources.indexOf("All"), 1);
-          this.sources.unshift("All");
-        }
-        this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-          this.conceptWithRelationships = new Concept(response, this.configService);
-        });
-        this.getPathInHierarchy();
-      });
-
-  }
-
-  // Unsubscribe
-  ngOnDestroy() {
-    console.log('search component destroyed');
-    // unsubscribe to ensure no memory leaks
-    this.routeListener.unsubscribe();
+    this.getPathInHierarchy();
   }
 
   configSetup() {
     this.configService.setConfigFromPathname(window.location.pathname);
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
+    this.conceptCode = this.configService.getCode();
+    this.terminology = this.configService.getTerminologyName();
   }
 
   handleNavigate(code) {
-    this.conceptDetailService
-      .getConceptSummary(code, 'summary')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response, this.configService);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        // make sure All is at the front
-        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-          this.sources.splice(this.sources.indexOf("All"), 1);
-          this.sources.unshift("All");
-        }
-        if (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null) {
-          this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-            this.conceptWithRelationships = new Concept(response, this.configService);
-          });
-        }
-
-        this.getPathInHierarchy();
-        for (let i = 0; i < this.selectedNodes.length; i++) {
-          this.selectedNodes[i]['highlight'] = false;
-        }
-        this.selectedNodes = [];
-        this.resetTreeTableNodes();
-        this.updateDisplaySize();
-      });
+    this.getPathInHierarchy();
+    for (let i = 0; i < this.selectedNodes.length; i++) {
+      this.selectedNodes[i]['highlight'] = false;
+    }
+    this.selectedNodes = [];
+    this.resetTreeTableNodes();
+    this.updateDisplaySize();
   }
 
   // Handler for tabs changing in the hierarchy view.

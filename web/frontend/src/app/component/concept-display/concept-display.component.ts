@@ -21,7 +21,6 @@ export class ConceptDisplayComponent implements OnInit {
   activeIndex = 0;
   conceptCode: string;
   conceptDetail: Concept;
-  conceptWithRelationships: Concept;
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
@@ -117,9 +116,6 @@ export class ConceptDisplayComponent implements OnInit {
               this.sources.splice(this.sources.indexOf("All"), 1);
               this.sources.unshift("All");
             }
-            this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-              this.conceptWithRelationships = new Concept(response, this.configService);
-            });
           })
 
       })
@@ -135,13 +131,6 @@ export class ConceptDisplayComponent implements OnInit {
   handleChange($event) {
     this.activeIndex = $event.index;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    if (($event.index === 0 || $event.index === 2) &&
-      (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-      this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptWithRelationships = new Concept(response, this.configService);
-      });
-    }
   }
 
   // Reroute to hierarchy view
