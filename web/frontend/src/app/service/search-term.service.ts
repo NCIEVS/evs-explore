@@ -51,12 +51,12 @@ export class SearchTermService {
     if (searchCriteria.definitionSource !== null && searchCriteria.definitionSource !== undefined) {
       param.definitionSource = searchCriteria.definitionSource.join();
     } else if ((searchCriteria.synonymSource !== null && searchCriteria.synonymSource !== undefined)
-      || (searchCriteria.synonymTermGroup !== null && searchCriteria.synonymTermGroup !== undefined)) {
+      || (searchCriteria.synonymTermType !== null && searchCriteria.synonymTermType !== undefined)) {
       if (searchCriteria.synonymSource !== null) {
         param.synonymSource = searchCriteria.synonymSource.join();
       }
-      if (searchCriteria.synonymTermGroup !== null) {
-        param.synonymTermGroup = searchCriteria.synonymTermGroup;
+      if (searchCriteria.synonymTermType !== null) {
+        param.synonymTermType = searchCriteria.synonymTermType;
       }
     }
     // TODO: hierarchy search not implemented in current
