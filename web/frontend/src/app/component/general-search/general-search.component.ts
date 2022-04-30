@@ -202,7 +202,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get('source') != "")
+      if (this.queryParams.get('source') != '')
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
     }
 
@@ -229,7 +229,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (value.value.terminology != 'ncit') {
       return true;
     }
-    if (value.value.tags && "monthly" in value.value.tags && value.value.latest == true) {
+    if (value.value.tags && 'monthly' in value.value.tags && value.value.latest == true) {
       return true;
     }
     return false;
@@ -299,7 +299,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     }
   }
 
-  // Handle a key event with "backspace" or "delete"
+  // Handle a key event with 'backspace' or 'delete'
   onChipsKeyEvent(event) {
     console.log('onChipsKeyEvent', event);
     if (!(event.keyCode === 8 || event.keyCode === 46)) {
@@ -356,21 +356,21 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   checkLicenseText(licenseText, terminology) {
-    if ((this.cookieService.check('mdrLicense') && terminology == "mdr") ||
-      (this.cookieService.check('ncitLicense') && terminology == "ncit") ||
-      (this.cookieService.check('ncimLicense') && terminology == "ncim")) {
+    if ((this.cookieService.check('mdrLicense') && terminology == 'mdr') ||
+      (this.cookieService.check('ncitLicense') && terminology == 'ncit') ||
+      (this.cookieService.check('ncimLicense') && terminology == 'ncim')) {
       return true;
     }
     if (confirm(licenseText)) {
-      if (terminology == "mdr") {
+      if (terminology == 'mdr') {
         this.cookieService.set('mdrLicense', 'accepted', 365);
         return true;
       }
-      else if (terminology == "ncim") {
+      else if (terminology == 'ncim') {
         this.cookieService.set('ncimLicense', 'accepted', 365);
         return true;
       }
-      else if (terminology == "ncit") {
+      else if (terminology == 'ncit') {
         this.cookieService.set('ncitLicense', 'accepted', 365);
         return true;
       }
@@ -402,7 +402,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.performSearch();
   }
 
-  // Handler for clicking the "Search" button
+  // Handler for clicking the 'Search' button
   onPerformSearch() {
     console.log('onPerformSeach');
     this.resetPaging();
@@ -456,7 +456,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
           // Build the search results table
           this.searchResultTableFormat = new SearchResultTableFormat(
-            new SearchResult(response, this.configService), this.selectedPropertiesReturn.slice(), this.cookieService, this.searchCriteria.synonymSource);
+            new SearchResult(response, this.configService), this.selectedPropertiesReturn.slice(), this.configService, this.searchCriteria.synonymSource);
 
           this.totalRecords = this.searchResultTableFormat.total;
           this.timetaken = this.searchResultTableFormat.timeTaken;
@@ -510,11 +510,19 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   setDefaultSelectedColumns() {
 
     if (this.cookieService.check('displayColumns')) {
-      this.displayColumns = [...this.cols.filter(a => this.cookieService.get('displayColumns').split(",").includes(a.header))];
+      var cookieColumns = this.cookieService.get('displayColumns').split(',');
+      this.displayColumns = [...this.cols.filter(a => cookieColumns.includes(a.header)
+        || (a.header == 'Code' && cookieColumns.includes('CUI'))
+        || (a.header == 'CUI' && cookieColumns.includes('Code'))
+      )];
     }
     else {
-      this.selectedColumns = ["Highlights", "Preferred Name", "Definitions", "Code", "Synonyms"];
-      this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
+      this.selectedColumns = ['Highlights', 'Preferred Name', 'Definitions',
+        (this.selectedTerminology.terminology == 'ncim' ? 'CUI' : 'Code'), 'Synonyms'];
+      this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header)
+        || (a.header == 'Code' && this.selectedColumns.includes('CUI'))
+        || (a.header == 'CUI' && this.selectedColumns.includes('Code'))
+      )];
 
     }
     console.log('  columns', this.displayColumns)

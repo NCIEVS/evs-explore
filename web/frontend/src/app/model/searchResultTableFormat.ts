@@ -1,7 +1,6 @@
 import { TableHeader } from './tableHeader';
 import { TableData } from './tableData';
 import { SearchResult } from '../model/searchResult';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../service/configuration.service';
 
 // Search results table definition
@@ -15,7 +14,7 @@ export class SearchResultTableFormat {
   constructor(
     searchResult: SearchResult,
     returnFields: string[],
-    cookieService: CookieService,
+    configService: ConfigurationService,
     private selectedSources: string[]) {
 
     // Write the search results response and let's see what up
@@ -28,8 +27,15 @@ export class SearchResultTableFormat {
       // Table Header
       const tableHeaderCode0 = new TableHeader('column0', 'Highlights', '70px');
       this.header.push(tableHeaderCode0);
-      const tableHeaderCode = new TableHeader('column1', 'Code', '70px');
-      this.header.push(tableHeaderCode);
+
+      if (configService.getTerminologyName() == 'ncim') {
+        const tableHeaderCode = new TableHeader('column1', 'CUI', '70px');
+        this.header.push(tableHeaderCode);
+      }
+      else {
+        const tableHeaderCode = new TableHeader('column1', 'Code', '70px');
+        this.header.push(tableHeaderCode);
+      }
 
       //const tableHeaderlabel = new TableHeader('column2', 'Label', '100px');
       //searchResultTableFormat.header.push(tableHeaderlabel);
