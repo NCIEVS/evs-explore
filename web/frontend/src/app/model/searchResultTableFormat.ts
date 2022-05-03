@@ -137,7 +137,7 @@ export class SearchResultTableFormat {
             //         ' || ' +
             //         '<strong>source-date:</strong> ' +
             //         goannotations[l]['source-date'] +
-            //         '<br><br>';
+            //         '<br /><br />';
             //     }
             //   }
             //   data['column' + count] = goannotationinfo;

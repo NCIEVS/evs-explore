@@ -172,7 +172,7 @@
   </p-panel>
   <br />
 
-  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isSingleSource() && configService.isRdf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRdf()">
     <p-header class="bold-heading">
       Maps To
     </p-header>
@@ -257,8 +257,5 @@
     </div>
     <ng-template #elseBlockMaps>None</ng-template>
   </p-panel>
-  <div
-    *ngIf="(configService.isSingleSource() && configService.isRdf()) || (configService.isMultiSource() && configService.isRrf())">
-    <br>
-  </div>
+  <br />
 </div>
