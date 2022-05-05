@@ -419,7 +419,7 @@ export class Concept {
           ' || ' +
           '<strong>relatedConceptLabel:</strong> ' +
           relationships[l].relatedName +
-          '<br><br>';
+          '<br /><br />';
       }
     }
     return relationshipInfo;
@@ -444,10 +444,10 @@ export class Concept {
           conceptRelationinfo +
           '<strong>code:</strong> ' +
           parChd[l].code +
-          ' <br> ' +
+          ' <br /> ' +
           '<strong>label:</strong> ' +
           parChd[l].name +
-          ' <br> <br>';
+          ' <br /> <br />';
       }
     }
     return conceptRelationinfo;
@@ -474,7 +474,7 @@ export class Concept {
           ' || ' +
           '<strong>targetTerminology:</strong> ' +
           maptos[l].targetTerminology +
-          '<br><br>';
+          '<br /><br />';
       }
     }
     return mapInfo;

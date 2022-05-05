@@ -82,23 +82,29 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
+  // Indicates whether current terminology is loaded from RDF (e.g. ncit) 
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
   }
 
+  // Indicates whether current terminology is loaded from RRF (e.g. ncim, mdr)
   isRrf() {
     return this.getTerminology().metadata['loader'] == 'rrf';
   }
 
+  // Indicates whether current terminology selection is a metathesaurus or a single source
   isSingleSource() {
     return this.getTerminology().metadata['sourceCt'] == 1;
   }
 
+  // Indicates whether current terminology selection is a metathesaurus or a single source
   isMultiSource() {
     return this.getTerminology().metadata['sourceCt'] > 1;
   }
 
+  // Set configuration information from query params
   setConfigFromQuery(query: string) {
+    console.log('set config from query params', query);
     const paramMap = new URLSearchParams(query);
     if (paramMap.get('code')) {
       this.code = paramMap.get('code');
@@ -124,12 +130,18 @@ export class ConfigurationService {
     }
   }
 
+  // Extract configuration information from the path
+  // consider the local env and the 'evsexplore' context path in deploy envs
   setConfigFromPathname(path: string) {
+    console.log('set config from path', path);
     const splitPath = path.split("/");
-    this.code = splitPath[3];
+    // The code is the last field
+    this.code = splitPath[splitPath.length - 1];
+    // The terminology is second-to-last field
+    var pterminology = splitPath[splitPath.length - 2];
     var terminology = this.terminologies.filter(t =>
-      t.latest && t.terminology == splitPath[2]
-      && (splitPath[2] != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+      t.latest && t.terminology == pterminology
+      && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
     this.setTerminology(terminology);
   }
 
