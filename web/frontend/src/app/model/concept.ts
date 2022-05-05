@@ -342,11 +342,11 @@ export class Concept {
   }
 
   // Return unique ynonym names for a specified source
-  getSynonymNames(source: string, termGroup: string): string[] {
+  getSynonymNames(source: string, termType: string): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (termGroup != null && this.synonyms[i].termGroup != termGroup) {
+        if (termType != null && this.synonyms[i].termType != termType) {
           continue;
         }
         if (source != null && this.synonyms[i].source != source) {
@@ -419,7 +419,7 @@ export class Concept {
           ' || ' +
           '<strong>relatedConceptLabel:</strong> ' +
           relationships[l].relatedName +
-          '<br><br>';
+          '<br /><br />';
       }
     }
     return relationshipInfo;
@@ -444,10 +444,10 @@ export class Concept {
           conceptRelationinfo +
           '<strong>code:</strong> ' +
           parChd[l].code +
-          ' <br> ' +
+          ' <br /> ' +
           '<strong>label:</strong> ' +
           parChd[l].name +
-          ' <br> <br>';
+          ' <br /> <br />';
       }
     }
     return conceptRelationinfo;
@@ -466,15 +466,15 @@ export class Concept {
           '<strong>relationshipToTarget:</strong> ' +
           maptos[l].type +
           ' || ' +
-          '<strong>targetTermGroup:</strong> ' +
-          maptos[l].targetTermGroup +
+          '<strong>targetTermType:</strong> ' +
+          maptos[l].targetTermType +
           ' || ' +
           '<strong>targetCode:</strong> ' +
           maptos[l].targetCode +
           ' || ' +
           '<strong>targetTerminology:</strong> ' +
           maptos[l].targetTerminology +
-          '<br><br>';
+          '<br /><br />';
       }
     }
     return mapInfo;

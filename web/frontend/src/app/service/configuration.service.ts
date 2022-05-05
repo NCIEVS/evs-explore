@@ -82,23 +82,30 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
+  // Indicates whether current terminology is loaded from RDF (e.g. ncit) 
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
   }
 
+  // Indicates whether current terminology is loaded from RRF (e.g. ncim, mdr)
   isRrf() {
     return this.getTerminology().metadata['loader'] == 'rrf';
   }
 
+  // Indicates whether current terminology selection is a metathesaurus or a single source
   isSingleSource() {
     return this.getTerminology().metadata['sourceCt'] == 1;
   }
 
+  // Indicates whether current terminology selection is a metathesaurus or a single source
   isMultiSource() {
     return this.getTerminology().metadata['sourceCt'] > 1;
   }
 
-  setConfigFromParameters(paramMap: ParamMap) {
+  // Set configuration information from query params
+  setConfigFromQuery(query: string) {
+    console.log('set config from query params', query);
+    const paramMap = new URLSearchParams(query);
     if (paramMap.get('code')) {
       this.code = paramMap.get('code');
     }
@@ -121,6 +128,21 @@ export class ConfigurationService {
         this.selectedSources.delete('All');
       }
     }
+  }
+
+  // Extract configuration information from the path
+  // consider the local env and the 'evsexplore' context path in deploy envs
+  setConfigFromPathname(path: string) {
+    console.log('set config from path', path);
+    const splitPath = path.split("/");
+    // The code is the last field
+    this.code = splitPath[splitPath.length - 1];
+    // The terminology is second-to-last field
+    var pterminology = splitPath[splitPath.length - 2];
+    var terminology = this.terminologies.filter(t =>
+      t.latest && t.terminology == pterminology
+      && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+    this.setTerminology(terminology);
   }
 
   getCode(): string {
@@ -224,16 +246,16 @@ export class ConfigurationService {
       );
   }
 
-  // Load term groups
-  getTermGroups(terminology: string): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termGroups'),
+  // Load term types
+  getTermTypes(terminology: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/termTypes'),
       {
         responseType: 'json',
       }
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch term groups = ' + terminology));
+          return observableThrowError(new EvsError(error, 'Could not fetch term types = ' + terminology));
         })
       );
   }

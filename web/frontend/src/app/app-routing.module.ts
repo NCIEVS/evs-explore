@@ -11,7 +11,7 @@ import { AssociationsComponent } from './component/documentation/associations/as
 import { PropertiesComponent } from './component/documentation/properties/properties.component';
 import { QualifiersComponent } from './component/documentation/qualifiers/qualifiers.component';
 import { OverviewComponent } from './component/documentation/overview/overview.component';
-import { TermGroupsComponent } from './component/documentation/term-groups/term-groups.component';
+import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'properties', component: PropertiesComponent },
   { path: 'qualifiers', component: QualifiersComponent },
   { path: 'overview', component: OverviewComponent },
-  { path: 'termgroups', component: TermGroupsComponent },
+  { path: 'termtypes', component: TermTypesComponent },
   { path: 'definitiontypes', component: DefinitionTypesComponent },
   { path: 'synonymtypes', component: SynonymTypesComponent },
   { path: 'alldocs', component: AlldocsComponent },

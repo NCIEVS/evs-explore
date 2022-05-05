@@ -16,10 +16,10 @@ export class DisplayPipe implements PipeTransform {
   transform(value: any, field: string): string {
     if (field === 'Maps_To') {
       let mapstos: any[];
-      mapstos = value.split('<br><br>');
+      mapstos = value.split('<br /><br />');
       let html = '';
 
-      html = html + '<button [pTooltip]="' + 'test' + '" type="button" class="btn btn-link">' + 'test' + '</button><br>';
+      html = html + '<button [pTooltip]="' + 'test' + '" type="button" class="btn btn-link">' + 'test' + '</button><br />';
 
       //html = html + 'test123';
       return html;

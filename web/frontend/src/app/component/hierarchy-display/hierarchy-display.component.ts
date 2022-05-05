@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
@@ -43,44 +42,43 @@ export class HierarchyDisplayComponent implements OnInit {
 
   constructor(
     private conceptDetailService: ConceptDetailService,
-    private location: Location,
-    private route: ActivatedRoute,
+    private router: Router,
     private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
-    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
-    this.selectedSources = this.configService.getSelectedSources();
-
+    this.configSetup();
   }
 
   ngOnInit() {
 
+    console.log("ngOnInit");
+
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    this.terminology = this.configService.getTerminologyName();
-
     this.updateDisplaySize();
 
-    this.conceptDetailService
-      .getConceptSummary(this.configService.getCode(), 'summary')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response, this.configService);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        // Sort the source list (case insensitive)
-        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        // make sure All is at the front
-        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-          this.sources.splice(this.sources.indexOf("All"), 1);
-          this.sources.unshift("All");
-        }
-        this.getPathInHierarchy();
-      });
+    this.getPathInHierarchy();
+  }
 
+  configSetup() {
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.configService.setConfigFromQuery(window.location.search);
+    this.selectedSources = this.configService.getSelectedSources();
+    this.conceptCode = this.configService.getCode();
+    this.terminology = this.configService.getTerminologyName();
+  }
+
+  handleNavigate(code) {
+    this.getPathInHierarchy();
+    for (let i = 0; i < this.selectedNodes.length; i++) {
+      this.selectedNodes[i]['highlight'] = false;
+    }
+    this.selectedNodes = [];
+    this.resetTreeTableNodes();
+    this.updateDisplaySize();
   }
 
   // Handler for tabs changing in the hierarchy view.
@@ -88,7 +86,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.activeIndex = $event.index;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    if (($event.index === 1 || $event.index === 2) &&
+    if (($event.index === 0 || $event.index === 2) &&
       (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
       this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
         this.conceptWithRelationships = new Concept(response, this.configService);
@@ -114,29 +112,7 @@ export class HierarchyDisplayComponent implements OnInit {
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
-    this.conceptDetailService
-      .getConceptSummary(event.code, 'summary')
-      .subscribe((response: any) => {
-        this.conceptDetail = new Concept(response, this.configService);
-        this.conceptCode = this.conceptDetail.code;
-        this.title = this.conceptDetail.name + ' ( Code - ' + this.conceptDetail.code + ' )';
-        this.conceptWithRelationships = undefined;
-        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        // make sure All is at the front
-        if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-          this.sources.splice(this.sources.indexOf("All"), 1);
-          this.sources.unshift("All");
-        }
-
-        this.getPathInHierarchy();
-        for (let i = 0; i < this.selectedNodes.length; i++) {
-          this.selectedNodes[i]['highlight'] = false;
-        }
-        this.selectedNodes = [];
-        this.resetTreeTableNodes();
-        this.updateDisplaySize();
-        this.location.replaceState("/hierarchy/" + this.conceptCode);
-      });
+    this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]);
   }
 
   // Gets path in the hierarchy and scrolls to the active node

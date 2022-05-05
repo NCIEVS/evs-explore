@@ -11,7 +11,7 @@ export class SearchCriteria {
   property: string[] = [];
   definitionSource: string[];
   synonymSource: string[] = [];
-  synonymTermGroup: string = '';
+  synonymTermType: string = '';
   hierarchySearch: string = null;
   conceptStatus: string[] = [];
   fromRecord: number = 0;
@@ -30,7 +30,7 @@ export class SearchCriteria {
     this.property = [];
     this.definitionSource = [];
     this.synonymSource = [];
-    this.synonymTermGroup = '';
+    this.synonymTermType = '';
     this.hierarchySearch = null;
     this.conceptStatus = [];
     this.fromRecord = 0;

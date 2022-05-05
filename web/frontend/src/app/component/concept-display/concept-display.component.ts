@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -21,7 +21,6 @@ export class ConceptDisplayComponent implements OnInit {
   activeIndex = 0;
   conceptCode: string;
   conceptDetail: Concept;
-  conceptWithRelationships: Concept;
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
@@ -54,19 +53,33 @@ export class ConceptDisplayComponent implements OnInit {
   collapsed: boolean = false;
   collapsedText: string = "Collapse All";
 
+  subscription = null;
+
   constructor(
     private conceptDetailService: ConceptDetailService,
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
-    this.configService.setConfigFromParameters(this.route.snapshot.queryParamMap);
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+
+    this.subscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Trick the Router into believing it's last link wasn't previously loaded
+        this.router.navigated = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -96,7 +109,6 @@ export class ConceptDisplayComponent implements OnInit {
             this.conceptDetail = new Concept(concept, this.configService);
             this.conceptCode = concept.code;
             this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-            this.conceptWithRelationships = undefined;
             // Sort the source list (case insensitive)
             this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
             // make sure All is at the front
@@ -109,17 +121,16 @@ export class ConceptDisplayComponent implements OnInit {
       })
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   // Respond to things like changes in tabs
   handleChange($event) {
     this.activeIndex = $event.index;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    if (($event.index === 1 || $event.index === 2) &&
-      (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-      this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptWithRelationships = new Concept(response, this.configService);
-      });
-    }
   }
 
   // Reroute to hierarchy view

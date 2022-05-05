@@ -41,7 +41,7 @@ export class SubsetDetailsComponent implements OnInit {
     private titleService: Title
   ) {
 
-    this.configService.setConfigFromParameters(this.route.snapshot.paramMap);
+    this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
 
   }
