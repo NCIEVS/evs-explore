@@ -135,14 +135,26 @@ export class ConfigurationService {
   setConfigFromPathname(path: string) {
     console.log('set config from path', path);
     const splitPath = path.split("/");
-    // The code is the last field
-    this.code = splitPath[splitPath.length - 1];
-    // The terminology is second-to-last field
-    var pterminology = splitPath[splitPath.length - 2];
+    var pterminology;
+
+    // Handle the /subsets/{terminology} path
+    if (splitPath[splitPath.length - 2] === 'subsets') {
+      // The terminology is last field
+      pterminology = splitPath[splitPath.length - 1];
+    }
+    // otherwise handle /hierarchy/concept/{terminology}/{code}
+    else {
+      // The code is the last field
+      this.code = splitPath[splitPath.length - 1];
+      // The terminology is second-to-last field
+      pterminology = splitPath[splitPath.length - 2];
+    }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
       && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
     this.setTerminology(terminology);
+
+
   }
 
   getCode(): string {
