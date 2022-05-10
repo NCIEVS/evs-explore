@@ -38,8 +38,8 @@ export class LoadingInterceptor implements HttpInterceptor {
    */
   private beforeRequest(req): void {
     // Check if we need to display the loader
-    let hideLoader = req.params.get("hideLoader");
-    if (hideLoader !== "true") {
+    let hideLoader = req.params.get('hideLoader');
+    if (hideLoader !== 'true') {
       this.loaderService.showLoader();
     }
   }
