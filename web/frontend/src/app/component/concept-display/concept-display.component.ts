@@ -7,7 +7,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
 
-
 // Concept display component
 // BAC - looks like not used
 @Component({
@@ -51,7 +50,7 @@ export class ConceptDisplayComponent implements OnInit {
   selectedSources = null;
   terminology: string;
   collapsed: boolean = false;
-  collapsedText: string = "Collapse All";
+  collapsedText: string = 'Collapse All';
 
   subscription = null;
 
@@ -112,9 +111,9 @@ export class ConceptDisplayComponent implements OnInit {
             // Sort the source list (case insensitive)
             this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
             // make sure All is at the front
-            if (this.sources[0] != "All" && this.sources.includes("All")) { // make sure All is first in list
-              this.sources.splice(this.sources.indexOf("All"), 1);
-              this.sources.unshift("All");
+            if (this.sources[0] != 'All' && this.sources.includes('All')) { // make sure All is first in list
+              this.sources.splice(this.sources.indexOf('All'), 1);
+              this.sources.unshift('All');
             }
           })
 
@@ -144,7 +143,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   getSourceList(concept) {
     var sourceList = new Set<string>();
-    sourceList.add("All");
+    sourceList.add('All');
     for (const obj in concept.synonyms) {
       if (this.keepSource(concept.synonyms[obj].source)) {
         sourceList.add(concept.synonyms[obj].source)
@@ -178,14 +177,14 @@ export class ConceptDisplayComponent implements OnInit {
 
   toggleSelectedSource(source) {
     // clear if All is selected or was last selected
-    if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
+    if (source == 'All' || (this.selectedSources.size == 1 && this.selectedSources.has('All'))) {
       this.selectedSources.clear();
     }
     if (this.selectedSources.has(source)) {
       this.selectedSources.delete(source);
       // reset to All if removing last selected source
       if (this.selectedSources.size == 0) {
-        this.selectedSources.add("All");
+        this.selectedSources.add('All');
       }
     }
     else {
