@@ -202,8 +202,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get('source') != '')
+      if (this.queryParams.get('source') != "") {
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
+      }
+      if (this.searchCriteria.type == 'phrase' ||
+        this.searchCriteria.type == 'fuzzy' ||
+        this.searchCriteria.type == 'AND' ||
+        this.searchCriteria.type == 'OR') {
+        this.showMoreSearchOption = true;
+      }
     }
 
   }

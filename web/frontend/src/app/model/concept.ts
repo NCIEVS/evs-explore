@@ -40,7 +40,7 @@ export class Concept {
       for (let i = 0; i < input.synonyms.length; i++) {
         var synonym = new Synonym(input.synonyms[i]);
         this.synonyms.push(synonym);
-        // Add synonyms with "_Name" to properties
+        // Add synonyms with '_Name' to properties
         if (synonym.type && synonym.type.endsWith('_Name') &&
           synonym.type != 'Preferred Name' && synonym.type != 'Preferred_Name' && synonym.type != 'Display_Name') {
           var prop = new Property({});
@@ -112,7 +112,7 @@ export class Concept {
 
       for (let i = 0; i < input.associations.length; i++) {
         // Handle the RB/RN/RO ncim case
-        // This seems backwards but an RB means "broader than" so the
+        // This seems backwards but an RB means 'broader than' so the
         // related concept is actually narrower than the current one
         if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
           this.broader.push(new Relationship(input.associations[i], configService));
@@ -151,7 +151,7 @@ export class Concept {
     return this.properties.filter(p => p.type == 'Concept_Status' && p.value == 'Retired_Concept').length > 0;
   }
 
-  // Get text that shows "more information" when expanding a search result.
+  // Get text that shows 'more information' when expanding a search result.
   // This should be the elasticsearch highlights.
   getHighlightText(): string {
     var text: string = '';
@@ -263,7 +263,7 @@ export class Concept {
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text = text + (this.definitions[i].source ?
-          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + "<br /><br />";
+          this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition + '<br /><br />';
         definitionUniqueArray.push((this.definitions[i].source ?
           this.definitions[i].source + ': ' : '') + ' ' + this.definitions[i].definition);
       }
@@ -367,8 +367,8 @@ export class Concept {
     let semTypes = [];
     if (this.properties.length > 0) {
       for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i].type == "Semantic_Type")
-          semTypes.push(this.properties[i].value + "<br />");
+        if (this.properties[i].type == 'Semantic_Type')
+          semTypes.push(this.properties[i].value + '<br />');
       }
       return semTypes;
     }
