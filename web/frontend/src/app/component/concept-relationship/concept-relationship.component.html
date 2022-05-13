@@ -209,7 +209,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="checkFilter(association)">
-            <td>{{ association.rela }}
+            <td>{{ association.type }}
               <div *ngIf="association.qualifiers != null">
                 <div *ngFor="let qual of association.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
