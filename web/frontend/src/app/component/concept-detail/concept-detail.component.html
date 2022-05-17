@@ -4,23 +4,25 @@
       <table class="table table-striped table-bordered">
         <tbody>
           <tr>
+            <td *ngIf="terminology == 'ncit'" class="w-25">NCI
+              Thesaurus Code:</td>
+            <td *ngIf="terminology == 'ncim'" class="w-25">CUI:
+            </td>
+            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">Code:
+            </td>
+            <td class="w-75">{{ concept.code }}</td>
+          </tr>
+          <tr>
             <td class="w-25">Preferred Name:</td>
             <td class="w-75">{{ concept.getPreferredName() }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="terminology == 'ncit'">
             <td class="w-25">Display Name:</td>
             <td class="w-75">{{ concept.getDisplayName() }}</td>
           </tr>
-          <tr>
+          <tr *ngIf="configService.isRdf()">
             <td class="w-25">Label:</td>
             <td class="w-75">{{ concept.name }}</td>
-          </tr>
-          <tr>
-            <td *ngIf="terminology=='ncit'" class="w-25">NCI
-              Thesaurus Code:</td>
-            <td *ngIf="terminology!='ncit'" class="w-25">Code:
-            </td>
-            <td class="w-75">{{ concept.code }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
             <td class="w-25">Concept Status:</td>
@@ -30,7 +32,7 @@
       </table>
     </div>
   </p-panel>
-  <br />
+
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Definitions
