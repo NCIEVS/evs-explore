@@ -125,20 +125,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.searchCriteria = new SearchCriteria(configService);
     this.configFromQueryParams();
 
-
-    // Set selected terminology - if there's something from the url
-    if (this.queryParams && this.queryParams.get('terminology') != undefined) {
-      this.selectedTerminology = configService.getTerminologyByName(this.queryParams.get('terminology'));
-    }
-    // set if there's nothing from the url
-    else {
-      this.selectedTerminology = this.configService.getTerminologyByName('ncit');
-    }
-    this.configService.setTerminology(this.selectedTerminology);
-
-    // Populate sources list from application metadata
-    this.loadAllSources();
-
     // Populate terms list from application metadata
     this.termsAll = configService.getTerminologies().map(element => {
       return {
@@ -188,6 +174,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.selectedTerminology = this.configService.getTerminologyByName('ncit');
       this.configService.setTerminology(this.selectedTerminology);
     }
+    this.loadAllSources();
 
     // set search criteria if there's stuff from the url
     if (this.queryParams && this.queryParams.get('term') != undefined) {
@@ -354,6 +341,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.searchCriteria.term = '';
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
+    this.loadAllSources();
+
     // reset to the welcome page
     this.router.navigate(['/welcome'], {
       queryParams: {
@@ -387,6 +376,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     }
   }
 
+  // Load source list
   loadAllSources() {
     this.configService.getSynonymSources(this.selectedTerminology.terminology)
       .subscribe(response => {
