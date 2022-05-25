@@ -8,7 +8,7 @@ import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
-import { element } from 'protractor';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'subsets',
@@ -27,17 +27,15 @@ export class SubsetsComponent implements OnInit {
   filteredHierarchy: TreeNode[]
   hierarchyDisplay = "";
   hierarchyData: TreeNode[];
-  selectedNode: any;
-  selectedNodes: TreeNode[] = [];
   subsetSuggestions: string[] = [];
   title: string;
   expand = true;
   terminology: string;
-  subsetsFound = true;
+  subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
 
-  static origHierarchyData: TreeNode[];
+  static origHierarchyData: TreeNode[] = null;
 
   urlBase = "/subsets"
   urlTarget = '_top'
@@ -49,7 +47,8 @@ export class SubsetsComponent implements OnInit {
     private cookieService: CookieService,
     private http: HttpClient,
     private router: Router,
-    private configService: ConfigurationService
+    private configService: ConfigurationService,
+    private titleService: Title
   ) {
 
     this.configService.setConfigFromPathname(window.location.pathname);
@@ -58,25 +57,32 @@ export class SubsetsComponent implements OnInit {
 
   ngOnInit() {
 
+    this.titleService.setTitle("EVS Explore - Subsets");
     this.getPathInHierarchy();
     this.subsetsFound = true;
   }
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    this.subsetDetailService.getSubsetTopLevel()
-      .then(nodes => {
-        this.hierarchyData = <TreeNode[]>nodes;
-        for (const node of this.hierarchyData) {
-          this.setTreeTableProperties(node, false);
-        }
-        SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
-        if (this.selectedNodes.length > 0) {
-          setTimeout(() => {
-            this.scrollToSelectionTableTree(this.selectedNodes[0]);
-          }, 100);
-        }
-      });
+    console.log('getPathInHierarchy');
+
+    if (SubsetsComponent.origHierarchyData == null) {
+      this.hierarchyTable.loading = true;
+      this.subsetDetailService.getSubsetTopLevel()
+        .then(nodes => {
+          console.log('get subset top level');
+          this.hierarchyData = <TreeNode[]>nodes;
+          for (const node of this.hierarchyData) {
+            this.setTreeTableProperties(node, false);
+          }
+          console.log('copy hierarchy data');
+          SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
+          console.log('done copy hierarchy data');
+          this.hierarchyTable.loading = false;
+        });
+    } else {
+      this.resetSearch();
+    }
   }
 
   // Get child tree nodes (for an expanded node)
@@ -85,9 +91,6 @@ export class SubsetsComponent implements OnInit {
       this.setTreeTableProperties(child, true);
     }
     this.deepCopyHierarchyData();
-    setTimeout(() => {
-      this.scrollToSelectionTableTree(nodeChildren);
-    }, 100);
   }
 
   clearTreeTableChildrenNodes(nodeChildren: any) {
@@ -135,7 +138,6 @@ export class SubsetsComponent implements OnInit {
       'highlight': false,
       'root': !child
     }
-    this.selectedNodes.push(node);
     node.data = obj;
 
     if (!node.children) {
@@ -146,19 +148,6 @@ export class SubsetsComponent implements OnInit {
     }
   }
 
-  // Scroll to the selected node - oy!
-  scrollToSelectionTableTree(selectedNode) {
-    let index = 0;
-    const hierarchyRows = this.hierarchyTable.el.nativeElement
-      .querySelectorAll('.ui-treetable-tbody>tr');
-    for (let i = 0; i < hierarchyRows.length; i++) {
-      const testLabel = hierarchyRows[i]['innerText'].trim();
-      if (testLabel === selectedNode.label) {
-        index = i;
-        break;
-      }
-    }
-  }
 
   // Handle "expand all" or "collapse all"
   expandOrCollapseAllNodes(hierarchyData, level = 0) {
