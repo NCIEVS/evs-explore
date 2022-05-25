@@ -28,6 +28,14 @@ export class EvsHeaderComponent implements OnInit {
         + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
       console.log(this.versionInfo)
     }
+    if (this.terminology.terminology != 'ncim') {
+      // Look up the first root code
+      this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
+        this.firstRoot = response[0].code;
+      });
+    }
+
+
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
       if (this.terminology) {
@@ -43,10 +51,7 @@ export class EvsHeaderComponent implements OnInit {
         }
       }
     });
-    // Look up the first root code
-    this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
-      this.firstRoot = response[0].code;
-    });
+
   }
 
   getTerminologyTitle() {
