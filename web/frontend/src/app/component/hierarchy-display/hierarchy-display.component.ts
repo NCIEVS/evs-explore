@@ -57,9 +57,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    this.updateDisplaySize();
-
+    // this.updateDisplaySize();
     this.getPathInHierarchy();
   }
 
@@ -69,16 +67,6 @@ export class HierarchyDisplayComponent implements OnInit {
     this.selectedSources = this.configService.getSelectedSources();
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
-  }
-
-  handleNavigate(code) {
-    this.getPathInHierarchy();
-    for (let i = 0; i < this.selectedNodes.length; i++) {
-      this.selectedNodes[i]['highlight'] = false;
-    }
-    this.selectedNodes = [];
-    this.resetTreeTableNodes();
-    this.updateDisplaySize();
   }
 
   // Handler for tabs changing in the hierarchy view.
