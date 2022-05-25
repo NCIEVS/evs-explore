@@ -14,18 +14,20 @@
         <ul class="menu nav-menu nav-item-title">
             <li class="nav-item">
                 <a class="nav-link nav-link-list" [routerLink]="['/welcome']"
-                    [queryParams]="{terminology: terminology.terminology}"><i class="fa fa-home"></i> Home </a>
+                    [queryParams]="{terminology: terminology.terminology}" title="Home"><i class="fa fa-home"></i> Home
+                </a>
             </li>
             <li class="nav-item version-info">
                 <span class="nav-link-list">{{versionInfo}}</span>
             </li>
 
             <li class="nav-item" *ngIf="terminology.terminology == 'ncit'">
-                <a class="nav-link nav-link-list" [routerLink]="['subsets', terminology.terminology]"
+                <a class="nav-link nav-link-list" [routerLink]="['/subsets', terminology.terminology]"
                     title="Display Subsets">Subsets</a>
             </li>
             <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
-                <a class="nav-link nav-link-list hierarchyButton" (click)="hierarchyRoute(terminology.terminology)"
+                <a class="nav-link nav-link-list"
+                    [routerLink]="['/hierarchy', terminology == null ? 'ncit' : terminology.terminology, firstRoot]"
                     title="Display Concept Hierarchy">Hierarchy</a>
             </li>
             <li class="nav-item dropdown">
@@ -58,7 +60,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-list" routerLink="overview" title="Help">Help</a>
+                <a class="nav-link nav-link-list" [routerLink]="['/overview']" title="Help">Help</a>
             </li>
         </ul>
     </div>
