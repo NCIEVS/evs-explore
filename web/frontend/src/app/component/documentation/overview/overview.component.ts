@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation overview component
 // BAC - looks like not used
@@ -13,9 +14,12 @@ export class OverviewComponent implements OnInit {
 
   terminology: string;
 
-  constructor(private router: Router, private configService: ConfigurationService) { }
+  constructor(private router: Router, private configService: ConfigurationService
+    , private titleService: Title
+  ) { }
 
   ngOnInit() {
+    this.titleService.setTitle("EVS Explore - Help");
     this.terminology = this.configService.getTerminologyName();
   }
 

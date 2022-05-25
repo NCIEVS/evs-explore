@@ -28,9 +28,8 @@
         (click)="resetSearch()" pTooltip="Click to reset search" label="Reset Search" tooltipPosition="bottom"></button>
     </div>
     <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
-      [(selection)]="selectedNode" (onNodeExpand)="treeTableNodeExpand($event)"
-      (onNodeCollapse)="treeTableNodeCollapse($event)">
-      <ng-template pTemplate="body" let-rowNode let-rowData="rowData" *ngIf="subsetsFound == true">
+      (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)">
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData" *ngIf="subsetsFound">
         <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
           <td>
             <div style="cursor: pointer; display:flex;">
@@ -45,6 +44,6 @@
         </tr>
       </ng-template>
     </p-treeTable>
-    <p *ngIf="subsetsFound == false">No Subsets Found</p>
+    <p *ngIf="!subsetsFound">No Subsets Found</p>
   </div>
 </div>
