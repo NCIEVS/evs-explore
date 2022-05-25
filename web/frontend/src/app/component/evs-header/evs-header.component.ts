@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class EvsHeaderComponent implements OnInit {
   versionInfo = '';
   terminology = null;
+  firstRoot = '';
   private subscription = null;
 
   constructor(private http: HttpClient,
@@ -33,7 +34,18 @@ export class EvsHeaderComponent implements OnInit {
         this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
           + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
         console.log(this.versionInfo)
+
+        if (this.terminology.terminology != 'ncim') {
+          // Look up the first root code
+          this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
+            this.firstRoot = response[0].code;
+          });
+        }
       }
+    });
+    // Look up the first root code
+    this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
+      this.firstRoot = response[0].code;
     });
   }
 
@@ -48,14 +60,6 @@ export class EvsHeaderComponent implements OnInit {
       return 'MedDRA';
     }
     else return null;
-  }
-
-  hierarchyRoute(terminology) {
-    var firstRoot = null;
-    this.conceptDetail.getRoots(terminology).subscribe(response => {
-      firstRoot = response[0].code;
-      this.router.navigate(['/hierarchy/' + terminology + "/" + firstRoot]);
-    });
   }
 
   ngOnDestroy() {
