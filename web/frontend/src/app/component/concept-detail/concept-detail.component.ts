@@ -106,4 +106,27 @@ export class ConceptDetailComponent implements OnInit {
     this.titleSet = true;
   }
 
+  getTerminologyBySource(source) {
+    if (!source)
+      return "";
+    if (source == "NCI") {
+      return "ncit";
+    }
+    else {
+      return source.toLowerCase();
+    }
+  }
+
+  getHierarchy(source) {
+    var termName = this.getTerminologyBySource(source);
+    if (termName == "") {
+      return false;
+    }
+    var terminology = this.configService.getTerminologyByName(termName);
+    if (terminology == null || terminology.hierarchy == null) {
+      return false;
+    }
+    return this.configService.getTerminologyByName(termName).hierarchy;
+  }
+
 }

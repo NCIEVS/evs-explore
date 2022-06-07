@@ -115,6 +115,9 @@
                 <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
                   [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{ synonym.code
                   }}</a>
+                <a *ngIf="getHierarchy(synonym.source)"
+                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]"
+                  target="_top"><i class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
                 <span
                   *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
                   synonym.code }}
