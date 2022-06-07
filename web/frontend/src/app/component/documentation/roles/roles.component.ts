@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation roles component
 @Component({
@@ -14,7 +15,7 @@ export class RolesComponent implements OnInit {
   terminology: string = null;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -27,6 +28,7 @@ export class RolesComponent implements OnInit {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
+    this.titleService.setTitle("EVS Explore - Roles");
   }
 
   customSort(event: SortEvent) {
