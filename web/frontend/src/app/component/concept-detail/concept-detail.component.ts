@@ -123,10 +123,10 @@ export class ConceptDetailComponent implements OnInit {
       return false;
     }
     var terminology = this.configService.getTerminologyByName(termName);
-    if (terminology == null || terminology.hierarchy == null) {
+    if (terminology == null || terminology.metadata.hierarchy == null) {
       return false;
     }
-    return this.configService.getTerminologyByName(termName).hierarchy;
+    return this.configService.getTerminologyByName(termName).metadata.hierarchy;
   }
 
 }
