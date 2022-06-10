@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation properties component
 @Component({
@@ -14,7 +15,7 @@ export class PropertiesComponent implements OnInit {
   terminology: string = null;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -33,6 +34,7 @@ export class PropertiesComponent implements OnInit {
         }
         );
       });
+    this.titleService.setTitle("EVS Explore - Properties");
   }
 
   customSort(event: SortEvent) {
