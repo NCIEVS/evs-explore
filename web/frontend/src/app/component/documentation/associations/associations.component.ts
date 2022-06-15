@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation associations component
 @Component({
@@ -14,7 +15,7 @@ export class AssociationsComponent implements OnInit {
   terminology = null;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
 
@@ -28,6 +29,7 @@ export class AssociationsComponent implements OnInit {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
+    this.titleService.setTitle("EVS Explore - Associations");
   }
 
   customSort(event: SortEvent) {

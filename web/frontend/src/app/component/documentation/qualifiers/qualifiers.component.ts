@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation qualifiers component
 @Component({
@@ -13,7 +14,7 @@ export class QualifiersComponent implements OnInit {
   terminology: string = null;;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -26,5 +27,6 @@ export class QualifiersComponent implements OnInit {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
+    this.titleService.setTitle("EVS Explore - Qualifiers");
   }
 }

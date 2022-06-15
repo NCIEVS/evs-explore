@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation of term types component
 @Component({
@@ -13,7 +14,7 @@ export class TermTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -26,6 +27,7 @@ export class TermTypesComponent implements OnInit {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.titleService.setTitle("EVS Explore - Term Types");
   }
 
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
+
 
 // Documentation of sources component
 @Component({
@@ -13,7 +15,7 @@ export class SourcesComponent implements OnInit {
   definitionSources: any;
   terminology: string;
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -33,6 +35,7 @@ export class SourcesComponent implements OnInit {
       });
 
     this.terminology = this.configService.getTerminology().terminology;
+    this.titleService.setTitle("EVS Explore - Sources");
 
   }
 
