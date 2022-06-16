@@ -205,11 +205,11 @@ export class SubsetsComponent implements OnInit {
         }
       });
     }
-    if (newChildren.length != 0 || !tn.name.toLowerCase().includes(string.toLowerCase())) {
+    if (newChildren.length != 0 || !tn.name.toLowerCase().includes(string.toLowerCase()) || !tn.code.toLowerCase().includes(string.toLowerCase())) {
       tn.children = newChildren;
       tn.expanded = true;
     }
-    return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
+    return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.code.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
   }
 
   resetSearch() {
