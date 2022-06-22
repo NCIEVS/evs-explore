@@ -9,6 +9,7 @@ import { ConfigurationService } from '../service/configuration.service';
 
 // MatchConcept Details - UI Component
 export class Concept {
+  s
   code: string;
   name: string;
   terminology: string;

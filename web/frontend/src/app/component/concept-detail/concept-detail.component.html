@@ -14,7 +14,9 @@
           </tr>
           <tr *ngIf="terminology != 'ncit'">
             <td>Semantic Type(s):</td>
-            <td>{{concept.semanticTypes}}</td>
+            <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
+                {{ sty }} <span *ngIf="!isLast"><br /></span>
+              </span></td>
           </tr>
           <tr>
             <td class="w-25">Preferred Name:</td>
