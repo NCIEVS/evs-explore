@@ -16,6 +16,7 @@ export class Concept {
   synonyms: Synonym[];
   definitions: Definition[];
   properties: Property[];
+  semanticTypes: String[];
   parents: ConceptReference[];
   children: ConceptReference[];
   roles: Relationship[];
@@ -60,6 +61,8 @@ export class Concept {
       }
     }
     if (input.properties) {
+      this.semanticTypes = new Array();
+
       // if properties not already initialized in synonyms section
       if (!input.properties) {
         this.properties = new Array();
@@ -67,6 +70,11 @@ export class Concept {
 
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
+
+        if (this.properties[i].type == 'Semantic_Type') {
+          this.semanticTypes.push(this.properties[i].value);
+        }
+
       }
       this.properties.sort((a, b) => (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
     }
@@ -361,17 +369,6 @@ export class Concept {
     // case-insensitive sort
     syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
-  }
-
-  getSemanticType(): any {
-    let semTypes = [];
-    if (this.properties.length > 0) {
-      for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i].type == 'Semantic_Type')
-          semTypes.push(this.properties[i].value + '<br />');
-      }
-      return semTypes;
-    }
   }
 
   // Returns SubsetLink if it exists
