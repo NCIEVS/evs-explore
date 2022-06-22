@@ -173,11 +173,11 @@ export class Concept {
           '<font color="#428bca">' + this.highlight + '</font><br/>';
       }
     }
-    // synonyms - sort unique the display
+    // synonyms - sort unique the display (based on the highlight)
     let headerFlag = false;
-    var uniqSynonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
-      .map(name => {
-        return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
+    var uniqSynonyms = Array.from(new Set(this.synonyms.map(a => a.highlight)))
+      .map(highlight => {
+        return this.synonyms.find(a => a.highlight === highlight)
       });
     if (uniqSynonyms) {
       for (let i = 0; i < uniqSynonyms.length; i++) {
