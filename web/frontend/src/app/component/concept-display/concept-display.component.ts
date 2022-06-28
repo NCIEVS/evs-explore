@@ -27,6 +27,7 @@ export class ConceptDisplayComponent implements OnInit {
   urlBase = '/concept';
   urlTarget = '_top';
   hierarchyButtonLabel = 'Open in Hierarchy';
+  termSuggestionButton = 'Term Suggestion Form';
 
   /*
    * The properties that are excluded are handled differently
@@ -203,6 +204,10 @@ export class ConceptDisplayComponent implements OnInit {
       result = { sources: [...this.selectedSources].join(',') };
     }
     return result;
+  }
+
+  termSuggestionUrl() {
+    window.location.href = "https://ncitermform.nci.nih.gov/ncitermform/?code=" + this.conceptCode;
   }
 
   expandCollapseTables() {
