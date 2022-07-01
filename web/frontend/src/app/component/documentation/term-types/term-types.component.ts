@@ -21,7 +21,15 @@ export class TermTypesComponent implements OnInit {
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded terminology
+    // if there's a valid terminology
+    if (window.location.pathname.split("/").length > 2) {
+      this.terminology = window.location.pathname.split("/")[2];
+      this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
+    }
+
+    // default to ncit
+    else this.configService.setTerminology(this.configService.getTerminologyByName('ncit'));
+
     this.configService.getTermTypes(this.terminology)
       .subscribe(response => {
         this.termTypes = response;
