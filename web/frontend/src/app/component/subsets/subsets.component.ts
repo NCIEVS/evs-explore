@@ -78,6 +78,7 @@ export class SubsetsComponent implements OnInit {
           console.log('copy hierarchy data');
           SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
           console.log('done copy hierarchy data');
+          this.NCItermFirst();
           this.hierarchyTable.loading = false;
         });
     } else {
@@ -191,6 +192,7 @@ export class SubsetsComponent implements OnInit {
       this.subsetSuggestions = []; // deal with the spinner
       this.subsetsFound = (this.filteredHierarchy.length > 0);
       this.hierarchyData = this.filteredHierarchy;
+      this.NCItermFirst();
       this.hierarchyTable.loading = false;
     });
   }
@@ -219,6 +221,11 @@ export class SubsetsComponent implements OnInit {
     this.expandLabel = 'Expand All';
     this.expandDisabled = false;
     this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
+    this.NCItermFirst();
+  }
+
+  NCItermFirst() {
+    this.hierarchyData = this.hierarchyData.filter(r => r.data.label.includes("National Cancer Institute Terminology")).concat(this.hierarchyData.filter(r => !r.data.label.includes("National Cancer Institute Terminology")));
   }
 
 }
