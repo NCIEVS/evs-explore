@@ -26,8 +26,8 @@
             <td class="w-25">Display Name:</td>
             <td class="w-75">{{ concept.getDisplayName() }}</td>
           </tr>
-          <tr *ngIf="configService.isRdf()">
-            <td class="w-25">Label:</td>
+          <tr *ngIf="!concept.getDisplayName()">
+            <td class="w-25">Name:</td>
             <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
