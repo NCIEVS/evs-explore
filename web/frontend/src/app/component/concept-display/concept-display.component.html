@@ -1,15 +1,20 @@
 <div class="hierarchy-div">
   <div class="page-header ui-coloring">
     {{ title }}
-    <span *ngIf="displayHierarchy"> -- <button [routerLink]="['/hierarchy', terminology, conceptCode]"
-        class="ui-button-coloring" [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
+    <span *ngIf="displayHierarchy"> -- <button
+        [routerLink]="['/hierarchy', terminology, conceptCode]" class="ui-button-coloring"
+        [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
         type="button"></button>
+    </span>
+    <span *ngIf="displayHierarchy && configService.isMultiSource()"> <button
+        (click)="termSuggestionUrl()" class="ui-button-coloring" [label]="termSuggestionButton"
+        pButton type="button"></button>
     </span>
     <span style="float:right" class="ui-button-back-to-search"><button [routerLink]="['/welcome']"
         [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
         class="ui-button-coloring"></button></span>
-    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button"
-        class="ui-button-coloring"></button></span>
+    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText"
+        pButton type="button" class="ui-button-coloring"></button></span>
   </div>
   <div *ngIf="configService.isMultiSource()" class="center">
     <span *ngIf="sources.length > 1">
@@ -25,14 +30,16 @@
   <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
     <p-tabPanel header="View All">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget">
+      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase"
+        [urlTarget]="urlTarget">
       </app-concept-relationship>
     </p-tabPanel>
     <p-tabPanel header="Terms and Properties">
       <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
     </p-tabPanel>
     <p-tabPanel header="Relationships">
-      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget">
+      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase"
+        [urlTarget]="urlTarget">
       </app-concept-relationship>
     </p-tabPanel>
   </p-tabView>
