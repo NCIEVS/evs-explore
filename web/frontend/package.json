@@ -30,6 +30,7 @@
     "bootstrap": "4.3.1",
     "chart.js": "^2.9.4",
     "cookie": "^0.4.1",
+    "eventsource": "^1.1.1",
     "font-awesome": "^4.7.0",
     "follow-redirects": "^1.14.8",
     "jquery": "^3.6.0",

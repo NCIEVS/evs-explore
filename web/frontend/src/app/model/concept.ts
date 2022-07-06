@@ -9,13 +9,17 @@ import { ConfigurationService } from '../service/configuration.service';
 
 // MatchConcept Details - UI Component
 export class Concept {
+
   code: string;
   name: string;
+  displayName: string;
+  preferredName: string;
   terminology: string;
   highlight: string;
   synonyms: Synonym[];
   definitions: Definition[];
   properties: Property[];
+  semanticTypes: String[];
   parents: ConceptReference[];
   children: ConceptReference[];
   roles: Relationship[];
@@ -60,6 +64,8 @@ export class Concept {
       }
     }
     if (input.properties) {
+      this.semanticTypes = new Array();
+
       // if properties not already initialized in synonyms section
       if (!input.properties) {
         this.properties = new Array();
@@ -67,6 +73,11 @@ export class Concept {
 
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
+
+        if (this.properties[i].type == 'Semantic_Type') {
+          this.semanticTypes.push(this.properties[i].value);
+        }
+
       }
       this.properties.sort((a, b) => (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
     }
@@ -144,6 +155,8 @@ export class Concept {
 
     }
 
+    this.computeDisplayName();
+    this.computePreferredName();
   }
 
   // Indicates whether properties suggest this is a retired concept.
@@ -164,11 +177,11 @@ export class Concept {
           '<font color="#428bca">' + this.highlight + '</font><br/>';
       }
     }
-    // synonyms - sort unique the display
+    // synonyms - sort unique the display (based on the highlight)
     let headerFlag = false;
-    var uniqSynonyms = Array.from(new Set(this.synonyms.map(a => a.name.toLowerCase())))
-      .map(name => {
-        return this.synonyms.find(a => a.name.toLowerCase() === name.toLowerCase())
+    var uniqSynonyms = Array.from(new Set(this.synonyms.map(a => a.highlight)))
+      .map(highlight => {
+        return this.synonyms.find(a => a.highlight === highlight)
       });
     if (uniqSynonyms) {
       for (let i = 0; i < uniqSynonyms.length; i++) {
@@ -221,28 +234,29 @@ export class Concept {
   }
 
   // Return the preferred name
-  getPreferredName(): string {
+  computePreferredName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Preferred Name') {
-          return this.synonyms[i].name;
+          this.preferredName = this.synonyms[i].name;
+          return;
         }
       }
     }
-    return this.name;
+    this.preferredName = this.name;
   }
 
   // Return the display name
   // TODO: very NCIt specific, need an alternative for other terminologies
-  getDisplayName(): string {
+  computeDisplayName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Display_Name') {
-          return this.synonyms[i].name;
+          this.displayName = this.synonyms[i].name;
+          return;
         }
       }
     }
-    return this.name;
   }
 
   // Get value from Concept_Status parameter
@@ -361,17 +375,6 @@ export class Concept {
     // case-insensitive sort
     syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
-  }
-
-  getSemanticType(): any {
-    let semTypes = [];
-    if (this.properties.length > 0) {
-      for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i].type == 'Semantic_Type')
-          semTypes.push(this.properties[i].value + '<br />');
-      }
-      return semTypes;
-    }
   }
 
   // Returns SubsetLink if it exists

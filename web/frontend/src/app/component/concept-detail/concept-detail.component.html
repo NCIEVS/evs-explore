@@ -4,23 +4,31 @@
       <table class="table table-striped table-bordered">
         <tbody>
           <tr>
-            <td class="w-25">Preferred Name:</td>
-            <td class="w-75">{{ concept.getPreferredName() }}</td>
-          </tr>
-          <tr>
-            <td class="w-25">Display Name:</td>
-            <td class="w-75">{{ concept.getDisplayName() }}</td>
-          </tr>
-          <tr>
-            <td class="w-25">Label:</td>
-            <td class="w-75">{{ concept.name }}</td>
-          </tr>
-          <tr>
-            <td *ngIf="terminology=='ncit'" class="w-25">NCI
+            <td *ngIf="terminology == 'ncit'" class="w-25">NCI
               Thesaurus Code:</td>
-            <td *ngIf="terminology!='ncit'" class="w-25">Code:
+            <td *ngIf="terminology == 'ncim'" class="w-25">CUI:
+            </td>
+            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">Code:
             </td>
             <td class="w-75">{{ concept.code }}</td>
+          </tr>
+          <tr *ngIf="terminology != 'ncit'">
+            <td>Semantic Type(s):</td>
+            <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
+                {{ sty }} <span *ngIf="!isLast"><br /></span>
+              </span></td>
+          </tr>
+          <tr>
+            <td class="w-25">Preferred Name:</td>
+            <td class="w-75">{{ concept.preferredName }}</td>
+          </tr>
+          <tr *ngIf="concept.displayName">
+            <td class="w-25">Display Name:</td>
+            <td class="w-75">{{ concept.displayName }}</td>
+          </tr>
+          <tr *ngIf="concept.preferredName !== concept.name">
+            <td class="w-25">Label:</td>
+            <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
             <td class="w-25">Concept Status:</td>
@@ -30,7 +38,7 @@
       </table>
     </div>
   </p-panel>
-  <br />
+
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Definitions
@@ -89,7 +97,8 @@
             <th *ngIf="configService.isMultiSource()" class="w-10" [pSortableColumn]="'code'">Code
               <p-sortIcon [field]="'code'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isMultiSource()" class="w-10" [pSortableColumn]="'subSource'">
+            <th *ngIf="configService.isMultiSource() && configService.isRdf()" class="w-10"
+              [pSortableColumn]="'subSource'">
               Subsource Name
               <p-sortIcon [field]="'subSource'"></p-sortIcon>
             </th>
@@ -111,11 +120,14 @@
                 <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
                   [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{ synonym.code
                   }}</a>
+                <a *ngIf="getHierarchy(synonym.source)"
+                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]" target="_top"><i
+                    class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
                 <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
                   synonym.code }}
                 </span>
               </td>
-              <td *ngIf="configService.isMultiSource()">{{
+              <td *ngIf="configService.isMultiSource() && configService.isRdf()">{{
                 synonym.subSource }}</td>
             </tr>
           </ng-container>

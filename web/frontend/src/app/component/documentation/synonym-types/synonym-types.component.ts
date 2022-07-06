@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from '../../../service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 // Documentation of synonym types component
 @Component({
@@ -14,7 +15,7 @@ export class SynonymTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService
+    private configService: ConfigurationService, private titleService: Title
   ) {
     this.terminology = configService.getTerminologyName();
   }
@@ -27,6 +28,7 @@ export class SynonymTypesComponent implements OnInit {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
+    this.titleService.setTitle("EVS Explore - Synonym Types");
   }
 
   customSort(event: SortEvent) {

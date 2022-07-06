@@ -174,16 +174,21 @@
                       </a>
                     </span>
                     <span pTooltip="Open concept details" *ngSwitchCase="'Code'">
-                      <a target="_top"
+                      <!--<a target="_top"
                         [routerLink]="['/concept/', selectedTerminology.terminology, rowData['column1'] ]"
                         [queryParams]="getSelectedSourcesQueryParam()">
-                        <!-- <i class="fa fa-external-link"></i> -->
-                      </a>
+                         <i class="fa fa-external-link"></i> 
+                      </a>-->
                       <a target="_top" class="ml3"
                         [routerLink]="['/concept', selectedTerminology.terminology, rowData['column1'] ]"
                         [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}<span
                           *ngIf="rowData.retiredConcept === 'yes'">
                           (Retired Concept)</span></a>
+                    </span>
+                    <span pTooltip="Open concept details" *ngSwitchCase="'CUI'">
+                      <a target="_top" class="ml3"
+                        [routerLink]="['/concept', selectedTerminology.terminology, rowData['column1'] ]"
+                        [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}</a>
                     </span>
                     <span *ngSwitchCase="'Synonyms'"><span [innerHTML]="rowData['synValue']"></span>
                       <span *ngIf="rowData['synValue'] == rowData['collapsedSynonyms']">
