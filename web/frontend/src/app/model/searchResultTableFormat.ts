@@ -149,7 +149,7 @@ export class SearchResultTableFormat {
             //   data['column' + count] = goannotationinfo;
 
           } else if (returnFields[k] === 'Preferred Name') {
-            data['column' + count] = searchResult.concepts[i].getPreferredName();
+            data['column' + count] = searchResult.concepts[i].preferredName;
             // } else {
             //   console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }

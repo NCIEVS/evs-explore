@@ -9,9 +9,11 @@ import { ConfigurationService } from '../service/configuration.service';
 
 // MatchConcept Details - UI Component
 export class Concept {
-  s
+
   code: string;
   name: string;
+  displayName: string;
+  preferredName: string;
   terminology: string;
   highlight: string;
   synonyms: Synonym[];
@@ -153,6 +155,8 @@ export class Concept {
 
     }
 
+    this.computeDisplayName();
+    this.computePreferredName();
   }
 
   // Indicates whether properties suggest this is a retired concept.
@@ -230,28 +234,29 @@ export class Concept {
   }
 
   // Return the preferred name
-  getPreferredName(): string {
+  computePreferredName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Preferred Name') {
-          return this.synonyms[i].name;
+          this.preferredName = this.synonyms[i].name;
+          return;
         }
       }
     }
-    return this.name;
+    this.preferredName = this.name;
   }
 
   // Return the display name
   // TODO: very NCIt specific, need an alternative for other terminologies
-  getDisplayName(): string {
+  computeDisplayName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Display_Name') {
-          return this.synonyms[i].name;
+          this.displayName = this.synonyms[i].name;
+          return;
         }
       }
     }
-    return null;
   }
 
   // Get value from Concept_Status parameter

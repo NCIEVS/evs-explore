@@ -20,14 +20,14 @@
           </tr>
           <tr>
             <td class="w-25">Preferred Name:</td>
-            <td class="w-75">{{ concept.getPreferredName() }}</td>
+            <td class="w-75">{{ concept.preferredName }}</td>
           </tr>
-          <tr *ngIf="terminology == 'ncit'">
+          <tr *ngIf="concept.displayName">
             <td class="w-25">Display Name:</td>
-            <td class="w-75">{{ concept.getDisplayName() }}</td>
+            <td class="w-75">{{ concept.displayName }}</td>
           </tr>
-          <tr *ngIf="!concept.getDisplayName()">
-            <td class="w-25">Name:</td>
+          <tr *ngIf="concept.preferredName !== concept.name">
+            <td class="w-25">Label:</td>
             <td class="w-75">{{ concept.name }}</td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
