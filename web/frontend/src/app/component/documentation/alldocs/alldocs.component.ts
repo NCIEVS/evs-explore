@@ -14,7 +14,12 @@ export class AlldocsComponent {
   constructor(private configService: ConfigurationService, private titleService: Title) { }
 
   ngOnInit() {
+    // if there's a valid terminology
+    if (window.location.pathname.split("/").length > 2)
+      this.configService.setTerminology(this.configService.getTerminologyByName(window.location.pathname.split("/")[2]));
 
+    // default to ncit
+    else this.configService.setTerminology(this.configService.getTerminologyByName('ncit'));
   }
 
   ngAfterViewInit(): void {
