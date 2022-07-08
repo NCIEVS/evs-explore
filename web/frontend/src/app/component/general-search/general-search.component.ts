@@ -171,7 +171,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
       this.configService.setTerminology(this.selectedTerminology);
     } else {
-      this.selectedTerminology = this.configService.getTerminologyByName('ncit');
+      this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName);
       this.configService.setTerminology(this.selectedTerminology);
     }
     this.loadAllSources();
@@ -352,27 +352,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   checkLicenseText(licenseText, terminology) {
-    if ((this.cookieService.check('mdrLicense') && terminology == 'mdr') ||
-      (this.cookieService.check('ncitLicense') && terminology == 'ncit') ||
-      (this.cookieService.check('ncimLicense') && terminology == 'ncim')) {
+    if (this.cookieService.check(terminology + 'License')) {
       return true;
     }
     if (confirm(licenseText)) {
-      if (terminology == 'mdr') {
-        this.cookieService.set('mdrLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncim') {
-        this.cookieService.set('ncimLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncit') {
-        this.cookieService.set('ncitLicense', 'accepted', 365);
-        return true;
-      }
-      else {
-        return false;
-      }
+      this.cookieService.set(terminology + 'License', 'accepted', 365);
+      return true;
     }
   }
 

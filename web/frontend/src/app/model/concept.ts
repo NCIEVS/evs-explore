@@ -123,11 +123,12 @@ export class Concept {
         // Handle the RB/RN/RO ncim case
         // This seems backwards but an RB means 'broader than' so the
         // related concept is actually narrower than the current one
-        if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
+        // configService.isRrf() && configService.isMultiSource() == ncim
+        if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type == 'RN') {
           this.broader.push(new Relationship(input.associations[i], configService));
-        } else if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
+        } else if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type == 'RB') {
           this.narrower.push(new Relationship(input.associations[i], configService));
-        } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
+        } else if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type.startsWith('R')) {
           this.other.push(new Relationship(input.associations[i], configService));
         } else {
           this.associations.push(new Relationship(input.associations[i], configService));

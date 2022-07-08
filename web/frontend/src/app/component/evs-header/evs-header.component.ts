@@ -55,16 +55,7 @@ export class EvsHeaderComponent implements OnInit {
   }
 
   getTerminologyTitle() {
-    if (this.terminology.terminology == 'ncit') {
-      return 'NCI Thesaurus';
-    }
-    else if (this.terminology.terminology == 'ncim') {
-      return 'NCI Metathesaurus';
-    }
-    else if (this.terminology.terminology == 'mdr') {
-      return 'MedDRA';
-    }
-    else return null;
+    return this.terminology.metadata.uiLabel;
   }
 
   ngOnDestroy() {

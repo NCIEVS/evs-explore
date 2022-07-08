@@ -19,6 +19,7 @@ export class ConfigurationService {
   private terminologies: Array<any> = [];
   private subject: Subject<any>;
   private sources: string = null;
+  private defaultTerminologyName = 'ncit';
 
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
@@ -33,11 +34,15 @@ export class ConfigurationService {
   }
 
   getTerminologyName(): string {
-    return this.terminology ? this.terminology.terminology : 'ncit';
+    return this.terminology ? this.terminology.terminology : this.defaultTerminologyName;
   }
 
   getTerminologies(): Array<any> {
     return this.terminologies;
+  }
+
+  getDefaultTerminologyName(): string {
+    return this.defaultTerminologyName;
   }
 
   // filter out terminologies that shouldn't be in the list on the search page
@@ -82,7 +87,7 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
-  // Indicates whether current terminology is loaded from RDF (e.g. ncit) 
+  // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
   }
@@ -168,16 +173,7 @@ export class ConfigurationService {
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
   loadConfig(): Promise<any> {
     // Extract the cookie value on instantiation if not passed in
-    var term = this.cookieService.get('term');
-
-    // Default to "ncit" if not passed in and no cookie
-    if (!term) {
-      this.cookieService.set('term', 'ncit')
-      term = 'ncit';
-    }
-    if (this.cookieService.get('sources')) {
-      this.setSources(this.cookieService.get('sources'));
-    }
+    var term = this.getTerminologyName();
 
     // defining subject object for subscription
     if (this.getSubject() == undefined) {
@@ -200,7 +196,6 @@ export class ConfigurationService {
         });
     });
   }
-
 
   // Load associations
   getAssociations(terminology: string): Observable<any> {

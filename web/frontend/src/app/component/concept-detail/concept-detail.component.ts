@@ -61,7 +61,7 @@ export class ConceptDetailComponent implements OnInit {
       this.setTitle();
     var flag = (
       // no source field -> show
-      (this.terminology == 'ncit' && !item.hasOwnProperty('source') &&
+      (!item.hasOwnProperty('source') &&
         this.conceptDisplay.selectedSources.has('NCI'))
       // source is one of the selected ones
       || this.conceptDisplay.selectedSources.has(item.source)

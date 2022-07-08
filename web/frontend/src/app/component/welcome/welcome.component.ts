@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { Title } from '@angular/platform-browser';
 import { GeneralSearchComponent } from '../general-search/general-search.component';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -14,7 +15,7 @@ export class WelcomeComponent implements AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
 
   // Constructor
-  constructor(private modalService: NgbModal, private cookieService: CookieService,
+  constructor(private configService: ConfigurationService, private modalService: NgbModal, private cookieService: CookieService,
     private generalSearchComponent: GeneralSearchComponent, private titleService: Title) { }
 
   // Post initialization
@@ -26,7 +27,7 @@ export class WelcomeComponent implements AfterViewInit {
   }
 
   getTerminology(): String {
-    return this.generalSearchComponent.selectedTerminology.terminology ? this.generalSearchComponent.selectedTerminology.terminology : 'ncit';
+    return this.generalSearchComponent.selectedTerminology.terminology ? this.generalSearchComponent.selectedTerminology.terminology : this.configService.getDefaultTerminologyName;
   }
 
   open(content: TemplateRef<any>) {
