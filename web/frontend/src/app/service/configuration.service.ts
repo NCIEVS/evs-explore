@@ -116,11 +116,11 @@ export class ConfigurationService {
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
     if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
-      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? 'ncit' : paramMap.get('terminology');
+      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down
       var terminology = this.terminologies.filter(t =>
         t.latest && t.terminology == term
-        && (term != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
       this.setTerminology(terminology);
     }
 
@@ -156,7 +156,7 @@ export class ConfigurationService {
     }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
-      && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
     this.setTerminology(terminology);
 
 
@@ -185,7 +185,7 @@ export class ConfigurationService {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
           arr = arr.filter(t => t.latest && t.terminology == term); // filter down to latest of terminology name
-          if (term == 'ncit') {
+          if (term == this.getDefaultTerminologyName()) {
             arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
           }
           this.terminology = arr[0];

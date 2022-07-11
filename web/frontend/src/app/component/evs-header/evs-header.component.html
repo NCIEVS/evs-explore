@@ -23,13 +23,13 @@
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
 
-      <li class="nav-item" *ngIf="terminology.terminology == 'ncit'">
+      <li class="nav-item" *ngIf="getTerminologySubset()">
         <a class="nav-link nav-link-list" [routerLink]="['/subsets', terminology.terminology]"
           title="Display Subsets">Subsets</a>
       </li>
-      <li class="nav-item" *ngIf="terminology.terminology != 'ncim'">
+      <li class="nav-item" *ngIf="getTerminologyHierarchy()">
         <a class="nav-link nav-link-list"
-          [routerLink]="['/hierarchy', terminology == null ? 'ncit' : terminology.terminology, firstRoot]"
+          [routerLink]="['/hierarchy', terminology == null ? getDefaultTerminology() : terminology.terminology, firstRoot]"
           title="Display Concept Hierarchy">Hierarchy</a>
       </li>
       <li class="nav-item dropdown">

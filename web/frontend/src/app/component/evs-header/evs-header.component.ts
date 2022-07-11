@@ -58,6 +58,18 @@ export class EvsHeaderComponent implements OnInit {
     return this.terminology.metadata.uiLabel;
   }
 
+  getTerminologyHierarchy() {
+    return this.configService.getTerminology().metadata.hierarchy;
+  }
+
+  getTerminologySubset() {
+    return this.configService.getTerminology().metadata.subset;
+  }
+
+  getDefaultTerminology() {
+    return this.configService.getDefaultTerminologyName();
+  }
+
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
