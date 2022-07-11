@@ -129,4 +129,8 @@ export class ConceptDetailComponent implements OnInit {
     return this.configService.getTerminologyByName(termName).metadata.hierarchy;
   }
 
+  getCodeLabel() {
+    this.configService.getTerminology().metadata.codeLabel;
+  }
+
 }

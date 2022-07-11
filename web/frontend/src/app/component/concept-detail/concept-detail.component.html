@@ -12,6 +12,11 @@
             </td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
+          <!-- <tr>
+            <td *ngIf="getCodeLabel(); else noCodeLabel" class="w-25">{{getCodeLabel()}}: </td>
+            <ng-template #noCodeLabel><td class="w-25">Code: </td></ng-template>
+            <td class="w-75">{{ concept.code }}</td>
+          </tr> -->
           <tr *ngIf="concept.semanticTypes">
             <td>Semantic Type(s):</td>
             <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
