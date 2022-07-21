@@ -23,8 +23,9 @@ export class DefinitionTypesComponent implements OnInit {
   // On initialization
   ngOnInit() {
     // if there's a valid terminology
-    if (window.location.pathname.split("/").length > 2) {
-      this.terminology = window.location.pathname.split("/")[2];
+    var pathLength = window.location.pathname.split("/").length;
+    if (pathLength > 2) {
+      this.terminology = window.location.pathname.split("/")[pathLength - 1];
       this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
     }
 
