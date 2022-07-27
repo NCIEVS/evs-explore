@@ -321,5 +321,17 @@ export class ConfigurationService {
       );
   }
 
+  getWelcomeText(terminology: String) {
+    var url = '/api/v1/metadata/' + terminology + '/welcomeText';
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'text'
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
+      })
+    );
+  }
 
 }

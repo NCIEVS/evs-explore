@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { WelcomeComponent } from '../welcome/welcome.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -90,6 +91,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     public configService: ConfigurationService,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
+    private welcomeComponent: WelcomeComponent,
     public router: Router,
     private titleService: Title) {
 
@@ -341,6 +343,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.searchCriteria.term = '';
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
+    this.welcomeComponent.setWelcomeText();
     this.loadAllSources();
 
     // reset to the welcome page
