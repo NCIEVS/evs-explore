@@ -19,24 +19,32 @@
               <h4 class="modal-title" id="modal-basic-title">Notice</h4>
             </div>
             <div class="modal-body">
-              <p> You are accessing a US Government website which may contain information that must
+              <p> You are accessing a US Government website which may contain
+                information that must
                 be protected
                 under
-                the US Privacy Act or other sensitive information and is intended for Government
+                the US Privacy Act or other sensitive information and is intended
+                for Government
                 authorized use only.
               </p>
-              <p> Unauthorized attempts to upload information, change information, or use of this
+              <p> Unauthorized attempts to upload information, change information, or
+                use of this
                 website may result
-                in disciplinary action, civil, and/or criminal penalties. Unauthorized users of this
+                in disciplinary action, civil, and/or criminal penalties.
+                Unauthorized users of this
                 website should have
-                no expectation of privacy regarding any communications or data processed by this
+                no expectation of privacy regarding any communications or data
+                processed by this
                 website.</p>
-              <p>Anyone accessing this website expressly consents to monitoring of their actions and
+              <p>Anyone accessing this website expressly consents to monitoring of
+                their actions and
                 all
                 communications
-                or data transiting or stored on related to this website and is advised that if such
+                or data transiting or stored on related to this website and is
+                advised that if such
                 monitoring reveals
-                possible evidence of criminal activity, NIH may provide that evidence to law
+                possible evidence of criminal activity, NIH may provide that
+                evidence to law
                 enforcement officials.</p>
             </div>
             <div class="modal-footer">
@@ -45,11 +53,8 @@
               </form>
             </div>
           </ng-template>
-          <div *ngIf="welcomeText; else noWelcomeText" [innerHTML]="welcomeText">
-          </div>
-          <ng-template #noWelcomeText>
-            <div id="noWelcomeText" [innerHTML]="boilerPlateWelcomeText"></div>
-          </ng-template>
+          <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+          <div *ngIf="!welcomeText" [innerHTML]="boilerPlateWelcomeText"></div>
         </div>
         <div class="col-md-4">
           <table>
@@ -66,7 +71,8 @@
                   <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS"
                     class="regular-link">NCI Enterprise
                     Vocabulary Services</a>:
-                  Terminology resources and services for NCI and the biomedical community.
+                  Terminology resources and services for NCI and the biomedical
+                  community.
                 </td>
               </tr>
               <!--
@@ -110,7 +116,8 @@
                     target="_blank" alt="NCI Metathesaurus" class="regular-link">
 
                     NCI Metathesaurus</a>:
-                  Comprehensive database of 6,700,000 terms from over 85 terminologies.
+                  Comprehensive database of 6,700,000 terms from over 85
+                  terminologies.
                 </td>
               </tr>
               <tr valign="top">
@@ -126,7 +133,8 @@
                     alt="NCI Thesaurus" class="regular-link">
 
                     NCI Thesaurus</a>:
-                  Reference terminology for NCI, NCI Metathesaurus and NCI informatics
+                  Reference terminology for NCI, NCI Metathesaurus and NCI
+                  informatics
                   infrastructure.
                 </td>
               </tr>
@@ -159,11 +167,13 @@
                   <a [routerLink]="['/evsapi']" alt="Swagger API Documentation"
                     class="regular-link">
                     Swagger API Documentation</a>:
-                  View documentation for the EVS REST API providing data to this application.
+                  View documentation for the EVS REST API providing data to this
+                  application.
 
                   Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK"
                     target="_blank" class="regular-link">
-                    evsrestapi-client-SDK</a> project for code examples for interacting with the
+                    evsrestapi-client-SDK</a> project for code examples for
+                  interacting with the
                   API.
                 </td>
               </tr>

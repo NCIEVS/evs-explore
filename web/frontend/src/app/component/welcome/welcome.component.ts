@@ -3,7 +3,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ConfigurationService } from 'src/app/service/configuration.service';
-import { DisplayPipe } from 'src/app/service/display.pipe';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -39,7 +38,8 @@ export class WelcomeComponent implements AfterViewInit {
 
   setWelcomeText(): any {
     this.configService.getWelcomeText(this.getTerminology()).subscribe(response => {
-      this.welcomeText = this.sanitizer.bypassSecurityTrustHtml(response);
+      this.welcomeText = response;
+      document.getElementById("welcomeTextDiv").innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
     });
   }
 
