@@ -5,5 +5,5 @@ export const environment = {
   production: true,
   productionHost: 'explore.evs.cancer.gov',
   code: 'UA-150112876-3',
-  swagger: 'https://api-evsrest.nci.nih.gov/swagger-ui.html'
+  swagger: 'https://api-evsrest.nci.nih.gov/swagger-ui/index.html'
 };
