@@ -159,6 +159,14 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.avoidLazyLoading = true;
       this.performSearch();
     }
+    else {
+      var terminology = this.configService.getTerminology();
+      if (terminology.metadata.licenseText) {
+        if (this.checkLicenseText(terminology.metadata.licenseText, terminology) == false) {
+          return;
+        }
+      }
+    }
   }
 
   // Set state variables from the query parameters
@@ -357,22 +365,21 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       (this.cookieService.check('ncimLicense') && terminology == 'ncim')) {
       return true;
     }
-    if (confirm(licenseText)) {
-      if (terminology == 'mdr') {
-        this.cookieService.set('mdrLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncim') {
-        this.cookieService.set('ncimLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncit') {
-        this.cookieService.set('ncitLicense', 'accepted', 365);
-        return true;
-      }
-      else {
-        return false;
-      }
+    alert(licenseText);
+    if (terminology == 'mdr') {
+      this.cookieService.set('mdrLicense', 'accepted', 365);
+      return true;
+    }
+    else if (terminology == 'ncim') {
+      this.cookieService.set('ncimLicense', 'accepted', 365);
+      return true;
+    }
+    else if (terminology == 'ncit') {
+      this.cookieService.set('ncitLicense', 'accepted', 365);
+      return true;
+    }
+    else {
+      return false;
     }
   }
 
