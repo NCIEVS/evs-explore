@@ -19,6 +19,7 @@ export class ConfigurationService {
   private terminologies: Array<any> = [];
   private subject: Subject<any>;
   private sources: string = null;
+  private defaultTerminologyName = 'ncit';
 
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
@@ -33,17 +34,21 @@ export class ConfigurationService {
   }
 
   getTerminologyName(): string {
-    return this.terminology ? this.terminology.terminology : 'ncit';
+    return this.terminology ? this.terminology.terminology : this.defaultTerminologyName;
   }
 
   getTerminologies(): Array<any> {
     return this.terminologies;
   }
 
+  getDefaultTerminologyName(): string {
+    return this.defaultTerminologyName;
+  }
+
   // filter out terminologies that shouldn't be in the list on the search page
   // mostly just the weekly ncit that's loaded
-  terminologySearchListFilter(term) {
-    if (term.terminology != 'ncit')
+  terminologySearchListFilter(term, defaultTerminologyName) {
+    if (term.terminology != defaultTerminologyName)
       return true;
     if (term.tags && "monthly" in term.tags && term.latest == true)
       return true;
@@ -51,7 +56,7 @@ export class ConfigurationService {
   }
 
   getTerminologyByName(name) { // reverse search terminology by short name
-    var terms = this.terminologies.filter(this.terminologySearchListFilter);
+    var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {
         return terms[term];
@@ -82,7 +87,7 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
-  // Indicates whether current terminology is loaded from RDF (e.g. ncit) 
+  // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
   }
@@ -111,11 +116,11 @@ export class ConfigurationService {
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
     if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
-      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? 'ncit' : paramMap.get('terminology');
+      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down
       var terminology = this.terminologies.filter(t =>
         t.latest && t.terminology == term
-        && (term != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
       this.setTerminology(terminology);
     }
 
@@ -151,7 +156,7 @@ export class ConfigurationService {
     }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
-      && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
+      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
     this.setTerminology(terminology);
 
 
@@ -168,16 +173,7 @@ export class ConfigurationService {
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
   loadConfig(): Promise<any> {
     // Extract the cookie value on instantiation if not passed in
-    var term = this.cookieService.get('term');
-
-    // Default to "ncit" if not passed in and no cookie
-    if (!term) {
-      this.cookieService.set('term', 'ncit')
-      term = 'ncit';
-    }
-    if (this.cookieService.get('sources')) {
-      this.setSources(this.cookieService.get('sources'));
-    }
+    var term = this.getTerminologyName();
 
     // defining subject object for subscription
     if (this.getSubject() == undefined) {
@@ -189,7 +185,7 @@ export class ConfigurationService {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
           arr = arr.filter(t => t.latest && t.terminology == term); // filter down to latest of terminology name
-          if (term == 'ncit') {
+          if (term == this.getDefaultTerminologyName()) {
             arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
           }
           this.terminology = arr[0];
@@ -200,7 +196,6 @@ export class ConfigurationService {
         });
     });
   }
-
 
   // Load associations
   getAssociations(terminology: string): Observable<any> {
@@ -326,5 +321,17 @@ export class ConfigurationService {
       );
   }
 
+  getWelcomeText(terminology: String) {
+    var url = '/api/v1/metadata/' + terminology + '/welcomeText';
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'text'
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
+      })
+    );
+  }
 
 }

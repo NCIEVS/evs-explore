@@ -22,8 +22,8 @@ export class AlldocsComponent {
       this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
     }
 
-    // default to ncit
-    else this.configService.setTerminology(this.configService.getTerminologyByName('ncit'));
+    // default terminology in config
+    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
   }
 
   ngAfterViewInit(): void {
