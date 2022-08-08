@@ -8,12 +8,15 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class LicenseTextComponent implements OnInit {
 
+  licenseText: string;
+
   constructor(private cookieService: CookieService) { }
 
   ngOnInit(): void {
   }
 
   checkLicenseText(terminology, licenseText) {
+    this.licenseText = licenseText;
     if (this.cookieService.check(terminology + 'License')) {
       return true;
     }
