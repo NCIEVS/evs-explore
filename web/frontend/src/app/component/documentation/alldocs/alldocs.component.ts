@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { Title } from '@angular/platform-browser';
+import { LicenseTextComponent } from '../../license-text/license-text.component';
 
 @Component({
   selector: 'app-alldocs',
@@ -12,7 +13,7 @@ export class AlldocsComponent {
 
   terminology = null;
 
-  constructor(private configService: ConfigurationService, private titleService: Title) { }
+  constructor(private configService: ConfigurationService, private titleService: Title, private licenseTextComponent: LicenseTextComponent) { }
 
   ngOnInit() {
     // if there's a valid terminology
@@ -28,6 +29,9 @@ export class AlldocsComponent {
 
   ngAfterViewInit(): void {
     this.titleService.setTitle("EVS Explore - All Documentation");
-
+    var terminology = this.configService.getTerminology();
+    if (terminology.metadata.licenseText) {
+      this.licenseTextComponent.checkLicenseText(terminology.terminology, terminology.metadata.licenseText);
+    }
   }
 }

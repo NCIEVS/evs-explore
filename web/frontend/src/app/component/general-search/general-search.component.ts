@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { WelcomeComponent } from '../welcome/welcome.component';
+import { LicenseTextComponent } from '../license-text/license-text.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -93,7 +94,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     private changeDetector: ChangeDetectorRef,
     private welcomeComponent: WelcomeComponent,
     public router: Router,
-    private titleService: Title) {
+    private titleService: Title, private licenseTextComponent: LicenseTextComponent) {
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -336,9 +337,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
     if (terminology.value.metadata.licenseText) {
-      if (this.checkLicenseText(terminology.value.metadata.licenseText, terminology.value.terminology) == false) {
-        return;
-      }
+      this.licenseTextComponent.checkLicenseText(terminology.value.terminology, terminology.value.metadata.licenseText);
     }
     this.searchCriteria.term = '';
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
@@ -352,16 +351,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         terminology: this.selectedTerminology.terminology
       }
     });
-  }
-
-  checkLicenseText(licenseText, terminology) {
-    if (this.cookieService.check(terminology + 'License')) {
-      return true;
-    }
-    if (confirm(licenseText)) {
-      this.cookieService.set(terminology + 'License', 'accepted', 365);
-      return true;
-    }
   }
 
   // Load source list

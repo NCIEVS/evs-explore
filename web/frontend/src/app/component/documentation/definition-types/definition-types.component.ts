@@ -2,54 +2,62 @@ import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from '../../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
+import { LicenseTextComponent } from '../../license-text/license-text.component';
 
 // Documentation of definition types component
 @Component({
-  selector: 'app-definition-types',
-  templateUrl: './definition-types.component.html',
-  styleUrls: ['./definition-types.component.css']
+    selector: 'app-definition-types',
+    templateUrl: './definition-types.component.html',
+    styleUrls: ['./definition-types.component.css']
 })
 export class DefinitionTypesComponent implements OnInit {
 
-  definitionTypes: any;
-  terminology: string;
+    definitionTypes: any;
+    terminology: string;
 
-  constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
-  }
-
-  // On initialization
-  ngOnInit() {
-    // if there's a valid terminology
-    if (window.location.pathname.split("/").length > 2) {
-      var pathLength = window.location.pathname.split("/").length;
-      if (pathLength > 2) {
-        this.terminology = window.location.pathname.split("/")[pathLength - 1];
-        this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
-      }
+    constructor(
+        private configService: ConfigurationService, private titleService: Title, private licenseTextComponent: LicenseTextComponent
+    ) {
+        this.terminology = configService.getTerminologyName();
     }
 
-    // default terminology in config
-    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
+    // On initialization
+    ngOnInit() {
+        // if there's a valid terminology
+        if (window.location.pathname.split("/").length > 2) {
+            var pathLength = window.location.pathname.split("/").length;
+            if (pathLength > 2) {
+                this.terminology = window.location.pathname.split("/")[pathLength - 1];
+                this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
+            }
+        }
 
-    this.configService.getDefinitionTypes(this.terminology)
-      .subscribe(response => {
-        this.definitionTypes = response;
-        this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
-      });
-    this.titleService.setTitle("EVS Explore - Definition Types");
-  }
+        // default terminology in config
+        else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
 
-  customSort(event: SortEvent) {
-    event.data.sort((data1, data2) => {
-      let value1 = data1[event.field];
-      let value2 = data2[event.field];
-      if (value1 == undefined)
-        return 0;
-      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
-    });
-  }
+        this.configService.getDefinitionTypes(this.terminology)
+            .subscribe(response => {
+                this.definitionTypes = response;
+                this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
+            });
+        this.titleService.setTitle("EVS Explore - Definition Types");
+    }
+
+    ngAfterViewInit(): void {
+        var terminology = this.configService.getTerminology();
+        if (terminology.metadata.licenseText) {
+            this.licenseTextComponent.checkLicenseText(terminology.terminology, terminology.metadata.licenseText);
+        }
+    }
+
+    customSort(event: SortEvent) {
+        event.data.sort((data1, data2) => {
+            let value1 = data1[event.field];
+            let value2 = data2[event.field];
+            if (value1 == undefined)
+                return 0;
+            return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+        });
+    }
 
 }
