@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from './../../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
-import { LicenseTextComponent } from '../../license-text/license-text.component';
 
 // Documentation properties component
 @Component({

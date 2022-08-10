@@ -87,7 +87,6 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
-import { LicenseTextComponent } from './component/license-text/license-text.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -168,7 +167,6 @@ import { LicenseTextComponent } from './component/license-text/license-text.comp
     ConceptDetailService,
     AppComponent,
     ConceptDisplayComponent,
-    LicenseTextComponent,
     WelcomeComponent,
     SearchTermService,
     GlobalErrorHandler,

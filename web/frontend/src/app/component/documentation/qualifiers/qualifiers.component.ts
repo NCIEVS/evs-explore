@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
-import { LicenseTextComponent } from '../../license-text/license-text.component';
 
 // Documentation qualifiers component
 @Component({
