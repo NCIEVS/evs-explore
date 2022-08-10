@@ -55,6 +55,8 @@ export class AppComponent {
       let terminology = window.location.search.split("=")[1];
       this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
     }
+    // default terminology in config
+    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
   }
   title = 'frontend';
   ngAfterViewInit(): void {
