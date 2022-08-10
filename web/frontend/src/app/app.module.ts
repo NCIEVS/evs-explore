@@ -166,6 +166,7 @@ import { LicenseTextComponent } from './component/license-text/license-text.comp
     MessageService,
     LoaderService,
     ConceptDetailService,
+    AppComponent,
     ConceptDisplayComponent,
     LicenseTextComponent,
     WelcomeComponent,

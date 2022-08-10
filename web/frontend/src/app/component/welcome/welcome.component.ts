@@ -3,7 +3,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ConfigurationService } from 'src/app/service/configuration.service';
-import { LicenseTextComponent } from '../license-text/license-text.component';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -18,7 +17,7 @@ export class WelcomeComponent implements AfterViewInit {
   boilerPlateWelcomeText: any = "Loading welcome text for " + this.configService.getTerminologyName();
 
   // Constructor
-  constructor(private modalService: NgbModal, private cookieService: CookieService, private configService: ConfigurationService, private sanitizer: DomSanitizer, private titleService: Title, private licenseTextComponent: LicenseTextComponent) { }
+  constructor(private modalService: NgbModal, private cookieService: CookieService, private configService: ConfigurationService, private sanitizer: DomSanitizer, private titleService: Title) { }
 
   ngOnInit() {
 
@@ -27,9 +26,6 @@ export class WelcomeComponent implements AfterViewInit {
   // Post initialization
   ngAfterViewInit() {
     var terminology = this.configService.getTerminology();
-    if (terminology.metadata.licenseText) {
-      this.licenseTextComponent.checkLicenseText(terminology.terminology, terminology.metadata.licenseText);
-    }
     if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }

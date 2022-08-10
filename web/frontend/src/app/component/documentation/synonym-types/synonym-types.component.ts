@@ -6,56 +6,49 @@ import { LicenseTextComponent } from '../../license-text/license-text.component'
 
 // Documentation of synonym types component
 @Component({
-    selector: 'app-synonym-types',
-    templateUrl: './synonym-types.component.html',
-    styleUrls: ['./synonym-types.component.css']
+  selector: 'app-synonym-types',
+  templateUrl: './synonym-types.component.html',
+  styleUrls: ['./synonym-types.component.css']
 })
 export class SynonymTypesComponent implements OnInit {
 
-    synonymTypes: any;
-    terminology: string;
+  synonymTypes: any;
+  terminology: string;
 
-    constructor(
-        private configService: ConfigurationService, private titleService: Title, private licenseTextComponent: LicenseTextComponent
-    ) {
-        this.terminology = configService.getTerminologyName();
+  constructor(
+    private configService: ConfigurationService, private titleService: Title) {
+    this.terminology = configService.getTerminologyName();
+  }
+
+  // On initialization
+  ngOnInit() {
+    // if there's a valid terminology
+    var pathLength = window.location.pathname.split("/").length;
+    if (pathLength > 2) {
+      this.terminology = window.location.pathname.split("/")[pathLength - 1];
+      this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
     }
 
-    // On initialization
-    ngOnInit() {
-        // if there's a valid terminology
-        var pathLength = window.location.pathname.split("/").length;
-        if (pathLength > 2) {
-            this.terminology = window.location.pathname.split("/")[pathLength - 1];
-            this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
-        }
+    // default to ncit
+    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
 
-        // default to ncit
-        else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
+    this.configService.getSynonymTypes(this.terminology)
+      .subscribe(response => {
+        this.synonymTypes = response;
+        this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
+      });
+    this.titleService.setTitle("EVS Explore - Synonym Types");
+  }
 
-        this.configService.getSynonymTypes(this.terminology)
-            .subscribe(response => {
-                this.synonymTypes = response;
-                this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
-            });
-        this.titleService.setTitle("EVS Explore - Synonym Types");
-    }
 
-    ngAfterViewInit(): void {
-        var terminology = this.configService.getTerminology();
-        if (terminology.metadata.licenseText) {
-            this.licenseTextComponent.checkLicenseText(terminology.terminology, terminology.metadata.licenseText);
-        }
-    }
-
-    customSort(event: SortEvent) {
-        event.data.sort((data1, data2) => {
-            let value1 = data1[event.field];
-            let value2 = data2[event.field];
-            if (value1 == undefined)
-                return 0;
-            return event.order * value1.localeCompare(value2, 'en', { numeric: true });
-        });
-    }
+  customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      if (value1 == undefined)
+        return 0;
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+    });
+  }
 
 }

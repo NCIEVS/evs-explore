@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { WelcomeComponent } from '../welcome/welcome.component';
-import { LicenseTextComponent } from '../license-text/license-text.component';
+import { AppComponent } from 'src/app/app.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -94,7 +94,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     private changeDetector: ChangeDetectorRef,
     private welcomeComponent: WelcomeComponent,
     public router: Router,
-    private titleService: Title, private licenseTextComponent: LicenseTextComponent) {
+    private titleService: Title, private appComponent: AppComponent) {
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -336,12 +336,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
-    if (terminology.value.metadata.licenseText) {
-      this.licenseTextComponent.checkLicenseText(terminology.value.terminology, terminology.value.metadata.licenseText);
-    }
     this.searchCriteria.term = '';
     this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
+    if (terminology.value.metadata.licenseText) {
+      this.appComponent.checkLicenseText();
+    }
     this.welcomeComponent.setWelcomeText();
     this.loadAllSources();
 
