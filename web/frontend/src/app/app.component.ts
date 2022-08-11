@@ -56,9 +56,9 @@ export class AppComponent {
       this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
     }
     // default terminology in config
-    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
+    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName()));
   }
-  title = 'frontend';
+
   ngAfterViewInit(): void {
     var terminology = this.configService.getTerminology();
     if (terminology.metadata.licenseText) {
@@ -68,7 +68,7 @@ export class AppComponent {
 
   checkLicenseText() {
     let terminology = this.configService.getTerminology();
-    if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License') && (window.location.pathname + window.location.search).split(/[\/=]/).includes(terminology.terminology)) {
+    if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License')) {
       this.licenseText = terminology.metadata.licenseText;
       this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
         this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);

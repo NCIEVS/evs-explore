@@ -39,9 +39,8 @@
                 label="New Search" tooltipPosition="bottom"></button>
 
               <div class="large-divider"></div>
-              <p-dropdown [style]="{'padding-top':'1px','padding-bottom':'1px'}"
-                styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerminology"
-                (onChange)="onChangeTerminology($event)">
+              <p-dropdown styleClass="ui-button-info" [options]="termsAll"
+                [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
               </p-dropdown>
             </div>
 
