@@ -337,12 +337,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
     this.searchCriteria.term = '';
-    this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
     this.configService.setTerminology(this.selectedTerminology);
+    this.welcomeComponent.setWelcomeText();
     if (terminology.value.metadata.licenseText) {
       this.appComponent.checkLicenseText();
     }
-    this.welcomeComponent.setWelcomeText();
     this.loadAllSources();
 
     // reset to the welcome page
