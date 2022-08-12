@@ -174,7 +174,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
       this.configService.setTerminology(this.selectedTerminology);
     } else {
-      this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName);
+      this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
       this.configService.setTerminology(this.selectedTerminology);
     }
     this.loadAllSources();
