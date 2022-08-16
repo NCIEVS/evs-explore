@@ -54,20 +54,25 @@ export class EvsHeaderComponent implements OnInit {
 
   }
 
+  // Get terminology title
   getTerminologyTitle() {
-    return this.terminology.metadata.uiLabel;
+    if (this.terminology && this.terminology.metadata) {
+      return this.terminology.metadata.uiLabel;
+    }
   }
 
+  // Get terminology hierarchy flag
   getTerminologyHierarchy() {
-    return this.configService.getTerminology().metadata.hierarchy;
+    if (this.terminology && this.terminology.metadata) {
+      return this.terminology.metadata.hierarchy;
+    }
   }
 
+  // Get terminology subsets flag
   getTerminologySubset() {
-    return this.configService.getTerminology().metadata.subset;
-  }
-
-  getDefaultTerminology() {
-    return this.configService.getDefaultTerminologyName();
+    if (this.terminology && this.terminology.metadata) {
+      return this.terminology.metadata.subset;
+    }
   }
 
   ngOnDestroy() {

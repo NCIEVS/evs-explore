@@ -12,8 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
-import { WelcomeComponent } from '../welcome/welcome.component';
-import { AppComponent } from 'src/app/app.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -92,9 +90,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     public configService: ConfigurationService,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
-    private welcomeComponent: WelcomeComponent,
     public router: Router,
-    private titleService: Title, private appComponent: AppComponent) {
+    private titleService: Title) {
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -124,12 +121,17 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
           }
         });
 
+
+  }
+
+  // On init, print console message
+  ngOnInit() {
     // Instantiate new search criteria and load from query params
-    this.searchCriteria = new SearchCriteria(configService);
+    this.searchCriteria = new SearchCriteria(this.configService);
     this.configFromQueryParams();
 
     // Populate terms list from application metadata
-    this.termsAll = configService.getTerminologies().map(element => {
+    this.termsAll = this.configService.getTerminologies().map(element => {
       return {
         label: element.metadata.uiLabel,
         value: element
@@ -137,11 +139,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-
-  }
-
-  // On init, print console message
-  ngOnInit() {
     console.log('search component initialized');
   }
 
@@ -156,7 +153,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('after view initialized');
+    console.log('after content initialized');
     setTimeout(() => this.termauto.focusInput());
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
@@ -172,11 +169,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // Setup terminology for both /welcome and /search pages
     if (this.queryParams.get('terminology')) {
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
-      this.configService.setTerminology(this.selectedTerminology);
     } else {
-      this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
-      this.configService.setTerminology(this.selectedTerminology);
+      this.selectedTerminology
+        = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
     }
+    this.configService.setTerminology(this.selectedTerminology);
+
     this.loadAllSources();
 
     // set search criteria if there's stuff from the url
@@ -337,11 +335,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
     this.searchCriteria.term = '';
-    this.configService.setTerminology(this.selectedTerminology);
-    this.welcomeComponent.setWelcomeText();
-    if (terminology.value.metadata.licenseText) {
-      this.appComponent.checkLicenseText();
-    }
+    this.configService.setTerminology(terminology.value);
     this.loadAllSources();
 
     // reset to the welcome page
@@ -350,6 +344,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         terminology: this.selectedTerminology.terminology
       }
     });
+
   }
 
   // Load source list

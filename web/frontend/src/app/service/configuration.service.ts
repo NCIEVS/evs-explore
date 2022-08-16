@@ -184,11 +184,23 @@ export class ConfigurationService {
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
+          if (arr.length == 0) {
+            throw 'Unable to find any terminologies with /metadata/terminlogies';
+          }
           arr = arr.filter(t => t.latest && t.terminology == term); // filter down to latest of terminology name
           if (term == this.getDefaultTerminologyName()) {
             arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
           }
+          if (arr.length == 0) {
+            var arr2 = response as any[];
+            arr = arr2.filter(t => t.terminology == term); // filter down to latest of terminology name
+
+          }
           this.terminology = arr[0];
+          if (this.terminology == null) {
+            throw 'Unable to find good match for termnology to load';
+          }
+
           this.terminologies = response as any[];
           resolve(true);
         }).catch(error => {
