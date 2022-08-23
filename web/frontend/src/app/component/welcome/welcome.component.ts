@@ -1,8 +1,8 @@
-import { Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, TemplateRef, AfterViewInit, SecurityContext } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
-import { Title } from '@angular/platform-browser';
-import { GeneralSearchComponent } from '../general-search/general-search.component';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -13,9 +13,15 @@ import { GeneralSearchComponent } from '../general-search/general-search.compone
 export class WelcomeComponent implements AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
 
+  welcomeText: any = null;
+  boilerPlateWelcomeText: any = "Loading welcome text for " + this.configService.getTerminologyName();
+
   // Constructor
-  constructor(private modalService: NgbModal, private cookieService: CookieService,
-    private generalSearchComponent: GeneralSearchComponent, private titleService: Title) { }
+  constructor(private modalService: NgbModal, private cookieService: CookieService, private configService: ConfigurationService, private sanitizer: DomSanitizer, private titleService: Title) { }
+
+  ngOnInit() {
+
+  }
 
   // Post initialization
   ngAfterViewInit() {
@@ -23,10 +29,18 @@ export class WelcomeComponent implements AfterViewInit {
       this.open(this.content);
     }
     this.titleService.setTitle("EVS Explore");
+    this.setWelcomeText();
   }
 
   getTerminology(): String {
-    return this.generalSearchComponent.selectedTerminology.terminology ? this.generalSearchComponent.selectedTerminology.terminology : 'ncit';
+    return this.configService.getTerminologyName() ? this.configService.getTerminologyName() : this.configService.getDefaultTerminologyName();
+  }
+
+  setWelcomeText(): any {
+    this.configService.getWelcomeText(this.getTerminology()).subscribe(response => {
+      this.welcomeText = response;
+      document.getElementById("welcomeTextDiv").innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
+    });
   }
 
   open(content: TemplateRef<any>) {
@@ -38,4 +52,5 @@ export class WelcomeComponent implements AfterViewInit {
       console.log('HHS Banner Accepted');
     });
   }
+
 }
