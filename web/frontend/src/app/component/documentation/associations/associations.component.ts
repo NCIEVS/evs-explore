@@ -15,24 +15,13 @@ export class AssociationsComponent implements OnInit {
   terminology = null;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
+    private configService: ConfigurationService, private titleService: Title) {
     this.terminology = configService.getTerminologyName();
 
   }
 
   // On initialization
   ngOnInit() {
-    // if there's a valid terminology
-    var pathLength = window.location.pathname.split("/").length;
-    if (pathLength > 2) {
-      this.terminology = window.location.pathname.split("/")[pathLength - 1];
-      this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
-    }
-
-
-    // default terminology in config
-    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
 
     this.configService.getAssociations(this.terminology)
       .subscribe(response => {
@@ -40,6 +29,10 @@ export class AssociationsComponent implements OnInit {
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
     this.titleService.setTitle("EVS Explore - Associations");
+
+  }
+
+  ngAfterViewInit(): void {
   }
 
   customSort(event: SortEvent) {

@@ -15,24 +15,12 @@ export class DefinitionTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
+    private configService: ConfigurationService, private titleService: Title) {
     this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
-    // if there's a valid terminology
-    if (window.location.pathname.split("/").length > 2) {
-      var pathLength = window.location.pathname.split("/").length;
-      if (pathLength > 2) {
-        this.terminology = window.location.pathname.split("/")[pathLength - 1];
-        this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
-      }
-    }
-
-    // default terminology in config
-    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
 
     this.configService.getDefinitionTypes(this.terminology)
       .subscribe(response => {
@@ -40,6 +28,9 @@ export class DefinitionTypesComponent implements OnInit {
         this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
     this.titleService.setTitle("EVS Explore - Definition Types");
+  }
+
+  ngAfterViewInit(): void {
   }
 
   customSort(event: SortEvent) {

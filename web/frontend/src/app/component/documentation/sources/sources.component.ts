@@ -15,23 +15,12 @@ export class SourcesComponent implements OnInit {
   definitionSources: any;
   terminology: string;
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
+    private configService: ConfigurationService, private titleService: Title) {
     this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
-    // if there's a valid terminology
-    var pathLength = window.location.pathname.split("/").length;
-    if (pathLength > 2) {
-      this.terminology = window.location.pathname.split("/")[pathLength - 1];
-      this.configService.setTerminology(this.configService.getTerminologyByName(this.terminology));
-    }
-
-    // default to ncit
-    else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName));
-
 
     this.configService.getSynonymSources(this.terminology)
       .subscribe(response => {
@@ -48,6 +37,9 @@ export class SourcesComponent implements OnInit {
     this.terminology = this.configService.getTerminology().terminology;
     this.titleService.setTitle("EVS Explore - Sources");
 
+  }
+
+  ngAfterViewInit(): void {
   }
 
 }

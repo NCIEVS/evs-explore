@@ -12,3 +12,13 @@
 
 <!-- EVS Footer -->
 <app-evs-footer></app-evs-footer>
+
+<ng-template #licenseModal let-modal>
+  <div class="modal-body">{{licenseText}}
+  </div>
+  <div class="modal-footer">
+    <form action="" (submit)="modal.close()" method="POST">
+      <button autofocus class="btn btn-sm btn-primary" type="submit">Accept</button>
+    </form>
+  </div>
+</ng-template>

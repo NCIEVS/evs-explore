@@ -165,6 +165,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     MessageService,
     LoaderService,
     ConceptDetailService,
+    AppComponent,
     ConceptDisplayComponent,
     WelcomeComponent,
     SearchTermService,

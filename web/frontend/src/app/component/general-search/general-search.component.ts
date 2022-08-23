@@ -12,7 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
-import { WelcomeComponent } from '../welcome/welcome.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -91,7 +90,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     public configService: ConfigurationService,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
-    private welcomeComponent: WelcomeComponent,
     public router: Router,
     private titleService: Title) {
 
@@ -123,12 +121,17 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
           }
         });
 
+
+  }
+
+  // On init, print console message
+  ngOnInit() {
     // Instantiate new search criteria and load from query params
-    this.searchCriteria = new SearchCriteria(configService);
+    this.searchCriteria = new SearchCriteria(this.configService);
     this.configFromQueryParams();
 
     // Populate terms list from application metadata
-    this.termsAll = configService.getTerminologies().map(element => {
+    this.termsAll = this.configService.getTerminologies().map(element => {
       return {
         label: element.metadata.uiLabel,
         value: element
@@ -136,11 +139,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-
-  }
-
-  // On init, print console message
-  ngOnInit() {
     console.log('search component initialized');
   }
 
@@ -155,7 +153,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('after view initialized');
+    console.log('after content initialized');
     setTimeout(() => this.termauto.focusInput());
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
@@ -179,11 +177,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // Setup terminology for both /welcome and /search pages
     if (this.queryParams.get('terminology')) {
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
-      this.configService.setTerminology(this.selectedTerminology);
     } else {
-      this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName);
-      this.configService.setTerminology(this.selectedTerminology);
+      this.selectedTerminology
+        = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
     }
+    this.configService.setTerminology(this.selectedTerminology);
+
     this.loadAllSources();
 
     // set search criteria if there's stuff from the url
@@ -343,15 +342,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
-    if (terminology.value.metadata.licenseText) {
-      if (this.checkLicenseText(terminology.value.metadata.licenseText, terminology.value.terminology) == false) {
-        return;
-      }
-    }
     this.searchCriteria.term = '';
-    this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
-    this.configService.setTerminology(this.selectedTerminology);
-    this.welcomeComponent.setWelcomeText();
+    this.configService.setTerminology(terminology.value);
     this.loadAllSources();
 
     // reset to the welcome page
@@ -360,17 +352,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         terminology: this.selectedTerminology.terminology
       }
     });
-  }
 
-  checkLicenseText(licenseText, terminology) {
-    if (this.cookieService.check(terminology + 'License')) {
-      return true;
-    }
-    alert(licenseText);
-    if (terminology == 'mdr') {
-      this.cookieService.set('mdrLicense', 'accepted', 365);
-      return true;
-    }
     else if (terminology == 'ncim') {
       this.cookieService.set('ncimLicense', 'accepted', 365);
       return true;
