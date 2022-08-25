@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { AppComponent } from 'src/app/app.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -91,7 +92,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
     public router: Router,
-    private titleService: Title) {
+    private titleService: Title, private appComponent: AppComponent) {
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -162,9 +163,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     else {
       var terminology = this.configService.getTerminology();
       if (terminology.metadata.licenseText) {
-        if (this.checkLicenseText(terminology.metadata.licenseText, terminology) == false) {
-          return;
-        }
+        this.appComponent.checkLicenseText();
       }
     }
   }
@@ -352,18 +351,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         terminology: this.selectedTerminology.terminology
       }
     });
-
-    else if (terminology == 'ncim') {
-      this.cookieService.set('ncimLicense', 'accepted', 365);
-      return true;
-    }
-    else if (terminology == 'ncit') {
-      this.cookieService.set('ncitLicense', 'accepted', 365);
-      return true;
-    }
-    else {
-      return false;
-    }
   }
 
   // Load source list
