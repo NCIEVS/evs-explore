@@ -39,6 +39,11 @@
             <td class="w-25">Concept Status:</td>
             <td class="w-75">{{ concept.getConceptStatus() }}</td>
           </tr>
+          <tr *ngIf="conceptIsSubset">
+            <td class="w-25">Subset Link:</td>
+            <td class="w-75"><a [routerLink]="['/subset', terminology, concept.code]"
+                [target]="_top">{{ concept.code }}</a></td>
+          </tr>
         </tbody>
       </table>
     </div>
