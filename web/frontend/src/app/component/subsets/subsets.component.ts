@@ -34,6 +34,7 @@ export class SubsetsComponent implements OnInit {
   subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
+  searchDisabled = false;
 
   static origHierarchyData: TreeNode[] = null;
 
@@ -68,6 +69,7 @@ export class SubsetsComponent implements OnInit {
 
     if (SubsetsComponent.origHierarchyData == null) {
       this.hierarchyTable.loading = true;
+      this.searchDisabled = true;
       this.subsetDetailService.getSubsetTopLevel()
         .then(nodes => {
           console.log('get subset top level');
@@ -80,11 +82,13 @@ export class SubsetsComponent implements OnInit {
           console.log('done copy hierarchy data');
           this.NCItermFirst();
           this.hierarchyTable.loading = false;
+          this.searchDisabled = false;
         });
     } else {
       this.resetSearch();
     }
   }
+
 
   // Get child tree nodes (for an expanded node)
   getTreeTableChildrenNodes(nodeChildren: any) {
@@ -146,6 +150,19 @@ export class SubsetsComponent implements OnInit {
     }
     for (const child of node.children) {
       this.setTreeTableProperties(child, true);
+    }
+  }
+
+  scrollToSelectionTableTree(selectedNode) {
+    let index = 0;
+    const hierarchyRows = this.hierarchyTable.el.nativeElement
+      .querySelectorAll('.ui-treetable-tbody>tr');
+    for (let i = 0; i < hierarchyRows.length; i++) {
+      const testLabel = hierarchyRows[i]['innerText'].trim();
+      if (testLabel === selectedNode.label) {
+        index = i;
+        break;
+      }
     }
   }
 
