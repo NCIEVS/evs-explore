@@ -12,7 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
-import { AppComponent } from 'src/app/app.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -92,7 +91,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
     public router: Router,
-    private titleService: Title, private appComponent: AppComponent) {
+    private titleService: Title) {
 
     // Determine if we are on the welcome page
     const path = '' + window.location.pathname;
@@ -159,12 +158,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
       this.performSearch();
-    }
-    else {
-      var terminology = this.configService.getTerminology();
-      if (terminology.metadata.licenseText) {
-        this.appComponent.checkLicenseText();
-      }
     }
   }
 
