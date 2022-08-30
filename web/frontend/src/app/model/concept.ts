@@ -9,10 +9,12 @@ import { ConfigurationService } from '../service/configuration.service';
 
 // MatchConcept Details - UI Component
 export class Concept {
-  s
+
   code: string;
   name: string;
+  leaf: boolean;
   terminology: string;
+  version: string;
   highlight: string;
   synonyms: Synonym[];
   definitions: Definition[];
@@ -35,10 +37,16 @@ export class Concept {
   uniqProps: any[];
 
   constructor(input: any, configService: ConfigurationService) {
-    Object.assign(this, input);
+    // Object.assign(this, input);
+    this.terminology = input.terminology;
+    this.version = input.version;
+    this.code = input.code;
+    this.name = input.name;
+    this.leaf = input.leaf;
+    this.synonyms = new Array();
+    this.properties = new Array();
+
     if (input.synonyms) {
-      this.synonyms = new Array();
-      this.properties = new Array();
       for (let i = 0; i < input.synonyms.length; i++) {
         var synonym = new Synonym(input.synonyms[i]);
         this.synonyms.push(synonym);
@@ -63,11 +71,6 @@ export class Concept {
     }
     if (input.properties) {
       this.semanticTypes = new Array();
-
-      // if properties not already initialized in synonyms section
-      if (!input.properties) {
-        this.properties = new Array();
-      }
 
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
@@ -400,7 +403,6 @@ export class Concept {
 
   // Helper
   getRelationshipsText(relationships: Relationship[]): string {
-    // console.log('In roles and associations');
 
     let relationshipInfo = '';
     if (relationships) {
