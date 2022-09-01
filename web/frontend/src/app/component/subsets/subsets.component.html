@@ -46,9 +46,10 @@
                 class="regular-link">
                 <i *ngIf="rowData.root && rowNode.node.children.length == 0"
                   class="pi pi-fw pi-blank"></i>
-                <!-- <i class="fa fa-external-link"
-                                    style="margin-left:0.2em;"></i> --> {{rowData.code}} -
-                {{rowData.label}}
+                <mark *ngIf="hasText(rowData.code + rowData.label); else nonMatch"
+                  style="color: #319fbe">{{rowData.code}}
+                  - {{rowData.label}}</mark>
+                <ng-template #nonMatch>{{rowData.code}} - {{rowData.label}}</ng-template>
               </a>
             </div>
           </td>

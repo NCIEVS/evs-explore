@@ -35,6 +35,7 @@ export class SubsetsComponent implements OnInit {
   expandLabel = 'Expand All';
   expandDisabled = false;
   searchDisabled = false;
+  subsetSearchText: string;
 
   static origHierarchyData: TreeNode[] = null;
 
@@ -196,6 +197,7 @@ export class SubsetsComponent implements OnInit {
 
   performSubsetSearch(string) {
     this.hierarchyTable.loading = true;
+    this.subsetSearchText = string;
     setTimeout(() => {
       this.expandDisabled = true;
       this.filteredHierarchy = [];
@@ -231,8 +233,13 @@ export class SubsetsComponent implements OnInit {
     return (tn.name.toLowerCase().includes(string.toLowerCase()) || tn.code.toLowerCase().includes(string.toLowerCase()) || tn.children.length > 0) ? tn : null;
   }
 
+  hasText(codeAndLabel) {
+    return this.subsetSearchText && codeAndLabel.toLowerCase().includes(this.subsetSearchText.toLowerCase());
+  }
+
   resetSearch() {
     this.subsetautosearch = '';
+    this.subsetSearchText = null;
     sessionStorage.setItem("subsetSearch", this.subsetautosearch);
     this.expand = true;
     this.expandLabel = 'Expand All';
