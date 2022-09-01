@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -57,7 +57,6 @@ export class ConceptDisplayComponent implements OnInit {
 
   constructor(
     private conceptDetailService: ConceptDetailService,
-    private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private cookieService: CookieService,
@@ -87,8 +86,9 @@ export class ConceptDisplayComponent implements OnInit {
     this.activeIndex = 0;
     this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
 
-    // TODO: this should be based on terminology metadata
-    this.displayHierarchy = (this.configService.getTerminology().metadata.hierarchy) ? true : false;
+    // show hierarchy if NOT in hierarchy page and there is a hierarchy
+    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') &&
+      this.configService.getTerminology().metadata.hierarchy;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
