@@ -196,7 +196,7 @@ export class Concept {
     }
     // properties
     headerFlag = false;
-    this.uniqProps = this.filterSetByUniqueObjects(this.properties);
+    this.uniqProps = this.filterSetByUniqueObjects(this.properties, this.name);
     if (this.uniqProps) {
       for (let i = 0; i < this.uniqProps.length; i++) {
         if (this.uniqProps[i].highlight) {
@@ -210,7 +210,7 @@ export class Concept {
     }
     // definitions
     headerFlag = false;
-    this.uniqDefs = (this.definitions != undefined ? this.filterSetByUniqueObjects(this.definitions) : null);
+    this.uniqDefs = (this.definitions != undefined ? this.filterSetByUniqueObjects(this.definitions, this.name) : null);
     if (this.uniqDefs) {
       for (let i = 0; i < this.uniqDefs.length; i++) {
         if (this.uniqDefs[i].highlight) {
@@ -225,11 +225,11 @@ export class Concept {
     return text;
   }
 
-  filterSetByUniqueObjects = function (set) {
+  filterSetByUniqueObjects = function (set, name) {
     var seen = {};
     return set.filter(function (x) {
       var key = JSON.stringify(x);
-      return !(key in seen) && (seen[key] = x);
+      return !(key in seen) && (seen[key] = x) && key.toLowerCase().includes(name.toLowerCase());
     });
   }
 
