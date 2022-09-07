@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 })
 export class ConceptDisplayComponent implements OnInit {
   expandCollapseChange: Subject<boolean> = new Subject();
+  getConceptIsSubset: Subject<boolean> = new Subject();
 
   activeIndex = 0;
   conceptCode: string;
@@ -46,12 +47,14 @@ export class ConceptDisplayComponent implements OnInit {
     'Maps_To',
     'Preferred_Name'
   ]
+  concept: any;
   properties: string[] = [];
   sources: string[] = [];
   selectedSources = null;
   terminology: string;
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
+  conceptIsSubset: boolean;
 
   subscription = null;
 
@@ -104,6 +107,7 @@ export class ConceptDisplayComponent implements OnInit {
           .getConceptSummary(this.configService.getCode(), 'full')
           .subscribe((concept: any) => {
             // and finally build the local state from it
+            this.concept = concept;
             this.conceptDetail = new Concept(concept, this.configService);
             this.conceptCode = concept.code;
             this.title = concept.name + ' ( Code - ' + concept.code + ' )';
@@ -114,9 +118,21 @@ export class ConceptDisplayComponent implements OnInit {
               this.sources.splice(this.sources.indexOf('All'), 1);
               this.sources.unshift('All');
             }
+            this.checkConceptSubset();
           })
 
       })
+  }
+
+  checkConceptSubset() {
+    let isSubset = false
+    for (let IA of this.concept.inverseAssociations) {
+      if (IA.type == "Concept_In_Subset") {
+        isSubset = true;
+        break;
+      }
+    }
+    this.getConceptIsSubset.next(isSubset);
   }
 
   ngOnDestroy() {

@@ -9,7 +9,8 @@
               Thesaurus Code:</td>
             <td *ngIf="terminology == 'ncim'" class="w-25">CUI:
             </td>
-            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">Code:
+            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">
+              Code:
             </td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
@@ -18,13 +19,13 @@
             <ng-template #noCodeLabel><td class="w-25">Code: </td></ng-template>
             <td class="w-75">{{ concept.code }}</td>
           </tr> -->
-          <tr *ngIf="concept.semanticTypes">
+          <tr *ngIf="concept.semanticTypes && concept.semanticTypes.length > 0">
             <td>Semantic Type(s):</td>
             <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
                 {{ sty }} <span *ngIf="!isLast"><br /></span>
               </span></td>
           </tr>
-          <tr>
+          <tr *ngIf="concept.getPreferredName()">
             <td class="w-25">Preferred Name:</td>
             <td class="w-75">{{ concept.getPreferredName() }}</td>
           </tr>
@@ -40,32 +41,11 @@
             <td class="w-25">Concept Status:</td>
             <td class="w-75">{{ concept.getConceptStatus() }}</td>
           </tr>
-
-          <tr *ngIf="concept.semanticTypes && concept.semanticTypes.length > 0">
-            <td>Semantic Type(s):</td>
-            <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
-                {{ sty }} <span *ngIf="!isLast"><br /></span>
-              </span></td>
+          <tr *ngIf="conceptIsSubset">
+            <td class="w-25">Subset Link:</td>
+            <td class="w-75"><a [routerLink]="['/subset', terminology, concept.code]"
+                [target]="_top">{{ concept.code }}</a></td>
           </tr>
-          <tr>
-            <td class="w-25">Preferred Name:</td>
-            <td class="w-75">{{ concept.getPreferredName() }}</td>
-          </tr>
-          <!-- The "display name" is NCIt specific -->
-          <tr *ngIf="terminology == 'ncit'">
-            <td class="w-25">Display Name:</td>
-            <td class="w-75">{{ concept.getDisplayName() }}</td>
-          </tr>
-          <!-- RDF loaded things will have an rdfs:label -->
-          <tr *ngIf="configService.isRdf()">
-            <td class="w-25">Label:</td>
-            <td class="w-75">{{ concept.name }}</td>
-          </tr>
-          <tr *ngIf="concept.getConceptStatus()">
-            <td class="w-25">Concept Status:</td>
-            <td class="w-75">{{ concept.getConceptStatus() }}</td>
-          </tr>
-
         </tbody>
       </table>
     </div>
@@ -76,7 +56,8 @@
       Definitions
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single"
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions"
+        sortMode="single"
         *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions"
         (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
@@ -97,9 +78,11 @@
               <td [innerHtml]="bypassHTML(val.definition)"></td>
               <td [innerHtml]="bypassHTML(val.source)"></td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="configService.isRdf() || configService.isSingleSource()"><span
-                  *ngFor="let qual of val.qualifiers">
-                  <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
+              <td *ngIf="configService.isRdf() || configService.isSingleSource()">
+                <span *ngFor="let qual of val.qualifiers">
+                  <span *ngIf="qual.type == 'attribution'">{{ qual.value
+                    }}</span></span>
+              </td>
             </tr>
           </ng-container>
         </ng-template>
@@ -113,8 +96,8 @@
       Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.synonyms" (sortFunction)="customSort($event)"
-        [customSort]="true">
+      <p-table class="table table-striped table-bordered" [value]="concept.synonyms"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-50" [pSortableColumn]="'name'">Term
@@ -147,15 +130,18 @@
               </td>
               <td *ngIf="configService.isMultiSource()"><a
                   *ngIf="!(configService.isSingleSource() && configService.isRdf()) && synonym.source == 'NCI' && synonym.code"
-                  [routerLink]="['/concept/ncit/', synonym.code]" target="_top">{{ synonym.code
+                  [routerLink]="['/concept/ncit/', synonym.code]" target="_top">{{
+                  synonym.code
                   }}</a>
                 <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
-                  [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{ synonym.code
+                  [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{
+                  synonym.code
                   }}</a>
                 <a *ngIf="getHierarchy(synonym.source)"
-                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]" target="_top"><i
-                    class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
-                <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
+                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]"
+                  target="_top"><i class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
+                <span
+                  *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
                   synonym.code }}
                 </span>
               </td>
@@ -196,7 +182,8 @@
               <td>{{property.type}}</td>
               <td>
                 <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
-                  <a [routerLink]="['/concept/ncim/' + property.value]" target=_top>{{property.value}}</a></span>
+                  <a [routerLink]="['/concept/ncim/' + property.value]"
+                    target=_top>{{property.value}}</a></span>
                 <span
                   *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'"
                   [innerHTML]="checkExternalLink(property)"></span>
@@ -206,7 +193,8 @@
                   </span>
                 </span>
               </td>
-              <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{property.source}}
+              <td *ngIf="configService.isMultiSource() && configService.isRrf()">
+                {{property.source}}
               </td>
             </tr>
           </ng-container>
@@ -222,8 +210,8 @@
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'targetName'">Target Name
@@ -263,8 +251,8 @@
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10" [pSortableColumn]="'sourceCode'">Source Code

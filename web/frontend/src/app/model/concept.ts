@@ -242,7 +242,7 @@ export class Concept {
         }
       }
     }
-    return this.name;
+    return null;
   }
 
   // Return the display name

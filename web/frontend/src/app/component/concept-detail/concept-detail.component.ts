@@ -37,6 +37,7 @@ export class ConceptDetailComponent implements OnInit {
   terminology: string = null;
   titleSet = false;
   collapsed: boolean = false;
+  conceptIsSubset: boolean = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -53,6 +54,9 @@ export class ConceptDetailComponent implements OnInit {
     // implements OnInit
     this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
+    })
+    this.conceptDisplay.getConceptIsSubset.subscribe(conceptIsSubset => {
+      this.conceptIsSubset = conceptIsSubset;
     })
   }
 
