@@ -9,7 +9,8 @@
               Thesaurus Code:</td>
             <td *ngIf="terminology == 'ncim'" class="w-25">CUI:
             </td>
-            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">Code:
+            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">
+              Code:
             </td>
             <td class="w-75">{{ concept.code }}</td>
           </tr>
@@ -18,13 +19,13 @@
             <ng-template #noCodeLabel><td class="w-25">Code: </td></ng-template>
             <td class="w-75">{{ concept.code }}</td>
           </tr> -->
-          <tr *ngIf="concept.semanticTypes">
+          <tr *ngIf="concept.semanticTypes && concept.semanticTypes.length > 0">
             <td>Semantic Type(s):</td>
             <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
                 {{ sty }} <span *ngIf="!isLast"><br /></span>
               </span></td>
           </tr>
-          <tr>
+          <tr *ngIf="concept.getPreferredName()">
             <td class="w-25">Preferred Name:</td>
             <td class="w-75">{{ concept.getPreferredName() }}</td>
           </tr>
@@ -77,9 +78,11 @@
               <td [innerHtml]="bypassHTML(val.definition)"></td>
               <td [innerHtml]="bypassHTML(val.source)"></td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="configService.isRdf() || configService.isSingleSource()"><span
-                  *ngFor="let qual of val.qualifiers">
-                  <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span></td>
+              <td *ngIf="configService.isRdf() || configService.isSingleSource()">
+                <span *ngFor="let qual of val.qualifiers">
+                  <span *ngIf="qual.type == 'attribution'">{{ qual.value
+                    }}</span></span>
+              </td>
             </tr>
           </ng-container>
         </ng-template>
@@ -127,10 +130,12 @@
               </td>
               <td *ngIf="configService.isMultiSource()"><a
                   *ngIf="!(configService.isSingleSource() && configService.isRdf()) && synonym.source == 'NCI' && synonym.code"
-                  [routerLink]="['/concept/ncit/', synonym.code]" target="_top">{{ synonym.code
+                  [routerLink]="['/concept/ncit/', synonym.code]" target="_top">{{
+                  synonym.code
                   }}</a>
                 <a *ngIf="!(configService.isSingleSource() && configService.isRrf()) && synonym.source == 'MDR' && synonym.code"
-                  [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{ synonym.code
+                  [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{
+                  synonym.code
                   }}</a>
                 <a *ngIf="getHierarchy(synonym.source)"
                   [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]"
@@ -188,7 +193,8 @@
                   </span>
                 </span>
               </td>
-              <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{property.source}}
+              <td *ngIf="configService.isMultiSource() && configService.isRrf()">
+                {{property.source}}
               </td>
             </tr>
           </ng-container>
