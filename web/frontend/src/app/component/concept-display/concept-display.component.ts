@@ -125,11 +125,13 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   checkConceptSubset() {
-    let isSubset = false
-    for (let IA of this.concept.inverseAssociations) {
-      if (IA.type == "Concept_In_Subset") {
-        isSubset = true;
-        break;
+    let isSubset = false;
+    if (this.concept.inverseAssociations) {
+      for (let IA of this.concept.inverseAssociations) {
+        if (IA.type == "Concept_In_Subset") {
+          isSubset = true;
+          break;
+        }
       }
     }
     this.getConceptIsSubset.next(isSubset);
