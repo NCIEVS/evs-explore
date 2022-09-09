@@ -71,6 +71,7 @@ export class SearchResultTableFormat {
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
+        data.displayName = searchResult.concepts[i].getDisplayName();
         data.semanticType = searchResult.concepts[i].semanticTypes.join("<br />");
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {

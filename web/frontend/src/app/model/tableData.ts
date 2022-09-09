@@ -66,6 +66,7 @@ export class TableData {
     public expandedDefinitions?: string,
     public collapsedSynonyms?: string,
     public collapsedDefinitions?: string,
+    public displayName?: string,
     public synValue?: string,
     public semanticType?: string,
     public highlight?: string,
