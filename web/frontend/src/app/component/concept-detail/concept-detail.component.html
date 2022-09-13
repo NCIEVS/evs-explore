@@ -5,46 +5,69 @@
         <tbody>
           <tr>
             <!-- if there are more of these, make them terminology metadata  -->
-            <td *ngIf="terminology == 'ncit'" class="w-25">NCI
+            <td *ngIf="terminology == 'ncit'" class="w-20">NCI
               Thesaurus Code:</td>
-            <td *ngIf="terminology == 'ncim'" class="w-25">CUI:
+            <td *ngIf="terminology == 'ncim'" class="w-20">CUI:
             </td>
-            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-25">
+            <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-20">
               Code:
             </td>
-            <td class="w-75">{{ concept.code }}</td>
+            <td class="w-50">{{ concept.code }}</td>
+            <td class="w-20 link-table-entry"><a title="Scroll To Synonyms"
+                (click)="clickScroll('synonyms')">Synonyms</a></td>
           </tr>
           <!-- <tr>
-            <td *ngIf="getCodeLabel(); else noCodeLabel" class="w-25">{{getCodeLabel()}}: </td>
-            <ng-template #noCodeLabel><td class="w-25">Code: </td></ng-template>
-            <td class="w-75">{{ concept.code }}</td>
+            <td *ngIf="getCodeLabel(); else noCodeLabel" class="w-20">{{getCodeLabel()}}: </td>
+            <ng-template #noCodeLabel><td class="w-20">Code: </td></ng-template>
+            <td class="w-50">{{ concept.code }}</td>
           </tr> -->
           <tr *ngIf="concept.semanticTypes && concept.semanticTypes.length > 0">
-            <td>Semantic Type(s):</td>
-            <td><span *ngFor="let sty of concept.semanticTypes; last as isLast">
+            <td class="w-30">Semantic Type(s):</td>
+            <td class="w-50"><span *ngFor="let sty of concept.semanticTypes; last as isLast">
                 {{ sty }} <span *ngIf="!isLast"><br /></span>
               </span></td>
+            <td class="w-20 link-table-entry"><a title="Scroll To Other Properties"
+                (click)="clickScroll('other')">Other Properties</a></td>
           </tr>
           <tr *ngIf="concept.getPreferredName()">
-            <td class="w-25">Preferred Name:</td>
-            <td class="w-75">{{ concept.getPreferredName() }}</td>
+            <td class="w-30">Preferred Name:</td>
+            <td class="w-50">{{ concept.getPreferredName() }}</td>
+            <td class="w-20 link-table-entry"><a title="Scroll To Parent Concepts"
+                (click)="clickScroll('parents')">Parent Concepts</a></td>
           </tr>
           <tr *ngIf="concept.getDisplayName()">
-            <td class="w-25">Display Name:</td>
-            <td class="w-75">{{ concept.getDisplayName() }}</td>
+            <td class="w-30">Display Name:</td>
+            <td class="w-50">{{ concept.getDisplayName() }}</td>
+            <td class="w-20 link-table-entry"><a title="Scroll To Parent Concepts"
+                (click)="clickScroll('parents')">Parent Concepts</a></td>
           </tr>
           <tr>
-            <td class="w-25">Concept Name:</td>
-            <td class="w-75">{{ concept.name }}</td>
+            <td class="w-30">Concept Name:</td>
+            <td class="w-50">{{ concept.name }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()"
+              class="w-20 link-table-entry"><a title="Scroll To Other Relationships"
+                (click)="clickScroll('otherRelationships')">Other Relationships</a>
+            </td>
+            <td *ngIf="!(configService.isMultiSource() && configService.isRrf())"
+              class="w-20 link-table-entry"><a title="Scroll To Roles and Associations"
+                (click)="clickScroll('roleRelationships')">Roles and Associations</a>
+            </td>
           </tr>
           <tr *ngIf="concept.getConceptStatus()">
-            <td class="w-25">Concept Status:</td>
-            <td class="w-75">{{ concept.getConceptStatus() }}</td>
+            <td class="w-30">Concept Status:</td>
+            <td class="w-50">{{ concept.getConceptStatus() }}</td>
+            <td class="w-20 link-table-entry"><a title="Scroll To Associations"
+                (click)="clickScroll('associations')">Associations</a>
+            </td>
           </tr>
           <tr *ngIf="conceptIsSubset">
-            <td class="w-25">Subset Link:</td>
-            <td class="w-75"><a [routerLink]="['/subset', terminology, concept.code]"
+            <td class="w-30">Subset Link:</td>
+            <td class="w-50"><a [routerLink]="['/subset', terminology, concept.code]"
                 [target]="_top">{{ concept.code }}</a></td>
+            <td class="w-20 link-table-entry"><a *ngIf="concept.inverseAssociations"
+                title="Scroll To Incoming Associations"
+                (click)="clickScroll('iassociations')">Incoming Associations</a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -92,7 +115,7 @@
   </p-panel>
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
-    <p-header class="bold-heading">
+    <p-header class="bold-heading" id="synonyms">
       Synonyms & Abbreviations
     </p-header>
     <div class="table-responsive">
@@ -137,7 +160,7 @@
                   [routerLink]="['/concept/mdr/', synonym.code]" target="_top">{{
                   synonym.code
                   }}</a>
-                <a *ngIf="getHierarchy(synonym.source)"
+                <a *ngIf="getHierarchy(synonym.source) && synonym.code"
                   [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]"
                   target="_top"><i class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
                 <span
@@ -156,7 +179,7 @@
   <br />
 
   <p-panel [toggleable]="true" [collapsed]="collapsed">
-    <p-header class="bold-heading">
+    <p-header class="bold-heading" id="other">
       Other Properties
     </p-header>
     <div class="table-responsive">
@@ -170,8 +193,8 @@
             <th class="w-50" [pSortableColumn]="'value'">Value
               <p-sortIcon [field]="'value'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-30"
-              [pSortableColumn]="'source'">Source
+            <th *ngIf="configService.isMultiSource() && configService.isRrf()"
+              class="w-20 link-table-entry" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
           </tr>
@@ -214,7 +237,8 @@
         (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-30" [pSortableColumn]="'targetName'">Target Name
+            <th class="w-20 link-table-entry" [pSortableColumn]="'targetName'">Target
+              Name
               <p-sortIcon [field]="'targetName'"></p-sortIcon>
             </th>
             <th class="w-20" [pSortableColumn]="'type'">Relationship to Target

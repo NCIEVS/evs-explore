@@ -6,6 +6,7 @@ import { ConceptDisplayComponent } from '../concept-display/concept-display.comp
 import { ConfigurationService } from '../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
 import { ignoreElements } from 'rxjs-compat/operator/ignoreElements';
+import { ViewportScroller } from '@angular/common';
 
 // Component for displaying concept details
 @Component({
@@ -43,7 +44,8 @@ export class ConceptDetailComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private conceptDisplay: ConceptDisplayComponent,
     private configService: ConfigurationService,
-    private titleService: Title
+    private titleService: Title,
+    private viewportScroller: ViewportScroller
   ) {
 
     this.terminology = configService.getTerminologyName();
@@ -135,6 +137,14 @@ export class ConceptDetailComponent implements OnInit {
 
   getCodeLabel() {
     this.configService.getTerminology().metadata.codeLabel;
+  }
+
+  clickScroll(elementId: string): void {
+    this.viewportScroller.scrollToAnchor(elementId);
+  }
+
+  scrollToTop() {
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 
 }
