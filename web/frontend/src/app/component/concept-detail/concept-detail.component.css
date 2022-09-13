@@ -72,13 +72,19 @@ table a:hover {
   width: 80% !important;
 }
 
-.link-table-entry {
+.link-table-cell {
   background-color: white;
   border: 0 !important;
   text-align: left;
   color: #007bff;
   cursor: pointer;
 }
+
+.link-table-entry {
+  margin-left: 0.25em;
+}
+
+
 
 html {
   scroll-behavior: smooth;
