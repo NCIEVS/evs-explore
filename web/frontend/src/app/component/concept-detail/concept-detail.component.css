@@ -75,7 +75,7 @@ table a:hover {
 .link-table-cell {
   background-color: white;
   border: 0 !important;
-  text-align: left;
+  justify-content: left;
   color: #007bff;
   cursor: pointer;
 }
