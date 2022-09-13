@@ -1,7 +1,7 @@
 <div *ngIf="concept">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="parents">
-      Parent Concepts
+      Parent Concepts <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.parents" sortMode="single"
@@ -49,7 +49,7 @@
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
-      Child Concepts
+      Child Concepts <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.children" sortMode="single"
@@ -97,7 +97,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="roleRelationships">
-      Role Relationships
+      Role Relationships <a (click)="scrollToTop()" class="top-link">[TOP]</a>
       <span class="small-heading">
         asserted or inherited, pointing from the current concept to other concepts:
       </span>
@@ -140,7 +140,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="associations">
-      Associations
+      Associations <a (click)="scrollToTop()" class="top-link">[TOP]</a>
       <span class="small-heading">
         pointing from the current concept to other concepts:
       </span>
@@ -189,7 +189,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Broader Concepts
+      Broader Concepts <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.broader" sortMode="single"
@@ -239,7 +239,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
-      Incoming Role Relationships
+      Incoming Role Relationships <a (click)="scrollToTop()" class="top-link">[TOP]</a>
       <span class="small-heading">
         asserted or inherited, pointing from other concepts to the current concept:
       </span>
@@ -284,7 +284,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Narrower Concepts
+      Narrower Concepts <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.narrower" sortMode="single"
@@ -336,7 +336,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="iassociations">
-      Incoming Associations
+      Incoming Associations <a (click)="scrollToTop()" class="top-link">[TOP]</a>
       <span class="small-heading">
         pointing from other concepts to the current concept:
       </span>
@@ -388,7 +388,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading" id="otherRelationships">
-      Other Relationships
+      Other Relationships <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered"
@@ -440,7 +440,7 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
-      Disjoint With
+      Disjoint With <a (click)="scrollToTop()" class="top-link">[TOP]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.disjointWith" sortMode="single"

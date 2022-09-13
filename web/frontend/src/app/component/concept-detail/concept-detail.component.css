@@ -80,6 +80,11 @@ table a:hover {
   cursor: pointer;
 }
 
+.top-link {
+  color: #06c !important;
+  cursor: pointer;
+}
+
 .link-table-entry {
   margin-left: 0.25em;
 }
