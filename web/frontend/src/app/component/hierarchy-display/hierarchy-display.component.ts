@@ -18,7 +18,6 @@ import { ConfigurationService } from '../../service/configuration.service';
 export class HierarchyDisplayComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
-  activeIndex = 0
   conceptCode: string;
   conceptDetail: Concept;
   conceptWithRelationships: Concept;
@@ -55,8 +54,6 @@ export class HierarchyDisplayComponent implements OnInit {
 
     console.log("ngOnInit");
 
-    this.activeIndex = 0;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
     // this.updateDisplaySize();
     this.getPathInHierarchy();
   }
@@ -67,19 +64,6 @@ export class HierarchyDisplayComponent implements OnInit {
     this.selectedSources = this.configService.getSelectedSources();
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
-  }
-
-  // Handler for tabs changing in the hierarchy view.
-  handleChange($event) {
-    this.activeIndex = $event.index;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    if (($event.index === 0 || $event.index === 2) &&
-      (this.conceptWithRelationships === undefined || this.conceptWithRelationships == null)) {
-      this.conceptDetailService.getRelationships(this.conceptCode).subscribe(response => {
-        this.conceptWithRelationships = new Concept(response, this.configService);
-      });
-    }
   }
 
   updateDisplaySize = () => {

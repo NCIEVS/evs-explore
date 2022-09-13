@@ -14,7 +14,6 @@ import { Title } from '@angular/platform-browser';
 })
 export class SubsetDetailsComponent implements OnInit {
 
-  activeIndex = 0;
   pageSize = 10;
   hitsFound = 0;
   conceptCode: string;
@@ -48,7 +47,6 @@ export class SubsetDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
       this.subsetDetailService.getSubsetFullDetails(this.titleCode)

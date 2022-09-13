@@ -18,7 +18,6 @@ export class ConceptDisplayComponent implements OnInit {
   expandCollapseChange: Subject<boolean> = new Subject();
   getConceptIsSubset: Subject<boolean> = new Subject();
 
-  activeIndex = 0;
   conceptCode: string;
   conceptDetail: Concept;
   hierarchyDisplay = '';
@@ -86,9 +85,6 @@ export class ConceptDisplayComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activeIndex = 0;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
     // show hierarchy if NOT in hierarchy page and there is a hierarchy
     this.displayHierarchy = !window.location.pathname.includes('/hierarchy') &&
       this.configService.getTerminology().metadata.hierarchy;
@@ -141,12 +137,6 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  // Respond to things like changes in tabs
-  handleChange($event) {
-    this.activeIndex = $event.index;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
   }
 
   // Reroute to hierarchy view
