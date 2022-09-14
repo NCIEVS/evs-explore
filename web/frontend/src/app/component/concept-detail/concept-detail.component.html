@@ -93,7 +93,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
-      Definitions <a (click)="scrollToTop()" class="top-link">[TOP]</a>
+      Definitions <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.definitions"
@@ -133,7 +134,8 @@
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="synonyms">
-      Synonyms & Abbreviations <a (click)="scrollToTop()" class="top-link">[TOP]</a>
+      Synonyms & Abbreviations <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.synonyms"
@@ -197,7 +199,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="other">
-      Other Properties <a (click)="scrollToTop()" class="top-link">[TOP]</a>
+      Other Properties <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.properties"
@@ -246,7 +249,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRdf()">
     <p-header class="bold-heading">
-      Maps To <a (click)="scrollToTop()" class="top-link">[TOP]</a>
+      Maps To <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
@@ -288,7 +292,8 @@
   </p-panel>
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRrf()">
     <p-header class="bold-heading">
-      Mappings <a (click)="scrollToTop()" class="top-link">[TOP]</a>
+      Mappings <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
