@@ -192,45 +192,41 @@ export class ConfigurationService {
 
           // Sort terminologies by "latest" and "tags=monthly" and 
           // pick the first one for the termniology.          
-          console.log('xxx arr before', arr);
           arr.sort((a, b) => {
             // Start with "terminology"
             if (a.terminology != b.terminology) {
-              a.terminology.localeCompare(b.terminology, undefined, { sensitivity: 'base' });
+              return a.terminology.localeCompare(b.terminology, undefined, { sensitivity: 'base' });
             }
             // Then by "latest"
             if (a.latest != b.latest) {
               return a.latest ? -1 : 1;
             }
             // Then by "monthly"
-            if (a.tags["monthly"] == "true" && b.tags["monthly"] != "true") {
+            if (a.tags && a.tags.monthly == 'true' && b.tags && b.tags.monthly != 'true') {
               return -1;
-            } else if (b.tags["monthly"] == "true" && a.tags["monthly"] != "true") {
+            } else if (b.tags && b.tags.monthly == 'true' && a.tags && a.tags.monthly != 'true') {
               return 1;
             }
-            return 0;
+            return a.version.localeCompare(b.version, undefined, { sensitivity: 'base' });;
           });
-          console.log('xxx arr after', arr);
 
           // Set terminologies based on this list and pick the first one
           var seen = {};
           this.terminologies = arr.filter(t => {
             var keep = false;
-            if (!seen[term]) {
-              seen[term] = 1;
+            if (!seen[t.terminology]) {
+              seen[t.terminology] = 1;
               keep = true;
-            }
+            } 
             return keep;
           });
-          console.log('xxx this.terminologies', this.terminologies);
 
           // Set terminology to the first one matching "term"
           arr = this.terminologies.filter(a => a.terminology == term);
-          if (arr.length == 0) {
+          if (!arr || arr.length == 0) {
             throw 'Unable to find terminology matching ' + term;
           }
           this.terminology = arr[0];
-          console.log('xxx this.terminology', this.terminology);
 
           resolve(true);
         }).catch(error => {
