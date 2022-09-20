@@ -34,6 +34,7 @@ export class SubsetsComponent implements OnInit {
   subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
+  placeholderText = "Loading Subset Hierarchy...";
   searchDisabled = false;
   subsetSearchText: string;
 
@@ -83,6 +84,7 @@ export class SubsetsComponent implements OnInit {
           console.log('done copy hierarchy data');
           this.NCItermFirst();
           this.hierarchyTable.loading = false;
+          this.placeholderText = "Enter at least 3 letters of a subset.";
           this.searchDisabled = false;
         });
     } else {
