@@ -184,24 +184,54 @@ export class ConfigurationService {
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
-          if (arr.length == 0) {
-            throw 'Unable to find any terminologies with /metadata/terminlogies';
-          }
-          arr = arr.filter(t => t.latest && t.terminology == term); // filter down to latest of terminology name
-          if (term == this.getDefaultTerminologyName()) {
-            arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
-          }
-          if (arr.length == 0) {
-            var arr2 = response as any[];
-            arr = arr2.filter(t => t.terminology == term); // filter down to latest of terminology name
 
+          // Fail if there are no entries
+          if (arr.length == 0) {
+            throw 'Unable to find any terminologies with /metadata/terminologies';
+          }
+
+          // Sort terminologies by "latest" and "tags=monthly" and 
+          // pick the first one for the termniology.          
+          console.log('xxx arr before', arr);
+          arr.sort((a, b) => {
+            // Start with "terminology"
+            if (a.terminology != b.terminology) {
+              a.terminology.localeCompare(b.terminology, undefined, { sensitivity: 'base' });
+            }
+            // Then by "latest"
+            if (a.latest != b.latest) {
+              return a.latest ? -1 : 1;
+            }
+            // Then by "monthly"
+            if (a.tags["monthly"] == "true" && b.tags["monthly"] != "true") {
+              return -1;
+            } else if (b.tags["monthly"] == "true" && a.tags["monthly"] != "true") {
+              return 1;
+            }
+            return 0;
+          });
+          console.log('xxx arr after', arr);
+
+          // Set terminologies based on this list and pick the first one
+          var seen = {};
+          this.terminologies = arr.filter(t => {
+            var keep = false;
+            if (!seen[term]) {
+              seen[term] = 1;
+              keep = true;
+            }
+            return keep;
+          });
+          console.log('xxx this.terminologies', this.terminologies);
+
+          // Set terminology to the first one matching "term"
+          arr = this.terminologies.filter(a => a.terminology == term);
+          if (arr.length == 0) {
+            throw 'Unable to find terminology matching ' + term;
           }
           this.terminology = arr[0];
-          if (this.terminology == null) {
-            throw 'Unable to find good match for termnology to load';
-          }
+          console.log('xxx this.terminology', this.terminology);
 
-          this.terminologies = response as any[];
           resolve(true);
         }).catch(error => {
           resolve(false);
