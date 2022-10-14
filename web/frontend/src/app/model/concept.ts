@@ -255,7 +255,7 @@ export class Concept {
         }
       }
     }
-    return this.name;
+    return null;
   }
 
   // Get value from Concept_Status parameter
