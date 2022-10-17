@@ -15,6 +15,7 @@ import { Title } from '@angular/platform-browser';
 export class SubsetDetailsComponent implements OnInit {
 
   pageSize = 10;
+  fromRecord = 0;
   hitsFound = 0;
   conceptCode: string;
   hierarchyDisplay = '';
@@ -31,6 +32,13 @@ export class SubsetDetailsComponent implements OnInit {
   subsetLink: string;
   subsetNCItDefinition: string;
   terminology: string;
+
+  currentSortColumn = "code";
+  currentSortDirection = false;
+  sortDirection = {
+    "ASC": false,
+    "DESC": true
+  }
 
   urlBase = '/concept';
 
@@ -102,7 +110,8 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
+      const query = document.getElementById("termauto").attributes["ng-reflect-model"].textContent;
+      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows, query)
         .then(nodes => {
           this.hitsFound = nodes["total"];
           this.fullSubsetList = nodes["concepts"];
@@ -118,6 +127,8 @@ export class SubsetDetailsComponent implements OnInit {
           });
           this.synonymSources = synonymMap;
         });
+      this.fromRecord = fromRecord;
+      this.pageSize = event.rows;
     }
   }
 
@@ -147,9 +158,34 @@ export class SubsetDetailsComponent implements OnInit {
     return synonymSourceMap;
   }
 
-  search(event) {
-    this.subsetDetailService.getSubsetFullDetails(this.titleCode, undefined, undefined, event.query)
+  search(event, columnName = null) {
+    var sortBy = null;
+    var sortDirection = null;
+    var query = event.query;
+    var sortCols = document.getElementsByClassName("sortable");
+    for (var i = 0; i < sortCols.length; i++) {
+      var str = sortCols[i].innerHTML;
+      var text = str.replace("↓", "").replace("↑", "");
+      sortCols[i].innerHTML = text;
+    }
+    if (columnName) { // setup for sorting
+      var sortCols = document.getElementsByClassName("sortable");
+      query = document.getElementById("termauto").attributes["ng-reflect-model"].textContent;
+      if (this.currentSortColumn == columnName) {
+        this.currentSortDirection = !this.currentSortDirection;
+      }
+      else {
+        this.currentSortColumn = columnName;
+        this.currentSortDirection = this.sortDirection.ASC;
+      }
+      this.currentSortColumn = columnName;
+      sortBy = this.currentSortColumn;
+      sortDirection = this.currentSortDirection
+      document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? "↑" : "↓");
+    }
+    this.subsetDetailService.getSubsetFullDetails(this.titleCode, 0, this.pageSize, query, sortDirection, sortBy)
       .then(nodes => {
+        console.log(nodes["concepts"][0]);
         this.hitsFound = nodes["total"];
         if (this.hitsFound > 0) {
           this.fullSubsetList = nodes["concepts"];
