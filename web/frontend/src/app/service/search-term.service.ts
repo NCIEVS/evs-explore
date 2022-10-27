@@ -91,11 +91,12 @@ export class SearchTermService {
     return param;
   }
 
-  export(searchCriteria: SearchCriteria): any {
+  export(searchCriteria: SearchCriteria, displayColumns: any[]): any {
     const url = '/api/v1/concept/export';
     console.log('perform export', searchCriteria.toString());
     const param = this.setupSearchParams(searchCriteria);
     param.pageSize = 10000;
+    param.columns = displayColumns.map(col => col.header).join(",");
 
     // Perform the HTTP call
     this.http.get(url, { responseType: 'blob', params: param })
