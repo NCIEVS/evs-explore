@@ -473,6 +473,13 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     }
   }
 
+  // export search results
+  exportSearch() {
+    this
+      .searchTermService
+      .export(this.searchCriteria);
+  }
+
   // Set default selected columns
   setDefaultSelectedColumns() {
 

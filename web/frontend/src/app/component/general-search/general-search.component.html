@@ -42,6 +42,10 @@
               <p-dropdown styleClass="ui-button-info" [options]="termsAll"
                 [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
               </p-dropdown>
+              <div class="large-divider"></div>
+              <button type="button" pButton label="Export" icon="fa fa-download"
+                pTooltip="Click to download search results" (click)="exportSearch();"
+                [disabled]="totalRecords == 0"></button>
             </div>
           </div>
 
