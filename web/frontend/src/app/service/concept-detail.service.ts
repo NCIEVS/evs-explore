@@ -97,12 +97,13 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = null, desc = null, sortBy = null) {
+  // Get the full subset details with sort params
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = null, ascending = null, sort = null) {
     var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
-    if (desc != null)
-      url += "&descending=" + desc;
-    if (sortBy != null)
-      url += "&sortBy=" + sortBy;
+    if (ascending != null)
+      url += "&ascending=" + ascending;
+    if (sort != null)
+      url += "&sort=" + sort;
     if (searchTerm != null)
       url += "&term=" + searchTerm;
     return this.http.get(encodeURI(url))

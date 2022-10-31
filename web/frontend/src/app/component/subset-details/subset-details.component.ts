@@ -36,8 +36,8 @@ export class SubsetDetailsComponent implements OnInit {
   currentSortColumn = "code";
   currentSortDirection = false;
   sortDirection = {
-    "ASC": false,
-    "DESC": true
+    "ASC": true,
+    "DESC": false
   }
 
   urlBase = '/concept';
@@ -159,7 +159,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   search(event, columnName = null) {
-    var sortBy = null;
+    var sort = null;
     var sortDirection = null;
     var query = event.query;
     var sortCols = document.getElementsByClassName("sortable");
@@ -179,13 +179,12 @@ export class SubsetDetailsComponent implements OnInit {
         this.currentSortDirection = this.sortDirection.ASC;
       }
       this.currentSortColumn = columnName;
-      sortBy = this.currentSortColumn;
+      sort = this.currentSortColumn;
       sortDirection = this.currentSortDirection
       document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? "↑" : "↓");
     }
-    this.subsetDetailService.getSubsetFullDetails(this.titleCode, 0, this.pageSize, query, sortDirection, sortBy)
+    this.subsetDetailService.getSubsetFullDetails(this.titleCode, 0, this.pageSize, query, sortDirection, sort)
       .then(nodes => {
-        console.log(nodes["concepts"][0]);
         this.hitsFound = nodes["total"];
         if (this.hitsFound > 0) {
           this.fullSubsetList = nodes["concepts"];
