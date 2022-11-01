@@ -97,6 +97,8 @@ export class SearchTermService {
     const param = this.setupSearchParams(searchCriteria);
     param.pageSize = 10000;
     param.columns = displayColumns.map(col => col.header).join(",");
+    param.columns = param.columns.replace("Highlights,", ""); // until we figure out what we're doing with the highlights
+    console.log(param.columns);
 
     // Perform the HTTP call
     this.http.get(url, { responseType: 'blob', params: param })
