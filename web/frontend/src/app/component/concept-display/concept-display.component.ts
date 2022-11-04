@@ -237,16 +237,16 @@ export class ConceptDisplayComponent implements OnInit {
     const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
 
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
-      var roleRelationshipsWorksheet = this.roleRelationshipsTable();
-      var associationsWorksheet = this.associationsTable();
-      var incomingRoleRelationshipsWorksheet = this.incomingRoleRelationshipsTable();
-      var incomingAssociationsWorksheet = this.incomingAssociationsTable();
-      var disjointWithWorksheet = this.disjointWithTable();
+      var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
+      var associationsWorksheet = utils.json_to_sheet(this.associationsTable());
+      var incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
+      var incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
+      var disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
     }
     else {
-      var broaderConceptWorksheet = this.broaderConceptTable();
-      var narrowerConceptWorksheet = this.narrowerConceptTable();
-      var otherRelationshipsWorksheet = this.otherRelationshipsTable();
+      var broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
+      var narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
+      var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
     }
 
     const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
@@ -409,7 +409,7 @@ export class ConceptDisplayComponent implements OnInit {
   associationsTable() {
     var associationsTable = [];
     if (this.concept.associations != undefined && this.concept.associations.length > 0) {
-      this.concept.roles.forEach(association => {
+      this.concept.associations.forEach(association => {
         var associationsEntry = {};
         associationsEntry["Relationship"] = association.type + this.getQualifiers(association.qualifiers);
         associationsEntry["Related Code"] = association.relatedCode;
@@ -507,7 +507,7 @@ export class ConceptDisplayComponent implements OnInit {
   otherRelationshipsTable() {
     var associationsTable = [];
     if (this.concept.associations != undefined && this.concept.associations.length > 0) {
-      this.concept.roles.forEach(association => {
+      this.concept.associations.forEach(association => {
         var associationsEntry = {};
         associationsEntry["Relationship"] = association.type + this.getQualifiers(association.qualifiers);
         associationsEntry["Related Code"] = association.relatedCode;
@@ -522,6 +522,8 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   getQualifiers(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
     var qualifiersString = "\n";
     qualifiers.forEach(qual => {
       qualifiersString += qual.type + ": " + qual.value + "\n"
