@@ -47,6 +47,7 @@
     "rxjs-compat": "^6.6.7",
     "tslib": "^1.14.1",
     "url-parse": "^1.5.10",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {

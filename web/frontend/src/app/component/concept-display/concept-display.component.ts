@@ -6,6 +6,9 @@ import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
+import { writeXLSX, utils } from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 // Concept display component
 // BAC - looks like not used
@@ -23,6 +26,7 @@ export class ConceptDisplayComponent implements OnInit {
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
+
 
   urlBase = '/concept';
   urlTarget = '_top';
@@ -220,6 +224,159 @@ export class ConceptDisplayComponent implements OnInit {
     this.collapsed = !this.collapsed;
     this.collapsedText = this.collapsed ? 'Expand All' : 'Collapse All';
     this.expandCollapseChange.next(this.collapsed);
+  }
+
+  exportDetails() {
+
+    var defTable = [];
+    if (this.concept.definitions != undefined && this.concept.definitions.length > 0) {
+      this.concept.definitions.forEach(def => {
+        var defEntry = {};
+        defEntry["Definition"] = def.definition;
+        defEntry["Source"] = def.source;
+        if (this.configService.isRdf() || this.configService.isSingleSource())
+          defEntry["Attribution"] = this.defAttribution(def.qualifiers);
+        defTable.push(defEntry);
+      });
+    }
+    else
+      defTable.push(["None"]);
+
+    var synTable = [];
+    if (this.concept.synonyms != undefined && this.concept.synonyms.length > 0) {
+      this.concept.synonyms.forEach(syn => {
+        var synEntry = {};
+        synEntry["Term"] = syn.name;
+        synEntry["Source"] = syn.source;
+        synEntry["Term Type"] = syn.termType ? syn.termType : syn.type;
+        if (this.configService.isMultiSource())
+          synEntry["Code"] = syn.code;
+        if (this.configService.isMultiSource() && this.configService.isRdf())
+          synEntry["Subsource Name"] = syn.subSource;
+        synTable.push(synEntry);
+      });
+      synTable = synTable.sort((a, b) => (a.Term > b.Term) ? 1 : ((b.Term > a.Term) ? -1 : 0));
+    }
+    else
+      synTable.push(["None"]);
+
+    var otherPropTable = [];
+    if (this.concept.properties != undefined && this.concept.properties.length > 0) {
+      this.concept.properties.forEach(prop => {
+        var propEntry = {};
+        propEntry["Type"] = prop.type;
+        propEntry["Value"] = prop.value;
+        if (this.configService.isMultiSource() && this.configService.isRrf()) {
+          propEntry["Source"] = prop.source;
+        }
+        otherPropTable.push(propEntry);
+      });
+      otherPropTable = otherPropTable.sort((a, b) => (a.Type > b.Type) ? 1 : ((b.Type > a.Type) ? -1 : 0));
+    }
+    else
+      otherPropTable.push(["None"]);
+
+    var mapTable = [];
+    if (this.concept.maps != undefined && this.concept.maps.length > 0) {
+      this.concept.maps.forEach(map => {
+        var mapEntry = {};
+        if (this.configService.isRdf()) {
+          mapEntry["Target Name"] = map.targetName;
+          mapEntry["Relationship to Target"] = map.type;
+          mapEntry["Target Term Type"] = map.targetTermType;
+          mapEntry["Target Code"] = map.targetCode;
+          mapEntry["Target Terminology"] = map.targetTerminology + " " + map.targetTerminologyVersion;
+        }
+        else if (this.configService.isRrf()) {
+          mapEntry["Source Code"] = map.sourceCode;
+          mapEntry["Source Terminology"] = map.sourceTerminology;
+          mapEntry["Type"] = map.type;
+          mapEntry["Target Code"] = map.targetCode;
+          mapEntry["Target Terminology"] = map.targetTerminology + " " + map.targetTerminologyVersion;
+          mapEntry["Target Name"] = map.targetName;
+        }
+        mapTable.push(mapEntry);
+      });
+    }
+    else
+      mapTable.push(["None"]);
+
+    var parentTable = [];
+    if (this.concept.parents != undefined && this.concept.parents.length > 0) {
+      this.concept.parents.forEach(parent => {
+        var parentEntry = {};
+        parentEntry["Code"] = parent.code;
+        parentEntry["Name"] = parent.name;
+        if (this.configService.isRrf())
+          parentEntry["Relationship Attribute"] = parent.rela;
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          parentEntry["Source"] = parent.source;
+        parentTable.push(parentEntry);
+      });
+    }
+    else
+      parentTable.push(["None"]);
+
+    var childrenTable = [];
+    if (this.concept.children != undefined && this.concept.children.length > 0) {
+      this.concept.children.forEach(child => {
+        var childEntry = {};
+        childEntry["Code"] = child.code;
+        childEntry["Name"] = child.name;
+        if (this.configService.isRrf())
+          childEntry["Relationship Attribute"] = child.rela;
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          childEntry["Source"] = child.source;
+        childrenTable.push(childEntry);
+      });
+    }
+    else
+      childrenTable.push(["None"]);
+
+    const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
+    const defWorksheet = utils.json_to_sheet(defTable);
+    const synWorksheet = utils.json_to_sheet(synTable);
+    const otherPropWorksheet = utils.json_to_sheet(otherPropTable);
+    const mapWorksheet = utils.json_to_sheet(mapTable);
+    const parentWorksheet = utils.json_to_sheet(parentTable);
+    const childrenWorksheet = utils.json_to_sheet(childrenTable);
+
+
+    const workbook = {
+      Sheets: {
+        "Name": nameWorksheet,
+        "Definitions": defWorksheet,
+        "Synonyms": synWorksheet,
+        "Other Properties": otherPropWorksheet,
+        "Maps": mapWorksheet,
+        "Parent Concepts": parentWorksheet,
+        "Child Concepts": childrenWorksheet
+      },
+      SheetNames: [
+        'Name',
+        'Definitions',
+        'Synonyms',
+        'Other Properties',
+        "Maps",
+        "Parent Concepts",
+        "Child Concepts"
+      ]
+    };
+    const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
+    });
+    saveAs(data, this.concept.code + "_" + this.concept.name + '_conceptDetails_' + new Date().getTime() + ".xlsx");
+  }
+
+  defAttribution(qualifiers) {
+    if (qualifiers == null || qualifiers.length == 0) return null;
+    var attribution = null;
+    qualifiers.forEach(qual => {
+      if (qual.type == 'attribution')
+        attribution = qual.value;
+    });
+    return attribution;
   }
 
 }

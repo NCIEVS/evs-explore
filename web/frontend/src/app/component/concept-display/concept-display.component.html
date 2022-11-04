@@ -10,6 +10,11 @@
         (click)="termSuggestionUrl()" class="ui-button-coloring" [label]="termSuggestionButton"
         pButton type="button"></button>
     </span>
+    <span>
+      &nbsp;<button type="button" pButton label="Export" icon="fa fa-download"
+        class="ui-button-coloring" style="border:0" pTooltip="Click to download concept details"
+        (click)="exportDetails();"></button>
+    </span>
     <span style="float:right" class="ui-button-back-to-search"><button [routerLink]="['/welcome']"
         [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
         class="ui-button-coloring"></button></span>
