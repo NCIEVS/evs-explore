@@ -228,6 +228,46 @@ export class ConceptDisplayComponent implements OnInit {
 
   exportDetails() {
 
+    const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
+    const defWorksheet = utils.json_to_sheet(this.defTable());
+    const synWorksheet = utils.json_to_sheet(this.synTable());
+    const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
+    const mapWorksheet = utils.json_to_sheet(this.mapsTable());
+    const parentWorksheet = utils.json_to_sheet(this.parentTable());
+    const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
+
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      var roleRelationshipsWorksheet = this.roleRelationshipsTable();
+      var associationsWorksheet = this.associationsTable();
+      var incomingRoleRelationshipsWorksheet = this.incomingRoleRelationshipsTable();
+      var incomingAssociationsWorksheet = this.incomingAssociationsTable();
+      var disjointWithWorksheet = this.disjointWithTable();
+    }
+    else {
+      var broaderConceptWorksheet = this.broaderConceptTable();
+      var narrowerConceptWorksheet = this.narrowerConceptTable();
+      var otherRelationshipsWorksheet = this.otherRelationshipsTable();
+    }
+
+    const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
+    const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
+    });
+    saveAs(data, this.concept.code + "_" + this.concept.name + '_conceptDetails_' + new Date().getTime() + ".xlsx");
+  }
+
+  defAttribution(qualifiers) {
+    if (qualifiers == null || qualifiers.length == 0) return null;
+    var attribution = null;
+    qualifiers.forEach(qual => {
+      if (qual.type == 'attribution')
+        attribution = qual.value;
+    });
+    return attribution;
+  }
+
+  defTable() {
     var defTable = [];
     if (this.concept.definitions != undefined && this.concept.definitions.length > 0) {
       this.concept.definitions.forEach(def => {
@@ -241,7 +281,10 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       defTable.push(["None"]);
+    return defTable;
+  }
 
+  synTable() {
     var synTable = [];
     if (this.concept.synonyms != undefined && this.concept.synonyms.length > 0) {
       this.concept.synonyms.forEach(syn => {
@@ -259,7 +302,10 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       synTable.push(["None"]);
+    return synTable;
+  }
 
+  otherPropTable() {
     var otherPropTable = [];
     if (this.concept.properties != undefined && this.concept.properties.length > 0) {
       this.concept.properties.forEach(prop => {
@@ -275,7 +321,10 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       otherPropTable.push(["None"]);
+    return otherPropTable;
+  }
 
+  mapsTable() {
     var mapTable = [];
     if (this.concept.maps != undefined && this.concept.maps.length > 0) {
       this.concept.maps.forEach(map => {
@@ -300,10 +349,13 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       mapTable.push(["None"]);
+    return mapTable;
+  }
 
+  parentTable() {
     var parentTable = [];
-    if (this.concept.parents != undefined && this.concept.parents.length > 0) {
-      this.concept.parents.forEach(parent => {
+    if (this.concept.parent != undefined && this.concept.parent.length > 0) {
+      this.concept.parent.forEach(parent => {
         var parentEntry = {};
         parentEntry["Code"] = parent.code;
         parentEntry["Name"] = parent.name;
@@ -316,7 +368,10 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       parentTable.push(["None"]);
+    return parentTable;
+  }
 
+  childrenTable() {
     var childrenTable = [];
     if (this.concept.children != undefined && this.concept.children.length > 0) {
       this.concept.children.forEach(child => {
@@ -332,51 +387,102 @@ export class ConceptDisplayComponent implements OnInit {
     }
     else
       childrenTable.push(["None"]);
-
-    const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
-    const defWorksheet = utils.json_to_sheet(defTable);
-    const synWorksheet = utils.json_to_sheet(synTable);
-    const otherPropWorksheet = utils.json_to_sheet(otherPropTable);
-    const mapWorksheet = utils.json_to_sheet(mapTable);
-    const parentWorksheet = utils.json_to_sheet(parentTable);
-    const childrenWorksheet = utils.json_to_sheet(childrenTable);
-
-
-    const workbook = {
-      Sheets: {
-        "Name": nameWorksheet,
-        "Definitions": defWorksheet,
-        "Synonyms": synWorksheet,
-        "Other Properties": otherPropWorksheet,
-        "Maps": mapWorksheet,
-        "Parent Concepts": parentWorksheet,
-        "Child Concepts": childrenWorksheet
-      },
-      SheetNames: [
-        'Name',
-        'Definitions',
-        'Synonyms',
-        'Other Properties',
-        "Maps",
-        "Parent Concepts",
-        "Child Concepts"
-      ]
-    };
-    const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
-    });
-    saveAs(data, this.concept.code + "_" + this.concept.name + '_conceptDetails_' + new Date().getTime() + ".xlsx");
+    return childrenTable;
   }
 
-  defAttribution(qualifiers) {
-    if (qualifiers == null || qualifiers.length == 0) return null;
-    var attribution = null;
-    qualifiers.forEach(qual => {
-      if (qual.type == 'attribution')
-        attribution = qual.value;
-    });
-    return attribution;
+  roleRelationshipsTable() {
+    return null;
   }
 
+  associationsTable() {
+    return null;
+  }
+
+  broaderConceptTable() {
+    return null;
+  }
+
+  incomingRoleRelationshipsTable() {
+    return null;
+  }
+
+  narrowerConceptTable() {
+    return null;
+  }
+
+  incomingAssociationsTable() {
+    return null;
+  }
+
+  disjointWithTable() {
+    return null;
+  }
+
+  otherRelationshipsTable() {
+    return null;
+  }
+
+  getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet) {
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      return {
+        Sheets: {
+          "Name": nameWorksheet,
+          "Definitions": defWorksheet,
+          "Synonyms": synWorksheet,
+          "Other Properties": otherPropWorksheet,
+          "Maps": mapWorksheet,
+          "Parent Concepts": parentWorksheet,
+          "Child Concepts": childrenWorksheet,
+          "Role Relationships": roleRelationshipsWorksheet,
+          "Associations": associationsWorksheet,
+          "Incoming Role Relationships": incomingRoleRelationshipsWorksheet,
+          "Incoming Associations": incomingAssociationsWorksheet,
+          "Disjoint With": disjointWithWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          "Maps",
+          "Parent Concepts",
+          "Child Concepts",
+          "Role Relationships",
+          "Associations",
+          "Incoming Role Relationships",
+          "Incoming Associations",
+          "Disjoint With"
+        ]
+      };
+    }
+    else {
+      return {
+        Sheets: {
+          "Name": nameWorksheet,
+          "Definitions": defWorksheet,
+          "Synonyms": synWorksheet,
+          "Other Properties": otherPropWorksheet,
+          "Maps": mapWorksheet,
+          "Parent Concepts": parentWorksheet,
+          "Child Concepts": childrenWorksheet,
+          "Broader Concepts": broaderConceptWorksheet,
+          "Narrower Concepts": narrowerConceptWorksheet,
+          "Other Relationships": otherRelationshipsWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          "Maps",
+          "Parent Concepts",
+          "Child Concepts",
+          "Role Relationships",
+          "Broader Concepts",
+          "Narrower Concepts",
+          "Other Relationships"
+        ]
+      };
+    }
+  }
 }
