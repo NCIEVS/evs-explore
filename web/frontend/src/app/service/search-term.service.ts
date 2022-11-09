@@ -53,6 +53,11 @@ export class SearchTermService {
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;
 
+    // Export parameter
+    if (searchCriteria.export !== undefined && searchCriteria.export != null) {
+      param.export = searchCriteria.export;
+    }
+
     // Paging parameters
     if (searchCriteria.fromRecord !== undefined && searchCriteria.fromRecord != null) {
       param.fromRecord = searchCriteria.fromRecord;
@@ -92,19 +97,27 @@ export class SearchTermService {
   }
 
   export(searchCriteria: SearchCriteria, displayColumns: any[]): any {
-    const url = '/api/v1/concept/export';
+    const url = '/api/v1/concept/search';
     console.log('perform export', searchCriteria.toString());
     const param = this.setupSearchParams(searchCriteria);
-    param.pageSize = 10000;
+    param.fromRecord = searchCriteria.fromRecord;
+    param.pageSize = searchCriteria.pageSize;
+    param.export = true;
     param.columns = displayColumns.map(col => col.header).join(",");
     param.columns = param.columns.replace("Highlights,", ""); // until we figure out what we're doing with the highlights
-    console.log(param.columns);
 
     // Perform the HTTP call
-    this.http.get(url, { responseType: 'blob', params: param })
-      .subscribe((resp: any) => {
-        saveAs(resp, searchCriteria.term + "." + new Date().toISOString() + '.xls');
-      });
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: param
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Failure to get search results = <p> ' + error.message + '</p>'));
+        })
+      );
   }
 
 }

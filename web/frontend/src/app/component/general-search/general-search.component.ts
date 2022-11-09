@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -46,6 +47,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   loadedMultipleConcept = false;
   firstSearchFlag = false;
   noMatchedConcepts = true;
+  MAX_EXPORT_SIZE = 10000;
+  EXPORT_PAGE_SIZE = 2500;
 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
@@ -474,10 +477,82 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // export search results
-  exportSearch() {
-    this
-      .searchTermService
-      .export(this.searchCriteria, this.displayColumns);
+  async exportSearch() {
+    var columnHeaders = this.displayColumns.map(col => col.header);
+    var toJoin = columnHeaders.join("\t").replace("Highlights\t", "") + "\n";
+    var pages = Math.ceil(Math.min(this.MAX_EXPORT_SIZE, this.totalRecords) / this.EXPORT_PAGE_SIZE);
+    this.searchCriteria.pageSize = this.EXPORT_PAGE_SIZE;
+    this.searchCriteria.export = true;
+
+    var pageList = Array.from(Array(pages).keys());
+    for (const page of pageList) {
+      this.searchCriteria.fromRecord = this.EXPORT_PAGE_SIZE * page;
+      this.searchCriteria.export = true;
+      await this.searchTermService.export(this.searchCriteria, this.displayColumns).toPromise().then(
+        result => {
+          result.concepts.forEach(concept => {
+            toJoin += this.exportCodeFormatter(concept, columnHeaders);
+          });
+        }
+      );
+    }
+    saveAs(new Blob([toJoin], {
+      type: 'text/plain'
+    }), this.searchCriteria.term + "." + new Date().toISOString() + '.xls');
+  }
+
+  exportCodeFormatter(concept, displayColumns) {
+    var conceptFormatString = "";
+    if (displayColumns.includes("Code"))
+      conceptFormatString += concept.code.replace(/"/g, "\\'") + "\t";
+    if (displayColumns.includes("Preferred Name"))
+      conceptFormatString += concept.name.replace(/"/g, "\\'") + "\t";
+
+    if (displayColumns.includes("Synonyms")) {
+      var synonymString = "";
+      if (concept.synonyms != undefined && concept.synonyms.length > 0) {
+        synonymString += "\"";
+        // get unique synonyms
+        let uniqueSynonyms = [...concept.synonyms.reduce((map, obj) => map.has(obj.name) ? map : map.set(obj.name, obj), new Map()).values()];
+        for (let syn of uniqueSynonyms) {
+          synonymString += syn.name.replace(/"/g, "\\'") + "\n";
+        }
+        // remove last newline
+        synonymString = synonymString.substring(0, synonymString.length - 1) + "\"";
+      }
+      synonymString += "\t";
+      conceptFormatString += synonymString;
+    }
+
+    if (displayColumns.includes("Definitions")) {
+      var definitionString = "";
+      if (concept.definitions != undefined && concept.definitions.length > 0) {
+        definitionString += "\"";
+        for (let def of concept.definitions) {
+          definitionString += def.source + ": " + def.definition.replace(/"/g, "\\'") + "\n";
+        }
+        // remove last newline
+        definitionString = definitionString.substring(0, definitionString.length - 1) + "\"";
+      }
+      definitionString += "\t";
+      conceptFormatString += definitionString;
+    }
+
+    if (displayColumns.includes("Semantic Type")) {
+      var semString = "";
+      if (concept.properties != undefined && concept.properties.length > 0) {
+        for (let prop of concept.properties) {
+          if (prop.type == "Semantic_Type") {
+            semString += prop.value;
+            // only one semantic type
+            break;
+          }
+        }
+      }
+      conceptFormatString += semString;
+    }
+    conceptFormatString += "\n";
+    return conceptFormatString;
   }
 
   // Set default selected columns
