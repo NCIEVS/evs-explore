@@ -529,7 +529,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             if (concept.definitions != undefined && concept.definitions.length > 0) {
                 definitionString += "\"";
                 for (let def of concept.definitions) {
-                    definitionString += def.source + ": " + def.definition.replace(/"/g, "'") + "\n";
+                    definitionString += def.source + ": " + def.definition.replace(/"/g, "\"\"") + "\n";
                 }
                 // remove last newline
                 definitionString = definitionString.substring(0, definitionString.length - 1) + "\"";
