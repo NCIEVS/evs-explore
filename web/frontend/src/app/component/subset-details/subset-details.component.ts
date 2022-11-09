@@ -6,6 +6,7 @@ import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-subset-details',
@@ -171,6 +172,105 @@ export class SubsetDetailsComponent implements OnInit {
         }
       });
     this.textSuggestions = [];
+  }
+
+  // export search results
+  async exportSubset() {
+    var titles = [];
+    var exportMax = this.configService.getMaxExportSize();
+    var exportPageSize = this.configService.getExportPageSize();
+    Array.from(document.getElementsByClassName('subsetTitle')).forEach(function (element) { titles.push(element.innerHTML) });
+
+    var term = document.getElementById("termauto").getAttribute("ng-reflect-model");
+    term = term.length > 2 ? term : "";
+    var subsetText = titles.join("\t") + "\n";
+    var pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
+    var pageList = Array.from(Array(pages).keys());
+
+    for (const page of pageList) {
+      await this.subsetDetailService.getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term).toPromise().then(
+        result => {
+          result.concepts.forEach(concept => {
+            subsetText += this.exportCodeFormatter(concept);
+          });
+        }
+      );
+    }
+    var fileName = this.titleCode + "." + this.titleDesc + "." + (term.length > 2 ? (term + ".") : "");
+    saveAs(new Blob([subsetText], {
+      type: 'text/plain'
+    }), fileName + new Date().toISOString() + '.xls');
+  }
+
+  exportCodeFormatter(concept: Concept) {
+    var rowText = "";
+    if (this.subsetFormat == "NCIt") {
+      rowText += concept.code + "\t";
+      rowText += concept.name + "\t";
+      rowText += "\"" + this.getSynonymNames(concept, "NCI", null).join("\n") + "\"";
+      rowText += "\t";
+      concept.definitions.forEach(def => {
+        if (def.source == "NCI")
+          rowText += def.definition.replace(/"/g, "\"\"");
+      });
+
+    }
+    else if (this.subsetFormat == "CTRP") {
+      rowText += this.titleCode + "\t";
+      rowText += this.titleDesc + "\t"
+      rowText += concept.code + "\t";
+      rowText += concept.name + "\t";
+      concept.synonyms.forEach(syn => {
+        if (syn.type == "Display_Name")
+          rowText += syn.name;
+      });
+      rowText += "\t";
+      rowText += "\"" + this.getSynonymNames(concept, "CTRP", "DN").join("\n") + "\"";
+
+    }
+    else {
+      rowText += concept.code + "\t";
+      rowText += "\"" + this.getSynonymNames(concept, this.subsetFormat, null).join("\n") + "\"";
+      rowText += "\t";
+
+      rowText += concept.name + "\t";
+      rowText += "\"" + this.getSynonymNames(concept, "NCI", null).join("\n") + "\"";
+      rowText += "\t";
+
+      concept.definitions.forEach(def => {
+        if (def.source == this.subsetFormat)
+          rowText += def.definition.replace(/"/g, "\"\"");
+      });
+      rowText += "\t";
+
+      concept.definitions.forEach(def => {
+        if (def.source == "NCI")
+          rowText += def.definition.replace(/"/g, "\"\"");
+      });
+    }
+    rowText += "\n";
+    return rowText;
+  }
+
+  getSynonymNames(concept: Concept, source, termType): string[] {
+    var syns: string[] = [];
+    if (concept.synonyms.length > 0) {
+      for (let i = 0; i < concept.synonyms.length; i++) {
+        if (termType != null && concept.synonyms[i].termType != termType) {
+          continue;
+        }
+        if (source != null && concept.synonyms[i].source != source) {
+          continue
+        }
+        if (syns.indexOf(concept.synonyms[i].name) != -1) {
+          continue;
+        }
+        syns.push(concept.synonyms[i].name);
+      }
+    }
+    // case-insensitive sort
+    syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    return syns;
   }
 
   setTitle() {

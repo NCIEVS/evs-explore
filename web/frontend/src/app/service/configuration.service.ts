@@ -21,12 +21,23 @@ export class ConfigurationService {
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
 
+  private MAX_EXPORT_SIZE = 10000;
+  private EXPORT_PAGE_SIZE = 1000;
+
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
     private cookieService: CookieService) {
 
     this.selectedSources = new Set<String>().add('All');
 
+  }
+
+  getExportPageSize() {
+    return this.EXPORT_PAGE_SIZE;
+  }
+
+  getMaxExportSize() {
+    return this.MAX_EXPORT_SIZE;
   }
 
   getTerminology() {
@@ -190,8 +201,8 @@ export class ConfigurationService {
             throw 'Unable to find any terminologies with /metadata/terminologies';
           }
 
-          // Sort terminologies by "latest" and "tags=monthly" and 
-          // pick the first one for the termniology.          
+          // Sort terminologies by "latest" and "tags=monthly" and
+          // pick the first one for the termniology.
           arr.sort((a, b) => {
             // Start with "terminology"
             if (a.terminology != b.terminology) {
@@ -217,7 +228,7 @@ export class ConfigurationService {
             if (!seen[t.terminology]) {
               seen[t.terminology] = 1;
               keep = true;
-            } 
+            }
             return keep;
           });
 

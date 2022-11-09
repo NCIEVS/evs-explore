@@ -97,13 +97,31 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = "") {
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""): any {
     var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
     if (searchTerm != "")
       url += "&term=" + searchTerm;
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetExport(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""): any {
+    var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
+    if (searchTerm != "")
+      url += "&term=" + searchTerm;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: "true"
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch subset for export = '));
+      })
+    );
   }
 
   getSubsetInfo(code: string, include: string) {

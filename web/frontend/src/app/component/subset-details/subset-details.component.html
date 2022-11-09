@@ -1,9 +1,12 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right"><button
-          [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}" label="New Search"
-          pButton type="button" class="ui-button-coloring"></button></span>
+      Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right">
+        <button type="button" pButton label="Export" icon="fa fa-download"
+          class="ui-button-coloring" pTooltip="Click to download subset search results"
+          (click)="exportSubset()" [disabled]="totalRecords == 0"></button>
+        <button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+          label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
     </div>
     <p>{{ subsetNCItDefinition }}</p>
     <div *ngIf="subsetLink != null">
@@ -49,10 +52,10 @@
         class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10">NCIt Concept Code</th>
-            <th class="w-30">NCIt Preferred Term</th>
-            <th class="w-30">NCIt Synonyms</th>
-            <th class="w-30">NCIt Definition</th>
+            <th class="w-10 subsetTitle">NCIt Concept Code</th>
+            <th class="w-30 subsetTitle">NCIt Preferred Term</th>
+            <th class="w-30 subsetTitle">NCIt Synonyms</th>
+            <th class="w-30 subsetTitle">NCIt Definition</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
@@ -90,12 +93,12 @@
         class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10">NCIt Subset Code</th>
-            <th class="w-20">NCIt Subset Name</th>
-            <th class="w-10">NCIt Concept Code</th>
-            <th class="w-20">NCIt Preferred Name</th>
-            <th class="w-20">NCIt Display Name</th>
-            <th class="w-20">CTRP Display Name</th>
+            <th class="w-10 subsetTitle">NCIt Subset Code</th>
+            <th class="w-20 subsetTitle">NCIt Subset Name</th>
+            <th class="w-10 subsetTitle">NCIt Concept Code</th>
+            <th class="w-20 subsetTitle">NCIt Preferred Name</th>
+            <th class="w-20 subsetTitle">NCIt Display Name</th>
+            <th class="w-20 subsetTitle">CTRP Display Name</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
@@ -138,12 +141,12 @@
         (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10">NCIt Concept Code</th>
-            <th class="w-15">{{subsetFormat }} Name</th>
-            <th class="w-15">NCIt Preferred Term</th>
-            <th class="w-20">NCIt Synonyms</th>
-            <th class="w-20">{{subsetFormat}} Definition</th>
-            <th class="w-20">NCIt Definition</th>
+            <th class="w-10 subsetTitle">NCIt Concept Code</th>
+            <th class="w-15 subsetTitle">{{subsetFormat }} Name</th>
+            <th class="w-15 subsetTitle">NCIt Preferred Term</th>
+            <th class="w-20 subsetTitle">NCIt Synonyms</th>
+            <th class="w-20 subsetTitle">{{subsetFormat}} Definition</th>
+            <th class="w-20 subsetTitle">NCIt Definition</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">

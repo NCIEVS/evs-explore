@@ -47,8 +47,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   loadedMultipleConcept = false;
   firstSearchFlag = false;
   noMatchedConcepts = true;
-  MAX_EXPORT_SIZE = 10000;
-  EXPORT_PAGE_SIZE = 1000;
 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
@@ -480,14 +478,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   async exportSearch() {
     var columnHeaders = this.displayColumns.map(col => col.header);
     var toJoin = columnHeaders.join("\t").replace("Highlights\t", "") + "\n";
-    var pages = Math.ceil(Math.min(this.MAX_EXPORT_SIZE, this.totalRecords) / this.EXPORT_PAGE_SIZE);
-    this.searchCriteria.pageSize = this.EXPORT_PAGE_SIZE;
+    var exportPageSize = this.configService.getExportPageSize();
+    var maxExport = this.configService.getMaxExportSize();
+    var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
+    this.searchCriteria.pageSize = exportPageSize;
     this.searchCriteria.export = true;
 
     var pageList = Array.from(Array(pages).keys());
     for (const page of pageList) {
-      this.searchCriteria.fromRecord = this.EXPORT_PAGE_SIZE * page;
-      this.searchCriteria.export = true;
+      this.searchCriteria.fromRecord = exportPageSize * page;
       await this.searchTermService.export(this.searchCriteria, this.displayColumns).toPromise().then(
         result => {
           result.concepts.forEach(concept => {
