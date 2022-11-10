@@ -176,6 +176,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   // export search results
   async exportSubset() {
+    document.getElementById("progressSpinner").style.display = "block";
     var titles = [];
     var exportMax = this.configService.getMaxExportSize();
     var exportPageSize = this.configService.getExportPageSize();
@@ -200,6 +201,7 @@ export class SubsetDetailsComponent implements OnInit {
     saveAs(new Blob([subsetText], {
       type: 'text/plain'
     }), fileName + new Date().toISOString() + '.xls');
+    document.getElementById("progressSpinner").style.display = "none";
   }
 
   exportCodeFormatter(concept: Concept) {

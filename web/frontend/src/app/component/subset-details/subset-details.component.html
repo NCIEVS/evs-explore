@@ -2,11 +2,12 @@
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right">
-        <button type="button" pButton label="Export" icon="fa fa-download"
+        <button type="button" pButton label="Export" icon="fa fa-download" id="subsetExportButton"
           class="ui-button-coloring" pTooltip="Click to download subset search results"
           (click)="exportSubset()" [disabled]="totalRecords == 0"></button>
         <button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
-          label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
+          label="New Search" pButton type="button" class="ui-button-coloring"></button>
+      </span>
     </div>
     <p>{{ subsetNCItDefinition }}</p>
     <div *ngIf="subsetLink != null">
@@ -190,3 +191,6 @@
   </p-panel>
 </div>
 <p>&nbsp;</p>
+<div class="progress-spinner" id="progressSpinner" style="display:none" color="grey">
+  <p-progressSpinner></p-progressSpinner>
+</div>
