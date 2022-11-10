@@ -53,8 +53,10 @@
         class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10 subsetTitle" id="code" (click)="search($event, 'code')">NCIt Concept Code</th>
-            <th class="w-30 subsetTitle" id="normName" (click)="search($event, 'normName')">NCIt Preferred Term</th>
+            <th class="w-10 subsetTitle sortable" id="code" (click)="search($event, 'code')">NCIt
+              Concept Code</th>
+            <th class="w-30 subsetTitle sortable" id="normName"
+              (click)="search($event, 'normName')">NCIt Preferred Term</th>
             <th class="w-30 subsetTitle">NCIt Synonyms</th>
             <th class="w-30 subsetTitle">NCIt Definition</th>
           </tr>
@@ -94,10 +96,12 @@
         class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10 subsetTitle" id="code" (click)="search($event, 'code')">NCIt Subset Code</th>
+            <th class="w-10 subsetTitle sortable" id="code" (click)="search($event, 'code')">NCIt
+              Subset Code</th>
             <th class="w-20 subsetTitle">NCIt Subset Name</th>
             <th class="w-10 subsetTitle">NCIt Concept Code</th>
-            <th class="w-20 subsetTitle" id="normName" (click)="search($event, 'normName')">NCIt Preferred Name</th>
+            <th class="w-20 subsetTitle sortable" id="normName"
+              (click)="search($event, 'normName')">NCIt Preferred Name</th>
             <th class="w-20 subsetTitle">NCIt Display Name</th>
             <th class="w-20 subsetTitle">CTRP Display Name</th>
           </tr>
@@ -142,10 +146,12 @@
         (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10 sortable subsetTitle" id="code" (click)="search($event, 'code')">NCIt Concept Code</th>
+            <th class="w-10 sortable subsetTitle" id="code" (click)="search($event, 'code')">NCIt
+              Concept Code</th>
             <th class="w-15 subsetTitle">{{subsetFormat }} Name</th>
             <th class="w-15 sortable subsetTitle">NCIt Preferred Term</th>
-            <th class="w-20 subsetTitle" id="normName" (click)="search($event, 'normName')">NCIt Synonyms</th>
+            <th class="w-20 subsetTitle" id="normName" (click)="search($event, 'normName')">NCIt
+              Synonyms</th>
             <th class="w-20 subsetTitle">{{subsetFormat}} Definition</th>
             <th class="w-20 subsetTitle">NCIt Definition</th>
           </tr>
