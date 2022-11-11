@@ -27,17 +27,13 @@
                     {{ sty }} <span *ngIf="!isLast"><br /></span>
                   </span></td>
               </tr>
-              <tr *ngIf="concept.getPreferredName()">
+              <tr>
                 <td class="w-30">Preferred Name:</td>
-                <td class="w-50">{{ concept.getPreferredName() }}</td>
+                <td class="w-50">{{ concept.name }}</td>
               </tr>
               <tr *ngIf="concept.getDisplayName()">
                 <td class="w-30">Display Name:</td>
                 <td class="w-50">{{ concept.getDisplayName() }}</td>
-              </tr>
-              <tr>
-                <td class="w-30">Concept Name:</td>
-                <td class="w-50">{{ concept.name }}</td>
               </tr>
               <tr *ngIf="concept.getConceptStatus()">
                 <td class="w-30">Concept Status:</td>
