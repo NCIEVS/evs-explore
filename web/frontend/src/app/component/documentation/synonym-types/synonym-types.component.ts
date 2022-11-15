@@ -16,12 +16,13 @@ export class SynonymTypesComponent implements OnInit {
 
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
-    this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
 
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
     this.configService.getSynonymTypes(this.terminology)
       .subscribe(response => {
         this.synonymTypes = response;

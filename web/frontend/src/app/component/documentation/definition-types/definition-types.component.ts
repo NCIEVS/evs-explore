@@ -16,11 +16,12 @@ export class DefinitionTypesComponent implements OnInit {
 
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
-    this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
 
     this.configService.getDefinitionTypes(this.terminology)
       .subscribe(response => {

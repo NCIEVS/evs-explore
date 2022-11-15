@@ -142,23 +142,29 @@ export class ConfigurationService {
     const splitPath = path.split("/");
     var pterminology;
 
-    // Handle the /subsets/{terminology} path
-    if (splitPath[splitPath.length - 2] === 'subsets') {
-      // The terminology is last field
-      pterminology = splitPath[splitPath.length - 1];
-    }
-    // otherwise handle /hierarchy/concept/{terminology}/{code}
-    else {
+    // Handle /hierarchy/{terminology}/{code}
+    // Handle concept//{terminology}/{code}
+    if (splitPath[splitPath.length - 3] === 'hierarchy' ||
+      splitPath[splitPath.length - 3] === 'concept'
+    ) {
       // The code is the last field
       this.code = splitPath[splitPath.length - 1];
       // The terminology is second-to-last field
       pterminology = splitPath[splitPath.length - 2];
     }
+    // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
+    else {
+      // The terminology is last field
+      pterminology = splitPath[splitPath.length - 1];
+    }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
       && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
-    this.setTerminology(terminology);
 
+    // If we are changing it, set the terminology
+    if (terminology != this.terminology) {
+      this.setTerminology(terminology);
+    }
 
   }
 
@@ -217,7 +223,7 @@ export class ConfigurationService {
             if (!seen[t.terminology]) {
               seen[t.terminology] = 1;
               keep = true;
-            } 
+            }
             return keep;
           });
 

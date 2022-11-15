@@ -16,11 +16,13 @@ export class PropertiesComponent implements OnInit {
 
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
-    this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
 
     this.configService.getProperties(this.terminology)
       .subscribe(response => {
@@ -35,6 +37,8 @@ export class PropertiesComponent implements OnInit {
         );
       });
     this.titleService.setTitle("EVS Explore - Properties");
+
+
   }
 
   ngAfterViewInit(): void {
