@@ -7,8 +7,8 @@ plugins {
 version = '1.7.0.RELEASE'
 
 node {
-  version = '12.6.0'
-  npmVersion = '6.14.11'
+  version = '16.14.1'
+  npmVersion = '9.1.3'
   download = true
   workDir = file("${project.buildDir}/node")
   nodeModulesDir = file("${project.projectDir}")
