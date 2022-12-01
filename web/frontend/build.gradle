@@ -1,5 +1,6 @@
 plugins {
     id("com.github.node-gradle.node") version "2.2.0"
+    // See https://github.com/srs/gradle-node-plugin/issues/292
 	//id "com.moowork.node" version "1.2.0"
 }
 
@@ -11,6 +12,7 @@ node {
   download = true
   workDir = file("${project.buildDir}/node")
   nodeModulesDir = file("${project.projectDir}")
+  npmWorkDir = project.file("${project.buildDir}/npm")
 }
 
 // Perform the NPM build
