@@ -6,6 +6,7 @@ import { throwError as observableThrowError, Subject, Observable, of } from 'rxj
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { ParamMap } from '@angular/router';
+import { Concept } from '../model/concept';
 
 // Configuration service
 @Injectable({
@@ -153,23 +154,29 @@ export class ConfigurationService {
     const splitPath = path.split("/");
     var pterminology;
 
-    // Handle the /subsets/{terminology} path
-    if (splitPath[splitPath.length - 2] === 'subsets') {
-      // The terminology is last field
-      pterminology = splitPath[splitPath.length - 1];
-    }
-    // otherwise handle /hierarchy/concept/{terminology}/{code}
-    else {
+    // Handle /hierarchy/{terminology}/{code}
+    // Handle concept//{terminology}/{code}
+    if (splitPath[splitPath.length - 3] === 'hierarchy' ||
+      splitPath[splitPath.length - 3] === 'concept'
+    ) {
       // The code is the last field
       this.code = splitPath[splitPath.length - 1];
       // The terminology is second-to-last field
       pterminology = splitPath[splitPath.length - 2];
     }
+    // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
+    else {
+      // The terminology is last field
+      pterminology = splitPath[splitPath.length - 1];
+    }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
       && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
-    this.setTerminology(terminology);
 
+    // If we are changing it, set the terminology
+    if (terminology != this.terminology) {
+      this.setTerminology(terminology);
+    }
 
   }
 
@@ -381,6 +388,13 @@ export class ConfigurationService {
         return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
       })
     );
+  }
+
+  getSubsetLink(terminology: string, subsetCode: String) {
+    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + "?include=subsetLink";
+    return this.http.get(encodeURI(url))
+      .toPromise()
+      .then(res => <Concept>res);
   }
 
 }

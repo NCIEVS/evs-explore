@@ -1,13 +1,13 @@
 <div class="container" *ngIf="qualifiers">
     <div class="page-header">
         <span class="ui-coloring">Qualifiers</span>
-        <span style="float:right"><button [routerLink]="['/welcome']"
-                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-                class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+                label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
     </div>
     <p>Information about qualifier types</p>
     <div class="table-responsive" style="font-size:14px;">
-        <p-table [value]="qualifiers" sortMode="single" class="table table-striped table-bordered">
+        <p-table [value]="qualifiers" sortMode="single" class="table table-striped table-bordered"
+            *ngIf="qualifiers && qualifiers.length > 0;else elseBlockDefinitions" (sortFunction)="customSort($event)">
             <ng-template pTemplate="header">
                 <tr>
                     <th class="w-10" [pSortableColumn]="'code'">Code
@@ -31,6 +31,7 @@
                 </tr>
             </ng-template>
         </p-table>
+        <ng-template #elseBlockDefinitions>None</ng-template>
     </div>
 </div>
 <p>&nbsp;</p>

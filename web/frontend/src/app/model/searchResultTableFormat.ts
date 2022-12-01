@@ -71,8 +71,8 @@ export class SearchResultTableFormat {
         data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? 'yes' : 'no';
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
-        data.displayName = searchResult.concepts[i].getDisplayName();
-        data.semanticType = searchResult.concepts[i].semanticTypes ?  searchResult.concepts[i].semanticTypes.join('<br />') : '';
+        data.displayName = searchResult.concepts[i].name;
+        data.semanticType = searchResult.concepts[i].semanticTypes ? searchResult.concepts[i].semanticTypes.join('<br />') : '';
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
@@ -150,7 +150,9 @@ export class SearchResultTableFormat {
             //   data['column' + count] = goannotationinfo;
 
           } else if (returnFields[k] === 'Preferred Name') {
-            data['column' + count] = searchResult.concepts[i].getPreferredName();
+
+            console.log('yyy', searchResult.concepts[i].name);
+            data['column' + count] = searchResult.concepts[i].name;
             // } else {
             //   console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }

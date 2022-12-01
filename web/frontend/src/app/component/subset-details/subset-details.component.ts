@@ -94,6 +94,13 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsetFormat = "NCIt";
           }
           this.subsetLink = subsetDetail.getSubsetLink();
+          if (this.subsetLink == null) {
+            this.configService.getSubsetLink(this.configService.getTerminologyName(), subsetDetail.code).then(
+              response => {
+                this.subsetLink = response.subsetLink;
+              }
+            );
+          }
           for (let definition of subsetDetail.definitions) {
             if (definition.source == "NCI") {
               this.subsetNCItDefinition = definition.definition;
@@ -111,8 +118,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      const query = document.getElementById("termauto").attributes["ng-reflect-model"].textContent;
-      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows, query)
+      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
         .then(nodes => {
           this.hitsFound = nodes["total"];
           this.fullSubsetList = nodes["concepts"];
@@ -162,7 +168,6 @@ export class SubsetDetailsComponent implements OnInit {
   search(event, columnName = null) {
     var sort = null;
     var sortDirection = null;
-    var query = event.query;
     var sortCols = document.getElementsByClassName("sortable");
     for (var i = 0; i < sortCols.length; i++) {
       var str = sortCols[i].innerHTML;
@@ -171,7 +176,6 @@ export class SubsetDetailsComponent implements OnInit {
     }
     if (columnName) { // setup for sorting
       var sortCols = document.getElementsByClassName("sortable");
-      query = document.getElementById("termauto").attributes["ng-reflect-model"].textContent;
       if (this.currentSortColumn == columnName) {
         this.currentSortDirection = !this.currentSortDirection;
       }
@@ -184,7 +188,7 @@ export class SubsetDetailsComponent implements OnInit {
       sortDirection = this.currentSortDirection
       document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? "↑" : "↓");
     }
-    this.subsetDetailService.getSubsetFullDetails(this.titleCode, 0, this.pageSize, query, sortDirection, sort)
+    this.subsetDetailService.getSubsetFullDetails(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort)
       .then(nodes => {
         this.hitsFound = nodes["total"];
         if (this.hitsFound > 0) {

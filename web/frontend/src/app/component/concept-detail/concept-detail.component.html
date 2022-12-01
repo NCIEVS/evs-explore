@@ -27,17 +27,13 @@
                     {{ sty }} <span *ngIf="!isLast"><br /></span>
                   </span></td>
               </tr>
-              <tr *ngIf="concept.getPreferredName()">
+              <tr>
                 <td class="w-30">Preferred Name:</td>
-                <td class="w-50">{{ concept.getPreferredName() }}</td>
+                <td class="w-50">{{ concept.name }}</td>
               </tr>
               <tr *ngIf="concept.getDisplayName()">
                 <td class="w-30">Display Name:</td>
                 <td class="w-50">{{ concept.getDisplayName() }}</td>
-              </tr>
-              <tr>
-                <td class="w-30">Concept Name:</td>
-                <td class="w-50">{{ concept.name }}</td>
               </tr>
               <tr *ngIf="concept.getConceptStatus()">
                 <td class="w-30">Concept Status:</td>
@@ -93,7 +89,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
-      Definitions <a (click)="scrollToTop()" class="top-link"
+      Definitions ({{conceptDisplay.concept.definitions ? conceptDisplay.concept.definitions.length
+      : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -134,8 +131,9 @@
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="synonyms">
-      Synonyms & Abbreviations <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Synonyms & Abbreviations ({{conceptDisplay.concept.synonyms ?
+      conceptDisplay.concept.synonyms.length : 0}})
+      <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.synonyms"
@@ -199,7 +197,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="other">
-      Other Properties <a (click)="scrollToTop()" class="top-link"
+      Other Properties ({{conceptDisplay.concept.properties ?
+      conceptDisplay.concept.properties.length : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -249,8 +248,8 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRdf()">
     <p-header class="bold-heading">
-      Maps To <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Maps To ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a
+        (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
@@ -292,8 +291,8 @@
   </p-panel>
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRrf()">
     <p-header class="bold-heading">
-      Mappings <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Mappings ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a
+        (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"

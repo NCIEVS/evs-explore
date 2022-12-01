@@ -37,7 +37,6 @@ export class Concept {
   uniqProps: any[];
 
   constructor(input: any, configService: ConfigurationService) {
-    // Object.assign(this, input);
     this.terminology = input.terminology;
     this.version = input.version;
     this.code = input.code;
@@ -231,18 +230,6 @@ export class Concept {
       var key = JSON.stringify(x);
       return !(key in seen) && (seen[key] = x) && key.toLowerCase().includes(name.toLowerCase());
     });
-  }
-
-  // Return the preferred name
-  getPreferredName(): string {
-    if (this.synonyms.length > 0) {
-      for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'Preferred Name') {
-          return this.synonyms[i].name;
-        }
-      }
-    }
-    return null;
   }
 
   // Return the display name

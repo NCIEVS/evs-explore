@@ -16,11 +16,13 @@ export class SourcesComponent implements OnInit {
   terminology: string;
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
-    this.terminology = configService.getTerminologyName();
   }
 
   // On initialization
   ngOnInit() {
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
 
     this.configService.getSynonymSources(this.terminology)
       .subscribe(response => {

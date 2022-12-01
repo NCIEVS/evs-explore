@@ -1,7 +1,8 @@
 <div *ngIf="concept">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="parents">
-      Parent Concepts <a (click)="scrollToTop()" class="top-link"
+      Parent Concepts ({{conceptDisplay.concept.parents ? conceptDisplay.concept.parents.length :
+      0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -50,7 +51,8 @@
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
-      Child Concepts <a (click)="scrollToTop()" class="top-link"
+      Child Concepts ({{conceptDisplay.concept.children ? conceptDisplay.concept.children.length :
+      0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -99,7 +101,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="roleRelationships">
-      Role Relationships <a (click)="scrollToTop()" class="top-link"
+      Role Relationships ({{conceptDisplay.concept.roles ? conceptDisplay.concept.roles.length :
+      0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         asserted or inherited, pointing from the current concept to other concepts:
@@ -143,7 +146,9 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="associations">
-      Associations <a (click)="scrollToTop()" class="top-link" title="Scroll To the
+      Associations ({{conceptDisplay.concept.associations ?
+      conceptDisplay.concept.associations.length : 0}}) <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the
         Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from the current concept to other concepts:
@@ -193,7 +198,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Broader Concepts <a (click)="scrollToTop()" class="top-link"
+      Broader Concepts ({{conceptDisplay.concept.broader ? conceptDisplay.concept.broader.length :
+      0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -244,7 +250,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
-      Incoming Role Relationships <a (click)="scrollToTop()" class="top-link"
+      Incoming Role Relationships ({{conceptDisplay.concept.inverseRoles ?
+      conceptDisplay.concept.inverseRoles.length : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         asserted or inherited, pointing from other concepts to the current concept:
@@ -290,7 +297,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Narrower Concepts <a (click)="scrollToTop()" class="top-link"
+      Narrower Concepts ({{conceptDisplay.concept.narrower ? conceptDisplay.concept.narrower.length
+      : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -343,8 +351,9 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="iassociations">
-      Incoming Associations <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Incoming Associations ({{conceptDisplay.concept.inverseAssociations ?
+      conceptDisplay.concept.inverseAssociations.length : 0}}) <a (click)="scrollToTop()"
+        class="top-link" title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from other concepts to the current concept:
       </span>
@@ -396,7 +405,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading" id="otherRelationships">
-      Other Relationships <a (click)="scrollToTop()" class="top-link"
+      Other Relationships ({{conceptDisplay.concept.other ? conceptDisplay.other.inverseRoles.length
+      : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
@@ -449,7 +459,9 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
-      Disjoint With <a (click)="scrollToTop()" class="top-link" title="Scroll To the
+      Disjoint With ({{conceptDisplay.concept.disjointWith ?
+      conceptDisplay.concept.disjointWith.length : 0}}) <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the
         Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
