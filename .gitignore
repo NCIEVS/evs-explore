@@ -9,7 +9,7 @@ setenv.sh
 .project
 .pydevproject
 .settings/
-bin/
+!web/src/main/bin
 __pycache__
 /build/
 WEB-INF/*
