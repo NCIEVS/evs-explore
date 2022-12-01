@@ -37,8 +37,8 @@ def bomVersion = "Greenwich.RELEASE"
 group = "gov.nih.nci.term.browser.web"
 version = "1.7.0.RELEASE"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build
