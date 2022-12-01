@@ -93,6 +93,13 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsetFormat = "NCIt";
           }
           this.subsetLink = subsetDetail.getSubsetLink();
+          if (this.subsetLink == null) {
+            this.configService.getSubsetLink(this.configService.getTerminologyName(), subsetDetail.code).then(
+              response => {
+                this.subsetLink = response.subsetLink;
+              }
+            );
+          }
           for (let definition of subsetDetail.definitions) {
             if (definition.source == "NCI") {
               this.subsetNCItDefinition = definition.definition;

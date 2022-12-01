@@ -6,6 +6,7 @@ import { throwError as observableThrowError, Subject, Observable, of } from 'rxj
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { ParamMap } from '@angular/router';
+import { Concept } from '../model/concept';
 
 // Configuration service
 @Injectable({
@@ -196,8 +197,8 @@ export class ConfigurationService {
             throw 'Unable to find any terminologies with /metadata/terminologies';
           }
 
-          // Sort terminologies by "latest" and "tags=monthly" and 
-          // pick the first one for the termniology.          
+          // Sort terminologies by "latest" and "tags=monthly" and
+          // pick the first one for the termniology.
           arr.sort((a, b) => {
             // Start with "terminology"
             if (a.terminology != b.terminology) {
@@ -376,6 +377,13 @@ export class ConfigurationService {
         return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
       })
     );
+  }
+
+  getSubsetLink(terminology: string, subsetCode: String) {
+    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + "?include=subsetLink";
+    return this.http.get(encodeURI(url))
+      .toPromise()
+      .then(res => <Concept>res);
   }
 
 }
