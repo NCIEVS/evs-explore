@@ -228,24 +228,24 @@ export class ConceptDisplayComponent implements OnInit {
   exportDetails() {
 
     const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
-    const defWorksheet = this.defTable() ? utils.json_to_sheet(this.defTable()) : null;
-    const synWorksheet = this.synTable() ? utils.json_to_sheet(this.synTable()) : null;
-    const otherPropWorksheet = this.otherPropTable() ? utils.json_to_sheet(this.otherPropTable()) : null;
-    const mapWorksheet = this.mapsTable() ? utils.json_to_sheet(this.mapsTable()) : null;
-    const parentWorksheet = this.parentTable() ? utils.json_to_sheet(this.parentTable()) : null;
-    const childrenWorksheet = this.childrenTable() ? utils.json_to_sheet(this.childrenTable()) : null;
+    const defWorksheet = utils.json_to_sheet(this.defTable());
+    const synWorksheet = utils.json_to_sheet(this.synTable());
+    const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
+    const mapWorksheet = utils.json_to_sheet(this.mapsTable());
+    const parentWorksheet = utils.json_to_sheet(this.parentTable());
+    const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
 
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
-      var roleRelationshipsWorksheet = this.roleRelationshipsTable() ? utils.json_to_sheet(this.roleRelationshipsTable()) : null;
-      var associationsWorksheet = this.associationsTable() ? utils.json_to_sheet(this.associationsTable()) : null;
-      var incomingRoleRelationshipsWorksheet = this.incomingRoleRelationshipsTable() ? utils.json_to_sheet(this.incomingRoleRelationshipsTable()) : null;
-      var incomingAssociationsWorksheet = this.incomingAssociationsTable() ? utils.json_to_sheet(this.incomingAssociationsTable()) : null;
-      var disjointWithWorksheet = this.disjointWithTable() ? utils.json_to_sheet(this.disjointWithTable()) : null;
+      var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
+      var associationsWorksheet = utils.json_to_sheet(this.associationsTable());
+      var incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
+      var incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
+      var disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
     }
     else {
-      var broaderConceptWorksheet = this.broaderConceptTable() ? utils.json_to_sheet(this.broaderConceptTable()) : null;
-      var narrowerConceptWorksheet = this.narrowerConceptTable() ? utils.json_to_sheet(this.narrowerConceptTable()) : null;
-      var otherRelationshipsWorksheet = this.otherRelationshipsTable() ? utils.json_to_sheet(this.otherRelationshipsTable()) : null;
+      var broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
+      var narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
+      var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
     }
 
     const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
@@ -279,7 +279,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      defTable.push({ "None": '' });
     return defTable;
   }
 
@@ -300,7 +300,7 @@ export class ConceptDisplayComponent implements OnInit {
       synTable = synTable.sort((a, b) => (a.Term > b.Term) ? 1 : ((b.Term > a.Term) ? -1 : 0));
     }
     else
-      return null;
+      synTable.push({ "None": '' });
     return synTable;
   }
 
@@ -319,7 +319,7 @@ export class ConceptDisplayComponent implements OnInit {
       otherPropTable = otherPropTable.sort((a, b) => (a.Type > b.Type) ? 1 : ((b.Type > a.Type) ? -1 : 0));
     }
     else
-      return null;
+      otherPropTable.push({ "None": '' });
     return otherPropTable;
   }
 
@@ -347,7 +347,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      mapTable.push({ "None": '' });
     return mapTable;
   }
 
@@ -366,7 +366,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      parentTable.push({ "None": '' });
     return parentTable;
   }
 
@@ -385,7 +385,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      childrenTable.push({ "None": '' });
     return childrenTable;
   }
 
@@ -401,7 +401,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      roleRelationshipsTable.push({ "None": '' });
     return roleRelationshipsTable;
   }
 
@@ -417,7 +417,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      associationsTable.push({ "None": '' });
     return associationsTable;
   }
 
@@ -434,7 +434,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      broaderConceptTable.push({ "None": '' });
     return broaderConceptTable;
   }
 
@@ -450,7 +450,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      incomingRoleRelationshipsTable.push({ "None": '' });
     return incomingRoleRelationshipsTable;
   }
 
@@ -467,7 +467,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      narrowerConceptTable.push({ "None": '' });
     return narrowerConceptTable;
   }
 
@@ -483,7 +483,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      incomingAssociationsTable.push({ "None": '' });
     return incomingAssociationsTable;
   }
 
@@ -499,7 +499,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      disjointWithTable.push({ "None": '' });
     return disjointWithTable;
   }
 
@@ -516,7 +516,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      return null;
+      associationsTable.push({ "None": '' });
     return associationsTable;
   }
 
