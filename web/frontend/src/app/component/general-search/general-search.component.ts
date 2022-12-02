@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -471,6 +472,86 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
     }
+  }
+
+  // export search results
+  async exportSearch() {
+    var columnHeaders = this.displayColumns.map(col => col.header);
+    var toJoin = columnHeaders.join("\t").replace("Highlights\t", "") + "\n";
+    var exportPageSize = this.configService.getExportPageSize();
+    var maxExport = this.configService.getMaxExportSize();
+    var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
+    this.searchCriteria.pageSize = exportPageSize;
+    this.searchCriteria.export = true;
+
+    var pageList = Array.from(Array(pages).keys());
+    for (const page of pageList) {
+      this.searchCriteria.fromRecord = exportPageSize * page;
+      await this.searchTermService.export(this.searchCriteria, this.displayColumns).toPromise().then(
+        result => {
+          result.concepts.forEach(concept => {
+            toJoin += this.exportCodeFormatter(concept, columnHeaders);
+          });
+        }
+      );
+    }
+    saveAs(new Blob([toJoin], {
+      type: 'text/plain'
+    }), this.searchCriteria.term + "." + new Date().toISOString() + '.xls');
+  }
+
+  exportCodeFormatter(concept, displayColumns) {
+    var conceptFormatString = "";
+    if (displayColumns.includes("Code"))
+      conceptFormatString += concept.code + "\t";
+    if (displayColumns.includes("Preferred Name"))
+      conceptFormatString += concept.name + "\t";
+
+    if (displayColumns.includes("Synonyms")) {
+      var synonymString = "";
+      if (concept.synonyms != undefined && concept.synonyms.length > 0) {
+        synonymString += "\"";
+        // get unique synonyms
+        let uniqueSynonyms = [...concept.synonyms.reduce((map, obj) => map.has(obj.name) ? map : map.set(obj.name, obj), new Map()).values()];
+        for (let syn of uniqueSynonyms) {
+          synonymString += syn.name.replace(/"/g, "\"\"") + "\n";
+        }
+        // remove last newline
+        synonymString = synonymString.substring(0, synonymString.length - 1) + "\"";
+      }
+      synonymString += "\t";
+      conceptFormatString += synonymString;
+    }
+
+    if (displayColumns.includes("Definitions")) {
+      var definitionString = "";
+      if (concept.definitions != undefined && concept.definitions.length > 0) {
+        definitionString += "\"";
+        for (let def of concept.definitions) {
+          definitionString += def.source + ": " + def.definition.replace(/"/g, "\"\"") + "\n";
+        }
+        // remove last newline
+        definitionString = definitionString.substring(0, definitionString.length - 1) + "\"";
+      }
+      definitionString += "\t";
+      conceptFormatString += definitionString;
+    }
+
+    if (displayColumns.includes("Semantic Type")) {
+      var semString = "";
+      if (concept.properties != undefined && concept.properties.length > 0) {
+        for (let prop of concept.properties) {
+          if (prop.type == "Semantic_Type") {
+            semString += prop.value;
+            // only one semantic type
+            break;
+          }
+        }
+      }
+      conceptFormatString += semString;
+    }
+    conceptFormatString += "\n";
+    return conceptFormatString;
   }
 
   // Set default selected columns

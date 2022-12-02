@@ -97,18 +97,35 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  // Get the full subset details with sort params
-  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = null, ascending = null, sort = null) {
+  getSubsetFullDetails(code: string, fromRecord = 0, pageSize = 10, searchTerm = "", ascending = null, sort = null): any {
     var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
     if (ascending != null)
       url += "&ascending=" + ascending;
     if (sort != null)
       url += "&sort=" + sort;
-    if (searchTerm != null)
+    if (searchTerm != "")
       url += "&term=" + searchTerm;
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetExport(code: string, fromRecord = 0, pageSize = 10, searchTerm = ""): any {
+    var url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/search?include=full&subset=' + code + "&fromRecord=" + fromRecord + "&pageSize=" + pageSize);
+    if (searchTerm != "")
+      url += "&term=" + searchTerm;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: "true"
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch subset for export = '));
+      })
+    );
   }
 
   getSubsetInfo(code: string, include: string) {

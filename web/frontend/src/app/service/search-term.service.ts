@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { SearchCriteria } from './../model/searchCriteria';
 import { EvsError } from '../model/evsError';
 import { ConfigurationService } from './configuration.service';
+import { saveAs } from 'file-saver';
 
 // Default HTTP Options
 const httpOptions = {
@@ -27,13 +28,35 @@ export class SearchTermService {
 
     const url = '/api/v1/concept/search';
     console.log('perform search', searchCriteria.toString());
-    const param: any = {};
+    const param = this.setupSearchParams(searchCriteria);
 
+    // Perform the HTTP call
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: param
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Failure to get search results = <p> ' + error.message + '</p>'));
+        })
+      );
+
+  }
+
+  setupSearchParams(searchCriteria: SearchCriteria): any {
+    const param: any = {};
     // Setup search parameters (default terminology and include, for now)
     param.terminology = searchCriteria.terminology;
     param.include = searchCriteria.include;
     param.term = searchCriteria.term;
     param.type = searchCriteria.type;
+
+    // Export parameter
+    if (searchCriteria.export !== undefined && searchCriteria.export != null) {
+      param.export = searchCriteria.export;
+    }
 
     // Paging parameters
     if (searchCriteria.fromRecord !== undefined && searchCriteria.fromRecord != null) {
@@ -70,22 +93,18 @@ export class SearchTermService {
       && searchCriteria.property.length > 0) {
       property = searchCriteria.property.join();
     }
+    return param;
+  }
 
-    // TODO: implement this later
-    // let propertyRelationship = '';
-    // if (searchCriteria.relationshipProperty !== undefined && searchCriteria.relationshipProperty != null
-    //   && searchCriteria.relationshipProperty.length > 0) {
-    //   propertyRelationship = searchCriteria.relationshipProperty.join();
-    // }
-    // if (propertyRelationship !== '' && property !== '') {
-    //   param.property = property + ',' + propertyRelationship;
-    // }
-    // if (propertyRelationship !== '' && property === '') {
-    //   param.property = propertyRelationship;
-    // }
-    // if (propertyRelationship === '' && property !== '') {
-    //   param.property = property;
-    // }
+  export(searchCriteria: SearchCriteria, displayColumns: any[]): any {
+    const url = '/api/v1/concept/search';
+    console.log('perform export', searchCriteria.toString());
+    const param = this.setupSearchParams(searchCriteria);
+    param.fromRecord = searchCriteria.fromRecord;
+    param.pageSize = searchCriteria.pageSize;
+    param.export = true;
+    param.columns = displayColumns.map(col => col.header).join(",");
+    param.columns = param.columns.replace("Highlights,", ""); // until we figure out what we're doing with the highlights
 
     // Perform the HTTP call
     return this.http.get(encodeURI(url),
@@ -102,7 +121,3 @@ export class SearchTermService {
   }
 
 }
-
-
-
-

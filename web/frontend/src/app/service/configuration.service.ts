@@ -22,12 +22,23 @@ export class ConfigurationService {
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
 
+  private MAX_EXPORT_SIZE = 10000;
+  private EXPORT_PAGE_SIZE = 1000;
+
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
     private cookieService: CookieService) {
 
     this.selectedSources = new Set<String>().add('All');
 
+  }
+
+  getExportPageSize() {
+    return this.EXPORT_PAGE_SIZE;
+  }
+
+  getMaxExportSize() {
+    return this.MAX_EXPORT_SIZE;
   }
 
   getTerminology() {

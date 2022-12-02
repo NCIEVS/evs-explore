@@ -6,6 +6,9 @@ import { Concept } from './../../model/concept';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
+import { writeXLSX, utils } from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 // Concept display component
 // BAC - looks like not used
@@ -23,6 +26,7 @@ export class ConceptDisplayComponent implements OnInit {
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
+
 
   urlBase = '/concept';
   urlTarget = '_top';
@@ -61,7 +65,6 @@ export class ConceptDisplayComponent implements OnInit {
     private conceptDetailService: ConceptDetailService,
     private router: Router,
     private location: Location,
-    private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
@@ -222,4 +225,372 @@ export class ConceptDisplayComponent implements OnInit {
     this.expandCollapseChange.next(this.collapsed);
   }
 
+  exportDetails() {
+
+    const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
+    const defWorksheet = utils.json_to_sheet(this.defTable());
+    const synWorksheet = utils.json_to_sheet(this.synTable());
+    const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
+    const mapWorksheet = utils.json_to_sheet(this.mapsTable());
+    const parentWorksheet = utils.json_to_sheet(this.parentTable());
+    const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
+
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
+      var associationsWorksheet = utils.json_to_sheet(this.associationsTable());
+      var incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
+      var incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
+      var disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
+    }
+    else {
+      var broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
+      var narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
+      var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
+    }
+
+    const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
+    const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
+    });
+    saveAs(data, this.concept.code + "_" + this.concept.name + '_conceptDetails_' + new Date().getTime() + ".xlsx");
+  }
+
+  defAttribution(qualifiers) {
+    if (qualifiers == null || qualifiers.length == 0) return null;
+    var attribution = null;
+    qualifiers.forEach(qual => {
+      if (qual.type == 'attribution')
+        attribution = qual.value;
+    });
+    return attribution;
+  }
+
+  defTable() {
+    var defTable = [];
+    if (this.concept.definitions != undefined && this.concept.definitions.length > 0) {
+      this.concept.definitions.forEach(def => {
+        var defEntry = {};
+        defEntry["Definition"] = def.definition;
+        defEntry["Source"] = def.source;
+        if (this.configService.isRdf() || this.configService.isSingleSource())
+          defEntry["Attribution"] = this.defAttribution(def.qualifiers);
+        defTable.push(defEntry);
+      });
+    }
+    else
+      defTable.push({ "None": '' });
+    return defTable;
+  }
+
+  synTable() {
+    var synTable = [];
+    if (this.concept.synonyms != undefined && this.concept.synonyms.length > 0) {
+      this.concept.synonyms.forEach(syn => {
+        var synEntry = {};
+        synEntry["Term"] = syn.name;
+        synEntry["Source"] = syn.source;
+        synEntry["Term Type"] = syn.termType ? syn.termType : syn.type;
+        if (this.configService.isMultiSource())
+          synEntry["Code"] = syn.code;
+        if (this.configService.isMultiSource() && this.configService.isRdf())
+          synEntry["Subsource Name"] = syn.subSource;
+        synTable.push(synEntry);
+      });
+      synTable = synTable.sort((a, b) => (a.Term > b.Term) ? 1 : ((b.Term > a.Term) ? -1 : 0));
+    }
+    else
+      synTable.push({ "None": '' });
+    return synTable;
+  }
+
+  otherPropTable() {
+    var otherPropTable = [];
+    if (this.concept.properties != undefined && this.concept.properties.length > 0) {
+      this.concept.properties.forEach(prop => {
+        var propEntry = {};
+        propEntry["Type"] = prop.type;
+        propEntry["Value"] = prop.value;
+        if (this.configService.isMultiSource() && this.configService.isRrf()) {
+          propEntry["Source"] = prop.source;
+        }
+        otherPropTable.push(propEntry);
+      });
+      otherPropTable = otherPropTable.sort((a, b) => (a.Type > b.Type) ? 1 : ((b.Type > a.Type) ? -1 : 0));
+    }
+    else
+      otherPropTable.push({ "None": '' });
+    return otherPropTable;
+  }
+
+  mapsTable() {
+    var mapTable = [];
+    if (this.concept.maps != undefined && this.concept.maps.length > 0) {
+      this.concept.maps.forEach(map => {
+        var mapEntry = {};
+        if (this.configService.isRdf()) {
+          mapEntry["Target Name"] = map.targetName;
+          mapEntry["Relationship to Target"] = map.type;
+          mapEntry["Target Term Type"] = map.targetTermType;
+          mapEntry["Target Code"] = map.targetCode;
+          mapEntry["Target Terminology"] = map.targetTerminology + " " + map.targetTerminologyVersion;
+        }
+        else if (this.configService.isRrf()) {
+          mapEntry["Source Code"] = map.sourceCode;
+          mapEntry["Source Terminology"] = map.sourceTerminology;
+          mapEntry["Type"] = map.type;
+          mapEntry["Target Code"] = map.targetCode;
+          mapEntry["Target Terminology"] = map.targetTerminology + " " + map.targetTerminologyVersion;
+          mapEntry["Target Name"] = map.targetName;
+        }
+        mapTable.push(mapEntry);
+      });
+    }
+    else
+      mapTable.push({ "None": '' });
+    return mapTable;
+  }
+
+  parentTable() {
+    var parentTable = [];
+    if (this.concept.parents != undefined && this.concept.parents.length > 0) {
+      this.concept.parents.forEach(parent => {
+        var parentEntry = {};
+        parentEntry["Code"] = parent.code;
+        parentEntry["Name"] = parent.name;
+        if (this.configService.isRrf())
+          parentEntry["Relationship Attribute"] = parent.rela;
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          parentEntry["Source"] = parent.source;
+        parentTable.push(parentEntry);
+      });
+    }
+    else
+      parentTable.push({ "None": '' });
+    return parentTable;
+  }
+
+  childrenTable() {
+    var childrenTable = [];
+    if (this.concept.children != undefined && this.concept.children.length > 0) {
+      this.concept.children.forEach(child => {
+        var childEntry = {};
+        childEntry["Code"] = child.code;
+        childEntry["Name"] = child.name;
+        if (this.configService.isRrf())
+          childEntry["Relationship Attribute"] = child.rela;
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          childEntry["Source"] = child.source;
+        childrenTable.push(childEntry);
+      });
+    }
+    else
+      childrenTable.push({ "None": '' });
+    return childrenTable;
+  }
+
+  roleRelationshipsTable() {
+    var roleRelationshipsTable = [];
+    if (this.concept.roles != undefined && this.concept.roles.length > 0) {
+      this.concept.roles.forEach(role => {
+        var roleEntry = {};
+        roleEntry["Relationship"] = role.type;
+        roleEntry["Related Code"] = role.relatedCode;
+        roleEntry["Related Name"] = role.relatedName;
+        roleRelationshipsTable.push(roleEntry);
+      });
+    }
+    else
+      roleRelationshipsTable.push({ "None": '' });
+    return roleRelationshipsTable;
+  }
+
+  associationsTable() {
+    var associationsTable = [];
+    if (this.concept.associations != undefined && this.concept.associations.length > 0) {
+      this.concept.associations.forEach(association => {
+        var associationsEntry = {};
+        associationsEntry["Relationship"] = association.type + this.getQualifiers(association.qualifiers);
+        associationsEntry["Related Code"] = association.relatedCode;
+        associationsEntry["Related Name"] = association.relatedName;
+        associationsTable.push(associationsEntry);
+      });
+    }
+    else
+      associationsTable.push({ "None": '' });
+    return associationsTable;
+  }
+
+  broaderConceptTable() {
+    var broaderConceptTable = [];
+    if (this.concept.broader != undefined && this.concept.broader.length > 0) {
+      this.concept.broader.forEach(broad => {
+        var broadEntry = {};
+        broadEntry["Relationship"] = broad.type + this.getQualifiers(broad.qualifiers);
+        broadEntry["Related Code"] = broad.relatedCode;
+        broadEntry["Related Name"] = broad.relatedName;
+        broadEntry["Source"] = broad.source;
+        broaderConceptTable.push(broadEntry);
+      });
+    }
+    else
+      broaderConceptTable.push({ "None": '' });
+    return broaderConceptTable;
+  }
+
+  incomingRoleRelationshipsTable() {
+    var incomingRoleRelationshipsTable = [];
+    if (this.concept.inverseRoles != undefined && this.concept.inverseRoles.length > 0) {
+      this.concept.inverseRoles.forEach(inverseRole => {
+        var incomingRoleEntry = {};
+        incomingRoleEntry["Relationship"] = inverseRole.type;
+        incomingRoleEntry["Related Code"] = inverseRole.relatedCode;
+        incomingRoleEntry["Related Name"] = inverseRole.relatedName;
+        incomingRoleRelationshipsTable.push(incomingRoleEntry);
+      });
+    }
+    else
+      incomingRoleRelationshipsTable.push({ "None": '' });
+    return incomingRoleRelationshipsTable;
+  }
+
+  narrowerConceptTable() {
+    var narrowerConceptTable = [];
+    if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
+      this.concept.narrower.forEach(narrow => {
+        var narrowEntry = {};
+        narrowEntry["Relationship"] = narrow.type + this.getQualifiers(narrow.qualifiers);
+        narrowEntry["Related Code"] = narrow.relatedCode;
+        narrowEntry["Related Name"] = narrow.relatedName;
+        narrowEntry["Source"] = narrow.source;
+        narrowerConceptTable.push(narrowEntry);
+      });
+    }
+    else
+      narrowerConceptTable.push({ "None": '' });
+    return narrowerConceptTable;
+  }
+
+  incomingAssociationsTable() {
+    var incomingAssociationsTable = [];
+    if (this.concept.inverseAssociations != undefined && this.concept.inverseAssociations.length > 0) {
+      this.concept.inverseAssociations.forEach(inverseAssociation => {
+        var inverseAssociationsEntry = {};
+        inverseAssociationsEntry["Relationship"] = inverseAssociation.type + this.getQualifiers(inverseAssociation.qualifiers);
+        inverseAssociationsEntry["Related Code"] = inverseAssociation.relatedCode;
+        inverseAssociationsEntry["Related Name"] = inverseAssociation.relatedName;
+        incomingAssociationsTable.push(inverseAssociationsEntry);
+      });
+    }
+    else
+      incomingAssociationsTable.push({ "None": '' });
+    return incomingAssociationsTable;
+  }
+
+  disjointWithTable() {
+    var disjointWithTable = [];
+    if (this.concept.disjointWith != undefined && this.concept.disjointWith.length > 0) {
+      this.concept.disjointWith.forEach(disjoint => {
+        var disjointWithEntry = {};
+        disjointWithEntry["Relationship"] = disjoint.type;
+        disjointWithEntry["Related Code"] = disjoint.relatedCode;
+        disjointWithEntry["Related Name"] = disjoint.relatedName;
+        disjointWithTable.push(disjointWithEntry);
+      });
+    }
+    else
+      disjointWithTable.push({ "None": '' });
+    return disjointWithTable;
+  }
+
+  otherRelationshipsTable() {
+    var associationsTable = [];
+    if (this.concept.associations != undefined && this.concept.associations.length > 0) {
+      this.concept.associations.forEach(association => {
+        var associationsEntry = {};
+        associationsEntry["Relationship"] = association.type + this.getQualifiers(association.qualifiers);
+        associationsEntry["Related Code"] = association.relatedCode;
+        associationsEntry["Related Name"] = association.relatedName;
+        associationsEntry["Source"] = association.source;
+        associationsTable.push(associationsEntry);
+      });
+    }
+    else
+      associationsTable.push({ "None": '' });
+    return associationsTable;
+  }
+
+  getQualifiers(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
+    var qualifiersString = "\n";
+    qualifiers.forEach(qual => {
+      qualifiersString += qual.type + ": " + qual.value + "\n"
+    });
+    return qualifiersString;
+  }
+
+  getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet) {
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      return {
+        Sheets: {
+          "Name": nameWorksheet,
+          "Definitions": defWorksheet,
+          "Synonyms": synWorksheet,
+          "Other Properties": otherPropWorksheet,
+          "Maps": mapWorksheet,
+          "Parent Concepts": parentWorksheet,
+          "Child Concepts": childrenWorksheet,
+          "Role Relationships": roleRelationshipsWorksheet,
+          "Associations": associationsWorksheet,
+          "Incoming Role Relationships": incomingRoleRelationshipsWorksheet,
+          "Incoming Associations": incomingAssociationsWorksheet,
+          "Disjoint With": disjointWithWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          "Maps",
+          "Parent Concepts",
+          "Child Concepts",
+          "Role Relationships",
+          "Associations",
+          "Incoming Role Relationships",
+          "Incoming Associations",
+          "Disjoint With"
+        ]
+      };
+    }
+    else {
+      return {
+        Sheets: {
+          "Name": nameWorksheet,
+          "Definitions": defWorksheet,
+          "Synonyms": synWorksheet,
+          "Other Properties": otherPropWorksheet,
+          "Maps": mapWorksheet,
+          "Parent Concepts": parentWorksheet,
+          "Child Concepts": childrenWorksheet,
+          "Broader Concepts": broaderConceptWorksheet,
+          "Narrower Concepts": narrowerConceptWorksheet,
+          "Other Relationships": otherRelationshipsWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          "Maps",
+          "Parent Concepts",
+          "Child Concepts",
+          "Role Relationships",
+          "Broader Concepts",
+          "Narrower Concepts",
+          "Other Relationships"
+        ]
+      };
+    }
+  }
 }
