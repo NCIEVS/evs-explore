@@ -65,7 +65,6 @@ export class ConceptDisplayComponent implements OnInit {
     private conceptDetailService: ConceptDetailService,
     private router: Router,
     private location: Location,
-    private cookieService: CookieService,
     public configService: ConfigurationService
   ) {
 
@@ -229,24 +228,24 @@ export class ConceptDisplayComponent implements OnInit {
   exportDetails() {
 
     const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
-    const defWorksheet = utils.json_to_sheet(this.defTable());
-    const synWorksheet = utils.json_to_sheet(this.synTable());
-    const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
-    const mapWorksheet = utils.json_to_sheet(this.mapsTable());
-    const parentWorksheet = utils.json_to_sheet(this.parentTable());
-    const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
+    const defWorksheet = this.defTable() ? utils.json_to_sheet(this.defTable()) : null;
+    const synWorksheet = this.synTable() ? utils.json_to_sheet(this.synTable()) : null;
+    const otherPropWorksheet = this.otherPropTable() ? utils.json_to_sheet(this.otherPropTable()) : null;
+    const mapWorksheet = this.mapsTable() ? utils.json_to_sheet(this.mapsTable()) : null;
+    const parentWorksheet = this.parentTable() ? utils.json_to_sheet(this.parentTable()) : null;
+    const childrenWorksheet = this.childrenTable() ? utils.json_to_sheet(this.childrenTable()) : null;
 
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
-      var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
-      var associationsWorksheet = utils.json_to_sheet(this.associationsTable());
-      var incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
-      var incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
-      var disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
+      var roleRelationshipsWorksheet = this.roleRelationshipsTable() ? utils.json_to_sheet(this.roleRelationshipsTable()) : null;
+      var associationsWorksheet = this.associationsTable() ? utils.json_to_sheet(this.associationsTable()) : null;
+      var incomingRoleRelationshipsWorksheet = this.incomingRoleRelationshipsTable() ? utils.json_to_sheet(this.incomingRoleRelationshipsTable()) : null;
+      var incomingAssociationsWorksheet = this.incomingAssociationsTable() ? utils.json_to_sheet(this.incomingAssociationsTable()) : null;
+      var disjointWithWorksheet = this.disjointWithTable() ? utils.json_to_sheet(this.disjointWithTable()) : null;
     }
     else {
-      var broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
-      var narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
-      var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
+      var broaderConceptWorksheet = this.broaderConceptTable() ? utils.json_to_sheet(this.broaderConceptTable()) : null;
+      var narrowerConceptWorksheet = this.narrowerConceptTable() ? utils.json_to_sheet(this.narrowerConceptTable()) : null;
+      var otherRelationshipsWorksheet = this.otherRelationshipsTable() ? utils.json_to_sheet(this.otherRelationshipsTable()) : null;
     }
 
     const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
@@ -280,7 +279,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      defTable.push(["None"]);
+      return null;
     return defTable;
   }
 
@@ -301,7 +300,7 @@ export class ConceptDisplayComponent implements OnInit {
       synTable = synTable.sort((a, b) => (a.Term > b.Term) ? 1 : ((b.Term > a.Term) ? -1 : 0));
     }
     else
-      synTable.push(["None"]);
+      return null;
     return synTable;
   }
 
@@ -320,7 +319,7 @@ export class ConceptDisplayComponent implements OnInit {
       otherPropTable = otherPropTable.sort((a, b) => (a.Type > b.Type) ? 1 : ((b.Type > a.Type) ? -1 : 0));
     }
     else
-      otherPropTable.push(["None"]);
+      return null;
     return otherPropTable;
   }
 
@@ -348,14 +347,14 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      mapTable.push(["None"]);
+      return null;
     return mapTable;
   }
 
   parentTable() {
     var parentTable = [];
-    if (this.concept.parent != undefined && this.concept.parent.length > 0) {
-      this.concept.parent.forEach(parent => {
+    if (this.concept.parents != undefined && this.concept.parents.length > 0) {
+      this.concept.parents.forEach(parent => {
         var parentEntry = {};
         parentEntry["Code"] = parent.code;
         parentEntry["Name"] = parent.name;
@@ -367,7 +366,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      parentTable.push(["None"]);
+      return null;
     return parentTable;
   }
 
@@ -386,7 +385,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      childrenTable.push(["None"]);
+      return null;
     return childrenTable;
   }
 
@@ -402,7 +401,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      roleRelationshipsTable.push(["None"]);
+      return null;
     return roleRelationshipsTable;
   }
 
@@ -418,7 +417,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      associationsTable.push(["None"]);
+      return null;
     return associationsTable;
   }
 
@@ -435,7 +434,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      broaderConceptTable.push(["None"]);
+      return null;
     return broaderConceptTable;
   }
 
@@ -451,7 +450,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      incomingRoleRelationshipsTable.push(["None"]);
+      return null;
     return incomingRoleRelationshipsTable;
   }
 
@@ -468,7 +467,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      narrowerConceptTable.push(["None"]);
+      return null;
     return narrowerConceptTable;
   }
 
@@ -484,14 +483,14 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      incomingAssociationsTable.push(["None"]);
+      return null;
     return incomingAssociationsTable;
   }
 
   disjointWithTable() {
     var disjointWithTable = [];
     if (this.concept.disjointWith != undefined && this.concept.disjointWith.length > 0) {
-      this.concept.roles.forEach(disjoint => {
+      this.concept.disjointWith.forEach(disjoint => {
         var disjointWithEntry = {};
         disjointWithEntry["Relationship"] = disjoint.type;
         disjointWithEntry["Related Code"] = disjoint.relatedCode;
@@ -500,7 +499,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      disjointWithTable.push(["None"]);
+      return null;
     return disjointWithTable;
   }
 
@@ -517,7 +516,7 @@ export class ConceptDisplayComponent implements OnInit {
       });
     }
     else
-      associationsTable.push(["None"]);
+      return null;
     return associationsTable;
   }
 
