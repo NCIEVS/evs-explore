@@ -31,11 +31,8 @@
             <button type="button" pButton label="Search" icon="fa fa-search"
               (click)="search($event);"
               [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="ui-inputgroup" style="padding-bottom: 6px;">
-            <button type="button" pButton label="Reset" (click)="ngOnInit()"></button>
+            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" 
+              (click)="ngOnInit()"></button>
           </div>
         </div>
       </div>
