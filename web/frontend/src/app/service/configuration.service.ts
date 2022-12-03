@@ -157,7 +157,8 @@ export class ConfigurationService {
     // Handle /hierarchy/{terminology}/{code}
     // Handle concept//{terminology}/{code}
     if (splitPath[splitPath.length - 3] === 'hierarchy' ||
-      splitPath[splitPath.length - 3] === 'concept'
+      splitPath[splitPath.length - 3] === 'concept' || 
+      splitPath[splitPath.length - 3] === 'subset'
     ) {
       // The code is the last field
       this.code = splitPath[splitPath.length - 1];

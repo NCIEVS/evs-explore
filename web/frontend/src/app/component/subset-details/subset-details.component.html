@@ -4,7 +4,7 @@
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="subsetExportButton"
           class="ui-button-coloring" pTooltip="Click to download subset search results"
-          (click)="exportSubset()" [disabled]="totalRecords == 0"></button>
+          (click)="exportSubset()" [disabled]="hitsFound == 0"></button>
         <button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
           label="New Search" pButton type="button" class="ui-button-coloring"></button>
       </span>
