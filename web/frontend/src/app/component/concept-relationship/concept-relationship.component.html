@@ -198,7 +198,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Broader Concepts ({{conceptDisplay.concept.broader ? conceptDisplay.concept.broader.length :
+      Broader Concepts ({{conceptDisplay.conceptDetail.broader ?
+      conceptDisplay.conceptDetail.broader.length :
       0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
@@ -297,7 +298,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
-      Narrower Concepts ({{conceptDisplay.concept.narrower ? conceptDisplay.concept.narrower.length
+      Narrower Concepts ({{conceptDisplay.conceptDetail.narrower ?
+      conceptDisplay.conceptDetail.narrower.length
       : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
@@ -405,7 +407,8 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading" id="otherRelationships">
-      Other Relationships ({{conceptDisplay.concept.other ? conceptDisplay.other.inverseRoles.length
+      Other Relationships ({{conceptDisplay.conceptDetail.other ?
+      conceptDisplay.conceptDetail.inverseRoles.length
       : 0}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
     </p-header>
