@@ -214,9 +214,10 @@ export class ConceptDisplayComponent implements OnInit {
     exportDetails() {
         var subsetLink = document.getElementById("subsetLink");
         var nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
-        var nameTableLength = (document.getElementById("nameTable") as HTMLTableElement).rows.length;
-        if (subsetLink)
+        if (subsetLink) {
+            var nameTableLength = (document.getElementById("nameTable") as HTMLTableElement).rows.length;
             nameWorksheet[utils.encode_cell({ c: 1, r: nameTableLength - 1 })] = { f: "=HYPERLINK(\"" + subsetLink.baseURI + "subset/" + this.configService.getTerminologyName() + "/" + subsetLink.innerText + "\",\"" + this.conceptCode + "\")" };
+        }
         const defWorksheet = utils.json_to_sheet(this.defTable());
         const synWorksheet = utils.json_to_sheet(this.synTable());
         const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
