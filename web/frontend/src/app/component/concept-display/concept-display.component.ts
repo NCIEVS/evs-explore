@@ -117,23 +117,9 @@ export class ConceptDisplayComponent implements OnInit {
                             this.sources.splice(this.sources.indexOf('All'), 1);
                             this.sources.unshift('All');
                         }
-                        this.checkConceptSubset();
                     })
 
             })
-    }
-
-    checkConceptSubset() {
-        let isSubset = false;
-        if (this.concept.inverseAssociations) {
-            for (let IA of this.concept.inverseAssociations) {
-                if (IA.type == "Concept_In_Subset" && IA.relatedCode != this.concept.code) {
-                    isSubset = true;
-                    break;
-                }
-            }
-        }
-        this.getConceptIsSubset.next(isSubset);
     }
 
     ngOnDestroy() {
