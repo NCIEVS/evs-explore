@@ -145,7 +145,7 @@
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                   <!--<col style="width: 1.8em">-->
-                  <col*ngFor="let col of columns" [style.width]="col.width">
+                  <col *ngFor="let col of columns" [style.width]="col.width">
                 </colgroup>
               </ng-template>
               <ng-template pTemplate="header" let-columns>

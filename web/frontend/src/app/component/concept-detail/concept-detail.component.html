@@ -42,8 +42,7 @@
               <tr *ngIf="conceptIsSubset">
                 <td class="w-30">Subset Link:</td>
                 <td class="w-50"><a id="subsetLink" [routerLink]="['/subset', terminology, concept.code]"
-                    [target]="_top">{{
-                    concept.code }}</a></td>
+                    [target]="_top">{{ concept.code }}</a></td>
               </tr>
             </tbody>
           </table>
@@ -59,24 +58,20 @@
               </tr>
               <tr>
                 <td class="link-table-cell"><a class="link-table-entry" title="Scroll To Other Properties"
-                    (click)="clickScroll('other')">Other
-                    Properties</a></td>
+                    (click)="clickScroll('other')">Other Properties</a></td>
               </tr>
               <tr>
                 <td class="link-table-cell"><a class="link-table-entry" title="Scroll To Parent/Child Concepts"
-                    (click)="clickScroll('parents')">Parent/Child
-                    Concepts</a></td>
+                    (click)="clickScroll('parents')">Parent/Child Concepts</a></td>
               </tr>
               <tr>
                 <td *ngIf="!(configService.isMultiSource() && configService.isRrf())" class="link-table-cell"><a
                     class="link-table-entry" title="Scroll To Roles and Associations"
-                    (click)="clickScroll('roleRelationships')">Roles and
-                    Associations</a>
+                    (click)="clickScroll('roleRelationships')">Roles and Associations</a>
                 </td>
                 <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20 link-table-cell"><a
                     class="link-table-entry" title="Scroll To Other Relationships"
-                    (click)="clickScroll('otherRelationships')">Other
-                    Relationships</a>
+                    (click)="clickScroll('otherRelationships')">Other Relationships</a>
                 </td>
               </tr>
             </tbody>
