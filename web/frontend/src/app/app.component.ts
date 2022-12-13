@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.checkLicenseText();
     });
 
-    // BAC: this is all begin handled by individual controllers
+    // BAC: this is all beign handled by individual controllers
     // var pathLength = window.location.pathname.split("/").length;
     // if (pathLength > 2) {
     //   let terminology = window.location.pathname.split("/")[pathLength - 1];

@@ -129,11 +129,27 @@ export class ConfigurationService {
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
     if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
       var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
-      // filter down
+      // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>
         t.latest && t.terminology == term
         && (term != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
-      this.setTerminology(terminology);
+
+
+      // If we are changing it, set the terminology
+      if (terminology && terminology != this.terminology) {
+        this.setTerminology(terminology);
+      }
+      // If blank, set terminology to the first one matching "term"
+      else if (!terminology) {
+        let arr = this.terminologies.filter(a => a.terminology == term);
+        if (!arr || arr.length == 0) {
+          throw 'Unable to find terminology matching ' + term;
+        }
+        this.terminology = arr[0];
+      }
+
+
+
     }
 
 
@@ -157,7 +173,7 @@ export class ConfigurationService {
     // Handle /hierarchy/{terminology}/{code}
     // Handle concept//{terminology}/{code}
     if (splitPath[splitPath.length - 3] === 'hierarchy' ||
-      splitPath[splitPath.length - 3] === 'concept' || 
+      splitPath[splitPath.length - 3] === 'concept' ||
       splitPath[splitPath.length - 3] === 'subset'
     ) {
       // The code is the last field
@@ -175,8 +191,16 @@ export class ConfigurationService {
       && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
 
     // If we are changing it, set the terminology
-    if (terminology != this.terminology) {
+    if (terminology && terminology != this.terminology) {
       this.setTerminology(terminology);
+    }
+    // If blank, set terminology to the first one matching "term"
+    else if (!terminology) {
+      let arr = this.terminologies.filter(a => a.terminology == pterminology);
+      if (!arr || arr.length == 0) {
+        throw 'Unable to find terminology matching ' + pterminology;
+      }
+      this.terminology = arr[0];
     }
 
   }
