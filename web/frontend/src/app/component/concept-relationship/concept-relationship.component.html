@@ -1,13 +1,12 @@
 <div *ngIf="concept">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="parents">
-      Parent Concepts ({{conceptDisplay.concept.parents ? conceptDisplay.concept.parents.length :
-      0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Parent Concepts ({{conceptDisplay.concept.parents ?
+      conceptDisplay.concept.parents.length :
+      0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.parents" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.parents" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.parents &&
             concept.parents.length > 0;
           else elseBlockParentConcept
@@ -34,8 +33,8 @@
           <tr *ngIf="checkFilter(parent)">
             <td class="w-20">{{ parent.code }}</td>
             <td class="w-40">
-              <a [routerLink]="[urlBase, terminology, parent.code]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ parent.name
+              <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
+                [target]="urlTarget">{{ parent.name
                 }} </a>
             </td>
             <td *ngIf="configService.isRrf()" class="w-20">{{
@@ -51,13 +50,12 @@
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
-      Child Concepts ({{conceptDisplay.concept.children ? conceptDisplay.concept.children.length :
-      0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Child Concepts ({{conceptDisplay.concept.children ?
+      conceptDisplay.concept.children.length :
+      0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.children" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.children" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.children &&
             concept.children.length > 0;
           else elseBlockChildConcept
@@ -84,8 +82,8 @@
           <tr *ngIf="checkFilter(child)">
             <td>{{ child.code }}</td>
             <td>
-              <a [routerLink]="[urlBase, terminology, child.code]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ child.name }}
+              <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
+                [target]="urlTarget">{{ child.name }}
               </a>
             </td>
             <td *ngIf="configService.isRrf()">{{ child.rela }}</td>
@@ -101,16 +99,15 @@
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="roleRelationships">
-      Role Relationships ({{conceptDisplay.concept.roles ? conceptDisplay.concept.roles.length :
-      0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      Role Relationships ({{conceptDisplay.concept.roles ? conceptDisplay.concept.roles.length
+      :
+      0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         asserted or inherited, pointing from the current concept to other concepts:
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered"
-        *ngIf="
+      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.roles && concept.roles.length > 0;
           else elseBlockRole
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -132,8 +129,8 @@
             <td>{{ role.type }}</td>
             <td>{{ role.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, terminology, role.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
+              <a [routerLink]="[urlBase, terminology, role.relatedCode ]" [queryParams]="getSelectedSourcesQueryParam()"
+                [target]="urlTarget">{{
                 role.relatedName }}</a>
             </td>
           </tr>
@@ -147,16 +144,14 @@
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="associations">
       Associations ({{conceptDisplay.concept.associations ?
-      conceptDisplay.concept.associations.length : 0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the
+      conceptDisplay.concept.associations.length : 0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the
         Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from the current concept to other concepts:
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.associations" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.associations && concept.associations.length > 0;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -195,17 +190,14 @@
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="configService.isMultiSource() && configService.isRrf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Broader Concepts ({{conceptDisplay.conceptDetail.broader ?
       conceptDisplay.conceptDetail.broader.length :
-      0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.broader" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.broader" sortMode="single" class="table table-striped table-bordered" *ngIf="
         concept.broader && concept.broader.length > 0;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -259,8 +251,7 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.inverseRoles" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseRoles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseRoles && concept.inverseRoles.length > 0;
           else elseBlockIncomingRole
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -295,17 +286,14 @@
     </ng-template>
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="configService.isMultiSource() && configService.isRrf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading">
       Narrower Concepts ({{conceptDisplay.conceptDetail.narrower ?
       conceptDisplay.conceptDetail.narrower.length
-      : 0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      : 0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.narrower" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.narrower" sortMode="single" class="table table-striped table-bordered" *ngIf="
         concept.narrower && concept.narrower.length > 0;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -354,15 +342,14 @@
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading" id="iassociations">
       Incoming Associations ({{conceptDisplay.concept.inverseAssociations ?
-      conceptDisplay.concept.inverseAssociations.length : 0}}) <a (click)="scrollToTop()"
-        class="top-link" title="Scroll To the Top of the Page">[top]</a>
+      conceptDisplay.concept.inverseAssociations.length : 0}}) <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from other concepts to the current concept:
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.inverseAssociations" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.inverseAssociations" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseAssociations && concept.inverseAssociations.length > 0;
           else elseBlockIncomingAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -404,17 +391,14 @@
     </ng-template>
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="configService.isMultiSource() && configService.isRrf()">
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
     <p-header class="bold-heading" id="otherRelationships">
       Other Relationships ({{conceptDisplay.conceptDetail.other ?
-      conceptDisplay.conceptDetail.inverseRoles.length
-      : 0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the Top of the Page">[top]</a>
+      conceptDisplay.conceptDetail.other.length
+      : 0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered"
-        *ngIf="concept.other &&
+      <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered" *ngIf="concept.other &&
           concept.other.length > 0;
           else elseBlockAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">
@@ -463,13 +447,11 @@
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
     <p-header class="bold-heading">
       Disjoint With ({{conceptDisplay.concept.disjointWith ?
-      conceptDisplay.concept.disjointWith.length : 0}}) <a (click)="scrollToTop()" class="top-link"
-        title="Scroll To the
+      conceptDisplay.concept.disjointWith.length : 0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the
         Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.disjointWith" sortMode="single"
-        class="table table-striped table-bordered" *ngIf="
+      <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.disjointWith && concept.disjointWith.length > 0;
           else elseBlockDisjointAssociation
         " (sortFunction)="customSort($event)" [customSort]="true">

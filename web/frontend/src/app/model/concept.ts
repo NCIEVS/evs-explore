@@ -42,6 +42,7 @@ export class Concept {
     this.code = input.code;
     this.name = input.name;
     this.leaf = input.leaf;
+    this.subsetLink = input.subsetLink;
     this.synonyms = new Array();
     this.properties = new Array();
 

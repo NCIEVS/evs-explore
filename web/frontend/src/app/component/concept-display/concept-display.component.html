@@ -1,25 +1,20 @@
 <div class="hierarchy-div">
   <div class="page-header ui-coloring">
     {{ title }}
-    <span *ngIf="displayHierarchy"> -- <button
-        [routerLink]="['/hierarchy', terminology, conceptCode]" class="ui-button-coloring"
-        [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
+    <span *ngIf="displayHierarchy"> -- <button [routerLink]="['/hierarchy', terminology, conceptCode]"
+        class="ui-button-coloring" [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
         type="button"></button>
     </span>
-    <span *ngIf="displayHierarchy && configService.isMultiSource()"> &nbsp;<button
-        (click)="termSuggestionUrl()" class="ui-button-coloring" [label]="termSuggestionButton"
-        pButton type="button"></button>
+    <span *ngIf="displayHierarchy && configService.isMultiSource()"> &nbsp;<button (click)="termSuggestionUrl()"
+        class="ui-button-coloring" [label]="termSuggestionButton" pButton type="button"></button>
     </span>
-    <span>
-      &nbsp;<button type="button" pButton label="Export" icon="fa fa-download"
-        class="ui-button-coloring" style="border:0" pTooltip="Click to download concept details"
-        (click)="exportDetails();"></button>
-    </span>
-    <span style="float:right" class="ui-button-back-to-search"><button [routerLink]="['/welcome']"
-        [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText"
-        pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+        label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button"
+        class="ui-button-coloring"></button> &nbsp;</span>
+    <span style="float:right"><button type="button" pButton label="Export" icon="fa fa-download"
+        class="ui-button-coloring" pTooltip="Click to download concept details" (click)="exportDetails();"></button>
+      &nbsp;</span>
   </div>
   <div *ngIf="configService.isMultiSource()" class="center">
     <span *ngIf="sources.length > 1">

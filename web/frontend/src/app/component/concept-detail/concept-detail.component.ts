@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
@@ -57,10 +57,26 @@ export class ConceptDetailComponent implements OnInit {
     this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
     })
-    this.conceptDisplay.getConceptIsSubset.subscribe(conceptIsSubset => {
-      this.conceptIsSubset = conceptIsSubset;
-    })
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.concept)
+      this.conceptIsSubset = this.conceptIsSubsetHelper(this.concept);
+  }
+
+  conceptIsSubsetHelper(concept): boolean {
+    let isSubset = false;
+    if (concept.inverseAssociations) {
+      for (let IA of concept.inverseAssociations) {
+        if (IA.type == "Concept_In_Subset") {
+          isSubset = true;
+          break;
+        }
+      }
+    }
+    return isSubset;
+  }
+
 
   checkFilter(item: any): Boolean {
     if (!this.titleSet && this.concept)

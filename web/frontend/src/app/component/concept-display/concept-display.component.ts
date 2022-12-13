@@ -117,23 +117,9 @@ export class ConceptDisplayComponent implements OnInit {
               this.sources.splice(this.sources.indexOf('All'), 1);
               this.sources.unshift('All');
             }
-            this.checkConceptSubset();
           })
 
       })
-  }
-
-  checkConceptSubset() {
-    let isSubset = false;
-    if (this.concept.inverseAssociations) {
-      for (let IA of this.concept.inverseAssociations) {
-        if (IA.type == "Concept_In_Subset") {
-          isSubset = true;
-          break;
-        }
-      }
-    }
-    this.getConceptIsSubset.next(isSubset);
   }
 
   ngOnDestroy() {
@@ -226,8 +212,12 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   exportDetails() {
-
-    const nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
+    var subsetLink = document.getElementById("subsetLink");
+    var nameWorksheet = utils.table_to_sheet(document.getElementById("nameTable"));
+    if (subsetLink) {
+      var nameTableLength = (document.getElementById("nameTable") as HTMLTableElement).rows.length;
+      nameWorksheet[utils.encode_cell({ c: 1, r: nameTableLength - 1 })] = { f: "=HYPERLINK(\"" + subsetLink.baseURI + "subset/" + this.configService.getTerminologyName() + "/" + subsetLink.innerText + "\",\"" + this.conceptCode + "\")" };
+    }
     const defWorksheet = utils.json_to_sheet(this.defTable());
     const synWorksheet = utils.json_to_sheet(this.synTable());
     const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
