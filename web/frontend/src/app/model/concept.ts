@@ -369,6 +369,23 @@ export class Concept {
     return this.subsetLink ? this.subsetLink : null;
   }
 
+  // returns the value for the specified type
+  getProperty(type) {
+    for (let i = 0; i < this.properties.length; i++) {
+      // ncit specific
+      if (this.properties[i].type == type) {
+        return this.properties[i].value;
+      }
+    }
+    return null;
+  }
+
+  // returns the subset descritpion
+  getSubsetDescription() {
+    // NCIt-specific
+    return this.getProperty('Term_Browser_Value_Set_Description');
+  }
+
   // Return roles text
   getRolesText() {
     return this.getRelationshipsText(this.roles);

@@ -18,7 +18,12 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription = null;
 
   // Constructor
-  constructor(private modalService: NgbModal, private cookieService: CookieService, private configService: ConfigurationService, private sanitizer: DomSanitizer, private titleService: Title) { }
+  constructor(
+    private modalService: NgbModal,
+    private cookieService: CookieService,
+    private configService: ConfigurationService,
+    private sanitizer: DomSanitizer,
+    private titleService: Title) { }
 
   // On init, set up a terminology change subscription
   ngOnInit() {
