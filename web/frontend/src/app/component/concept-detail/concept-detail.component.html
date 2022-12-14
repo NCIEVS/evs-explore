@@ -41,8 +41,9 @@
               </tr>
               <tr *ngIf="conceptIsSubset">
                 <td class="w-30">Subset Link:</td>
-                <td class="w-50"><a id="subsetLink" [routerLink]="['/subset', terminology, concept.code]"
-                    [target]="_top">{{ concept.code }}</a></td>
+                <td class="w-50"><a id="subsetLink"
+                    [routerLink]="['/subset', terminology, concept.code]" [target]="_top">{{
+                    concept.code }}</a></td>
               </tr>
             </tbody>
           </table>
@@ -57,20 +58,24 @@
                     (click)="clickScroll('synonyms')">Synonyms</a></td>
               </tr>
               <tr>
-                <td class="link-table-cell"><a class="link-table-entry" title="Scroll To Other Properties"
-                    (click)="clickScroll('other')">Other Properties</a></td>
+                <td class="link-table-cell"><a class="link-table-entry"
+                    title="Scroll To Other Properties" (click)="clickScroll('other')">Other
+                    Properties</a></td>
               </tr>
               <tr>
-                <td class="link-table-cell"><a class="link-table-entry" title="Scroll To Parent/Child Concepts"
+                <td class="link-table-cell"><a class="link-table-entry"
+                    title="Scroll To Parent/Child Concepts"
                     (click)="clickScroll('parents')">Parent/Child Concepts</a></td>
               </tr>
               <tr>
-                <td *ngIf="!(configService.isMultiSource() && configService.isRrf())" class="link-table-cell"><a
-                    class="link-table-entry" title="Scroll To Roles and Associations"
+                <td *ngIf="!(configService.isMultiSource() && configService.isRrf())"
+                  class="link-table-cell"><a class="link-table-entry"
+                    title="Scroll To Roles and Associations"
                     (click)="clickScroll('roleRelationships')">Roles and Associations</a>
                 </td>
-                <td *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20 link-table-cell"><a
-                    class="link-table-entry" title="Scroll To Other Relationships"
+                <td *ngIf="configService.isMultiSource() && configService.isRrf()"
+                  class="w-20 link-table-cell"><a class="link-table-entry"
+                    title="Scroll To Other Relationships"
                     (click)="clickScroll('otherRelationships')">Other Relationships</a>
                 </td>
               </tr>
@@ -86,10 +91,12 @@
     <p-header class="bold-heading">
       Definitions ({{conceptDisplay.concept.definitions ?
       conceptDisplay.concept.definitions.length
-      : 0}}) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
+      : 0}}) <a (click)="scrollToTop()" class="top-link"
+        title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.definitions" sortMode="single"
+      <p-table class="table table-striped table-bordered" [value]="concept.definitions"
+        sortMode="single"
         *ngIf="concept.definitions && concept.definitions.length > 0;else elseBlockDefinitions"
         (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
@@ -100,7 +107,7 @@
             <th class="w-10" [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isRdf() || configService.isSingleSource()" class="w-10">
+            <th *ngIf="configService.terminology.terminology == 'ncit'" class="w-10">
               Attribution</th>
           </tr>
         </ng-template>
@@ -110,14 +117,16 @@
               <td>{{bypassHTML(val.definition)}}
                 <div *ngIf="val.qualifiers != null">
                   <div *ngFor="let qual of val.qualifiers">
-                    <span class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value
+                    <span *ngIf="qual.type != 'attribution'" class="qualEntry">&ensp;{{ qual.type
+                      }}:
+                      {{ qual.value
                       }}</span>
                   </div>
                 </div>
               </td>
               <td [innerHtml]="bypassHTML(val.source)"></td>
               <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
-              <td *ngIf="configService.isRdf() || configService.isSingleSource()">
+              <td *ngIf="configService.terminology.terminology == 'ncit'">
                 <span *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value
                     }}</span></span>
@@ -137,8 +146,8 @@
       <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
-      <p-table class="table table-striped table-bordered" [value]="concept.synonyms" (sortFunction)="customSort($event)"
-        [customSort]="true">
+      <p-table class="table table-striped table-bordered" [value]="concept.synonyms"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-50" [pSortableColumn]="'name'">Term
@@ -186,9 +195,10 @@
                   synonym.code
                   }}</a>
                 <a *ngIf="getHierarchy(synonym.source) && synonym.code"
-                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]" target="_top"><i
-                    class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
-                <span *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
+                  [routerLink]="['/hierarchy/', getTerminologyBySource(synonym.source), synonym.code]"
+                  target="_top"><i class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
+                <span
+                  *ngIf="(synonym.source != 'MDR' && synonym.source != 'NCI') || !synonym.code">{{
                   synonym.code }}
                 </span>
               </td>
@@ -231,7 +241,8 @@
               <td>{{property.type}}</td>
               <td>
                 <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
-                  <a [routerLink]="['/concept/ncim/' + property.value]" target=_top>{{property.value}}</a></span>
+                  <a [routerLink]="['/concept/ncim/' + property.value]"
+                    target=_top>{{property.value}}</a></span>
                 <span
                   *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'"
                   [innerHTML]="checkExternalLink(property)"></span>
@@ -254,13 +265,13 @@
 
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRdf()">
     <p-header class="bold-heading">
-      Maps To ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a (click)="scrollToTop()"
-        class="top-link" title="Scroll To the Top of the Page">[top]</a>
+      Maps To ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a
+        (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20 link-table-cell" [pSortableColumn]="'targetName'">Target
@@ -297,13 +308,13 @@
   </p-panel>
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isRrf()">
     <p-header class="bold-heading">
-      Mappings ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a (click)="scrollToTop()"
-        class="top-link" title="Scroll To the Top of the Page">[top]</a>
+      Mappings ({{conceptDisplay.concept.maps ? conceptDisplay.concept.maps.length : 0}}) <a
+        (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.maps"
-        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps" (sortFunction)="customSort($event)"
-        [customSort]="true">
+        *ngIf="concept.maps && concept.maps.length > 0; else elseBlockMaps"
+        (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10" [pSortableColumn]="'sourceCode'">Source Code
