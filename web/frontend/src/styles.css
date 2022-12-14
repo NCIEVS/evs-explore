@@ -190,6 +190,10 @@ body .alert-info {
   color: #1c5e86 !important;
 }
 
+.ui-button-text-icon-left .ui-button-text {
+  padding: .28em 1em .28em 1.8em !important
+}
+
 .ui-tabview-selected.ui-state-active {
   background-color: #1c5e86 !important;
   border-color: #1c5e86 !important;
