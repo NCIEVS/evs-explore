@@ -36,6 +36,8 @@ export class ConceptDetailComponent implements OnInit {
   )
 
   terminology: string = null;
+  metadataMap: Map<String, any> = null;
+  metadata: any = null;
   titleSet = false;
   collapsed: boolean = false;
   conceptIsSubset: boolean = false;
@@ -49,6 +51,8 @@ export class ConceptDetailComponent implements OnInit {
   ) {
 
     this.terminology = configService.getTerminologyName();
+    this.metadataMap = configService.getMetadataMap();
+    this.metadata = this.metadataMap[this.terminology];
   }
 
   // On initialization
@@ -60,8 +64,24 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.concept)
+    if (this.concept) {
       this.conceptIsSubset = this.conceptIsSubsetHelper(this.concept);
+
+      // build metadata entries for each synonym source
+      this.concept.synonyms.forEach(s => {
+        if (s.source) {
+          let term = this.getTerminologyBySource(s.source);
+          // don't do for the current terminology
+          if (this.terminology != term && !this.metadataMap[s.source] && this.metadataMap[term]) {
+            this.metadataMap[s.source] = {
+              'terminology': term,
+              'hierarchy': this.metadataMap[term].hierarchy
+            };
+          }
+        }
+
+      });
+    }
   }
 
   conceptIsSubsetHelper(concept): boolean {
@@ -137,18 +157,6 @@ export class ConceptDetailComponent implements OnInit {
     else {
       return source.toLowerCase();
     }
-  }
-
-  getHierarchy(source) {
-    var termName = this.getTerminologyBySource(source);
-    if (termName == "") {
-      return false;
-    }
-    var terminology = this.configService.getTerminologyByName(termName);
-    if (terminology == null || terminology.metadata.hierarchy == null) {
-      return false;
-    }
-    return this.configService.getTerminologyByName(termName).metadata.hierarchy;
   }
 
   getCodeLabel() {

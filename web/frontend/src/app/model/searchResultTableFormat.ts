@@ -151,7 +151,6 @@ export class SearchResultTableFormat {
 
           } else if (returnFields[k] === 'Preferred Name') {
 
-            console.log('yyy', searchResult.concepts[i].name);
             data['column' + count] = searchResult.concepts[i].name;
             // } else {
             //   console.log('NEED TO SUPPORT THIS', returnFields[k]);

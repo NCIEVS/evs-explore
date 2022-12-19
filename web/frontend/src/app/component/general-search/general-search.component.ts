@@ -46,7 +46,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   title: string;
   loadedMultipleConcept = false;
   firstSearchFlag = false;
-  noMatchedConcepts = true;
+  noMatchedConcepts = false;
 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
@@ -108,6 +108,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         .pipe(filter((event) => event instanceof NavigationStart))
         .subscribe((event: NavigationStart) => {
           if (event.restoredState) {
+            console.log('zzz')
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
@@ -158,7 +159,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     setTimeout(() => this.termauto.focusInput());
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
-      this.performSearch();
+      setTimeout(() => this.performSearch());
     }
   }
 
@@ -291,7 +292,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchCriteria.fromRecord = event.first;
       this.searchCriteria.pageSize = event.rows;
       this.setQueryUrl();
-      this.performSearch();
+      // This triggers a duplicate search, the setQueryUrl prompts a search on its own
+      //this.performSearch();
     }
   }
 
