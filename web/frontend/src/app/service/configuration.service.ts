@@ -16,7 +16,7 @@ export class ConfigurationService {
 
   private code: string = null;
   selectedSources = null;
-  private terminology = null;
+  terminology = null;
   private terminologies: Array<any> = [];
   private subject: Subject<any>;
   private sources: string = null;
@@ -51,6 +51,18 @@ export class ConfigurationService {
 
   getTerminologies(): Array<any> {
     return this.terminologies;
+  }
+
+  getTerminologyMap(): Map<string, any> {
+    let terminologyMap = new Map();
+    this.terminologies.forEach(t => terminologyMap[t.terminology] = t);
+    return terminologyMap;
+  }
+
+  getMetadataMap(): Map<string, any> {
+    let metadataMap = new Map();
+    this.terminologies.forEach(t => { metadataMap[t.terminology] = t.metadata; });
+    return metadataMap;
   }
 
   getDefaultTerminologyName(): string {
