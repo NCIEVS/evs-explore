@@ -19,8 +19,9 @@ export class ConceptDetailService {
   ) { }
 
   // Get concept with summary includes
-  getConceptSummary(conceptCode: string, include: string): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include),
+  getConceptSummary(conceptCode: string, include: string, limit: number = null): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include
+      + (limit ? '&limit=' + limit : '')),
       {
         responseType: 'json',
         params: {
@@ -48,23 +49,6 @@ export class ConceptDetailService {
 
   }
 
-  // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
-  getRelationships(conceptCode: string) {
-    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith'),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: "true"
-        }
-      }
-    )
-      .pipe(
-        catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch concept relationships = ' + conceptCode));
-        })
-      );
-  }
-
   // Get hierarchy data (either paths from root, or children)
   getHierarchyData(code: string) {
     const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree';
@@ -87,14 +71,6 @@ export class ConceptDetailService {
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
-  }
-
-  // Get Value Set Top Level
-  getSubsetDetails(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/subsetMembers/' + code);
-    return this.http.get(encodeURI(url))
-      .toPromise()
-      .then(res => <Array<Concept>[]>res);
   }
 
   getSubsetMembers(code: string, fromRecord = 0, pageSize = 10, searchTerm = "", ascending = null, sort = null): any {

@@ -5,7 +5,6 @@ import { Concept } from './../../model/concept';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
-import { ignoreElements } from 'rxjs-compat/operator/ignoreElements';
 import { ViewportScroller } from '@angular/common';
 
 // Component for displaying concept details
@@ -99,8 +98,9 @@ export class ConceptDetailComponent implements OnInit {
 
 
   checkFilter(item: any): Boolean {
-    if (!this.titleSet && this.concept)
+    if (!this.titleSet && this.concept) {
       this.setTitle();
+    }
     var flag = (
       // no source field -> show
       (!item.hasOwnProperty('source') &&
@@ -171,4 +171,9 @@ export class ConceptDetailComponent implements OnInit {
     this.viewportScroller.scrollToPosition([0, 0]);
   }
 
+  loadAll(scrollToId: string = null) {
+    if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
+      this.conceptDisplay.lookupConcept(false, scrollToId);
+    }
+  }
 }

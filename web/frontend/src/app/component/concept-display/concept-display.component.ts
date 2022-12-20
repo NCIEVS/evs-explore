@@ -7,6 +7,7 @@ import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
 import { writeXLSX, utils } from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ViewportScroller } from '@angular/common';
 
 
 // Concept display component
@@ -62,6 +63,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   constructor(
     private conceptDetailService: ConceptDetailService,
+    private viewportScroller: ViewportScroller,
     private router: Router,
     private location: Location,
     public configService: ConfigurationService
@@ -72,7 +74,6 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
-
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
@@ -100,23 +101,9 @@ export class ConceptDisplayComponent implements OnInit {
             this.properties.push(property['name']);
           }
         }
+
         // Then look up the concept
-        this.conceptDetailService
-          .getConceptSummary(this.configService.getCode(), 'full')
-          .subscribe((concept: any) => {
-            // and finally build the local state from it
-            this.concept = concept;
-            this.conceptDetail = new Concept(concept, this.configService);
-            this.conceptCode = concept.code;
-            this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-            // Sort the source list (case insensitive)
-            this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-            // make sure All is at the front
-            if (this.sources[0] != 'All' && this.sources.includes('All')) { // make sure All is first in list
-              this.sources.splice(this.sources.indexOf('All'), 1);
-              this.sources.unshift('All');
-            }
-          })
+        this.lookupConcept(true);
 
       })
   }
@@ -125,6 +112,30 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  // lookup concept
+  lookupConcept(limit: boolean = false, scrollToId: string = null) {
+    this.conceptDetailService
+      .getConceptSummary(this.configService.getCode(), 'full', limit ? 100 : null)
+      .subscribe((concept: any) => {
+        // and finally build the local state from it
+        this.concept = concept;
+        this.conceptDetail = new Concept(concept, this.configService);
+        this.conceptCode = concept.code;
+        this.title = concept.name + ' ( Code - ' + concept.code + ' )';
+        // Sort the source list (case insensitive)
+        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        // make sure All is at the front
+        if (this.sources[0] != 'All' && this.sources.includes('All')) { // make sure All is first in list
+          this.sources.splice(this.sources.indexOf('All'), 1);
+          this.sources.unshift('All');
+        }
+
+        if (scrollToId) {
+          this.viewportScroller.scrollToAnchor(scrollToId);
+        }
+      })
   }
 
   // Reroute to hierarchy view

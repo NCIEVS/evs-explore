@@ -24,7 +24,7 @@ export class ConceptRelationshipComponent implements OnInit {
     private conceptDisplay: ConceptDisplayComponent,
     private configService: ConfigurationService, private viewportScroller: ViewportScroller) {
 
-    this.terminology = configService.getTerminologyName();
+    this.terminology = this.configService.getTerminologyName();
   }
 
   ngOnInit() {
@@ -67,5 +67,11 @@ export class ConceptRelationshipComponent implements OnInit {
 
   scrollToTop() {
     this.viewportScroller.scrollToPosition([0, 0]);
+  }
+
+  loadAll(scrollToId: string = null) {
+    if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
+      this.conceptDisplay.lookupConcept(false, scrollToId);
+    }
   }
 }
