@@ -21,13 +21,7 @@ export class ConceptDetailService {
   // Get concept with summary includes
   getConceptSummary(conceptCode: string, include: string, limit: number = null): Observable<any> {
     return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include
-      + (limit ? '&limit=' + limit : '')),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: "true"
-        }
-      }
+      + (limit ? '&limit=' + limit : ''))
     ).pipe(
       catchError((error) => {
         return observableThrowError(new EvsError(error, 'Could not fetch concept = ' + conceptCode));
@@ -50,16 +44,18 @@ export class ConceptDetailService {
   }
 
   // Get hierarchy data (either paths from root, or children)
-  getHierarchyData(code: string) {
-    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree';
+  getHierarchyData(code: string, limit: number = null) {
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree'
+      + (limit ? '?limit=' + limit : '');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
   }
 
   // Get hierarchy data for children of specified code.
-  getHierarchyChildData(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children');
+  getHierarchyChildData(code: string, limit: number = null) {
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children'
+      + (limit ? '?limit=' + limit : '');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -94,7 +90,7 @@ export class ConceptDetailService {
       {
         responseType: 'json',
         params: {
-          hideLoader: "true"
+          //          hideLoader: "true"
         }
       }
     ).pipe(
@@ -111,14 +107,14 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  getRoots(terminology: string) {
+  getRoots(terminology: string, hideLoader: boolean = false) {
     var url = '/api/v1/concept/' + this.configService.getTerminology().terminology + '/roots';
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
-        params: {
+        params: (hideLoader ? {
           hideLoader: "true"
-        }
+        } : {})
       }
     ).pipe(
       catchError((error) => {

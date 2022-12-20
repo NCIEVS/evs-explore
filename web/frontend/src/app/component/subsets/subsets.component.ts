@@ -70,7 +70,6 @@ export class SubsetsComponent implements OnInit {
     console.log('getPathInHierarchy');
 
     if (SubsetsComponent.origHierarchyData == null) {
-      this.hierarchyTable.loading = true;
       this.searchDisabled = true;
       this.subsetDetailService.getSubsetTopLevel()
         .then(nodes => {
@@ -83,7 +82,6 @@ export class SubsetsComponent implements OnInit {
           SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
           console.log('done copy hierarchy data');
           this.NCItermFirst();
-          this.hierarchyTable.loading = false;
           this.placeholderText = "Enter at least 3 letters of a subset.";
           this.searchDisabled = false;
         });
@@ -172,7 +170,6 @@ export class SubsetsComponent implements OnInit {
 
   // Handle "expand all" or "collapse all"
   expandOrCollapseAllNodes(hierarchyData, level = 0) {
-    this.hierarchyTable.loading = true;
     setTimeout(() => this.expandOrCollapseAllNodesHelper(hierarchyData, level));
   }
 
@@ -193,12 +190,10 @@ export class SubsetsComponent implements OnInit {
       } else {
         this.expandLabel = 'Expand All';
       }
-      this.hierarchyTable.loading = false;
     }
   }
 
   performSubsetSearch(string) {
-    this.hierarchyTable.loading = true;
     this.subsetSearchText = string;
     setTimeout(() => {
       this.expandDisabled = true;
@@ -214,7 +209,6 @@ export class SubsetsComponent implements OnInit {
       this.subsetsFound = (this.filteredHierarchy.length > 0);
       this.hierarchyData = this.filteredHierarchy;
       this.NCItermFirst();
-      this.hierarchyTable.loading = false;
     });
   }
 

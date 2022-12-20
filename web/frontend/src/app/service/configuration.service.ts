@@ -235,7 +235,12 @@ export class ConfigurationService {
       this.setSubject(new Subject<any>());
     }
     return new Promise((resolve, reject) => {
-      this.http.get('/api/v1/metadata/terminologies').toPromise()
+      this.http.get('/api/v1/metadata/terminologies',
+        {
+          params: {
+            hideLoader: "true"
+          }
+        }).toPromise()
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
@@ -365,6 +370,9 @@ export class ConfigurationService {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
+        params: {
+          hideLoader: "true"
+        }
       }
     )
       .pipe(
@@ -418,7 +426,10 @@ export class ConfigurationService {
     var url = '/api/v1/metadata/' + terminology + '/welcomeText';
     return this.http.get(encodeURI(url),
       {
-        responseType: 'text'
+        responseType: 'text',
+        params: {
+          hideLoader: "true"
+        }
       }
     ).pipe(
       catchError((error) => {

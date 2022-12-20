@@ -108,7 +108,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         .pipe(filter((event) => event instanceof NavigationStart))
         .subscribe((event: NavigationStart) => {
           if (event.restoredState) {
-            console.log('zzz')
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();

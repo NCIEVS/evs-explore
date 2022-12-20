@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
+import { LoaderService } from '../../service/loader.service';
 
 
 // Hierarchy display component - loaded via the /hierarchy route
@@ -42,7 +41,7 @@ export class HierarchyDisplayComponent implements OnInit {
   constructor(
     private conceptDetailService: ConceptDetailService,
     private router: Router,
-    private cookieService: CookieService,
+    private loaderService: LoaderService,
     public configService: ConfigurationService
   ) {
 
@@ -89,7 +88,8 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    this.conceptDetailService.getHierarchyData(this.conceptCode)
+    this.loaderService.showLoader();
+    this.conceptDetailService.getHierarchyData(this.conceptCode, 100)
       .then(nodes => {
 
         this.hierarchyData = <TreeNode[]>nodes;
@@ -102,13 +102,15 @@ export class HierarchyDisplayComponent implements OnInit {
             this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
           }, 100);
         }
+        this.loaderService.hideLoader();
 
       });
   }
 
   // Get child tree nodes (for an expanded node)
   getTreeTableChildrenNodes(code: string, node: any) {
-    this.conceptDetailService.getHierarchyChildData(code)
+    this.loaderService.showLoader();
+    this.conceptDetailService.getHierarchyChildData(code, 100)
       .then(nodes => {
         node.children = nodes;
         for (const child of node.children) {
@@ -118,12 +120,13 @@ export class HierarchyDisplayComponent implements OnInit {
         setTimeout(() => {
           this.scrollToSelectionTableTree(node, this.hierarchyTable);
         }, 100);
+        this.loaderService.hideLoader();
       });
   }
 
   // Handler for expanding a tree node
   treeTableNodeExpand(event) {
-    console.log('treeTableNodeExpand', event.node);
+    // console.log('treeTableNodeExpand', event.node);
     if (event.node) {
       this.getTreeTableChildrenNodes(event.node.code, event.node);
     }
@@ -131,7 +134,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Handler for collapsing a tree node
   treeTableNodeCollapse(event) {
-    console.log('treeTableNodeCollapse', event.node);
+    // console.log('treeTableNodeCollapse', event.node);
     setTimeout(() => {
       this.scrollToSelectionTableTree(event.node, this.hierarchyTable);
     }, 100);
@@ -146,11 +149,13 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Deep copy of hierarchy data
   deepCopyHierarchyData() {
+    // console.log('deep copy hierarchy data');
     this.hierarchyData = [...this.hierarchyData];
   }
 
   // Reset tree node properties
   setTreeTableProperties(node: TreeNode) {
+    // console.log('set tree table properties', node);
     node.collapsedIcon = '';
     node.expandedIcon = '';
     const obj = {
@@ -174,6 +179,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Scroll to the selected node - oy!
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
+    // console.log('scroll to selection', selectedNode);
     let index = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement
       .querySelectorAll('.ui-treetable-tbody>tr');
@@ -195,6 +201,7 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   getSourceList(concept) {
+    // console.log('get source list', concept);
     var sourceList = new Set<string>();
     sourceList.add("All");
     for (const obj in concept.synonyms) {
