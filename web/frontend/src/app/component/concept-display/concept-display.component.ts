@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { writeXLSX, utils } from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ViewportScroller } from '@angular/common';
-
+import { LoaderService } from '../../service/loader.service';
 
 // Concept display component
 // BAC - looks like not used
@@ -66,7 +66,8 @@ export class ConceptDisplayComponent implements OnInit {
     private viewportScroller: ViewportScroller,
     private router: Router,
     private location: Location,
-    public configService: ConfigurationService
+    private loaderService: LoaderService,
+    public configService: ConfigurationService,
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
@@ -116,6 +117,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   // lookup concept
   lookupConcept(limit: boolean = false, scrollToId: string = null) {
+    this.loaderService.showLoader();
     this.conceptDetailService
       .getConceptSummary(this.configService.getCode(), 'full', limit ? 100 : null)
       .subscribe((concept: any) => {
@@ -135,6 +137,7 @@ export class ConceptDisplayComponent implements OnInit {
         if (scrollToId) {
           this.viewportScroller.scrollToAnchor(scrollToId);
         }
+        this.loaderService.hideLoader();
       })
   }
 
