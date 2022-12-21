@@ -30,15 +30,11 @@ table a:hover {
   border-bottom: 1px solid #ccc !important;
 }
 
-
 p-dialog .ui-dialog {
   overflow: scroll;
   max-height: 70%;
 }
 
-.overflow-scroll {
-  overflow: scroll;
-}
 
 .btn-link {
   font-weight: 400;
@@ -207,30 +203,19 @@ body .alert-info {
   margin-right: 17px
 }
 
-.progress-spinner {
-  position: fixed;
-  z-index: 999;
-  height: 2em;
-  width: 2em;
-  overflow: show;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.progress-spinner:before {
-  content: '';
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.53);
-}
 
 .pb-0 {
   padding-bottom: 0px !important;
 }
+
+.pl-3 {
+  padding-left: 3px !important;
+}
+.pr-3 {
+  padding-right: 3px !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+

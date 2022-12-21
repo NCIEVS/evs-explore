@@ -25,7 +25,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     const appRef = this.injector.get(ApplicationRef);
     const commonDataService = this.injector.get(CommonDataService);
 
-    loaderService.hideLoader();
+    loaderService.forceHideLoader();
 
     // Handle EVS errors in specific ay
     if (error instanceof EvsError) {

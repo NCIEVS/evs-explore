@@ -4,15 +4,15 @@
       <div class="hierarchy-div">
         <div class="page-header ui-coloring">
           Concept Hierarchy
+          <span style="float:right" class="fa fa-close pointer" title="Close hierarchy view"
+            (click)="closeHierarchy()"></span>
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
           [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
-          (onNodeExpand)="treeTableNodeExpand($event)"
-          (onNodeCollapse)="treeTableNodeCollapse($event)"
+          (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)"
           (onNodeSelect)="treeTableNodeSelected(selectedNode)">
           <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
-              [ngClass]="{'treenode-highlight': rowData.highlight}">
+            <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
               <td>
                 <div style="cursor: pointer; display:flex;">
                   <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>

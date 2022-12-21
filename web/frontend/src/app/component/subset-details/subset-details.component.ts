@@ -3,10 +3,10 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-subset-details',
@@ -22,8 +22,7 @@ export class SubsetDetailsComponent implements OnInit {
   hierarchyDisplay = '';
   titleCode: string;
   titleDesc: string;
-  usedSubsetList: Array<Concept>;
-  fullSubsetList: Array<Concept>;
+  subsets: Array<Concept>;
   avoidLazyLoading = true;
   loading: boolean;
   synonymSources: any;
@@ -46,7 +45,8 @@ export class SubsetDetailsComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer,
     private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
-    private cookieService: CookieService, private configService: ConfigurationService,
+    private loaderService: LoaderService,
+    private configService: ConfigurationService,
     private titleService: Title
   ) {
 
@@ -62,15 +62,14 @@ export class SubsetDetailsComponent implements OnInit {
       this.subsetDetailService.getSubsetMembers(this.titleCode)
         .then(nodes => {
           this.hitsFound = nodes["total"];
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.subsets = new Array<Concept>();
+          nodes["concepts"].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
-          //this.usedSubsetList = this.fullSubsetList;
+
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c["synonyms"]));
           });
           this.synonymSources = synonymMap;
           this.termAutoSearch = "";
@@ -120,16 +119,14 @@ export class SubsetDetailsComponent implements OnInit {
       this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows)
         .then(nodes => {
           this.hitsFound = nodes["total"];
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.subsets = new Array<Concept>();
+          nodes["concepts"].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
 
-          //          this.usedSubsetList = this.fullSubsetList;
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c["synonyms"]));
           });
           this.synonymSources = synonymMap;
         });
@@ -191,22 +188,19 @@ export class SubsetDetailsComponent implements OnInit {
       .then(nodes => {
         this.hitsFound = nodes["total"];
         if (this.hitsFound > 0) {
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.subsets = new Array<Concept>();
+          nodes["concepts"].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
 
-          //          this.usedSubsetList = this.fullSubsetList;
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c["synonyms"]));
           });
           this.synonymSources = synonymMap;
         }
         else {
-          this.fullSubsetList = null;
-          this.usedSubsetList = null;
+          this.subsets = null;
         }
       });
     this.textSuggestions = [];
@@ -214,7 +208,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   // export search results
   async exportSubset() {
-    document.getElementById("progressSpinner").style.display = "block";
+    this.loaderService.showLoader();
     var titles = [];
     var exportMax = this.configService.getMaxExportSize();
     var exportPageSize = this.configService.getExportPageSize();
@@ -229,8 +223,8 @@ export class SubsetDetailsComponent implements OnInit {
     for (const page of pageList) {
       await this.subsetDetailService.getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term).toPromise().then(
         result => {
-          result.concepts.forEach(concept => {
-            subsetText += this.exportCodeFormatter(concept);
+          result.concepts.forEach(c => {
+            subsetText += this.exportCodeFormatter(c);
           });
         }
       );
@@ -239,7 +233,7 @@ export class SubsetDetailsComponent implements OnInit {
     saveAs(new Blob([subsetText], {
       type: 'text/plain'
     }), fileName + new Date().toISOString() + '.xls');
-    document.getElementById("progressSpinner").style.display = "none";
+    this.loaderService.hideLoader();
   }
 
   exportCodeFormatter(concept: Concept) {
@@ -249,10 +243,12 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += concept.name + "\t";
       rowText += "\"" + this.getSynonymNames(concept, "NCI", null).join("\n") + "\"";
       rowText += "\t";
-      concept.definitions.forEach(def => {
-        if (def.source == "NCI")
-          rowText += def.definition.replace(/"/g, "\"\"");
-      });
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == "NCI")
+            rowText += def.definition.replace(/"/g, "\"\"");
+        });
+      }
 
     }
     else if (this.subsetFormat == "CTRP") {
@@ -277,16 +273,20 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += "\"" + this.getSynonymNames(concept, "NCI", null).join("\n") + "\"";
       rowText += "\t";
 
-      concept.definitions.forEach(def => {
-        if (def.source == this.subsetFormat)
-          rowText += def.definition.replace(/"/g, "\"\"");
-      });
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == this.subsetFormat)
+            rowText += def.definition.replace(/"/g, "\"\"");
+        });
+      }
       rowText += "\t";
 
-      concept.definitions.forEach(def => {
-        if (def.source == "NCI")
-          rowText += def.definition.replace(/"/g, "\"\"");
-      });
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == "NCI")
+            rowText += def.definition.replace(/"/g, "\"\"");
+        });
+      }
     }
     rowText += "\n";
     return rowText;

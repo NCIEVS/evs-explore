@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 import { Router } from '@angular/router';
+import { LoaderService } from 'src/app/service/loader.service';
 
 // Header component
 @Component({
@@ -18,7 +19,8 @@ export class EvsHeaderComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private configService: ConfigurationService,
-    private conceptDetail: ConceptDetailService,
+    private conceptService: ConceptDetailService,
+    private loaderService: LoaderService,
     public router: Router) { }
 
   ngOnInit() {
@@ -28,12 +30,13 @@ export class EvsHeaderComponent implements OnInit {
         + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
       console.log(this.versionInfo)
     }
-    if (this.terminology.metadata.hierarchy) {
-      // Look up the first root code
-      this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
-        this.firstRoot = response[0].code;
-      });
-    }
+    // The next part gets called automatically via the subscription
+    // if (this.terminology.metadata.hierarchy) {
+    //   // Look up the first root code
+    //   this.conceptDetail.getRoots(this.terminology.terminology, true).subscribe(response => {
+    //     this.firstRoot = response[0].code;
+    //   });
+    // }
 
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
@@ -43,9 +46,11 @@ export class EvsHeaderComponent implements OnInit {
         console.log(this.versionInfo)
 
         if (this.terminology.metadata.hierarchy) {
+          this.loaderService.showLoader();
           // Look up the first root code
-          this.conceptDetail.getRoots(this.terminology.terminology).subscribe(response => {
+          this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
             this.firstRoot = response[0].code;
+            this.loaderService.hideLoader();
           });
         }
       }

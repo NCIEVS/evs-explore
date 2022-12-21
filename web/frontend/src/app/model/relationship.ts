@@ -7,14 +7,20 @@ export class Relationship {
   relatedCode: string;
   relatedName: string;
   source: string
-  highlight: string;
+  ct: number;
   qualifiers: any;
+  highlight: string;
 
   // Construct a concept reference from json input
   constructor(input: any,
     private configService: ConfigurationService
   ) {
     Object.assign(this, input);
+
+    // Bail if this is a ct entry
+    if (input.ct) {
+      return;
+    }
 
     var relaQualifier = null;
     if (input.qualifiers) {
@@ -26,7 +32,6 @@ export class Relationship {
     // Handle UMLS relationships
     // This seems backwards but RB means "broader than" which means the
     // related code is "narrower" than the current concept.
-
     if (input.type == 'RB') {
       // If we're showing "Narrower Concepts" table
       if (configService.isMultiSource && configService.isRrf()) {

@@ -50,7 +50,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
-  displayTableFormat = true;
   showMoreSearchOption = false;
   avoidLazyLoading = false;
 
@@ -73,7 +72,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   propertiesReturn = null;
   totalRecords = 0;
   timetaken = '';
-  loading: boolean;
   showMore = true;
 
   // filter for sources
@@ -108,7 +106,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         .pipe(filter((event) => event instanceof NavigationStart))
         .subscribe((event: NavigationStart) => {
           if (event.restoredState) {
-            console.log('zzz')
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
@@ -411,12 +408,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
       this.searchCriteria.terminology = this.selectedTerminology.terminology;
+      this.loadedMultipleConcept = false;
       // call search term service
       this
         .searchTermService
@@ -445,7 +442,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
 
-            this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
             // detect changes if not a destroyed view, then set paging
@@ -460,7 +456,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
           }
-          this.loading = false;
           this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
         });
@@ -469,8 +464,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.noMatchedConcepts = true;
       this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
       this.reportData = [];
-      this.displayTableFormat = false;
-      this.loading = false;
       this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
     }

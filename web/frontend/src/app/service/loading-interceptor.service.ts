@@ -61,7 +61,7 @@ export class LoadingInterceptor implements HttpInterceptor {
    */
   private onError(error: any): Observable<HttpEvent<any>> {
     // if any error (not for just HttpResponse) we stop our loader bar
-    this.loaderService.hideLoader();
+    this.loaderService.forceHideLoader();
     return observableThrowError(error);
   }
 }

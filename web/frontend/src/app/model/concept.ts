@@ -17,19 +17,34 @@ export class Concept {
   version: string;
   highlight: string;
   synonyms: Synonym[];
+  synonymsCt: number = 0;
   definitions: Definition[];
+  definitionsCt: number = 0;
   properties: Property[];
+  propertiesCt: number = 0;
   semanticTypes: String[];
   parents: ConceptReference[];
+  parentsCt: number = 0;
   children: ConceptReference[];
+  childrenCt: number = 0;
   roles: Relationship[];
+  rolesCt: number = 0;
   inverseRoles: Relationship[];
+  inverseRolesCt: number = 0;
   associations: Relationship[];
+  associationsCt: number = 0;
   inverseAssociations: Relationship[];
+  inverseAssociationsCt: number = 0;
   broader: Relationship[];
+  broaderCt: number = 0;
   narrower: Relationship[];
+  narrowerCt: number = 0;
   other: Relationship[];
+  otherCt: number = 0;
   maps: Map[];
+  mapsCt: number = 0;
+  disjointWith: Relationship[];
+  disjointWithCt: number = 0;
   subsetLink: string;
   synonymUniqueArray: any[];
   definitionUniqueArray: any[];
@@ -61,14 +76,20 @@ export class Concept {
         }
       }
       // Case-insensitive search
-      this.synonyms.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+      this.synonyms.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+      this.synonymsCt = this.getCt(this.synonyms)
     }
+
+    this.definitions = new Array();
     if (input.definitions) {
-      this.definitions = new Array();
       for (let i = 0; i < input.definitions.length; i++) {
         this.definitions.push(new Definition(input.definitions[i]));
       }
+      this.definitionsCt = this.getCt(this.definitions);
     }
+
     if (input.properties) {
       this.semanticTypes = new Array();
 
@@ -80,49 +101,65 @@ export class Concept {
         }
 
       }
-      this.properties.sort((a, b) => (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
+      this.properties.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
+
+      this.propertiesCt = this.getCt(this.properties);
+
     }
 
     // children
+    this.children = new Array();
     if (input.children) {
-      this.children = new Array();
       for (let i = 0; i < input.children.length; i++) {
         this.children.push(new ConceptReference(input.children[i]));
       }
+      this.childrenCt = this.getCt(this.children);
+
     }
 
     // parents
+    this.parents = new Array();
     if (input.parents) {
-      this.parents = new Array();
       for (let i = 0; i < input.parents.length; i++) {
         this.parents.push(new ConceptReference(input.parents[i]));
       }
+      this.parentsCt = this.getCt(this.parents);
     }
 
     // roles
+    this.roles = new Array();
     if (input.roles) {
-      this.roles = new Array();
       for (let i = 0; i < input.roles.length; i++) {
         this.roles.push(new Relationship(input.roles[i], configService));
       }
+      this.rolesCt = this.getCt(this.roles);
     }
 
     // inverse roles
+    this.inverseRoles = new Array();
     if (input.inverseRoles) {
-      this.inverseRoles = new Array();
       for (let i = 0; i < input.inverseRoles.length; i++) {
         this.inverseRoles.push(new Relationship(input.inverseRoles[i], configService));
       }
+      this.inverseRolesCt = this.getCt(this.inverseRoles);
     }
 
     // associations
+    this.associations = new Array();
+    this.broader = new Array();
+    this.narrower = new Array();
+    this.other = new Array();
     if (input.associations) {
-      this.associations = new Array();
-      this.broader = new Array();
-      this.narrower = new Array();
-      this.other = new Array();
 
       for (let i = 0; i < input.associations.length; i++) {
+        if (input.associations[i].ct) {
+          this.associationsCt = input.associations[i].ct;
+          this.associations.push(new Relationship(input.associations[i], configService));
+          continue;
+        }
+
         // Handle the RB/RN/RO ncim case
         // This seems backwards but an RB means 'broader than' so the
         // related concept is actually narrower than the current one
@@ -137,26 +174,73 @@ export class Concept {
           this.associations.push(new Relationship(input.associations[i], configService));
         }
       }
+
+      // If in RRF mode, associationsCt being set means there is "more" data.
+      if (configService.isRrf()) {
+
+        this.broaderCt = this.getCt(this.broader);
+        this.narrowerCt = this.getCt(this.narrower);
+        this.otherCt = this.getCt(this.other);
+
+        // If there is an associationsCt, we know there are more rels
+        // So set flags to reflect numbers greater than the number of entries.
+        if (this.associationsCt > 0) {
+          this.broader.push(new Relationship({ 'ct': this.associationsCt }, configService));
+          this.narrower.push(new Relationship({ 'ct': this.associationsCt }, configService));
+          this.other.push(new Relationship({ 'ct': this.associationsCt }, configService));
+        }
+      }
+      // Otherwise, it operates normally
+      else {
+        this.associationsCt = this.getCt(this.associations);
+      }
     }
 
+
     // inverse associations
+    this.inverseAssociations = new Array();
     if (input.inverseAssociations) {
       this.inverseAssociations = new Array();
       for (let i = 0; i < input.inverseAssociations.length; i++) {
         this.inverseAssociations.push(new Relationship(input.inverseAssociations[i], configService));
       }
+      this.inverseAssociationsCt = this.getCt(this.inverseAssociations);
     }
 
     // maps
+    this.maps = new Array();
     if (input.maps) {
-      this.maps = new Array();
       for (let i = 0; i < input.maps.length; i++) {
         this.maps.push(new Map(input.maps[i]));
       }
-      this.maps.sort((a, b) => a.targetName.localeCompare(b.targetName, undefined, { sensitivity: 'base' }));
-
+      this.maps.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        a.targetName.localeCompare(b.targetName, undefined, { sensitivity: 'base' }));
+      this.mapsCt = this.getCt(this.maps);
     }
 
+    // disjoint with
+    this.disjointWith = new Array();
+    if (input.disjointWith) {
+      for (let i = 0; i < input.disjointWith.length; i++) {
+        this.disjointWith.push(new Relationship(input.disjointWith[i], configService));
+      }
+      this.disjointWithCt = this.getCt(this.disjointWith);
+    }
+
+  }
+
+  getCt(list: Array<any>): number {
+    if (!list) {
+      return 0;
+    }
+    if (list.length == 0) {
+      return 0;
+    }
+    if (list[list.length - 1].ct) {
+      return list[list.length - 1].ct;
+    }
+    return list.length;
   }
 
   // Indicates whether properties suggest this is a retired concept.
@@ -360,7 +444,8 @@ export class Concept {
       }
     }
     // case-insensitive sort
-    syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    syns = syns.sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
   }
 

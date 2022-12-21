@@ -33,16 +33,16 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!usedSubsetList && termAutoSearch">
+      <div *ngIf="!subsets && termAutoSearch">
         <p-header class="bold-heading">
           <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
         </p-header>
       </div>
 
       <!-- "NCIt" Subset Format -->
-      <p-table *ngIf="usedSubsetList && subsetFormat == 'NCIt'" [value]="usedSubsetList" [rows]="pageSize"
-        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+      <p-table *ngIf="subsets && subsetFormat == 'NCIt'" [value]="subsets" [rows]="pageSize" [totalRecords]="hitsFound"
+        [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true"
+        (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10 subsetTitle sortable" id="code" (click)="search($event, 'code')">NCIt
@@ -81,9 +81,9 @@
       </p-table>
 
       <!-- "CTRP" Subset Format -->
-      <p-table *ngIf="usedSubsetList && subsetFormat == 'CTRP'" [value]="usedSubsetList" [rows]="pageSize"
-        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+      <p-table *ngIf="subsets && subsetFormat == 'CTRP'" [value]="subsets" [rows]="pageSize" [totalRecords]="hitsFound"
+        [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true"
+        (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10 subsetTitle sortable" id="code" (click)="search($event, 'code')">NCIt
@@ -130,10 +130,9 @@
       </p-table>
 
       <!-- "Other" Subset Format -->
-      <p-table *ngIf="usedSubsetList && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" [value]="usedSubsetList"
-        [rows]="pageSize" [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both"
-        [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
-        class="table table-striped table-bordered">
+      <p-table *ngIf="subsets && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" [value]="subsets" [rows]="pageSize"
+        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
+        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10 subsetTitle sortable" id="code" (click)="search($event, 'code')">NCIt
@@ -184,8 +183,4 @@
       </p-table>
     </div>
   </p-panel>
-</div>
-<p>&nbsp;</p>
-<div class="progress-spinner" id="progressSpinner" style="display:none" color="grey">
-  <p-progressSpinner></p-progressSpinner>
 </div>

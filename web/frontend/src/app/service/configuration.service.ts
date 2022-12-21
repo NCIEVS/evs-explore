@@ -5,8 +5,9 @@ import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { ParamMap } from '@angular/router';
 import { Concept } from '../model/concept';
+import { TreeNode } from 'primeng/api';
+
 
 // Configuration service
 @Injectable({
@@ -21,6 +22,7 @@ export class ConfigurationService {
   private subject: Subject<any>;
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
+  public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;
@@ -235,7 +237,12 @@ export class ConfigurationService {
       this.setSubject(new Subject<any>());
     }
     return new Promise((resolve, reject) => {
-      this.http.get('/api/v1/metadata/terminologies').toPromise()
+      this.http.get('/api/v1/metadata/terminologies',
+        {
+          params: {
+            hideLoader: "true"
+          }
+        }).toPromise()
         .then(response => {
           // response is an array of terminologies, find the "latest" one
           var arr = response as any[];
@@ -365,6 +372,9 @@ export class ConfigurationService {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
+        params: {
+          hideLoader: "true"
+        }
       }
     )
       .pipe(
@@ -418,7 +428,10 @@ export class ConfigurationService {
     var url = '/api/v1/metadata/' + terminology + '/welcomeText';
     return this.http.get(encodeURI(url),
       {
-        responseType: 'text'
+        responseType: 'text',
+        params: {
+          hideLoader: "true"
+        }
       }
     ).pipe(
       catchError((error) => {

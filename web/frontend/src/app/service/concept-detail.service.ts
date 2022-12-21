@@ -19,14 +19,9 @@ export class ConceptDetailService {
   ) { }
 
   // Get concept with summary includes
-  getConceptSummary(conceptCode: string, include: string): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: "true"
-        }
-      }
+  getConceptSummary(conceptCode: string, include: string, limit: number = null): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include
+      + (limit ? '&limit=' + limit : ''))
     ).pipe(
       catchError((error) => {
         return observableThrowError(new EvsError(error, 'Could not fetch concept = ' + conceptCode));
@@ -48,34 +43,19 @@ export class ConceptDetailService {
 
   }
 
-  // Get the concept relationships (roles, associations, inverseRoles, inverseAssociations, and maps?)
-  getRelationships(conceptCode: string) {
-    return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + conceptCode + '?include=parents,children,roles,associations,inverseRoles,inverseAssociations,disjointWith'),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: "true"
-        }
-      }
-    )
-      .pipe(
-        catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Could not fetch concept relationships = ' + conceptCode));
-        })
-      );
-  }
-
   // Get hierarchy data (either paths from root, or children)
-  getHierarchyData(code: string) {
-    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree';
+  getHierarchyData(code: string, limit: number = null) {
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree'
+      + (limit ? '?limit=' + limit : '');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
   }
 
   // Get hierarchy data for children of specified code.
-  getHierarchyChildData(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children');
+  getHierarchyChildData(code: string, limit: number = null) {
+    const url = '/api/v1/concept/' + this.configService.getTerminologyName() + '/' + code + '/subtree/children'
+      + (limit ? '?limit=' + limit : '');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -87,14 +67,6 @@ export class ConceptDetailService {
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
-  }
-
-  // Get Value Set Top Level
-  getSubsetDetails(code: string) {
-    const url = encodeURI('/api/v1/concept/' + this.configService.getTerminologyName() + '/subsetMembers/' + code);
-    return this.http.get(encodeURI(url))
-      .toPromise()
-      .then(res => <Array<Concept>[]>res);
   }
 
   getSubsetMembers(code: string, fromRecord = 0, pageSize = 10, searchTerm = "", ascending = null, sort = null): any {
@@ -118,7 +90,7 @@ export class ConceptDetailService {
       {
         responseType: 'json',
         params: {
-          hideLoader: "true"
+          //          hideLoader: "true"
         }
       }
     ).pipe(
@@ -135,14 +107,14 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
-  getRoots(terminology: string) {
+  getRoots(terminology: string, hideLoader: boolean = false) {
     var url = '/api/v1/concept/' + this.configService.getTerminology().terminology + '/roots';
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
-        params: {
+        params: (hideLoader ? {
           hideLoader: "true"
-        }
+        } : {})
       }
     ).pipe(
       catchError((error) => {
