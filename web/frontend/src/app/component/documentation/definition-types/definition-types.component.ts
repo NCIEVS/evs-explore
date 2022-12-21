@@ -28,7 +28,7 @@ export class DefinitionTypesComponent implements OnInit {
         this.definitionTypes = response;
         this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Definition Types");
+    this.titleService.setTitle('EVS Explore - Definition Types');
   }
 
   ngAfterViewInit(): void {

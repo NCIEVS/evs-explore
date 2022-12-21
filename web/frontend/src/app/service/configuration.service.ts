@@ -76,7 +76,7 @@ export class ConfigurationService {
   terminologySearchListFilter(term, defaultTerminologyName) {
     if (term.terminology != defaultTerminologyName)
       return true;
-    if (term.tags && "monthly" in term.tags && term.latest == true)
+    if (term.tags && 'monthly' in term.tags && term.latest == true)
       return true;
     return false;
   }
@@ -146,14 +146,14 @@ export class ConfigurationService {
       // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>
         t.latest && t.terminology == term
-        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
+        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
 
 
       // If we are changing it, set the terminology
       if (terminology && terminology != this.terminology) {
         this.setTerminology(terminology);
       }
-      // If blank, set terminology to the first one matching "term"
+      // If blank, set terminology to the first one matching 'term'
       else if (!terminology) {
         let arr = this.terminologies.filter(a => a.terminology == term);
         if (!arr || arr.length == 0) {
@@ -181,7 +181,7 @@ export class ConfigurationService {
   // consider the local env and the 'evsexplore' context path in deploy envs
   setConfigFromPathname(path: string) {
     console.log('set config from path', path);
-    const splitPath = path.split("/");
+    const splitPath = path.split('/');
     var pterminology;
 
     // Handle /hierarchy/{terminology}/{code}
@@ -202,13 +202,13 @@ export class ConfigurationService {
     }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
-      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags["monthly"] == "true")))[0];
+      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
 
     // If we are changing it, set the terminology
     if (terminology && terminology != this.terminology) {
       this.setTerminology(terminology);
     }
-    // If blank, set terminology to the first one matching "term"
+    // If blank, set terminology to the first one matching 'term'
     else if (!terminology) {
       let arr = this.terminologies.filter(a => a.terminology == pterminology);
       if (!arr || arr.length == 0) {
@@ -240,11 +240,11 @@ export class ConfigurationService {
       this.http.get('/api/v1/metadata/terminologies',
         {
           params: {
-            hideLoader: "true"
+            hideLoader: 'true'
           }
         }).toPromise()
         .then(response => {
-          // response is an array of terminologies, find the "latest" one
+          // response is an array of terminologies, find the 'latest' one
           var arr = response as any[];
 
           // Fail if there are no entries
@@ -252,18 +252,18 @@ export class ConfigurationService {
             throw 'Unable to find any terminologies with /metadata/terminologies';
           }
 
-          // Sort terminologies by "latest" and "tags=monthly" and
+          // Sort terminologies by 'latest' and 'tags=monthly' and
           // pick the first one for the termniology.
           arr.sort((a, b) => {
-            // Start with "terminology"
+            // Start with 'terminology'
             if (a.terminology != b.terminology) {
               return a.terminology.localeCompare(b.terminology, undefined, { sensitivity: 'base' });
             }
-            // Then by "latest"
+            // Then by 'latest'
             if (a.latest != b.latest) {
               return a.latest ? -1 : 1;
             }
-            // Then by "monthly"
+            // Then by 'monthly'
             if (a.tags && a.tags.monthly == 'true' && b.tags && b.tags.monthly != 'true') {
               return -1;
             } else if (b.tags && b.tags.monthly == 'true' && a.tags && a.tags.monthly != 'true') {
@@ -283,7 +283,7 @@ export class ConfigurationService {
             return keep;
           });
 
-          // Set terminology to the first one matching "term"
+          // Set terminology to the first one matching 'term'
           arr = this.terminologies.filter(a => a.terminology == term);
           if (!arr || arr.length == 0) {
             throw 'Unable to find terminology matching ' + term;
@@ -373,7 +373,7 @@ export class ConfigurationService {
       {
         responseType: 'json',
         params: {
-          hideLoader: "true"
+          hideLoader: 'true'
         }
       }
     )
@@ -430,7 +430,7 @@ export class ConfigurationService {
       {
         responseType: 'text',
         params: {
-          hideLoader: "true"
+          hideLoader: 'true'
         }
       }
     ).pipe(
@@ -441,7 +441,7 @@ export class ConfigurationService {
   }
 
   getSubsetLink(terminology: string, subsetCode: String) {
-    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + "?include=subsetLink";
+    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Concept>res);

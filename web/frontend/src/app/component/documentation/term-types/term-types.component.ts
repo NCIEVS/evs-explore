@@ -27,7 +27,7 @@ export class TermTypesComponent implements OnInit {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Term Types");
+    this.titleService.setTitle('EVS Explore - Term Types');
   }
 
 }

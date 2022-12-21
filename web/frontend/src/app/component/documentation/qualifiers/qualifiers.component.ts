@@ -28,7 +28,7 @@ export class QualifiersComponent implements OnInit {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Qualifiers");
+    this.titleService.setTitle('EVS Explore - Qualifiers');
   }
 
   ngAfterViewInit(): void {

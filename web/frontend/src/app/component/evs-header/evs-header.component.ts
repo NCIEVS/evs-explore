@@ -27,7 +27,7 @@ export class EvsHeaderComponent implements OnInit {
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
-        + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
+        + (this.terminology.date ? '; Release Date: ' + this.terminology.date : '');
       console.log(this.versionInfo)
     }
     // The next part gets called automatically via the subscription
@@ -42,15 +42,13 @@ export class EvsHeaderComponent implements OnInit {
       this.terminology = terminology;
       if (this.terminology) {
         this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
-          + (this.terminology.date ? '; Release Date: ' + this.terminology.date : "");
+          + (this.terminology.date ? '; Release Date: ' + this.terminology.date : '');
         console.log(this.versionInfo)
 
         if (this.terminology.metadata.hierarchy) {
-          this.loaderService.showLoader();
           // Look up the first root code
-          this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
+          this.conceptService.getRoots(this.terminology.terminology).subscribe(response => {
             this.firstRoot = response[0].code;
-            this.loaderService.hideLoader();
           });
         }
       }

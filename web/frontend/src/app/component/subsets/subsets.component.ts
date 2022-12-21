@@ -22,7 +22,7 @@ export class SubsetsComponent implements OnInit {
   subsetWithRelationships: Concept;
   direction = 'horizontal';
   filteredHierarchy: TreeNode[]
-  hierarchyDisplay = "";
+  hierarchyDisplay = '';
   hierarchyData: TreeNode[];
   subsetSuggestions: string[] = [];
   title: string;
@@ -31,11 +31,11 @@ export class SubsetsComponent implements OnInit {
   subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
-  placeholderText = "Loading Subset Hierarchy...";
+  placeholderText = 'Loading Subset Hierarchy...';
   searchDisabled = false;
   subsetSearchText: string;
 
-  urlBase = "/subsets"
+  urlBase = '/subsets'
   urlTarget = '_top'
 
   constructor(
@@ -51,7 +51,7 @@ export class SubsetsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.titleService.setTitle("EVS Explore - Subsets");
+    this.titleService.setTitle('EVS Explore - Subsets');
     this.getPathInHierarchy();
     this.subsetsFound = true;
   }
@@ -65,16 +65,13 @@ export class SubsetsComponent implements OnInit {
       this.loaderService.showLoader();
       this.subsetDetailService.getSubsetTopLevel()
         .then(nodes => {
-          console.log('get subset top level');
           this.hierarchyData = <TreeNode[]>nodes;
           for (const node of this.hierarchyData) {
             this.setTreeTableProperties(node, false);
           }
-          console.log('copy hierarchy data');
           this.configService.subsets = JSON.parse(JSON.stringify(this.hierarchyData));
-          console.log('done copy hierarchy data');
           this.sortNcitFirst();
-          this.placeholderText = "Enter at least 3 letters of a subset.";
+          this.placeholderText = 'Enter at least 3 letters of a subset.';
           this.searchDisabled = false;
           this.loaderService.hideLoader();
         });
@@ -154,7 +151,7 @@ export class SubsetsComponent implements OnInit {
   }
 
 
-  // Handle "expand all" or "collapse all"
+  // Handle 'expand all' or 'collapse all'
   expandOrCollapseAllNodes(hierarchyData, level = 0) {
     setTimeout(() => this.expandOrCollapseAllNodesHelper(hierarchyData, level));
   }
@@ -231,7 +228,7 @@ export class SubsetsComponent implements OnInit {
   }
 
   sortNcitFirst() {
-    this.hierarchyData = this.hierarchyData.filter(r => r.data.label.includes("National Cancer Institute Terminology")).concat(this.hierarchyData.filter(r => !r.data.label.includes("National Cancer Institute Terminology")));
+    this.hierarchyData = this.hierarchyData.filter(r => r.data.label.includes('National Cancer Institute Terminology')).concat(this.hierarchyData.filter(r => !r.data.label.includes('National Cancer Institute Terminology')));
   }
 
 }

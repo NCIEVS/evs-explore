@@ -17,6 +17,6 @@ export class AlldocsComponent {
   }
 
   ngAfterViewInit(): void {
-    this.titleService.setTitle("EVS Explore - All Documentation");
+    this.titleService.setTitle('EVS Explore - All Documentation');
   }
 }

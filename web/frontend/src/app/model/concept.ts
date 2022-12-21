@@ -175,7 +175,7 @@ export class Concept {
         }
       }
 
-      // If in RRF mode, associationsCt being set means there is "more" data.
+      // If in RRF mode, associationsCt being set means there is 'more' data.
       if (configService.isRrf()) {
 
         this.broaderCt = this.getCt(this.broader);

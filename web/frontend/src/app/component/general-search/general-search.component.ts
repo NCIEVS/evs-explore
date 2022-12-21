@@ -189,7 +189,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get('source') != "") {
+      if (this.queryParams.get('source') != '') {
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
       }
       if (this.searchCriteria.type == 'phrase' ||
@@ -411,7 +411,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
-      this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
+      this.searchCriteria.term = String(this.searchCriteria.term).replace(/"/g, '');
       this.searchCriteria.terminology = this.selectedTerminology.terminology;
       this.loadedMultipleConcept = false;
       // call search term service
@@ -472,7 +472,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   // export search results
   async exportSearch() {
     var columnHeaders = this.displayColumns.map(col => col.header);
-    var toJoin = columnHeaders.join("\t").replace("Highlights\t", "") + "\n";
+    var toJoin = columnHeaders.join('\t').replace('Highlights\t', '') + '\n';
     var exportPageSize = this.configService.getExportPageSize();
     var maxExport = this.configService.getMaxExportSize();
     var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
@@ -492,51 +492,51 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     }
     saveAs(new Blob([toJoin], {
       type: 'text/plain'
-    }), this.searchCriteria.term + "." + new Date().toISOString() + '.xls');
+    }), this.searchCriteria.term + '.' + new Date().toISOString() + '.xls');
   }
 
   exportCodeFormatter(concept, displayColumns) {
-    var conceptFormatString = "";
-    if (displayColumns.includes("Code"))
-      conceptFormatString += concept.code + "\t";
-    if (displayColumns.includes("Preferred Name"))
-      conceptFormatString += concept.name + "\t";
+    var conceptFormatString = '';
+    if (displayColumns.includes('Code'))
+      conceptFormatString += concept.code + '\t';
+    if (displayColumns.includes('Preferred Name'))
+      conceptFormatString += concept.name + '\t';
 
-    if (displayColumns.includes("Synonyms")) {
-      var synonymString = "";
+    if (displayColumns.includes('Synonyms')) {
+      var synonymString = '';
       if (concept.synonyms != undefined && concept.synonyms.length > 0) {
-        synonymString += "\"";
+        synonymString += '"';
         // get unique synonyms
         let uniqueSynonyms = [...concept.synonyms.reduce((map, obj) => map.has(obj.name) ? map : map.set(obj.name, obj), new Map()).values()];
         for (let syn of uniqueSynonyms) {
-          synonymString += syn.name.replace(/"/g, "\"\"") + "\n";
+          synonymString += syn.name.replace(/"/g, '""') + '\n';
         }
         // remove last newline
-        synonymString = synonymString.substring(0, synonymString.length - 1) + "\"";
+        synonymString = synonymString.substring(0, synonymString.length - 1) + '"';
       }
-      synonymString += "\t";
+      synonymString += '\t';
       conceptFormatString += synonymString;
     }
 
-    if (displayColumns.includes("Definitions")) {
-      var definitionString = "";
+    if (displayColumns.includes('Definitions')) {
+      var definitionString = '';
       if (concept.definitions != undefined && concept.definitions.length > 0) {
-        definitionString += "\"";
+        definitionString += '"';
         for (let def of concept.definitions) {
-          definitionString += def.source + ": " + def.definition.replace(/"/g, "\"\"") + "\n";
+          definitionString += def.source + ': ' + def.definition.replace(/"/g, '""') + '\n';
         }
         // remove last newline
-        definitionString = definitionString.substring(0, definitionString.length - 1) + "\"";
+        definitionString = definitionString.substring(0, definitionString.length - 1) + '"';
       }
-      definitionString += "\t";
+      definitionString += '\t';
       conceptFormatString += definitionString;
     }
 
-    if (displayColumns.includes("Semantic Type")) {
-      var semString = "";
+    if (displayColumns.includes('Semantic Type')) {
+      var semString = '';
       if (concept.properties != undefined && concept.properties.length > 0) {
         for (let prop of concept.properties) {
-          if (prop.type == "Semantic_Type") {
+          if (prop.type == 'Semantic_Type') {
             semString += prop.value;
             // only one semantic type
             break;
@@ -545,7 +545,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       }
       conceptFormatString += semString;
     }
-    conceptFormatString += "\n";
+    conceptFormatString += '\n';
     return conceptFormatString;
   }
 

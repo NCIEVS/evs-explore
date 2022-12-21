@@ -37,7 +37,7 @@ export class SourcesComponent implements OnInit {
       });
 
     this.terminology = this.configService.getTerminology().terminology;
-    this.titleService.setTitle("EVS Explore - Sources");
+    this.titleService.setTitle('EVS Explore - Sources');
 
   }
 

@@ -54,13 +54,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     // BAC: this is all beign handled by individual controllers
-    // var pathLength = window.location.pathname.split("/").length;
+    // var pathLength = window.location.pathname.split('/').length;
     // if (pathLength > 2) {
-    //   let terminology = window.location.pathname.split("/")[pathLength - 1];
+    //   let terminology = window.location.pathname.split('/')[pathLength - 1];
     //   this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
     // }
     // else if (window.location.search) {
-    //   let terminology = window.location.search.split("=")[1];
+    //   let terminology = window.location.search.split('=')[1];
     //   this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
     // }
     // // default terminology in config

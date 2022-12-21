@@ -29,7 +29,7 @@ export class RolesComponent implements OnInit {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Roles");
+    this.titleService.setTitle('EVS Explore - Roles');
   }
 
   ngAfterViewInit(): void {

@@ -21,18 +21,18 @@ export class HierarchyDisplayComponent implements OnInit {
   conceptDetail: Concept;
   conceptWithRelationships: Concept;
   direction = 'horizontal';
-  hierarchyDisplay = "";
+  hierarchyDisplay = '';
   hierarchyData: TreeNode[]
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
   terminology: any;
   title: string;
 
-  urlBase = "/hierarchy"
+  urlBase = '/hierarchy'
   urlTarget = '_top'
 
-  conceptPanelSize = "70.0"
-  hierarchyPanelSize = "30.0"
+  conceptPanelSize = '70.0'
+  hierarchyPanelSize = '30.0'
 
   // For source control
   sources: string[] = [];
@@ -51,7 +51,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log("ngOnInit");
+    console.log('ngOnInit');
 
     // this.updateDisplaySize();
     this.getPathInHierarchy();
@@ -66,12 +66,12 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   closeHierarchy() {
-    this.router.navigate(["/concept/" + this.terminology + "/" + this.conceptCode]);
+    this.router.navigate(['/concept/' + this.terminology + '/' + this.conceptCode]);
   }
 
   updateDisplaySize = () => {
     let bodyHeight = document.documentElement.scrollHeight
-    document.getElementById('hierarchyTableDisplay').style.height = bodyHeight + "px";
+    document.getElementById('hierarchyTableDisplay').style.height = bodyHeight + 'px';
     /*
      * Adjust the size of the hierarchy display
     */
@@ -81,7 +81,7 @@ export class HierarchyDisplayComponent implements OnInit {
     } else {
       tableHeight = bodyHeight
     }
-    this.hierarchyTable.scrollHeight = (tableHeight - 200) + "px";
+    this.hierarchyTable.scrollHeight = (tableHeight - 200) + 'px';
   }
 
   // Handler for selecting a tree node
@@ -105,7 +105,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
     // Handle selecting a code to navigate away
     else {
-      this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]);
+      this.router.navigate(['/hierarchy/' + this.terminology + '/' + event.code]);
     }
   }
 
@@ -142,7 +142,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
         if (limit == null) {
           let codes = new Set(node.children.map(n => n.code));
-          // Remove the "ct" node and combine the list with the remaining elements
+          // Remove the 'ct' node and combine the list with the remaining elements
           // NOTE: this may require resorting
           node.children = [...node.children.filter(n => !n.ct), ...nodes.filter(n => !codes.has(n['code']))];
         } else {
@@ -205,15 +205,15 @@ export class HierarchyDisplayComponent implements OnInit {
       node.children = [];
     }
 
-    // Attach info to the "ct" entry
+    // Attach info to the 'ct' entry
     if (node['ct']) {
-      // Handle a "more data" siblings situation
+      // Handle a 'more data' siblings situation
       if (parentNode) {
         node.data.label = '... More data (' + node['ct'] + ')';
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
       }
-      // Handle a "more data" tree positions
+      // Handle a 'more data' tree positions
       else {
         node.data.label = '... Get all tree positions (' + node['ct'] + ')';
         node.data.parentCode = 'root';
@@ -251,7 +251,7 @@ export class HierarchyDisplayComponent implements OnInit {
   getSourceList(concept) {
     // console.log('get source list', concept);
     var sourceList = new Set<string>();
-    sourceList.add("All");
+    sourceList.add('All');
     for (const obj in concept.synonyms) {
       if (this.keepSource(concept.synonyms[obj].source)) {
         sourceList.add(concept.synonyms[obj].source)
@@ -286,14 +286,14 @@ export class HierarchyDisplayComponent implements OnInit {
 
   toggleSelectedSource(source) {
     // clear if All is selected or was last selected
-    if (source == "All" || (this.selectedSources.size == 1 && this.selectedSources.has("All"))) {
+    if (source == 'All' || (this.selectedSources.size == 1 && this.selectedSources.has('All'))) {
       this.selectedSources.clear();
     }
     if (this.selectedSources.has(source)) {
       this.selectedSources.delete(source);
       // reset to All if removing last selected source
       if (this.selectedSources.size == 0) {
-        this.selectedSources.add("All");
+        this.selectedSources.add('All');
       }
     }
     else {

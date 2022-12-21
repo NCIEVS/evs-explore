@@ -29,7 +29,7 @@ export class AssociationsComponent implements OnInit {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Associations");
+    this.titleService.setTitle('EVS Explore - Associations');
 
   }
 

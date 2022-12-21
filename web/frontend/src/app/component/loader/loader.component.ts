@@ -24,6 +24,7 @@ export class LoaderComponent implements OnInit, OnDestroy {
     this.loaderService.getLoaderSubject().subscribe(show => {
       // force hide and unblock
       if (show == null) {
+        console.log('error, clear spinner tracking');
         this.tracking = [];
         this.spinner.hide();
         this.blockedDocument = false;
@@ -36,7 +37,6 @@ export class LoaderComponent implements OnInit, OnDestroy {
       } else {
         // If hides are coming in after force hide, ignore them
         if (this.tracking.length > 0) {
-
           // pop the stack
           this.tracking.pop();
           // if fully unwound, hide

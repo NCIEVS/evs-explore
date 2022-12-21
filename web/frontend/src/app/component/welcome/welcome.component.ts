@@ -14,7 +14,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
 
   welcomeText: any = null;
-  boilerPlateWelcomeText: any = "Loading welcome text for " + this.configService.getTerminologyName() + " ...";
+  boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
   private subscription = null;
 
   // Constructor
@@ -42,7 +42,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }
-    this.titleService.setTitle("EVS Explore");
+    this.titleService.setTitle('EVS Explore');
     this.setWelcomeText(this.configService.getTerminologyName());
   }
 
@@ -50,8 +50,8 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   setWelcomeText(terminology: String): any {
     this.configService.getWelcomeText(terminology).subscribe(response => {
       this.welcomeText = response;
-      if (document.getElementById("welcomeTextDiv")) {
-        document.getElementById("welcomeTextDiv").innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
+      if (document.getElementById('welcomeTextDiv')) {
+        document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
       }
     });
   }

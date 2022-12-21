@@ -87,7 +87,7 @@ export class ConceptDetailComponent implements OnInit {
     let isSubset = false;
     if (concept.inverseAssociations) {
       for (let IA of concept.inverseAssociations) {
-        if (IA.type == "Concept_In_Subset") {
+        if (IA.type == 'Concept_In_Subset') {
           isSubset = true;
           break;
         }
@@ -112,7 +112,7 @@ export class ConceptDetailComponent implements OnInit {
     return flag;
   }
 
-  // Render links appropriately if they are defined in "external Links"
+  // Render links appropriately if they are defined in 'external Links'
   checkExternalLink(property) {
     if (this.externalLinks.has(property.type)) {
       let values = [];
@@ -128,7 +128,7 @@ export class ConceptDetailComponent implements OnInit {
   bypassHTML(value) {
     if (!value)
       return null;
-    if (value.search("<") == -1 || value.search(">") == -1)
+    if (value.search('<') == -1 || value.search('>') == -1)
       return value;
     return this.sanitizer.bypassSecurityTrustHtml(value);
   }
@@ -144,15 +144,15 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   public setTitle() {
-    this.titleService.setTitle(this.concept.code + " - " + this.concept.name);
+    this.titleService.setTitle(this.concept.code + ' - ' + this.concept.name);
     this.titleSet = true;
   }
 
   getTerminologyBySource(source) {
     if (!source)
-      return "";
-    if (source == "NCI") {
-      return "ncit";
+      return '';
+    if (source == 'NCI') {
+      return 'ncit';
     }
     else {
       return source.toLowerCase();

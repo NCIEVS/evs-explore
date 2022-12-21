@@ -28,7 +28,7 @@ export class SynonymTypesComponent implements OnInit {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Synonym Types");
+    this.titleService.setTitle('EVS Explore - Synonym Types');
   }
 
 

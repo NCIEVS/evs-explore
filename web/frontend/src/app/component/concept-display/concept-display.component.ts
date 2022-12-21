@@ -232,7 +232,7 @@ export class ConceptDisplayComponent implements OnInit {
       nameWorksheet[utils.encode_cell({ c: 1, r: nameTableLength - 1 })] =
       {
         f: '=HYPERLINK("' + subsetLink.baseURI + 'subset/' + this.configService.getTerminologyName() +
-          '/' + subsetLink.innerText + '\',"' + this.conceptCode + '"'
+          '/' + subsetLink.innerText + '","' + this.conceptCode + '"'
       };
     }
     const defWorksheet = utils.json_to_sheet(this.defTable());

@@ -103,8 +103,8 @@ export class SearchTermService {
     param.fromRecord = searchCriteria.fromRecord;
     param.pageSize = searchCriteria.pageSize;
     param.export = true;
-    param.columns = displayColumns.map(col => col.header).join(",");
-    param.columns = param.columns.replace("Highlights,", ""); // until we figure out what we're doing with the highlights
+    param.columns = displayColumns.map(col => col.header).join(',');
+    param.columns = param.columns.replace('Highlights,', ''); // until we figure out what we're doing with the highlights
 
     // Perform the HTTP call
     return this.http.get(encodeURI(url),
