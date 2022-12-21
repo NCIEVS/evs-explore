@@ -30,15 +30,11 @@ table a:hover {
   border-bottom: 1px solid #ccc !important;
 }
 
-
 p-dialog .ui-dialog {
   overflow: scroll;
   max-height: 70%;
 }
 
-.overflow-scroll {
-  overflow: scroll;
-}
 
 .btn-link {
   font-weight: 400;
@@ -211,3 +207,15 @@ body .alert-info {
 .pb-0 {
   padding-bottom: 0px !important;
 }
+
+.pl-3 {
+  padding-left: 3px !important;
+}
+.pr-3 {
+  padding-right: 3px !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+

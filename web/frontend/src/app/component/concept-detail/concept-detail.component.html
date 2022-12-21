@@ -200,7 +200,7 @@
               <td *ngIf="metadata.detailsColumns && metadata.detailsColumns['synonyms-termType']">
                 <span *ngIf="synonym.termType">{{ synonym.termType }}</span>
                 <span
-                  *ngIf="!synonym.termType && metadata.detailsColumns && metadata.detailsColumns['synonyms-type']">({{
+                  *ngIf="!synonym.termType && metadata.detailsColumns && !metadata.detailsColumns['synonyms-type']">({{
                   synonym.type }})</span>
               </td>
               <td *ngIf="metadata.detailsColumns && metadata.detailsColumns['synonyms-code']">

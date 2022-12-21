@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/primeng';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'subsets',
@@ -16,7 +13,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./subsets.component.css']
 })
 export class SubsetsComponent implements OnInit {
-  [x: string]: any;
+
 
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
@@ -38,19 +35,13 @@ export class SubsetsComponent implements OnInit {
   searchDisabled = false;
   subsetSearchText: string;
 
-  static origHierarchyData: TreeNode[] = null;
-
   urlBase = "/subsets"
   urlTarget = '_top'
 
   constructor(
     private subsetDetailService: ConceptDetailService,
-    private location: Location,
-    private route: ActivatedRoute,
-    private cookieService: CookieService,
-    private http: HttpClient,
-    private router: Router,
     private configService: ConfigurationService,
+    private loaderService: LoaderService,
     private titleService: Title
   ) {
 
@@ -67,10 +58,11 @@ export class SubsetsComponent implements OnInit {
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    console.log('getPathInHierarchy');
+    console.log('getPathInHierarchy', this.configService.subsets);
 
-    if (SubsetsComponent.origHierarchyData == null) {
+    if (this.configService.subsets == null) {
       this.searchDisabled = true;
+      this.loaderService.showLoader();
       this.subsetDetailService.getSubsetTopLevel()
         .then(nodes => {
           console.log('get subset top level');
@@ -79,11 +71,12 @@ export class SubsetsComponent implements OnInit {
             this.setTreeTableProperties(node, false);
           }
           console.log('copy hierarchy data');
-          SubsetsComponent.origHierarchyData = JSON.parse(JSON.stringify(this.hierarchyData));
+          this.configService.subsets = JSON.parse(JSON.stringify(this.hierarchyData));
           console.log('done copy hierarchy data');
-          this.NCItermFirst();
+          this.sortNcitFirst();
           this.placeholderText = "Enter at least 3 letters of a subset.";
           this.searchDisabled = false;
+          this.loaderService.hideLoader();
         });
     } else {
       this.resetSearch();
@@ -120,13 +113,6 @@ export class SubsetsComponent implements OnInit {
     setTimeout(() => {
       this.scrollToSelectionTableTree(event.node);
     }, 100);
-  }
-
-  // Reset all table nodes in the hierarchy
-  resetTreeTableNodes() {
-    for (const node of this.hierarchyData) {
-      this.setTreeTableProperties(node, false);
-    }
   }
 
   // Deep copy of hierarchy data
@@ -193,14 +179,15 @@ export class SubsetsComponent implements OnInit {
     }
   }
 
-  performSubsetSearch(string) {
-    this.subsetSearchText = string;
+  performSubsetSearch(query) {
+    this.subsetSearchText = query;
+    this.loaderService.showLoader();
     setTimeout(() => {
       this.expandDisabled = true;
       this.filteredHierarchy = [];
-      this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
+      this.hierarchyData = JSON.parse(JSON.stringify(this.configService.subsets));
       this.hierarchyData.forEach(element => {
-        var newTn = this.performSubsetSearchHelper(element, string);
+        var newTn = this.performSubsetSearchHelper(element, this.subsetSearchText);
         if (newTn) {
           this.filteredHierarchy.push(element);
         }
@@ -208,7 +195,8 @@ export class SubsetsComponent implements OnInit {
       this.subsetSuggestions = []; // deal with the spinner
       this.subsetsFound = (this.filteredHierarchy.length > 0);
       this.hierarchyData = this.filteredHierarchy;
-      this.NCItermFirst();
+      this.sortNcitFirst();
+      this.loaderService.hideLoader();
     });
   }
 
@@ -234,17 +222,15 @@ export class SubsetsComponent implements OnInit {
   }
 
   resetSearch() {
-    this.subsetautosearch = '';
     this.subsetSearchText = null;
-    sessionStorage.setItem("subsetSearch", this.subsetautosearch);
     this.expand = true;
     this.expandLabel = 'Expand All';
     this.expandDisabled = false;
-    this.hierarchyData = JSON.parse(JSON.stringify(SubsetsComponent.origHierarchyData));
-    this.NCItermFirst();
+    this.hierarchyData = JSON.parse(JSON.stringify(this.configService.subsets));
+    this.sortNcitFirst();
   }
 
-  NCItermFirst() {
+  sortNcitFirst() {
     this.hierarchyData = this.hierarchyData.filter(r => r.data.label.includes("National Cancer Institute Terminology")).concat(this.hierarchyData.filter(r => !r.data.label.includes("National Cancer Institute Terminology")));
   }
 

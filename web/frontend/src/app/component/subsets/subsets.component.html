@@ -3,12 +3,10 @@
     <div class="page-header">
       Subsets
       <button id="expandOrCollapseButton" [label]="expandLabel" [disabled]="expandDisabled"
-        pTooltip="Click to {{expandLabel}}" tooltipPosition="bottom"
-        (click)="expandOrCollapseAllNodes(hierarchyData)" pButton type="button"
-        class="ui-button-coloring expandAll"></button>
-      <span class="newSearch"><button [routerLink]="['/welcome']"
-          [queryParams]="{terminology: terminology}" label="New Search"
-          pTooltip="Click to start new search" tooltipPosition="bottom" pButton type="button"
+        pTooltip="Click to {{expandLabel}}" tooltipPosition="bottom" (click)="expandOrCollapseAllNodes(hierarchyData)"
+        pButton type="button" class="ui-button-coloring expandAll"></button>
+      <span class="newSearch"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+          label="New Search" pTooltip="Click to start new search" tooltipPosition="bottom" pButton type="button"
           class="ui-button-coloring"></button></span>
     </div>
     <p>View subsets organized by standards category. Standards categories group the subsets
@@ -24,27 +22,23 @@
       </a>
     </p>
     <div style="padding-bottom: 6px;">
-      Search: <p-autoComplete id="subsetSearch" [style]="{'width':'30%'}"
-        [inputStyle]="{'width':'100%'}" [delay]="800" [(ngModel)]="subsetautosearch"
+      Search: <p-autoComplete id="subsetSearch" [style]="{'width':'30%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
         [suggestions]="subsetSuggestions" (completeMethod)="performSubsetSearch($event.query)"
         placeholder="{{placeholderText}}" [minLength]="3" [disabled]="searchDisabled">
       </p-autoComplete>
-      <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton
-        icon="fa fa-undo" (click)="resetSearch()" pTooltip="Click to reset search"
-        label="Reset Search" tooltipPosition="bottom" [disabled]="searchDisabled"></button>
+      <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton icon="fa fa-undo"
+        (click)="resetSearch()" pTooltip="Click to reset search" label="Reset Search" tooltipPosition="bottom"
+        [disabled]="searchDisabled"></button>
     </div>
     <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
       (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)">
       <ng-template pTemplate="body" let-rowNode let-rowData="rowData" *ngIf="subsetsFound">
-        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode"
-          [ngClass]="{'treenode-highlight': rowData.highlight}">
+        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
           <td>
             <div style="cursor: pointer; display:flex;">
               <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-              <a [routerLink]="['/subset/', terminology, rowData.code]" target="_top"
-                class="regular-link">
-                <i *ngIf="rowData.root && rowNode.node.children.length == 0"
-                  class="pi pi-fw pi-blank"></i>
+              <a [routerLink]="['/subset/', terminology, rowData.code]" target="_top" class="regular-link">
+                <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-fw pi-blank"></i>
                 <mark *ngIf="hasText(rowData.code + rowData.label); else nonMatch"
                   style="color: #319fbe">{{rowData.code}}
                   - {{rowData.label}}</mark>

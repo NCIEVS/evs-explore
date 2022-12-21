@@ -65,6 +65,10 @@ export class HierarchyDisplayComponent implements OnInit {
     this.terminology = this.configService.getTerminologyName();
   }
 
+  closeHierarchy() {
+    this.router.navigate(["/concept/" + this.terminology + "/" + this.conceptCode]);
+  }
+
   updateDisplaySize = () => {
     let bodyHeight = document.documentElement.scrollHeight
     document.getElementById('hierarchyTableDisplay').style.height = bodyHeight + "px";
@@ -83,18 +87,37 @@ export class HierarchyDisplayComponent implements OnInit {
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
-    this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]);
+    // Handle selecting for more data for top level
+    if (event.ct && event.data.parentCode == 'root') {
+      if (confirm('Loading all tree positions may take a while, are you sure you want to proceed?')) {
+        this.getAllPathsInHierarchy();
+      }
+      setTimeout(() => this.selectedNode = null, 100);
+    }
+
+    // Handle selecting for more data for sibling level
+    else if (event.ct) {
+      if (confirm('Loading more data may take a while, are you sure you want to proceed?')) {
+        this.getAllTreeTableChildrenNodes(event.data.parentCode, event.data.parentNode);
+      }
+      setTimeout(() => this.selectedNode = null, 100);
+    }
+
+    // Handle selecting a code to navigate away
+    else {
+      this.router.navigate(["/hierarchy/" + this.terminology + "/" + event.code]);
+    }
   }
 
   // Gets path in the hierarchy and scrolls to the active node
-  getPathInHierarchy() {
+  getPathInHierarchy(limit: number = 100) {
     this.loaderService.showLoader();
-    this.conceptDetailService.getHierarchyData(this.conceptCode, 100)
+    this.conceptDetailService.getHierarchyData(this.conceptCode, limit)
       .then(nodes => {
 
         this.hierarchyData = <TreeNode[]>nodes;
         for (const node of this.hierarchyData) {
-          this.setTreeTableProperties(node);
+          this.setTreeTableProperties(node, null);
         }
         this.updateDisplaySize();
         if (this.selectedNodes.length > 0) {
@@ -107,14 +130,26 @@ export class HierarchyDisplayComponent implements OnInit {
       });
   }
 
+  getAllPathsInHierarchy() {
+    this.getPathInHierarchy(null);
+  }
+
   // Get child tree nodes (for an expanded node)
-  getTreeTableChildrenNodes(code: string, node: any) {
+  getTreeTableChildrenNodes(code: string, node: any, limit: number = 100) {
     this.loaderService.showLoader();
-    this.conceptDetailService.getHierarchyChildData(code, 100)
+    this.conceptDetailService.getHierarchyChildData(code, limit)
       .then(nodes => {
-        node.children = nodes;
+
+        if (limit == null) {
+          let codes = new Set(node.children.map(n => n.code));
+          // Remove the "ct" node and combine the list with the remaining elements
+          // NOTE: this may require resorting
+          node.children = [...node.children.filter(n => !n.ct), ...nodes.filter(n => !codes.has(n['code']))];
+        } else {
+          node.children = nodes;
+        }
         for (const child of node.children) {
-          this.setTreeTableProperties(child);
+          this.setTreeTableProperties(child, node);
         }
         this.deepCopyHierarchyData();
         setTimeout(() => {
@@ -122,6 +157,10 @@ export class HierarchyDisplayComponent implements OnInit {
         }, 100);
         this.loaderService.hideLoader();
       });
+  }
+
+  getAllTreeTableChildrenNodes(code: string, node: any) {
+    this.getTreeTableChildrenNodes(code, node, null);
   }
 
   // Handler for expanding a tree node
@@ -140,13 +179,6 @@ export class HierarchyDisplayComponent implements OnInit {
     }, 100);
   }
 
-  // Reset all table nodes in the hierarchy
-  resetTreeTableNodes() {
-    for (const node of this.hierarchyData) {
-      this.setTreeTableProperties(node);
-    }
-  }
-
   // Deep copy of hierarchy data
   deepCopyHierarchyData() {
     // console.log('deep copy hierarchy data');
@@ -154,7 +186,7 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   // Reset tree node properties
-  setTreeTableProperties(node: TreeNode) {
+  setTreeTableProperties(node: TreeNode, parentNode: TreeNode) {
     // console.log('set tree table properties', node);
     node.collapsedIcon = '';
     node.expandedIcon = '';
@@ -172,8 +204,24 @@ export class HierarchyDisplayComponent implements OnInit {
     if (!node.children) {
       node.children = [];
     }
+
+    // Attach info to the "ct" entry
+    if (node['ct']) {
+      // Handle a "more data" siblings situation
+      if (parentNode) {
+        node.data.label = '... More data (' + node['ct'] + ')';
+        node.data.parentCode = parentNode['code'];
+        node.data.parentNode = parentNode;
+      }
+      // Handle a "more data" tree positions
+      else {
+        node.data.label = '... Get all tree positions (' + node['ct'] + ')';
+        node.data.parentCode = 'root';
+      }
+    }
+
     for (const child of node.children) {
-      this.setTreeTableProperties(child);
+      this.setTreeTableProperties(child, node);
     }
   }
 

@@ -5,8 +5,9 @@ import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { ParamMap } from '@angular/router';
 import { Concept } from '../model/concept';
+import { TreeNode } from 'primeng/api';
+
 
 // Configuration service
 @Injectable({
@@ -21,6 +22,7 @@ export class ConfigurationService {
   private subject: Subject<any>;
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
+  public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;

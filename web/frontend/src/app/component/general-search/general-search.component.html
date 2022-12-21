@@ -59,7 +59,7 @@
             </p-radioButton>
             <p-radioButton class="radio-padding" name="searchtype" value="startsWith" label="Starts With"
               [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('startsWith')"></p-radioButton>
-            <p-button icon="pi pi-angle-double-right" (onClick)="toggleShowMoreSearchOptions()"
+            <p-button class="pl-3 pr-3" icon="pi pi-angle-double-right" (onClick)="toggleShowMoreSearchOptions()"
               *ngIf="!showMoreSearchOption" pTooltip="Click to show all search types">
             </p-button><span *ngIf="showMoreSearchOption">
               <br />
@@ -112,6 +112,9 @@
               <span *ngIf="loadedMultipleConcept">
                 <i class="fa fa-info-circle"></i>&nbsp;&nbsp;{{title}}
               </span>
+              <span *ngIf="!noMatchedConcepts && !loadedMultipleConcept">
+                <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Searching...
+              </span>
             </div>
             <div *ngIf="loadedMultipleConcept" class="ui-toolbar-group-right">
 
@@ -128,15 +131,14 @@
       </div>
 
 
-      <div *ngIf="displayTableFormat  && !noMatchedConcepts">
+      <div *ngIf="loadedMultipleConcept && !noMatchedConcepts">
         <div class="row" style="margin-bottom:10px;padding-top:5px;">
           <div class="col-sm-12">
 
-            <p-table #dtSearch [loading]="loading" loadingIcon="fa fa-spinner" [columns]="displayColumns"
-              [value]="reportData" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3"
-              [rows]="pageSize" [scrollable]="true" dataKey="column1" [reorderableColumns]="true"
-              [totalRecords]="totalRecords" paginatorPosition="both" [lazy]="true"
-              (onLazyLoad)="loadDataLazily($event)">
+            <p-table #dtSearch [columns]="displayColumns" [value]="reportData" [paginator]="true"
+              [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3" [rows]="pageSize" [scrollable]="true"
+              dataKey="column1" [reorderableColumns]="true" [totalRecords]="totalRecords" paginatorPosition="both"
+              [lazy]="true" (onLazyLoad)="loadDataLazily($event)">
 
 
               <ng-template pTemplate="colgroup" let-columns>
