@@ -40,6 +40,7 @@ export class ConceptDetailComponent implements OnInit {
   titleSet = false;
   collapsed: boolean = false;
   conceptIsSubset: boolean = false;
+  httpRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/g;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -126,10 +127,20 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   bypassHTML(value) {
-    if (!value)
+    // if blank return null
+    if (!value) {
       return null;
-    if (value.search('<') == -1 || value.search('>') == -1)
+    }
+    // if no tags
+    else if (value.search('<') == -1 || value.search('>') == -1) {
+      // if contains raw links, make then links
+      if (value.match(this.httpRegex)) {
+        console.log('xxx', value)
+        return this.sanitizer.bypassSecurityTrustHtml(value.replace(this.httpRegex, '<a href="$1">$1</a>'));
+      }
+      // normal value
       return value;
+    }
     return this.sanitizer.bypassSecurityTrustHtml(value);
   }
 
@@ -137,8 +148,9 @@ export class ConceptDetailComponent implements OnInit {
     event.data.sort((data1, data2) => {
       let value1 = data1[event.field];
       let value2 = data2[event.field];
-      if (value1 == undefined)
+      if (value1 == undefined) {
         return 0;
+      }
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
@@ -149,14 +161,13 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   getTerminologyBySource(source) {
-    if (!source)
+    if (!source) {
       return '';
+    }
     if (source == 'NCI') {
       return 'ncit';
     }
-    else {
-      return source.toLowerCase();
-    }
+    return source.toLowerCase();
   }
 
   getCodeLabel() {
