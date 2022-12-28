@@ -115,13 +115,11 @@
             <tr *ngIf="val.ct || checkFilter(val)">
               <td *ngIf="val.ct"><a (click)="loadAll('definitionsHeader')" class="top-link"
                   title="More data available, click to load full concept details">More data available...</a></td>
-              <td *ngIf="!val.ct">{{val.definition}}
-                <div *ngIf="val.qualifiers != null">
+              <td *ngIf="!val.ct"><span [innerHTML]="bypassHTML(val.definition)"></span>
+                <div *ngIf=" val.qualifiers !=null">
                   <div *ngFor="let qual of val.qualifiers">
-                    <span *ngIf="qual.type != 'attribution'" class="qualEntry">&ensp;{{ qual.type
-                      }}:
-                      {{ qual.value
-                      }}</span>
+                    <span *ngIf="qual.type != 'attribution'" class="qualEntry">&ensp;{{ qual.type }}:
+                      {{ qual.value }}</span>
                   </div>
                 </div>
               </td>
