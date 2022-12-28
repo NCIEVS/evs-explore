@@ -26,7 +26,7 @@
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
               <p-multiSelect *ngIf="configService.isMultiSource()" autoWidth="false" [showToggleAll]="true"
                 dropdownIcon="pi pi-caret-down" [options]="sourcesAll" [(ngModel)]="searchCriteria.synonymSource"
-                name="sourceSearch" defaultLabel="Source" [filter]="true" (onChange)="onChangeSource($event)"
+                name="sourceSearch" defaultLabel="Source" [filter]="true" (onPanelHide)="onChangeSources($event)"
                 [displaySelectedLabel]="false" [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
@@ -85,7 +85,7 @@
           <div class="col-sm-6" style="padding-top:3px;">
             <p-chips (keydown)="onChipsKeyEvent($event)"
               *ngIf="searchCriteria.synonymSource && searchCriteria.synonymSource.length > 0"
-              [(ngModel)]="searchCriteria.synonymSource" (onRemove)="onSourceSelectDeselect($event)" addOnTab="false"
+              [(ngModel)]="searchCriteria.synonymSource" (onRemove)="onSourceDeselect($event)" addOnTab="false"
               addOnBlur="false">
               <ng-template let-item pTemplate="item">
                 {{item}}

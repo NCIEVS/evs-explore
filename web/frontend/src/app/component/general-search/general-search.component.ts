@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import { TreeTableModule } from 'primeng/primeng';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -109,6 +110,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
+              this.avoidLazyLoading = true;
               this.performSearch();
             }
             // Handle the welcome page
@@ -187,9 +189,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       }
       if (this.queryParams.get('pageSize')) {
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
+        this.searchCriteria.pageSize = this.pageSize;
       }
       // safety check against there being no sources selected
       if (this.queryParams.get('source') != '') {
+        console.debug('xxx', this.queryParams.get('source').split(','), this.searchCriteria.synonymSource);
+        console.debug('xxx', this.sourcesAll);
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
       }
       if (this.searchCriteria.type == 'phrase' ||
@@ -288,9 +293,10 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     } else {
       this.searchCriteria.fromRecord = event.first;
       this.searchCriteria.pageSize = event.rows;
+      this.pageSize = event.rows;
       this.setQueryUrl();
-      // This triggers a duplicate search, the setQueryUrl prompts a search on its own
-      //this.performSearch();
+      this.avoidLazyLoading = true;
+      this.performSearch();
     }
   }
 
@@ -323,8 +329,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // Handle a change of the source - save in session storage and re-search
-  onChangeSource(event) {
-    console.log('onChangeSource', event);
+  onChangeSources(event) {
+    console.log('onChangeSource');
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetPaging();
     this.setQueryUrl();
@@ -361,8 +367,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // Handle deselecting a source
-  onSourceSelectDeselect(event) {
-    console.log('onSourceSelectDeselect', event);
+  onSourceDeselect(event) {
+    console.log('onSourceDeselect', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetPaging();
     this.setQueryUrl();
@@ -385,7 +391,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Perform the search
   performSearch() {
-
     if (this.searchCriteria.term == null || this.searchCriteria.term.length < 3) {
       if (!this.firstSearchFlag) {
         console.log('skip search - first search has not happened, reroute to /welcome', this.searchCriteria.term);
