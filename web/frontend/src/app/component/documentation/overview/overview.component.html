@@ -17,6 +17,7 @@
   Advanced Search -->
     <li><a href="overview#concept-details">Concept Details</a></li>
     <li><a href="overview#subsets">Subsets</a></li>
+    <li><a href="overview#export">Export Feature</a></li>
     <li><a href="overview#hierarchy">Hierarchy</a></li>
     <li><a href="overview#documentation">Metadata Documentation</a></li>
     <!-- Value Sets, Mappings -->
@@ -237,90 +238,71 @@
       aria-label="Scroll to hierarchy">hierarchy
       view</a>.
   </p>
-  <p>Below that, there are three tabs: <b>Terms and Properties</b>, <b>Relationships</b>, and
-    <b>View
-      All</b>. The application remembers your last selection among these three tabs and will
-    default to that view until
-    you change it. The contents of these tabs are described below.
-  </p>
+  <p><b>Concept Details</b> has a number of different tables showing different pieces of information
+    about and associated with the given concept: </p>
   <ul>
-    <li><b>Terms and Properties</b> shows detailed information about the terms and properties of
-      the concept being show.
-      This information is broken down into five tables.
-      <ul>
-        <li>The first table shows top level information about the concept, including the
-          preferred name, the display
-          name, the label, and the concept code.</li>
-        <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
-          includes columns for the
-          definition text, the source of the definition, and any associated
-          attribution(s).</li>
-        <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
-          concept in a sortable table.
-          This table includes columns for the term, the sub-source, the term type, the
-          sub-source code, and the
-          sub-source name.</li>
-        <li><b>Other Properties</b> shows other properties associated with the concept in a
-          sortable table. This table
-          includes columns for the property type and value. In some cases, property values
-          may be linked out to external
-          data sources that provide additional information about those values. For
-          example, a "CAS_Registry" property
-          will have its value linked out to <a target="_blank"
-            href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
-          display the data attached to the identifier by the original source, in this case
-          an NIH ChemID.
-        </li>
-        <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other terminologies in
-          a sortable table.
-          This table includes columns for the target name, relationship to target, target term type,
-          target code, and
-          the target terminology (and the target terminology version if available).</li>
-      </ul>
 
+    <li>The first table shows top level information about the concept, including the
+      preferred name, the display
+      name, the label, and the concept code.</li>
+    <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
+      includes columns for the
+      definition text, the source of the definition, and any associated
+      attribution(s).</li>
+    <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
+      concept in a sortable table.
+      This table includes columns for the term, the sub-source, the term type, the
+      sub-source code, and the
+      sub-source name.</li>
+    <li><b>Other Properties</b> shows other properties associated with the concept in a
+      sortable table. This table
+      includes columns for the property type and value. In some cases, property values
+      may be linked out to external
+      data sources that provide additional information about those values. For
+      example, a "CAS_Registry" property
+      will have its value linked out to <a target="_blank"
+        href="https://chem.nlm.nih.gov/">https://chem.nlm.nih.gov</a> to
+      display the data attached to the identifier by the original source, in this case
+      an NIH ChemID.
     </li>
-    <li><b>Relationships</b> shows information about related concepts. This information is
-      broken down into several tables. Clicking on the preferred name of a related concept will
-      launch a new browser tab
-      with the concept details for that related concept.
-      <ul>
-        <li><b>Parent Concepts</b> shows basic information about parent concepts in a sortable
-          table. This table
-          includes columns for code and preferred name.
-        </li>
-        <li><b>Child Concepts</b> shows basic information about child concepts in a sortable table.
-          This table includes
-          columns for code and preferred name.
-        </li>
-        <li><b>Role Relationships</b> shows basic information about asserted or inherited role
-          relationships, pointing
-          from the current concept to other concepts in a sortable table. This table includes
-          columns for code and
-          preferred name.
-        </li>
-        <li><b>Associations</b> shows basic information about associations pointing from the current
-          concept to other
-          concepts in a sortable table. This table includes columns for code and preferred name.
-        </li>
-        <li><b>Incoming Role Relationships</b> shows basic information about asserted or inherited
-          role relationships,
-          pointing from other concepts to the current concept in a sortable table. This table
-          includes columns for code
-          and preferred name.
-        </li>
-        <li><b>Incoming Associations</b> shows basic information about associations pointing from
-          other concepts to the
-          current concept in a sortable table. This table includes columns for code and preferred
-          name.
-        </li>
-        <li><b>Disjoint With</b> shows basic information about disjointness assertions
-          between this concept and other
-          concepts.
-        </li>
-      </ul>
-
+    <li><b>Maps To</b> and <b>Mappings</b> show information about maps to other terminologies in
+      a sortable table.
+      This table includes columns for the target name, relationship to target, target term type,
+      target code, and
+      the target terminology (and the target terminology version if available).</li>
+    <li><b>Parent Concepts</b> shows basic information about parent concepts in a sortable
+      table. This table
+      includes columns for code and preferred name.
     </li>
-    <li><b>View All</b> combines the content of both views listed above into a single view.</li>
+    <li><b>Child Concepts</b> shows basic information about child concepts in a sortable table.
+      This table includes
+      columns for code and preferred name.
+    </li>
+    <li><b>Role Relationships</b> shows basic information about asserted or inherited role
+      relationships, pointing
+      from the current concept to other concepts in a sortable table. This table includes
+      columns for code and
+      preferred name.
+    </li>
+    <li><b>Associations</b> shows basic information about associations pointing from the current
+      concept to other
+      concepts in a sortable table. This table includes columns for code and preferred name.
+    </li>
+    <li><b>Incoming Role Relationships</b> shows basic information about asserted or inherited
+      role relationships,
+      pointing from other concepts to the current concept in a sortable table. This table
+      includes columns for code
+      and preferred name.
+    </li>
+    <li><b>Incoming Associations</b> shows basic information about associations pointing from
+      other concepts to the
+      current concept in a sortable table. This table includes columns for code and preferred
+      name.
+    </li>
+    <li><b>Disjoint With</b> shows basic information about disjointness assertions
+      between this concept and other
+      concepts.
+    </li>
   </ul>
 
   <a name="subsets"></a>
@@ -330,7 +312,8 @@
   </span>
   <p>The <b>Subset View</b> of EVS Explore supports the browsing of subsets, which are flat lists
     of member concepts intended for specific coding purposes. </p>
-  <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top banner.
+  <p>The <b>Subset View</b> is enabled by clicking on the <b>Subsets</b> link along the top
+    banner.
   </p>
   <p>
     In this view, there is a hierarchical view of the available subsets. Clicking on the <i
@@ -349,9 +332,34 @@
     of this table varies slightly across different subsets. It provides basic high-level
     information about each member including information like the code, various names and synonyms,
     and one
-    or more definitions for that member. At the top of this table is a <b>Search Box</b> that can be
+    or more definitions for that member. At the top of this table is a <b>Search Box</b> that can
+    be
     used to restrict to only those member concepts whose contents are matches to the search text
     provided. Click the <b>Reset</b> button to clear any search text and retrieve the full list.
+  </p>
+
+  <a name="export"></a>
+  <span>
+    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h4>Export Feature</h4>
+  </span>
+  <p>The Export functionality is available within search results, concept details, and subsets
+    display using the Export button located in upper right of the EVS Explore application.
+  </p>
+  <p>
+    When the Export button is selected in the search results page, the application will return an
+    Excel file that includes all the concepts from the search, along with any search results
+    details
+    selected by the user in the display.
+  </p>
+  <p>
+    When the Export button is selected in the concept details page, the application will return an
+    Excel file that includes all information for the selected concept. In the file, a worksheet is
+    created for each section of the concept details (Definitions, Synonyms, etc.).
+  </p>
+  <p>
+    When the Export button is selected in the subsets page, the application will return an Excel
+    file that includes all the concepts and details displayed for the selected subset.
   </p>
 
   <a name="hierarchy"></a>
@@ -364,7 +372,8 @@
     </a> or by clicking on the <b>Hierarchy</b> link in the top banner.
   </p>
   <p>
-    In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display opened
+    In this view, there is a <b>Concept Hierarchy</b> view along the left side of the display
+    opened
     to reveal the full
     path from the root level of the tree to the currently selected concept. The entry for the
     current concept is
@@ -376,7 +385,8 @@
     Clicking on the <i class="pi pi-fw pi-chevron-right"></i> to the left of a concept in this
     view triggers a call to look up and display its child concepts.
   </p>
-  <p>Clicking on a concept itself will change the focus of the display to that concept and load the
+  <p>Clicking on a concept itself will change the focus of the display to that concept and load
+    the
     corresponding
     concept detail information for that concept on the right side of the display.
   </p>
