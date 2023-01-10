@@ -24,19 +24,19 @@ export class EvsHeaderComponent implements OnInit {
     public router: Router) { }
 
   ngOnInit() {
+    this.firstRoot = null;
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
         + (this.terminology.date ? '; Release Date: ' + this.terminology.date : '');
       console.log(this.versionInfo)
+      if (this.terminology.metadata.hierarchy) {
+        // Look up the first root code
+        this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
+          this.firstRoot = response[0].code;
+        });
+      }
     }
-    // The next part gets called automatically via the subscription
-    // if (this.terminology.metadata.hierarchy) {
-    //   // Look up the first root code
-    //   this.conceptDetail.getRoots(this.terminology.terminology, true).subscribe(response => {
-    //     this.firstRoot = response[0].code;
-    //   });
-    // }
 
     this.subscription = this.configService.getSubject().subscribe(terminology => {
       this.terminology = terminology;
