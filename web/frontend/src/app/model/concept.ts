@@ -52,6 +52,7 @@ export class Concept {
   uniqProps: any[];
 
   constructor(input: any, configService: ConfigurationService) {
+    this.highlight = input.highlight;
     this.terminology = input.terminology;
     this.version = input.version;
     this.code = input.code;
