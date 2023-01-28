@@ -132,10 +132,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.configFromQueryParams();
 
     // Populate terms list from application metadata
-    this.termsAll = this.configService.getTerminologies().map(element => {
+    this.termsAll = this.configService.getTerminologies().map(terminology => {
       return {
-        label: element.metadata.uiLabel,
-        value: element
+        label: terminology.metadata.uiLabel.replace(/\:.*/, ''),
+        value: terminology,
+        description: terminology.metadata.uiLabel.replace(/.*?\: /, '')
       };
     });
     // filter for list of terminologies presented

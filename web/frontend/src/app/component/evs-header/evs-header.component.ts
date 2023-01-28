@@ -59,7 +59,7 @@ export class EvsHeaderComponent implements OnInit {
   // Get terminology title
   getTerminologyTitle() {
     if (this.terminology && this.terminology.metadata) {
-      return this.terminology.metadata.uiLabel;
+      return this.terminology.metadata.uiLabel.replace(/\:.*/, '');
     }
   }
 

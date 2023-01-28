@@ -40,6 +40,11 @@
               <div class="large-divider"></div>
               <p-dropdown styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerminology"
                 (onChange)="onChangeTerminology($event)">
+                <ng-template let-terminology pTemplate="item">
+                  <div [title]="terminology.description">
+                    {{ terminology.label }}
+                  </div>
+                </ng-template>
               </p-dropdown>
               <div class="large-divider"></div>
               <span><button type="button" pButton label="Export" class="ui-button-coloring" style="border:0"
