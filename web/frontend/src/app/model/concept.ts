@@ -190,6 +190,10 @@ export class Concept {
           this.narrower.push(new Relationship({ 'ct': this.associationsCt }, configService));
           this.other.push(new Relationship({ 'ct': this.associationsCt }, configService));
         }
+        // Otherwise, compute association ct for single RRF sources
+        else {
+          this.associationsCt = this.getCt(this.associations);
+        }
       }
       // Otherwise, it operates normally
       else {
