@@ -215,7 +215,7 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   termSuggestionUrl() {
-    window.location.href = 'https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode;
+    window.open('https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {
