@@ -384,7 +384,15 @@ export class ConceptDisplayComponent implements OnInit {
         parentEntry['Code'] = parent.code;
         parentEntry['Name'] = parent.name;
         if (this.configService.isRrf())
-          parentEntry['Relationship Attribute'] = parent.rela;
+          if (parent.rela)
+            parentEntry['Relationship Attribute'] = parent.rela;
+          else if (parent.qualifiers && parent.qualifiers.length > 0) {
+            parent.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                parentEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
         if (this.configService.isMultiSource() && this.configService.isRrf())
           parentEntry['Source'] = parent.source;
         parentTable.push(parentEntry);
@@ -448,10 +456,13 @@ export class ConceptDisplayComponent implements OnInit {
 
   broaderConceptTable() {
     var broaderConceptTable = [];
+    if (!this.concept.broader)
+      this.concept.broader = this.concept.associations.filter(x => x.type == "RN");
     if (this.concept.broader != undefined && this.concept.broader.length > 0) {
       this.concept.broader.forEach(broad => {
         var broadEntry = {};
-        broadEntry['Relationship'] = broad.type + this.getQualifiers(broad.qualifiers);
+        var broadRela = this.getQualifiers(broad.qualifiers);
+        broadEntry['Relationship'] = broadRela != null ? broadRela : "Broader";
         broadEntry['Related Code'] = broad.relatedCode;
         broadEntry['Related Name'] = broad.relatedName;
         broadEntry['Source'] = broad.source;
@@ -481,10 +492,13 @@ export class ConceptDisplayComponent implements OnInit {
 
   narrowerConceptTable() {
     var narrowerConceptTable = [];
+    if (!this.concept.narrower)
+      this.concept.narrower = this.concept.associations.filter(x => x.type == "RB");
     if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
       this.concept.narrower.forEach(narrow => {
         var narrowEntry = {};
-        narrowEntry['Relationship'] = narrow.type + this.getQualifiers(narrow.qualifiers);
+        var narrowRela = this.getQualifiers(narrow.qualifiers);
+        narrowEntry['Relationship'] = narrowRela != null ? narrowRela : "Narrower";
         narrowEntry['Related Code'] = narrow.relatedCode;
         narrowEntry['Related Name'] = narrow.relatedName;
         narrowEntry['Source'] = narrow.source;
@@ -530,13 +544,15 @@ export class ConceptDisplayComponent implements OnInit {
 
   otherRelationshipsTable() {
     var associationsTable = [];
-    if (this.concept.associations != undefined && this.concept.associations.length > 0) {
-      this.concept.associations.forEach(association => {
+    this.concept.otherRelationships = this.concept.associations.filter(x => !["RB", "RN"].includes(x.type));
+    if (this.concept.otherRelationships != undefined && this.concept.otherRelationships.length > 0) {
+      this.concept.otherRelationships.forEach(otherRelationship => {
         var associationsEntry = {};
-        associationsEntry['Relationship'] = association.type + this.getQualifiers(association.qualifiers);
-        associationsEntry['Related Code'] = association.relatedCode;
-        associationsEntry['Related Name'] = association.relatedName;
-        associationsEntry['Source'] = association.source;
+        var otherRela = this.getQualifiers(otherRelationship.qualifiers);
+        associationsEntry['Relationship'] = otherRela ? otherRela : "Other";
+        associationsEntry['Related Code'] = otherRelationship.relatedCode;
+        associationsEntry['Related Name'] = otherRelationship.relatedName;
+        associationsEntry['Source'] = otherRelationship.source;
         associationsTable.push(associationsEntry);
       });
     }
