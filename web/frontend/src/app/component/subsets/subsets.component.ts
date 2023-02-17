@@ -33,7 +33,8 @@ export class SubsetsComponent implements OnInit {
   expandDisabled = false;
   placeholderText = 'Loading Subset Hierarchy...';
   searchDisabled = false;
-  subsetSearchText: string;
+  enteredSearchText: string; // text from search box
+  subsetSearchText: string; // transferred search text
 
   urlBase = '/subsets'
   urlTarget = '_top'
@@ -176,8 +177,8 @@ export class SubsetsComponent implements OnInit {
     }
   }
 
-  performSubsetSearch(query) {
-    this.subsetSearchText = query;
+  performSubsetSearch() {
+    this.subsetSearchText = this.enteredSearchText;
     this.loaderService.showLoader();
     setTimeout(() => {
       this.expandDisabled = true;
@@ -219,6 +220,7 @@ export class SubsetsComponent implements OnInit {
   }
 
   resetSearch() {
+    this.enteredSearchText = null;
     this.subsetSearchText = null;
     this.expand = true;
     this.expandLabel = 'Expand All';
