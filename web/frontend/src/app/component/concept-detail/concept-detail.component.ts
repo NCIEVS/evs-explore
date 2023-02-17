@@ -94,7 +94,8 @@ export class ConceptDetailComponent implements OnInit {
         }
       }
     }
-    return isSubset;
+    // Currently only NCIT has subsets
+    return concept.terminology == 'ncit' && isSubset;
   }
 
 
