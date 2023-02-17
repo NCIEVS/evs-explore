@@ -461,7 +461,7 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.concept.broader != undefined && this.concept.broader.length > 0) {
       this.concept.broader.forEach(broad => {
         var broadEntry = {};
-        var broadRela = this.getQualifiers(broad.qualifiers);
+        var broadRela = this.getRrfRelationships(broad.qualifiers);
         broadEntry['Relationship'] = broadRela != null ? broadRela : "Broader";
         broadEntry['Related Code'] = broad.relatedCode;
         broadEntry['Related Name'] = broad.relatedName;
@@ -497,7 +497,7 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
       this.concept.narrower.forEach(narrow => {
         var narrowEntry = {};
-        var narrowRela = this.getQualifiers(narrow.qualifiers);
+        var narrowRela = this.getRrfRelationships(narrow.qualifiers);
         narrowEntry['Relationship'] = narrowRela != null ? narrowRela : "Narrower";
         narrowEntry['Related Code'] = narrow.relatedCode;
         narrowEntry['Related Name'] = narrow.relatedName;
@@ -548,7 +548,7 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.concept.otherRelationships != undefined && this.concept.otherRelationships.length > 0) {
       this.concept.otherRelationships.forEach(otherRelationship => {
         var associationsEntry = {};
-        var otherRela = this.getQualifiers(otherRelationship.qualifiers);
+        var otherRela = this.getRrfRelationships(otherRelationship.qualifiers);
         associationsEntry['Relationship'] = otherRela ? otherRela : "Other";
         associationsEntry['Related Code'] = otherRelationship.relatedCode;
         associationsEntry['Related Name'] = otherRelationship.relatedName;
@@ -567,6 +567,18 @@ export class ConceptDisplayComponent implements OnInit {
     var qualifiersString = '\n';
     qualifiers.forEach(qual => {
       qualifiersString += qual.type + ': ' + qual.value + '\n'
+    });
+    return qualifiersString;
+  }
+
+  getRrfRelationships(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
+    var qualifiersString = "";
+    qualifiers.forEach(qual => {
+      if (qual.type == "RELA")
+        qualifiersString = qual.value;
+      return qualifiersString;
     });
     return qualifiersString;
   }
