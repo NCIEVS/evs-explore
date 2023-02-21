@@ -435,7 +435,15 @@ export class ConceptDisplayComponent implements OnInit {
         childEntry['Code'] = child.code;
         childEntry['Name'] = child.name;
         if (this.configService.isRrf())
-          childEntry['Relationship Attribute'] = child.rela;
+          if (child.rela)
+            childEntry['Relationship Attribute'] = child.rela;
+          else if (child.qualifiers && child.qualifiers.length > 0) {
+            child.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                childEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
         if (this.configService.isMultiSource() && this.configService.isRrf())
           childEntry['Source'] = child.source;
         childrenTable.push(childEntry);
