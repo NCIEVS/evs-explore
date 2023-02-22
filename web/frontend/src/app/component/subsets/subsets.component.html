@@ -22,9 +22,10 @@
       </a>
     </p>
     <div style="padding-bottom: 6px;">
-      Search: <p-autoComplete id="subsetSearch" [style]="{'width':'30%'}" [inputStyle]="{'width':'100%'}" [delay]="800"
-        [suggestions]="subsetSuggestions" (completeMethod)="performSubsetSearch($event.query)"
-        placeholder="{{placeholderText}}" [minLength]="3" [disabled]="searchDisabled">
+      Search: <p-autoComplete id="subsetSearch" [(ngModel)]="enteredSearchText" [style]="{'width':'30%'}"
+        [inputStyle]="{'width':'100%'}" [delay]="800" [suggestions]="subsetSuggestions"
+        (completeMethod)="performSubsetSearch()" placeholder="{{placeholderText}}" [minLength]="3"
+        [disabled]="searchDisabled">
       </p-autoComplete>
       <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton icon="fa fa-undo"
         (click)="resetSearch()" pTooltip="Click to reset search" label="Reset Search" tooltipPosition="bottom"

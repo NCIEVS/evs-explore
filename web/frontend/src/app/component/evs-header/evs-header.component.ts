@@ -33,12 +33,16 @@ export class EvsHeaderComponent implements OnInit {
       if (this.terminology.metadata.hierarchy) {
         // Look up the first root code
         this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
-          this.firstRoot = response[0].code;
+          // if first root is still null then set it
+          if (this.firstRoot == null) {
+            this.firstRoot = response[0].code;
+          }
         });
       }
     }
 
     this.subscription = this.configService.getSubject().subscribe(terminology => {
+      this.firstRoot = null;
       this.terminology = terminology;
       if (this.terminology) {
         this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version

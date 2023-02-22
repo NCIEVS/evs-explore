@@ -215,7 +215,7 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   termSuggestionUrl() {
-    window.location.href = 'https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode;
+    window.open('https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {
@@ -277,6 +277,10 @@ export class ConceptDisplayComponent implements OnInit {
     var defTable = [];
     if (this.concept.definitions != undefined && this.concept.definitions.length > 0) {
       this.concept.definitions.forEach(def => {
+        if (def.ct) {
+          defTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var defEntry = {};
         defEntry['Definition'] = def.definition;
         if (this.configService.getTerminology().metadata.detailsColumns['definitions-source']) {
@@ -297,6 +301,10 @@ export class ConceptDisplayComponent implements OnInit {
     var synTable = [];
     if (this.concept.synonyms != undefined && this.concept.synonyms.length > 0) {
       this.concept.synonyms.forEach(syn => {
+        if (syn.ct) {
+          synTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var synEntry = {};
         synEntry['Term'] = syn.name;
         if (this.configService.getTerminology().metadata.detailsColumns['synonyms-source']) {
@@ -333,6 +341,10 @@ export class ConceptDisplayComponent implements OnInit {
     var otherPropTable = [];
     if (this.concept.properties != undefined && this.concept.properties.length > 0) {
       this.concept.properties.forEach(prop => {
+        if (prop.ct) {
+          otherPropTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var propEntry = {};
         propEntry['Type'] = prop.type;
         propEntry['Value'] = prop.value;
@@ -352,6 +364,10 @@ export class ConceptDisplayComponent implements OnInit {
     var mapTable = [];
     if (this.concept.maps != undefined && this.concept.maps.length > 0) {
       this.concept.maps.forEach(map => {
+        if (map.ct) {
+          mapTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var mapEntry = {};
         if (this.configService.isRdf()) {
           mapEntry['Target Name'] = map.targetName;
@@ -380,11 +396,23 @@ export class ConceptDisplayComponent implements OnInit {
     var parentTable = [];
     if (this.concept.parents != undefined && this.concept.parents.length > 0) {
       this.concept.parents.forEach(parent => {
+        if (parent.ct) {
+          parentTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var parentEntry = {};
         parentEntry['Code'] = parent.code;
         parentEntry['Name'] = parent.name;
         if (this.configService.isRrf())
-          parentEntry['Relationship Attribute'] = parent.rela;
+          if (parent.rela)
+            parentEntry['Relationship Attribute'] = parent.rela;
+          else if (parent.qualifiers && parent.qualifiers.length > 0) {
+            parent.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                parentEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
         if (this.configService.isMultiSource() && this.configService.isRrf())
           parentEntry['Source'] = parent.source;
         parentTable.push(parentEntry);
@@ -399,11 +427,23 @@ export class ConceptDisplayComponent implements OnInit {
     var childrenTable = [];
     if (this.concept.children != undefined && this.concept.children.length > 0) {
       this.concept.children.forEach(child => {
+        if (child.ct) {
+          childrenTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var childEntry = {};
         childEntry['Code'] = child.code;
         childEntry['Name'] = child.name;
         if (this.configService.isRrf())
-          childEntry['Relationship Attribute'] = child.rela;
+          if (child.rela)
+            childEntry['Relationship Attribute'] = child.rela;
+          else if (child.qualifiers && child.qualifiers.length > 0) {
+            child.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                childEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
         if (this.configService.isMultiSource() && this.configService.isRrf())
           childEntry['Source'] = child.source;
         childrenTable.push(childEntry);
@@ -418,6 +458,10 @@ export class ConceptDisplayComponent implements OnInit {
     var roleRelationshipsTable = [];
     if (this.concept.roles != undefined && this.concept.roles.length > 0) {
       this.concept.roles.forEach(role => {
+        if (role.ct) {
+          roleRelationshipsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var roleEntry = {};
         roleEntry['Relationship'] = role.type;
         roleEntry['Related Code'] = role.relatedCode;
@@ -434,6 +478,10 @@ export class ConceptDisplayComponent implements OnInit {
     var associationsTable = [];
     if (this.concept.associations != undefined && this.concept.associations.length > 0) {
       this.concept.associations.forEach(association => {
+        if (association.ct) {
+          associationsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var associationsEntry = {};
         associationsEntry['Relationship'] = association.type + this.getQualifiers(association.qualifiers);
         associationsEntry['Related Code'] = association.relatedCode;
@@ -448,15 +496,21 @@ export class ConceptDisplayComponent implements OnInit {
 
   broaderConceptTable() {
     var broaderConceptTable = [];
+    if (!this.concept.broader)
+      this.concept.broader = this.concept.associations.filter(x => x.type == "RN");
     if (this.concept.broader != undefined && this.concept.broader.length > 0) {
       this.concept.broader.forEach(broad => {
         var broadEntry = {};
-        broadEntry['Relationship'] = broad.type + this.getQualifiers(broad.qualifiers);
+        var broadRela = this.getRrfRelationships(broad.qualifiers);
+        broadEntry['Relationship'] = broadRela != null ? broadRela : "Broader";
         broadEntry['Related Code'] = broad.relatedCode;
         broadEntry['Related Name'] = broad.relatedName;
         broadEntry['Source'] = broad.source;
         broaderConceptTable.push(broadEntry);
       });
+      if (this.conceptDetail.broaderCt < this.conceptDetail.broader.length) {
+        broaderConceptTable.push({ "Relationship": "More Data Available..." });
+      }
     }
     else
       broaderConceptTable.push({ 'None': '' });
@@ -467,6 +521,10 @@ export class ConceptDisplayComponent implements OnInit {
     var incomingRoleRelationshipsTable = [];
     if (this.concept.inverseRoles != undefined && this.concept.inverseRoles.length > 0) {
       this.concept.inverseRoles.forEach(inverseRole => {
+        if (inverseRole.ct) {
+          incomingRoleRelationshipsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var incomingRoleEntry = {};
         incomingRoleEntry['Relationship'] = inverseRole.type;
         incomingRoleEntry['Related Code'] = inverseRole.relatedCode;
@@ -481,15 +539,21 @@ export class ConceptDisplayComponent implements OnInit {
 
   narrowerConceptTable() {
     var narrowerConceptTable = [];
+    if (!this.concept.narrower)
+      this.concept.narrower = this.concept.associations.filter(x => x.type == "RB");
     if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
       this.concept.narrower.forEach(narrow => {
         var narrowEntry = {};
-        narrowEntry['Relationship'] = narrow.type + this.getQualifiers(narrow.qualifiers);
+        var narrowRela = this.getRrfRelationships(narrow.qualifiers);
+        narrowEntry['Relationship'] = narrowRela != null ? narrowRela : "Narrower";
         narrowEntry['Related Code'] = narrow.relatedCode;
         narrowEntry['Related Name'] = narrow.relatedName;
         narrowEntry['Source'] = narrow.source;
         narrowerConceptTable.push(narrowEntry);
       });
+      if (this.conceptDetail.narrowerCt < this.conceptDetail.narrower.length) {
+        narrowerConceptTable.push({ "Relationship": "More Data Available..." });
+      }
     }
     else
       narrowerConceptTable.push({ 'None': '' });
@@ -500,6 +564,10 @@ export class ConceptDisplayComponent implements OnInit {
     var incomingAssociationsTable = [];
     if (this.concept.inverseAssociations != undefined && this.concept.inverseAssociations.length > 0) {
       this.concept.inverseAssociations.forEach(inverseAssociation => {
+        if (inverseAssociation.ct) {
+          incomingAssociationsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         var inverseAssociationsEntry = {};
         inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.getQualifiers(inverseAssociation.qualifiers);
         inverseAssociationsEntry['Related Code'] = inverseAssociation.relatedCode;
@@ -517,6 +585,10 @@ export class ConceptDisplayComponent implements OnInit {
     if (this.concept.disjointWith != undefined && this.concept.disjointWith.length > 0) {
       this.concept.disjointWith.forEach(disjoint => {
         var disjointWithEntry = {};
+        if (disjoint.ct) {
+          disjointWithTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
         disjointWithEntry['Relationship'] = disjoint.type;
         disjointWithEntry['Related Code'] = disjoint.relatedCode;
         disjointWithEntry['Related Name'] = disjoint.relatedName;
@@ -530,15 +602,22 @@ export class ConceptDisplayComponent implements OnInit {
 
   otherRelationshipsTable() {
     var associationsTable = [];
-    if (this.concept.associations != undefined && this.concept.associations.length > 0) {
-      this.concept.associations.forEach(association => {
+    this.concept.otherRelationships = this.concept.associations.filter(x => !["RB", "RN"].includes(x.type));
+    if (this.concept.otherRelationships != undefined && this.concept.otherRelationships.length > 0) {
+      this.concept.otherRelationships.forEach(otherRelationship => {
+        if (otherRelationship.ct)
+          return;
         var associationsEntry = {};
-        associationsEntry['Relationship'] = association.type + this.getQualifiers(association.qualifiers);
-        associationsEntry['Related Code'] = association.relatedCode;
-        associationsEntry['Related Name'] = association.relatedName;
-        associationsEntry['Source'] = association.source;
+        var otherRela = this.getRrfRelationships(otherRelationship.qualifiers);
+        associationsEntry['Relationship'] = otherRela ? otherRela : "Other";
+        associationsEntry['Related Code'] = otherRelationship.relatedCode;
+        associationsEntry['Related Name'] = otherRelationship.relatedName;
+        associationsEntry['Source'] = otherRelationship.source;
         associationsTable.push(associationsEntry);
       });
+      if (this.conceptDetail.otherCt < this.conceptDetail.other.length) {
+        associationsTable.push({ "Relationship": "More Data Available..." });
+      }
     }
     else
       associationsTable.push({ 'None': '' });
@@ -551,6 +630,18 @@ export class ConceptDisplayComponent implements OnInit {
     var qualifiersString = '\n';
     qualifiers.forEach(qual => {
       qualifiersString += qual.type + ': ' + qual.value + '\n'
+    });
+    return qualifiersString;
+  }
+
+  getRrfRelationships(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
+    var qualifiersString = "";
+    qualifiers.forEach(qual => {
+      if (qual.type == "RELA")
+        qualifiersString = qual.value;
+      return qualifiersString;
     });
     return qualifiersString;
   }
