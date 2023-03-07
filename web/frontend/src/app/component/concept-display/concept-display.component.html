@@ -1,8 +1,9 @@
 <div class="hierarchy-div">
   <div class="page-header ui-coloring">
     {{ title }}
-    <span *ngIf="displayHierarchy"> -- <button [routerLink]="['/hierarchy', terminology, conceptCode]"
-        class="ui-button-coloring" [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
+    <span *ngIf="displayHierarchy"> -- <button
+        [routerLink]="['/hierarchy', terminology, conceptCode]" class="ui-button-coloring"
+        [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
         type="button"></button>
     </span>
     <span *ngIf="displayHierarchy && configService.isMultiSource()"> &nbsp;<button (click)="termSuggestionUrl()"
