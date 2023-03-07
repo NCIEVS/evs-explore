@@ -19,14 +19,14 @@ export class OverviewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titleService.setTitle("EVS Explore - Help");
+    this.titleService.setTitle('EVS Explore - Help');
     this.terminology = this.configService.getTerminologyName();
   }
 
   scrollToTop() {
-    this.router.onSameUrlNavigation = "reload";
-    this.router.navigate(["/overview"], { fragment: "top" }).finally(() => {
-      this.router.onSameUrlNavigation = "ignore"; // Restore config after navigation completes
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/overview'], { fragment: 'top' }).finally(() => {
+      this.router.onSameUrlNavigation = 'ignore'; // Restore config after navigation completes
     });
   }
 }

@@ -19,7 +19,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { ButtonModule } from 'primeng/primeng';
+import { ButtonModule, ProgressSpinnerModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChipsModule } from 'primeng/chips';
 import { TooltipModule } from 'primeng/tooltip';
@@ -151,6 +151,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     TreeTableModule,
     DropdownModule,
     ToggleButtonModule,
+    ProgressSpinnerModule,
     AngularSplitModule.forRoot()
   ],
   exports: [
@@ -165,7 +166,9 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     MessageService,
     LoaderService,
     ConceptDetailService,
+    AppComponent,
     ConceptDisplayComponent,
+    WelcomeComponent,
     SearchTermService,
     GlobalErrorHandler,
     {

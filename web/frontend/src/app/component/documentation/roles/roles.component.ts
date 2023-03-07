@@ -15,20 +15,24 @@ export class RolesComponent implements OnInit {
   terminology: string = null;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded terminology
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getRoles(this.terminology)
       .subscribe(response => {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Roles");
+    this.titleService.setTitle('EVS Explore - Roles');
+  }
+
+  ngAfterViewInit(): void {
   }
 
   customSort(event: SortEvent) {

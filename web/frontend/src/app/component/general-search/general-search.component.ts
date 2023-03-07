@@ -12,6 +12,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
+import { TreeTableModule } from 'primeng/primeng';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -45,11 +47,10 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   title: string;
   loadedMultipleConcept = false;
   firstSearchFlag = false;
-  noMatchedConcepts = true;
+  noMatchedConcepts = false;
 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
-  displayTableFormat = true;
   showMoreSearchOption = false;
   avoidLazyLoading = false;
 
@@ -72,7 +73,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   propertiesReturn = null;
   totalRecords = 0;
   timetaken = '';
-  loading: boolean;
   showMore = true;
 
   // filter for sources
@@ -110,6 +110,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             // Handle the search page
             if (event.url.indexOf('/search') != -1) {
               this.configFromQueryParams();
+              this.avoidLazyLoading = true;
               this.performSearch();
             }
             // Handle the welcome page
@@ -121,24 +122,25 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
           }
         });
 
-    // Instantiate new search criteria and load from query params
-    this.searchCriteria = new SearchCriteria(configService);
-    this.configFromQueryParams();
-
-    // Populate terms list from application metadata
-    this.termsAll = configService.getTerminologies().map(element => {
-      return {
-        label: element.metadata.uiLabel,
-        value: element
-      };
-    });
-    // filter for list of terminologies presented
-    this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
 
   }
 
   // On init, print console message
   ngOnInit() {
+    // Instantiate new search criteria and load from query params
+    this.searchCriteria = new SearchCriteria(this.configService);
+    this.configFromQueryParams();
+
+    // Populate terms list from application metadata
+    this.termsAll = this.configService.getTerminologies().map(terminology => {
+      return {
+        label: terminology.metadata.uiLabel.replace(/\:.*/, ''),
+        value: terminology,
+        description: terminology.metadata.uiLabel.replace(/.*?\: /, '')
+      };
+    });
+    // filter for list of terminologies presented
+    this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
     console.log('search component initialized');
   }
 
@@ -153,11 +155,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('after view initialized');
+    console.log('after content initialized');
     setTimeout(() => this.termauto.focusInput());
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
-      this.performSearch();
+      setTimeout(() => this.performSearch());
     }
   }
 
@@ -169,11 +171,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     // Setup terminology for both /welcome and /search pages
     if (this.queryParams.get('terminology')) {
       this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
-      this.configService.setTerminology(this.selectedTerminology);
     } else {
-      this.selectedTerminology = this.configService.getTerminologyByName('ncit');
-      this.configService.setTerminology(this.selectedTerminology);
+      this.selectedTerminology
+        = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
     }
+    this.configService.setTerminology(this.selectedTerminology);
+
     this.loadAllSources();
 
     // set search criteria if there's stuff from the url
@@ -187,9 +190,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       }
       if (this.queryParams.get('pageSize')) {
         this.pageSize = parseInt(this.queryParams.get('pageSize'));
+        this.searchCriteria.pageSize = this.pageSize;
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get('source') != "") {
+      if (this.queryParams.get('source') != '') {
+        console.debug('xxx', this.queryParams.get('source').split(','), this.searchCriteria.synonymSource);
+        console.debug('xxx', this.sourcesAll);
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
       }
       if (this.searchCriteria.type == 'phrase' ||
@@ -288,7 +294,9 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     } else {
       this.searchCriteria.fromRecord = event.first;
       this.searchCriteria.pageSize = event.rows;
+      this.pageSize = event.rows;
       this.setQueryUrl();
+      this.avoidLazyLoading = true;
       this.performSearch();
     }
   }
@@ -322,8 +330,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // Handle a change of the source - save in session storage and re-search
-  onChangeSource(event) {
-    console.log('onChangeSource', event);
+  onChangeSources(event) {
+    console.log('onChangeSource');
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetPaging();
     this.setQueryUrl();
@@ -333,14 +341,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log('onChangeTerminology', terminology.value.terminology);
-    if (terminology.value.metadata.licenseText) {
-      if (this.checkLicenseText(terminology.value.metadata.licenseText, terminology.value.terminology) == false) {
-        return;
-      }
-    }
     this.searchCriteria.term = '';
-    this.selectedTerminology = this.termsAll.filter(term => term.label === terminology.value.metadata.uiLabel)[0].value;
-    this.configService.setTerminology(this.selectedTerminology);
+    this.configService.setTerminology(terminology.value);
     this.loadAllSources();
 
     // reset to the welcome page
@@ -349,31 +351,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
         terminology: this.selectedTerminology.terminology
       }
     });
-  }
-
-  checkLicenseText(licenseText, terminology) {
-    if ((this.cookieService.check('mdrLicense') && terminology == 'mdr') ||
-      (this.cookieService.check('ncitLicense') && terminology == 'ncit') ||
-      (this.cookieService.check('ncimLicense') && terminology == 'ncim')) {
-      return true;
-    }
-    if (confirm(licenseText)) {
-      if (terminology == 'mdr') {
-        this.cookieService.set('mdrLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncim') {
-        this.cookieService.set('ncimLicense', 'accepted', 365);
-        return true;
-      }
-      else if (terminology == 'ncit') {
-        this.cookieService.set('ncitLicense', 'accepted', 365);
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
   }
 
   // Load source list
@@ -391,8 +368,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   }
 
   // Handle deselecting a source
-  onSourceSelectDeselect(event) {
-    console.log('onSourceSelectDeselect', event);
+  onSourceDeselect(event) {
+    console.log('onSourceDeselect', event);
     this.configService.setSources(this.searchCriteria.synonymSource.join(','));
     this.resetPaging();
     this.setQueryUrl();
@@ -415,7 +392,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Perform the search
   performSearch() {
-
     if (this.searchCriteria.term == null || this.searchCriteria.term.length < 3) {
       if (!this.firstSearchFlag) {
         console.log('skip search - first search has not happened, reroute to /welcome', this.searchCriteria.term);
@@ -438,12 +414,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
     }
 
-    this.loading = true;
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
       this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
-      this.searchCriteria.term = String(this.searchCriteria.term).replace(/\"/g, '');
+      this.searchCriteria.term = String(this.searchCriteria.term).replace(/"/g, '');
       this.searchCriteria.terminology = this.selectedTerminology.terminology;
+      this.loadedMultipleConcept = false;
       // call search term service
       this
         .searchTermService
@@ -472,7 +448,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.colsOrig = [...this.searchResultTableFormat.header];
             this.reportData = [...this.searchResultTableFormat.data];
 
-            this.displayTableFormat = true;
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
             // detect changes if not a destroyed view, then set paging
@@ -487,7 +462,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
           }
-          this.loading = false;
           this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
         });
@@ -496,11 +470,89 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       this.noMatchedConcepts = true;
       this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
       this.reportData = [];
-      this.displayTableFormat = false;
-      this.loading = false;
       this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
 
     }
+  }
+
+  // export search results
+  async exportSearch() {
+    var columnHeaders = this.displayColumns.map(col => col.header);
+    var toJoin = columnHeaders.join('\t').replace('Highlights\t', '') + '\n';
+    var exportPageSize = this.configService.getExportPageSize();
+    var maxExport = this.configService.getMaxExportSize();
+    var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
+    this.searchCriteria.pageSize = exportPageSize;
+    this.searchCriteria.export = true;
+
+    var pageList = Array.from(Array(pages).keys());
+    for (const page of pageList) {
+      this.searchCriteria.fromRecord = exportPageSize * page;
+      await this.searchTermService.export(this.searchCriteria, this.displayColumns).toPromise().then(
+        result => {
+          result.concepts.forEach(concept => {
+            toJoin += this.exportCodeFormatter(concept, columnHeaders);
+          });
+        }
+      );
+    }
+    saveAs(new Blob([toJoin], {
+      type: 'text/plain'
+    }), this.searchCriteria.term + '.' + new Date().toISOString() + '.xls');
+  }
+
+  exportCodeFormatter(concept, displayColumns) {
+    var conceptFormatString = '';
+    if (displayColumns.includes('Code'))
+      conceptFormatString += concept.code + '\t';
+    if (displayColumns.includes('Preferred Name'))
+      conceptFormatString += concept.name + '\t';
+
+    if (displayColumns.includes('Synonyms')) {
+      var synonymString = '';
+      if (concept.synonyms != undefined && concept.synonyms.length > 0) {
+        synonymString += '"';
+        // get unique synonyms
+        let uniqueSynonyms = [...concept.synonyms.reduce((map, obj) => map.has(obj.name) ? map : map.set(obj.name, obj), new Map()).values()];
+        for (let syn of uniqueSynonyms) {
+          synonymString += syn.name.replace(/"/g, '""') + '\n';
+        }
+        // remove last newline
+        synonymString = synonymString.substring(0, synonymString.length - 1) + '"';
+      }
+      synonymString += '\t';
+      conceptFormatString += synonymString;
+    }
+
+    if (displayColumns.includes('Definitions')) {
+      var definitionString = '';
+      if (concept.definitions != undefined && concept.definitions.length > 0) {
+        definitionString += '"';
+        for (let def of concept.definitions) {
+          definitionString += def.source + ': ' + def.definition.replace(/"/g, '""') + '\n';
+        }
+        // remove last newline
+        definitionString = definitionString.substring(0, definitionString.length - 1) + '"';
+      }
+      definitionString += '\t';
+      conceptFormatString += definitionString;
+    }
+
+    if (displayColumns.includes('Semantic Type')) {
+      var semString = '';
+      if (concept.properties != undefined && concept.properties.length > 0) {
+        for (let prop of concept.properties) {
+          if (prop.type == 'Semantic_Type') {
+            semString += prop.value;
+            // only one semantic type
+            break;
+          }
+        }
+      }
+      conceptFormatString += semString;
+    }
+    conceptFormatString += '\n';
+    return conceptFormatString;
   }
 
   // Set default selected columns

@@ -14,19 +14,23 @@ export class QualifiersComponent implements OnInit {
   terminology: string = null;;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded terminology
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getQualifiers(this.terminology)
       .subscribe(response => {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Qualifiers");
+    this.titleService.setTitle('EVS Explore - Qualifiers');
+  }
+
+  ngAfterViewInit(): void {
   }
 }

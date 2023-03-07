@@ -13,7 +13,7 @@ export class EvsApiComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer, private titleService: Title) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle("EVS Explore API");
+    this.titleService.setTitle('EVS Explore API');
     this.apiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.swagger);
   }
 

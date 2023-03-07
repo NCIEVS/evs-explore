@@ -1,14 +1,18 @@
 <div *ngIf="concept">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
-    <p-header class="bold-heading">
-      Parent Concepts
+    <p-header class="bold-heading" id="parentsHeader">
+      Parent Concepts (
+      <span *ngIf="concept.parentsCt == concept.parents.length">{{concept.parentsCt}}</span>
+      <span *ngIf="concept.parentsCt > concept.parents.length">
+        <a (click)="loadAll('parentsHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.parentsCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.parents" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.parents &&
             concept.parents.length > 0;
-          else elseBlockParentConcept
-        " (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockParentConcept" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20" [pSortableColumn]="'code'">Code
@@ -17,8 +21,8 @@
             <th class="w-40" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th *ngIf="configService.isRrf()" class="w-20" [pSortableColumn]="'rela'">Relationship
-              Attribute
+            <th *ngIf="configService.isRrf()" class="w-20" [pSortableColumn]="'rela'">
+              Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th *ngIf="configService.isMultiSource() && configService.isRrf()" class="w-20"
@@ -29,7 +33,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-parent>
           <tr *ngIf="checkFilter(parent)">
-            <td class="w-20">{{ parent.code }}</td>
+            <td *ngIf="parent.ct"><a (click)="loadAll('parentsHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!parent.ct" class="w-20">{{ parent.code }}</td>
             <td class="w-40">
               <a [routerLink]="[urlBase, terminology, parent.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]="urlTarget">{{ parent.name
@@ -47,8 +53,13 @@
   </p-panel>
   <br />
   <p-panel [toggleable]="true" [collapsed]="collapsed">
-    <p-header class="bold-heading">
-      Child Concepts
+    <p-header class="bold-heading" id="childrenHeader">
+      Child Concepts (
+      <span *ngIf="concept.childrenCt == concept.children.length">{{concept.childrenCt}}</span>
+      <span *ngIf="concept.childrenCt > concept.children.length">
+        <a (click)="loadAll('childrenHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.childrenCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.children" sortMode="single" class="table table-striped table-bordered" *ngIf="
@@ -64,8 +75,8 @@
             <th class="w-20" [pSortableColumn]="'name'">Name
               <p-sortIcon [field]="'name'"></p-sortIcon>
             </th>
-            <th class="w-30" *ngIf="configService.isRrf()" [pSortableColumn]="'rela'">Relationship
-              Attribute
+            <th class="w-30" *ngIf="configService.isRrf()" [pSortableColumn]="'rela'">
+              Relationship Attribute
               <p-sortIcon [field]="'rela'"></p-sortIcon>
             </th>
             <th class="w-30" *ngIf="configService.isMultiSource() && configService.isRrf()"
@@ -76,15 +87,17 @@
         </ng-template>
         <ng-template pTemplate="body" let-child>
           <tr *ngIf="checkFilter(child)">
-            <td>{{ child.code }}</td>
+            <td *ngIf="child.ct"><a (click)="loadAll('childrenHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!child.ct">{{ child.code }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, child.code]" [queryParams]="getSelectedSourcesQueryParam()"
                 [target]="urlTarget">{{ child.name }}
               </a>
             </td>
             <td *ngIf="configService.isRrf()">{{ child.rela }}</td>
-            <td *ngIf="configService.isMultiSource() && configService.isRrf()">{{ child.source ?
-              child.source : "" }}</td>
+            <td *ngIf="configService.isMultiSource() && configService.isRrf()">
+              {{ child.source ? child.source : "" }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -92,10 +105,16 @@
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
   <br />
+
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
-    <p-header class="bold-heading">
-      Role Relationships
+    <p-header class="bold-heading" id="roleRelationshipsHeader">
+      Role Relationships (
+      <span *ngIf="concept.rolesCt == concept.roles.length">{{concept.rolesCt}}</span>
+      <span *ngIf="concept.rolesCt > concept.roles.length">
+        <a (click)="loadAll('roleRelationshipsHeader')" class="top-link"
+          title="More data available, click to load full concept details">{{concept.rolesCt}}...</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         asserted or inherited, pointing from the current concept to other concepts:
       </span>
@@ -103,8 +122,7 @@
     <div class="table-responsive">
       <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.roles && concept.roles.length > 0;
-          else elseBlockRole
-        " (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockRole" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -120,7 +138,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-role>
           <tr>
-            <td>{{ role.type }}</td>
+            <td *ngIf="role.ct"><a (click)="loadAll('roleRelationshipsHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!role.ct">{{ role.type }}</td>
             <td>{{ role.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, role.relatedCode ]" [queryParams]="getSelectedSourcesQueryParam()"
@@ -136,8 +156,14 @@
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
-    <p-header class="bold-heading">
-      Associations
+    <p-header class="bold-heading" id="associationsHeader">
+      Associations (
+      <span *ngIf="concept.associationsCt == concept.associations.length">{{concept.associationsCt}}</span>
+      <span *ngIf="concept.associationsCt > concept.associations.length">
+        <a (click)="loadAll('associationsHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.associationsCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the
+        Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from the current concept to other concepts:
       </span>
@@ -162,7 +188,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.type }}
+            <td *ngIf="association.ct"><a (click)="loadAll('associationsHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!association.ct">{{ association.type }}
               <div *ngIf="association.qualifiers != null">
                 <div *ngFor="let qual of association.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -183,14 +211,18 @@
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
-    <p-header class="bold-heading">
-      Broader Concepts
+    <p-header class="bold-heading" id="broaderHeader">
+      Broader Concepts (
+      <span *ngIf="concept.associationsCt == 0">{{concept.broaderCt}}</span>
+      <span *ngIf="concept.associationsCt > 0">
+        <a (click)="loadAll('broaderHeader')" class="top-link"
+          title="More data available, click to load full concept details">{{concept.broaderCt}}...</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.broader" sortMode="single" class="table table-striped table-bordered" *ngIf="
         concept.broader && concept.broader.length > 0;
-          else elseBlockAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockAssociation" (sortFunction)="customSort($event)" [customSort]="true">
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'rela'">Relationship
@@ -208,8 +240,10 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association>
-          <tr *ngIf="checkFilter(association)">
-            <td>{{ association.type }}
+          <tr *ngIf="association.ct || checkFilter(association)">
+            <td *ngIf="association.ct"><a (click)="loadAll('broaderHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!association.ct">{{ association.type }}
               <div *ngIf="association.qualifiers != null">
                 <div *ngFor="let qual of association.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -219,8 +253,7 @@
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"
-                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{
-                association.relatedName }}</a>
+                [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ association.relatedName }}</a>
             </td>
             <td>{{ association.source }}</td>
           </tr>
@@ -232,8 +265,13 @@
   <br *ngIf="configService.isMultiSource() && configService.isRrf()" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
-    <p-header class="bold-heading">
-      Incoming Role Relationships
+    <p-header class="bold-heading" id="iroleHeader">
+      Incoming Role Relationships (
+      <span *ngIf="concept.inverseRolesCt == concept.inverseRoles.length">{{concept.inverseRolesCt}}</span>
+      <span *ngIf="concept.inverseRolesCt > concept.inverseRoles.length">
+        <a (click)="loadAll('iroleHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.inverseRolesCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         asserted or inherited, pointing from other concepts to the current concept:
       </span>
@@ -258,7 +296,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-irole>
           <tr>
-            <td>{{ irole.type }}</td>
+            <td *ngIf="irole.ct"><a (click)="loadAll('iroleHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!irole.ct">{{ irole.type }}</td>
             <td>{{ irole.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, irole.relatedCode ]"
@@ -275,8 +315,13 @@
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
-    <p-header class="bold-heading">
-      Narrower Concepts
+    <p-header class="bold-heading" id="narrowerHeader">
+      Narrower Concepts (
+      <span *ngIf="concept.associationsCt == 0">{{concept.narrowerCt}}</span>
+      <span *ngIf="concept.associationsCt > 0">
+        <a (click)="loadAll('narrowerHeader')" class="top-link"
+          title="More data available, click to load full concept details">{{concept.narrowerCt}}...</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.narrower" sortMode="single" class="table table-striped table-bordered" *ngIf="
@@ -301,7 +346,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="checkFilter(association)">
-            <td>{{ association.type }}
+            <td *ngIf="association.ct"><a (click)="loadAll('narrowerHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!association.ct">{{ association.type }}
               <div *ngIf="association.qualifiers != null">
                 <div *ngFor="let qual of association.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -326,8 +373,14 @@
   <br *ngIf="configService.isMultiSource() && configService.isRrf()" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
-    <p-header class="bold-heading">
-      Incoming Associations
+    <p-header class="bold-heading" id="iassociationsHeader">
+      Incoming Associations (
+      <span
+        *ngIf="concept.inverseAssociationsCt == concept.inverseAssociations.length">{{concept.inverseAssociationsCt}}</span>
+      <span *ngIf="concept.inverseAssociationsCt > concept.inverseAssociations.length">
+        <a (click)="loadAll('iassociationsHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.inverseAssociationsCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
       <span class="small-heading">
         pointing from other concepts to the current concept:
       </span>
@@ -352,7 +405,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-iassociation>
           <tr>
-            <td>{{ iassociation.type }}
+            <td *ngIf="iassociation.ct"><a (click)="loadAll('iassociationsHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!iassociation.ct">{{ iassociation.type }}
               <div *ngIf="iassociation.qualifiers != null">
                 <div *ngFor="let qual of iassociation.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -376,8 +431,13 @@
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf())" />
   <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf()">
-    <p-header class="bold-heading">
-      Other Relationships
+    <p-header class="bold-heading" id="otherRelationshipsHeader">
+      Other Relationships (
+      <span *ngIf="concept.associationsCt == 0">{{concept.otherCt}}</span>
+      <span *ngIf="concept.associationsCt > 0">
+        <a (click)="loadAll('otherRelationshipsHeader')" class="top-link"
+          title="More data available, click to load full concept details">{{concept.otherCt}}...</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered" *ngIf="concept.other &&
@@ -402,7 +462,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr *ngIf="checkFilter(association)">
-            <td>{{ association.type }}
+            <td *ngIf="association.ct"><a (click)="loadAll('otherRelationshipsHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!association.ct">{{ association.type }}
               <div *ngIf="association.qualifiers != null">
                 <div *ngFor="let qual of association.qualifiers">
                   <p class="qualEntry">&ensp;{{ qual.type }}: {{ qual.value }}</p>
@@ -427,8 +489,14 @@
   <br *ngIf="configService.isMultiSource() && configService.isRrf()" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
     *ngIf="!(configService.isMultiSource() && configService.isRrf())">
-    <p-header class="bold-heading">
-      Disjoint With
+    <p-header class="bold-heading" id="disjointHeader">
+      Disjoint With (
+      <span *ngIf="concept.disjointWithCt == concept.disjointWith.length">{{concept.disjointWithCt}}</span>
+      <span *ngIf="concept.disjointWithCt > concept.disjointWith.length">
+        <a (click)="loadAll('disjointHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.disjointWithCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the
+        Top of the Page">[top]</a>
     </p-header>
     <div class="table-responsive">
       <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
@@ -450,7 +518,10 @@
         </ng-template>
         <ng-template pTemplate="body" let-association>
           <tr>
-            <td>{{ association.type }}</td>
+            <td *ngIf="association.ct"><a (click)="loadAll('disjointHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!association.ct">
+              {{ association.type }}</td>
             <td>{{ association.relatedCode }}</td>
             <td>
               <a [routerLink]="[urlBase, terminology, association.relatedCode ]"

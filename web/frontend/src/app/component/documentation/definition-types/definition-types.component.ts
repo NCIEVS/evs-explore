@@ -15,20 +15,23 @@ export class DefinitionTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded definitioninology
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getDefinitionTypes(this.terminology)
       .subscribe(response => {
         this.definitionTypes = response;
         this.definitionTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Definition Types");
+    this.titleService.setTitle('EVS Explore - Definition Types');
+  }
+
+  ngAfterViewInit(): void {
   }
 
   customSort(event: SortEvent) {

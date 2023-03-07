@@ -6,19 +6,24 @@ import { Observable, BehaviorSubject } from 'rxjs';
 @Injectable()
 export class LoaderService {
 
-    private loaderSubject = new BehaviorSubject<boolean>(false);
+  private loaderSubject = new BehaviorSubject<boolean>(false);
 
-    constructor() { }
+  constructor() { }
 
-    showLoader() {
-        this.loaderSubject.next(true);
-    }
+  // increment loader counter and show loader
+  showLoader() {
+    this.loaderSubject.next(true);
+  }
 
-    hideLoader() {
-        this.loaderSubject.next(false);
-    }
+  hideLoader() {
+    this.loaderSubject.next(false);
+  }
 
-    getLoaderSubject(): Observable<any> {
-        return this.loaderSubject.asObservable();
-    }
+  forceHideLoader() {
+    this.loaderSubject.next(null);
+  }
+
+  getLoaderSubject(): Observable<any> {
+    return this.loaderSubject.asObservable();
+  }
 }

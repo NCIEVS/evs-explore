@@ -2,6 +2,7 @@
 export class Property {
   type: string;
   value: string;
+  ct: number;
   highlight: string;
 
   // Construct a concept reference from json input

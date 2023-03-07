@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
-import { Title } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-subset-details',
@@ -14,15 +15,14 @@ import { Title } from '@angular/platform-browser';
 })
 export class SubsetDetailsComponent implements OnInit {
 
-  activeIndex = 0;
   pageSize = 10;
+  fromRecord = 0;
   hitsFound = 0;
   conceptCode: string;
   hierarchyDisplay = '';
   titleCode: string;
   titleDesc: string;
-  usedSubsetList: Array<Concept>;
-  fullSubsetList: Array<Concept>;
+  subsets: Array<Concept>;
   avoidLazyLoading = true;
   loading: boolean;
   synonymSources: any;
@@ -30,14 +30,23 @@ export class SubsetDetailsComponent implements OnInit {
   textSuggestions: string[] = [];
   subsetFormat: string;
   subsetLink: string;
-  subsetNCItDefinition: string;
+  subsetDescription: any;
   terminology: string;
+
+  currentSortColumn = 'code';
+  currentSortDirection = false;
+  sortDirection = {
+    'ASC': true,
+    'DESC': false
+  }
 
   urlBase = '/concept';
 
-  constructor(private subsetDetailService: ConceptDetailService,
+  constructor(private sanitizer: DomSanitizer,
+    private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
-    private cookieService: CookieService, private configService: ConfigurationService,
+    private loaderService: LoaderService,
+    private configService: ConfigurationService,
     private titleService: Title
   ) {
 
@@ -48,29 +57,27 @@ export class SubsetDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activeIndex = this.cookieService.check('activeIndex') ? Number(this.cookieService.get('activeIndex')) : 0;
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.subsetDetailService.getSubsetFullDetails(this.titleCode)
+      this.subsetDetailService.getSubsetMembers(this.titleCode)
         .then(nodes => {
-          this.hitsFound = nodes["total"];
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.hitsFound = nodes['total'];
+          this.subsets = new Array<Concept>();
+          nodes['concepts'].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
-          //this.usedSubsetList = this.fullSubsetList;
+
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
           this.synonymSources = synonymMap;
-          this.termAutoSearch = "";
+          this.termAutoSearch = '';
         });
       this.route.paramMap.pipe(
         switchMap((params: ParamMap) =>
           this.subsetDetailService
-            .getSubsetInfo(this.titleCode, "summary,definitions")
+            .getSubsetInfo(this.titleCode, 'summary,definitions,properties,subsetLink')
         )
       )
         .subscribe((response: any) => {
@@ -78,19 +85,24 @@ export class SubsetDetailsComponent implements OnInit {
           this.titleDesc = subsetDetail.name;
           let ContSource = subsetDetail.properties.filter(item => item.type == 'Contributing_Source');
           if (ContSource.length == 1) {
-            if (ContSource[0].value == "CTRP")
-              this.subsetFormat = "CTRP";
+            if (ContSource[0].value == 'CTRP')
+              this.subsetFormat = 'CTRP';
             else
               this.subsetFormat = ContSource[0].value;
           }
           else {
-            this.subsetFormat = "NCIt";
+            this.subsetFormat = 'NCIt';
           }
           this.subsetLink = subsetDetail.getSubsetLink();
-          for (let definition of subsetDetail.definitions) {
-            if (definition.source == "NCI") {
-              this.subsetNCItDefinition = definition.definition;
-              break;
+
+          // Lookup the subset description.
+          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, subsetDetail.getSubsetDescription());
+          if (!this.subsetDescription) {
+            for (let definition of subsetDetail.definitions) {
+              if (definition.source == 'NCI') {
+                this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, definition.definition);
+                break;
+              }
             }
           }
           this.setTitle();
@@ -104,44 +116,44 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetFullDetails(this.titleCode, fromRecord, event.rows)
+      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows)
         .then(nodes => {
-          this.hitsFound = nodes["total"];
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.hitsFound = nodes['total'];
+          this.subsets = new Array<Concept>();
+          nodes['concepts'].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
 
-          //          this.usedSubsetList = this.fullSubsetList;
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
           this.synonymSources = synonymMap;
         });
+      this.fromRecord = fromRecord;
+      this.pageSize = event.rows;
     }
   }
 
   getSynonymSources(synonyms) {
     var synonymSourceMap = new Map<string, string>();
     synonyms.forEach(synonym => {
-      if (synonym["source"] == undefined) {
-        if (!(synonymSourceMap.has("No Source"))) {
-          synonymSourceMap.set("No Source", synonym["name"]);
+      if (synonym['source'] == undefined) {
+        if (!(synonymSourceMap.has('No Source'))) {
+          synonymSourceMap.set('No Source', synonym['name']);
         }
         else {
-          var key = synonymSourceMap.get("No Source") + ", " + synonym["name"];
-          synonymSourceMap.set("No Source", key);
+          var key = synonymSourceMap.get('No Source') + ', ' + synonym['name'];
+          synonymSourceMap.set('No Source', key);
         }
       }
       else {
-        if (!(synonymSourceMap.has(synonym["source"]))) {
-          synonymSourceMap.set(synonym["source"], synonym["name"]);
+        if (!(synonymSourceMap.has(synonym['source']))) {
+          synonymSourceMap.set(synonym['source'], synonym['name']);
         }
         else {
-          var key = synonymSourceMap.get(synonym["source"]) + ", " + synonym["name"];
-          synonymSourceMap.set(synonym["source"], key);
+          var key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
+          synonymSourceMap.set(synonym['source'], key);
         }
       }
 
@@ -149,34 +161,160 @@ export class SubsetDetailsComponent implements OnInit {
     return synonymSourceMap;
   }
 
-  search(event) {
-    this.subsetDetailService.getSubsetFullDetails(this.titleCode, undefined, undefined, event.query)
+  search(event, columnName = null) {
+    var sort = null;
+    var sortDirection = null;
+    var sortCols = document.getElementsByClassName('sortable');
+    for (var i = 0; i < sortCols.length; i++) {
+      var str = sortCols[i].innerHTML;
+      var text = str.replace('↓', '').replace('↑', '');
+      sortCols[i].innerHTML = text;
+    }
+    if (columnName) { // setup for sorting
+      var sortCols = document.getElementsByClassName('sortable');
+      if (this.currentSortColumn == columnName) {
+        this.currentSortDirection = !this.currentSortDirection;
+      }
+      else {
+        this.currentSortColumn = columnName;
+        this.currentSortDirection = this.sortDirection.ASC;
+      }
+      this.currentSortColumn = columnName;
+      sort = this.currentSortColumn;
+      sortDirection = this.currentSortDirection
+      document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓');
+    }
+    this.subsetDetailService.getSubsetMembers(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort)
       .then(nodes => {
-        this.hitsFound = nodes["total"];
+        this.hitsFound = nodes['total'];
         if (this.hitsFound > 0) {
-          this.fullSubsetList = nodes["concepts"];
-          this.usedSubsetList = new Array<Concept>();
-          this.fullSubsetList.forEach(conc => {
-            this.usedSubsetList.push(new Concept(conc, this.configService));
+          this.subsets = new Array<Concept>();
+          nodes['concepts'].forEach(c => {
+            this.subsets.push(new Concept(c, this.configService));
           });
 
-          //          this.usedSubsetList = this.fullSubsetList;
           var synonymMap = new Array<Map<string, string>>();
-          this.usedSubsetList.forEach(conc => {
-            synonymMap.push(this.getSynonymSources(conc["synonyms"]));
+          this.subsets.forEach(c => {
+            synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
           this.synonymSources = synonymMap;
         }
         else {
-          this.fullSubsetList = null;
-          this.usedSubsetList = null;
+          this.subsets = null;
         }
       });
     this.textSuggestions = [];
   }
 
+  // export search results
+  async exportSubset() {
+    this.loaderService.showLoader();
+    var titles = [];
+    var exportMax = this.configService.getMaxExportSize();
+    var exportPageSize = this.configService.getExportPageSize();
+    Array.from(document.getElementsByClassName('subsetTitle')).forEach(function (element) { titles.push(element.innerHTML) });
+
+    var term = document.getElementById('termauto').getAttribute('ng-reflect-model');
+    term = term && term.length > 2 ? term : '';
+    var subsetText = titles.join('\t') + '\n';
+    var pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
+    var pageList = Array.from(Array(pages).keys());
+
+    for (const page of pageList) {
+      await this.subsetDetailService.getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term).toPromise().then(
+        result => {
+          result.concepts.forEach(c => {
+            subsetText += this.exportCodeFormatter(c);
+          });
+        }
+      );
+    }
+    var fileName = this.titleCode + '.' + this.titleDesc + '.' + (term.length > 2 ? (term + '.') : '');
+    saveAs(new Blob([subsetText], {
+      type: 'text/plain'
+    }), fileName + new Date().toISOString() + '.xls');
+    this.loaderService.hideLoader();
+  }
+
+  exportCodeFormatter(concept: Concept) {
+    var rowText = '';
+    if (this.subsetFormat == 'NCIt') {
+      rowText += concept.code + '\t';
+      rowText += concept.name + '\t';
+      rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
+      rowText += '\t';
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == 'NCI')
+            rowText += def.definition.replace(/"/g, '""');
+        });
+      }
+
+    }
+    else if (this.subsetFormat == 'CTRP') {
+      rowText += this.titleCode + '\t';
+      rowText += this.titleDesc + '\t'
+      rowText += concept.code + '\t';
+      rowText += concept.name + '\t';
+      concept.synonyms.forEach(syn => {
+        if (syn.type == 'Display_Name')
+          rowText += syn.name;
+      });
+      rowText += '\t';
+      rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
+
+    }
+    else {
+      rowText += concept.code + '\t';
+      rowText += '"' + this.getSynonymNames(concept, this.subsetFormat, null).join('\n') + '"';
+      rowText += '\t';
+
+      rowText += concept.name + '\t';
+      rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
+      rowText += '\t';
+
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == this.subsetFormat)
+            rowText += def.definition.replace(/"/g, '""');
+        });
+      }
+      rowText += '\t';
+
+      if (concept.definitions) {
+        concept.definitions.forEach(def => {
+          if (def.source == 'NCI')
+            rowText += def.definition.replace(/"/g, '""');
+        });
+      }
+    }
+    rowText += '\n';
+    return rowText;
+  }
+
+  getSynonymNames(concept: Concept, source, termType): string[] {
+    var syns: string[] = [];
+    if (concept.synonyms && concept.synonyms.length > 0) {
+      for (let i = 0; i < concept.synonyms.length; i++) {
+        if (termType != null && concept.synonyms[i].termType != termType) {
+          continue;
+        }
+        if (source != null && concept.synonyms[i].source != source) {
+          continue
+        }
+        if (syns.indexOf(concept.synonyms[i].name) != -1) {
+          continue;
+        }
+        syns.push(concept.synonyms[i].name);
+      }
+    }
+    // case-insensitive sort
+    syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    return syns;
+  }
+
   setTitle() {
-    this.titleService.setTitle(this.titleCode + " - " + this.titleDesc)
+    this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc)
   }
 
 }

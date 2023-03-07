@@ -15,13 +15,15 @@ export class SourcesComponent implements OnInit {
   definitionSources: any;
   terminology: string;
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getSynonymSources(this.terminology)
       .subscribe(response => {
         this.synonymSources = response;
@@ -35,8 +37,11 @@ export class SourcesComponent implements OnInit {
       });
 
     this.terminology = this.configService.getTerminology().terminology;
-    this.titleService.setTitle("EVS Explore - Sources");
+    this.titleService.setTitle('EVS Explore - Sources');
 
+  }
+
+  ngAfterViewInit(): void {
   }
 
 }

@@ -25,7 +25,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     const appRef = this.injector.get(ApplicationRef);
     const commonDataService = this.injector.get(CommonDataService);
 
-    loaderService.hideLoader();
+    loaderService.forceHideLoader();
 
     // Handle EVS errors in specific ay
     if (error instanceof EvsError) {
@@ -36,7 +36,7 @@ export class GlobalErrorHandler extends ErrorHandler {
         this.notifyError(error.displayMessage);
       }
     } else {
-      if (error.message.includes('Cannot read property \'version\' of null')) {
+      if (error.message.includes('Cannot read property "version" of null')) {
         error.message = 'Could not get configuration information from the backend. Either the database or evsrestapi is unaccessible';
       }
       zone.run(() => {

@@ -16,6 +16,7 @@ export class SearchCriteria {
   conceptStatus: string[] = [];
   fromRecord: number = 0;
   pageSize: number = 10;
+  export: boolean = false;
 
   // Render as a string
   toString(): string {
@@ -35,5 +36,6 @@ export class SearchCriteria {
     this.conceptStatus = [];
     this.fromRecord = 0;
     this.pageSize = 10;
+    this.export = false;
   }
 }

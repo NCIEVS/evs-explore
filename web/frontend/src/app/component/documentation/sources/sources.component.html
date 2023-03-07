@@ -1,15 +1,16 @@
 <div class="container">
     <div class="page-header">
         <span class="ui-coloring">Sources</span>
-        <span style="float:right"><button [routerLink]="['/welcome']"
-                [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-                class="ui-button-coloring"></button></span>
+        <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+                label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
     </div>
 
     <p>Information about synonym sources</p>
     <div class="table-responsive" style="font-size:14px;">
-        <p-table class="table table-striped table-bordered" [value]="synonymSources"
-            sortMode="single">
+        <p-table class="table table-striped table-bordered" [value]="synonymSources" sortMode="single"
+            *ngIf="synonymSources && synonymSources.length > 0;else elseBlockDefinitions"
+            (sortFunction)="customSort($event)">
+
             <ng-template pTemplate="header">
                 <tr>
                     <th class="w-20" [pSortableColumn]="'code'">Name
@@ -27,13 +28,14 @@
                 </tr>
             </ng-template>
         </p-table>
+        <ng-template #elseBlockDefinitions>None</ng-template>
     </div>
     <p>&nbsp;</p>
 
     <p>Information about definition sources</p>
     <div class="table-responsive" style="font-size:14px;">
-        <p-table class="table table-striped table-bordered" [value]="definitionSources"
-            sortMode="single">
+        <p-table class="table table-striped table-bordered" [value]="definitionSources" sortMode="single"
+            *ngIf="definitionSources && definitionSources.length > 0;else elseBlockDefinitions">
             <ng-template pTemplate="header">
                 <tr>
                     <th class="w-20" [pSortableColumn]="'code'">Name
@@ -51,6 +53,7 @@
                 </tr>
             </ng-template>
         </p-table>
+        <ng-template #elseBlockDefinitions>None</ng-template>
     </div>
 
     <!-- if/when definition sources are searchable via explore, list them here -->

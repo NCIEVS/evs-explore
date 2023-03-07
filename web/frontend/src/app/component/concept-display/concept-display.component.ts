@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
-import { CookieService } from 'ngx-cookie-service';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
+import { writeXLSX, utils } from 'xlsx';
+import { saveAs } from 'file-saver';
+import { ViewportScroller } from '@angular/common';
+import { LoaderService } from '../../service/loader.service';
 
 // Concept display component
 // BAC - looks like not used
@@ -16,13 +19,14 @@ import { Subject } from 'rxjs';
 })
 export class ConceptDisplayComponent implements OnInit {
   expandCollapseChange: Subject<boolean> = new Subject();
+  getConceptIsSubset: Subject<boolean> = new Subject();
 
-  activeIndex = 0;
   conceptCode: string;
   conceptDetail: Concept;
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
+
 
   urlBase = '/concept';
   urlTarget = '_top';
@@ -46,22 +50,24 @@ export class ConceptDisplayComponent implements OnInit {
     'Maps_To',
     'Preferred_Name'
   ]
+  concept: any;
   properties: string[] = [];
   sources: string[] = [];
   selectedSources = null;
   terminology: string;
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
+  conceptIsSubset: boolean;
 
   subscription = null;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
-    private route: ActivatedRoute,
+    private viewportScroller: ViewportScroller,
     private router: Router,
     private location: Location,
-    private cookieService: CookieService,
-    public configService: ConfigurationService
+    private loaderService: LoaderService,
+    public configService: ConfigurationService,
   ) {
 
     // Do this in the constructor so it's ready to go when this component is injected
@@ -69,7 +75,6 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
     this.terminology = this.configService.getTerminologyName();
-
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
@@ -84,13 +89,9 @@ export class ConceptDisplayComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activeIndex = 0;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
-
-    // TODO: this should be based on terminology metadata
-    this.displayHierarchy = (
-      window.location.pathname.indexOf('hierarchy') == -1 &&
-      this.configService.getTerminologyName() != 'ncim') ? true : false;
+    // show hierarchy if NOT in hierarchy page and there is a hierarchy
+    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') &&
+      this.configService.getTerminology().metadata.hierarchy;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties()
@@ -101,22 +102,9 @@ export class ConceptDisplayComponent implements OnInit {
             this.properties.push(property['name']);
           }
         }
+
         // Then look up the concept
-        this.conceptDetailService
-          .getConceptSummary(this.configService.getCode(), 'full')
-          .subscribe((concept: any) => {
-            // and finally build the local state from it
-            this.conceptDetail = new Concept(concept, this.configService);
-            this.conceptCode = concept.code;
-            this.title = concept.name + ' ( Code - ' + concept.code + ' )';
-            // Sort the source list (case insensitive)
-            this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-            // make sure All is at the front
-            if (this.sources[0] != 'All' && this.sources.includes('All')) { // make sure All is first in list
-              this.sources.splice(this.sources.indexOf('All'), 1);
-              this.sources.unshift('All');
-            }
-          })
+        this.lookupConcept(true);
 
       })
   }
@@ -127,10 +115,30 @@ export class ConceptDisplayComponent implements OnInit {
     }
   }
 
-  // Respond to things like changes in tabs
-  handleChange($event) {
-    this.activeIndex = $event.index;
-    this.cookieService.set('activeIndex', String(this.activeIndex), 365, '/');
+  // lookup concept
+  lookupConcept(limit: boolean = false, scrollToId: string = null) {
+    this.loaderService.showLoader();
+    this.conceptDetailService
+      .getConceptSummary(this.configService.getCode(), 'full', limit ? 100 : null)
+      .subscribe((concept: any) => {
+        // and finally build the local state from it
+        this.concept = concept;
+        this.conceptDetail = new Concept(concept, this.configService);
+        this.conceptCode = concept.code;
+        this.title = concept.name + ' ( Code - ' + concept.code + ' )';
+        // Sort the source list (case insensitive)
+        this.sources = this.getSourceList(this.conceptDetail).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        // make sure All is at the front
+        if (this.sources[0] != 'All' && this.sources.includes('All')) { // make sure All is first in list
+          this.sources.splice(this.sources.indexOf('All'), 1);
+          this.sources.unshift('All');
+        }
+
+        if (scrollToId) {
+          this.viewportScroller.scrollToAnchor(scrollToId);
+        }
+        this.loaderService.hideLoader();
+      })
   }
 
   // Reroute to hierarchy view
@@ -207,7 +215,7 @@ export class ConceptDisplayComponent implements OnInit {
   }
 
   termSuggestionUrl() {
-    window.location.href = "https://ncitermform.nci.nih.gov/ncitermform/?code=" + this.conceptCode;
+    window.open('https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {
@@ -216,4 +224,489 @@ export class ConceptDisplayComponent implements OnInit {
     this.expandCollapseChange.next(this.collapsed);
   }
 
+  exportDetails() {
+    var subsetLink = document.getElementById('subsetLink');
+    var nameWorksheet = utils.table_to_sheet(document.getElementById('nameTable'));
+    if (subsetLink) {
+      var nameTableLength = (document.getElementById('nameTable') as HTMLTableElement).rows.length;
+      nameWorksheet[utils.encode_cell({ c: 1, r: nameTableLength - 1 })] =
+      {
+        f: '=HYPERLINK("' + subsetLink.baseURI + 'subset/' + this.configService.getTerminologyName() +
+          '/' + subsetLink.innerText + '","' + this.conceptCode + '"'
+      };
+    }
+    const defWorksheet = utils.json_to_sheet(this.defTable());
+    const synWorksheet = utils.json_to_sheet(this.synTable());
+    const otherPropWorksheet = utils.json_to_sheet(this.otherPropTable());
+    const mapWorksheet = utils.json_to_sheet(this.mapsTable());
+    const parentWorksheet = utils.json_to_sheet(this.parentTable());
+    const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
+
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
+      var associationsWorksheet = utils.json_to_sheet(this.associationsTable());
+      var incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
+      var incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
+      var disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
+    }
+    else {
+      var broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
+      var narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
+      var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
+    }
+
+    const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
+    const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
+    });
+    saveAs(data, this.concept.code + '_' + this.concept.name + '_conceptDetails_' + new Date().getTime() + '.xlsx');
+  }
+
+  defAttribution(qualifiers) {
+    if (qualifiers == null || qualifiers.length == 0) return null;
+    var attribution = null;
+    qualifiers.forEach(qual => {
+      if (qual.type == 'attribution')
+        attribution = qual.value;
+    });
+    return attribution;
+  }
+
+  defTable() {
+    var defTable = [];
+    if (this.concept.definitions != undefined && this.concept.definitions.length > 0) {
+      this.concept.definitions.forEach(def => {
+        if (def.ct) {
+          defTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var defEntry = {};
+        defEntry['Definition'] = def.definition;
+        if (this.configService.getTerminology().metadata.detailsColumns['definitions-source']) {
+          defEntry['Source'] = def.source;
+        }
+        if (this.configService.getTerminology().metadata.detailsColumns['definitions-attribution']) {
+          defEntry['Attribution'] = this.defAttribution(def.qualifiers);
+        }
+        defTable.push(defEntry);
+      });
+    }
+    else
+      defTable.push({ 'None': '' });
+    return defTable;
+  }
+
+  synTable() {
+    var synTable = [];
+    if (this.concept.synonyms != undefined && this.concept.synonyms.length > 0) {
+      this.concept.synonyms.forEach(syn => {
+        if (syn.ct) {
+          synTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var synEntry = {};
+        synEntry['Term'] = syn.name;
+        if (this.configService.getTerminology().metadata.detailsColumns['synonyms-source']) {
+          synEntry['Source'] = syn.source;
+        }
+        if (this.configService.getTerminology().metadata.detailsColumns['synonyms-type']) {
+          synEntry['Type'] = syn.type;
+        }
+        if (this.configService.getTerminology().metadata.detailsColumns['synonyms-termType']) {
+          // Show embedded type if type column not shown and term type is blank
+          if (!syn.termType && !this.configService.getTerminology().metadata.detailsColumns['synonyms-type']) {
+            synEntry['Term Type'] = '(' + syn.type + ')';
+          } else {
+            synEntry['Term Type'] = syn.termType;
+          }
+        }
+        if (this.configService.getTerminology().metadata.detailsColumns['synonyms-code']) {
+          synEntry['Code'] = syn.code;
+        }
+        if (this.configService.getTerminology().metadata.detailsColumns['synonyms-subsourceName'] ||
+          this.configService.getTerminology().metadata.detailsColumns['synonyms-subSource']) {
+          synEntry['Subsource Name'] = syn.subSource;
+        }
+        synTable.push(synEntry);
+      });
+      synTable = synTable.sort((a, b) => (a.Term > b.Term) ? 1 : ((b.Term > a.Term) ? -1 : 0));
+    }
+    else
+      synTable.push({ 'None': '' });
+    return synTable;
+  }
+
+  otherPropTable() {
+    var otherPropTable = [];
+    if (this.concept.properties != undefined && this.concept.properties.length > 0) {
+      this.concept.properties.forEach(prop => {
+        if (prop.ct) {
+          otherPropTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var propEntry = {};
+        propEntry['Type'] = prop.type;
+        propEntry['Value'] = prop.value;
+        if (this.configService.isMultiSource() && this.configService.isRrf()) {
+          propEntry['Source'] = prop.source;
+        }
+        otherPropTable.push(propEntry);
+      });
+      otherPropTable = otherPropTable.sort((a, b) => (a.Type > b.Type) ? 1 : ((b.Type > a.Type) ? -1 : 0));
+    }
+    else
+      otherPropTable.push({ 'None': '' });
+    return otherPropTable;
+  }
+
+  mapsTable() {
+    var mapTable = [];
+    if (this.concept.maps != undefined && this.concept.maps.length > 0) {
+      this.concept.maps.forEach(map => {
+        if (map.ct) {
+          mapTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var mapEntry = {};
+        if (this.configService.isRdf()) {
+          mapEntry['Target Name'] = map.targetName;
+          mapEntry['Relationship to Target'] = map.type;
+          mapEntry['Target Term Type'] = map.targetTermType;
+          mapEntry['Target Code'] = map.targetCode;
+          mapEntry['Target Terminology'] = map.targetTerminology + ' ' + map.targetTerminologyVersion;
+        }
+        else if (this.configService.isRrf()) {
+          mapEntry['Source Code'] = map.sourceCode;
+          mapEntry['Source Terminology'] = map.sourceTerminology;
+          mapEntry['Type'] = map.type;
+          mapEntry['Target Code'] = map.targetCode;
+          mapEntry['Target Terminology'] = map.targetTerminology + ' ' + map.targetTerminologyVersion;
+          mapEntry['Target Name'] = map.targetName;
+        }
+        mapTable.push(mapEntry);
+      });
+    }
+    else
+      mapTable.push({ 'None': '' });
+    return mapTable;
+  }
+
+  parentTable() {
+    var parentTable = [];
+    if (this.concept.parents != undefined && this.concept.parents.length > 0) {
+      this.concept.parents.forEach(parent => {
+        if (parent.ct) {
+          parentTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var parentEntry = {};
+        parentEntry['Code'] = parent.code;
+        parentEntry['Name'] = parent.name;
+        if (this.configService.isRrf())
+          if (parent.rela)
+            parentEntry['Relationship Attribute'] = parent.rela;
+          else if (parent.qualifiers && parent.qualifiers.length > 0) {
+            parent.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                parentEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          parentEntry['Source'] = parent.source;
+        parentTable.push(parentEntry);
+      });
+    }
+    else
+      parentTable.push({ 'None': '' });
+    return parentTable;
+  }
+
+  childrenTable() {
+    var childrenTable = [];
+    if (this.concept.children != undefined && this.concept.children.length > 0) {
+      this.concept.children.forEach(child => {
+        if (child.ct) {
+          childrenTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var childEntry = {};
+        childEntry['Code'] = child.code;
+        childEntry['Name'] = child.name;
+        if (this.configService.isRrf())
+          if (child.rela)
+            childEntry['Relationship Attribute'] = child.rela;
+          else if (child.qualifiers && child.qualifiers.length > 0) {
+            child.qualifiers.forEach(qual => {
+              if (qual.type == "RELA") {
+                childEntry['Relationship Attribute'] = qual.value;
+              }
+            });
+          }
+        if (this.configService.isMultiSource() && this.configService.isRrf())
+          childEntry['Source'] = child.source;
+        childrenTable.push(childEntry);
+      });
+    }
+    else
+      childrenTable.push({ 'None': '' });
+    return childrenTable;
+  }
+
+  roleRelationshipsTable() {
+    var roleRelationshipsTable = [];
+    if (this.concept.roles != undefined && this.concept.roles.length > 0) {
+      this.concept.roles.forEach(role => {
+        if (role.ct) {
+          roleRelationshipsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var roleEntry = {};
+        roleEntry['Relationship'] = role.type;
+        roleEntry['Related Code'] = role.relatedCode;
+        roleEntry['Related Name'] = role.relatedName;
+        roleRelationshipsTable.push(roleEntry);
+      });
+    }
+    else
+      roleRelationshipsTable.push({ 'None': '' });
+    return roleRelationshipsTable;
+  }
+
+  associationsTable() {
+    var associationsTable = [];
+    if (this.concept.associations != undefined && this.concept.associations.length > 0) {
+      this.concept.associations.forEach(association => {
+        if (association.ct) {
+          associationsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var associationsEntry = {};
+        associationsEntry['Relationship'] = association.type + this.getQualifiers(association.qualifiers);
+        associationsEntry['Related Code'] = association.relatedCode;
+        associationsEntry['Related Name'] = association.relatedName;
+        associationsTable.push(associationsEntry);
+      });
+    }
+    else
+      associationsTable.push({ 'None': '' });
+    return associationsTable;
+  }
+
+  broaderConceptTable() {
+    var broaderConceptTable = [];
+    if (!this.concept.broader)
+      this.concept.broader = this.concept.associations.filter(x => x.type == "RN");
+    if (this.concept.broader != undefined && this.concept.broader.length > 0) {
+      this.concept.broader.forEach(broad => {
+        var broadEntry = {};
+        var broadRela = this.getRrfRelationships(broad.qualifiers);
+        broadEntry['Relationship'] = broadRela != null ? broadRela : "Broader";
+        broadEntry['Related Code'] = broad.relatedCode;
+        broadEntry['Related Name'] = broad.relatedName;
+        broadEntry['Source'] = broad.source;
+        broaderConceptTable.push(broadEntry);
+      });
+      if (this.conceptDetail.broaderCt < this.conceptDetail.broader.length) {
+        broaderConceptTable.push({ "Relationship": "More Data Available..." });
+      }
+    }
+    else
+      broaderConceptTable.push({ 'None': '' });
+    return broaderConceptTable;
+  }
+
+  incomingRoleRelationshipsTable() {
+    var incomingRoleRelationshipsTable = [];
+    if (this.concept.inverseRoles != undefined && this.concept.inverseRoles.length > 0) {
+      this.concept.inverseRoles.forEach(inverseRole => {
+        if (inverseRole.ct) {
+          incomingRoleRelationshipsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var incomingRoleEntry = {};
+        incomingRoleEntry['Relationship'] = inverseRole.type;
+        incomingRoleEntry['Related Code'] = inverseRole.relatedCode;
+        incomingRoleEntry['Related Name'] = inverseRole.relatedName;
+        incomingRoleRelationshipsTable.push(incomingRoleEntry);
+      });
+    }
+    else
+      incomingRoleRelationshipsTable.push({ 'None': '' });
+    return incomingRoleRelationshipsTable;
+  }
+
+  narrowerConceptTable() {
+    var narrowerConceptTable = [];
+    if (!this.concept.narrower)
+      this.concept.narrower = this.concept.associations.filter(x => x.type == "RB");
+    if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
+      this.concept.narrower.forEach(narrow => {
+        var narrowEntry = {};
+        var narrowRela = this.getRrfRelationships(narrow.qualifiers);
+        narrowEntry['Relationship'] = narrowRela != null ? narrowRela : "Narrower";
+        narrowEntry['Related Code'] = narrow.relatedCode;
+        narrowEntry['Related Name'] = narrow.relatedName;
+        narrowEntry['Source'] = narrow.source;
+        narrowerConceptTable.push(narrowEntry);
+      });
+      if (this.conceptDetail.narrowerCt < this.conceptDetail.narrower.length) {
+        narrowerConceptTable.push({ "Relationship": "More Data Available..." });
+      }
+    }
+    else
+      narrowerConceptTable.push({ 'None': '' });
+    return narrowerConceptTable;
+  }
+
+  incomingAssociationsTable() {
+    var incomingAssociationsTable = [];
+    if (this.concept.inverseAssociations != undefined && this.concept.inverseAssociations.length > 0) {
+      this.concept.inverseAssociations.forEach(inverseAssociation => {
+        if (inverseAssociation.ct) {
+          incomingAssociationsTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var inverseAssociationsEntry = {};
+        inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.getQualifiers(inverseAssociation.qualifiers);
+        inverseAssociationsEntry['Related Code'] = inverseAssociation.relatedCode;
+        inverseAssociationsEntry['Related Name'] = inverseAssociation.relatedName;
+        incomingAssociationsTable.push(inverseAssociationsEntry);
+      });
+    }
+    else
+      incomingAssociationsTable.push({ 'None': '' });
+    return incomingAssociationsTable;
+  }
+
+  disjointWithTable() {
+    var disjointWithTable = [];
+    if (this.concept.disjointWith != undefined && this.concept.disjointWith.length > 0) {
+      this.concept.disjointWith.forEach(disjoint => {
+        var disjointWithEntry = {};
+        if (disjoint.ct) {
+          disjointWithTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        disjointWithEntry['Relationship'] = disjoint.type;
+        disjointWithEntry['Related Code'] = disjoint.relatedCode;
+        disjointWithEntry['Related Name'] = disjoint.relatedName;
+        disjointWithTable.push(disjointWithEntry);
+      });
+    }
+    else
+      disjointWithTable.push({ 'None': '' });
+    return disjointWithTable;
+  }
+
+  otherRelationshipsTable() {
+    var associationsTable = [];
+    this.concept.otherRelationships = this.concept.associations.filter(x => !["RB", "RN"].includes(x.type));
+    if (this.concept.otherRelationships != undefined && this.concept.otherRelationships.length > 0) {
+      this.concept.otherRelationships.forEach(otherRelationship => {
+        if (otherRelationship.ct)
+          return;
+        var associationsEntry = {};
+        var otherRela = this.getRrfRelationships(otherRelationship.qualifiers);
+        associationsEntry['Relationship'] = otherRela ? otherRela : "Other";
+        associationsEntry['Related Code'] = otherRelationship.relatedCode;
+        associationsEntry['Related Name'] = otherRelationship.relatedName;
+        associationsEntry['Source'] = otherRelationship.source;
+        associationsTable.push(associationsEntry);
+      });
+      if (this.conceptDetail.otherCt < this.conceptDetail.other.length) {
+        associationsTable.push({ "Relationship": "More Data Available..." });
+      }
+    }
+    else
+      associationsTable.push({ 'None': '' });
+    return associationsTable;
+  }
+
+  getQualifiers(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
+    var qualifiersString = '\n';
+    qualifiers.forEach(qual => {
+      qualifiersString += qual.type + ': ' + qual.value + '\n'
+    });
+    return qualifiersString;
+  }
+
+  getRrfRelationships(qualifiers) {
+    if (qualifiers == undefined || qualifiers.length == 0)
+      return null;
+    var qualifiersString = "";
+    qualifiers.forEach(qual => {
+      if (qual.type == "RELA")
+        qualifiersString = qual.value;
+      return qualifiersString;
+    });
+    return qualifiersString;
+  }
+
+  getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet) {
+    if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
+      return {
+        Sheets: {
+          'Name': nameWorksheet,
+          'Definitions': defWorksheet,
+          'Synonyms': synWorksheet,
+          'Other Properties': otherPropWorksheet,
+          'Maps': mapWorksheet,
+          'Parent Concepts': parentWorksheet,
+          'Child Concepts': childrenWorksheet,
+          'Role Relationships': roleRelationshipsWorksheet,
+          'Associations': associationsWorksheet,
+          'Incoming Role Relationships': incomingRoleRelationshipsWorksheet,
+          'Incoming Associations': incomingAssociationsWorksheet,
+          'Disjoint With': disjointWithWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          'Maps',
+          'Parent Concepts',
+          'Child Concepts',
+          'Role Relationships',
+          'Associations',
+          'Incoming Role Relationships',
+          'Incoming Associations',
+          'Disjoint With'
+        ]
+      };
+    }
+    else {
+      return {
+        Sheets: {
+          'Name': nameWorksheet,
+          'Definitions': defWorksheet,
+          'Synonyms': synWorksheet,
+          'Other Properties': otherPropWorksheet,
+          'Maps': mapWorksheet,
+          'Parent Concepts': parentWorksheet,
+          'Child Concepts': childrenWorksheet,
+          'Broader Concepts': broaderConceptWorksheet,
+          'Narrower Concepts': narrowerConceptWorksheet,
+          'Other Relationships': otherRelationshipsWorksheet
+        },
+        SheetNames: [
+          'Name',
+          'Definitions',
+          'Synonyms',
+          'Other Properties',
+          'Maps',
+          'Parent Concepts',
+          'Child Concepts',
+          'Role Relationships',
+          'Broader Concepts',
+          'Narrower Concepts',
+          'Other Relationships'
+        ]
+      };
+    }
+  }
 }

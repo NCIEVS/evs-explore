@@ -15,26 +15,34 @@ export class PropertiesComponent implements OnInit {
   terminology: string = null;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getProperties(this.terminology)
       .subscribe(response => {
         this.properties = response;
         this.properties.sort((a, b) => {
           // use code because value doesn't always exist
-          let value1 = a.name || "";
-          let value2 = b.name || "";
+          let value1 = a.name || '';
+          let value2 = b.name || '';
           // case-inensitive sort
           return value1.localeCompare(value2, undefined, { sensitivity: 'base' });
         }
         );
       });
-    this.titleService.setTitle("EVS Explore - Properties");
+    this.titleService.setTitle('EVS Explore - Properties');
+
+
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   customSort(event: SortEvent) {

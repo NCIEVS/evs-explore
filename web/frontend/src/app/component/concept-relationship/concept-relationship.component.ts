@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from 'src/app/service/configuration.service';
@@ -21,9 +22,9 @@ export class ConceptRelationshipComponent implements OnInit {
 
   constructor(
     private conceptDisplay: ConceptDisplayComponent,
-    private configService: ConfigurationService) {
+    private configService: ConfigurationService, private viewportScroller: ViewportScroller) {
 
-    this.terminology = configService.getTerminologyName();
+    this.terminology = this.configService.getTerminologyName();
   }
 
   ngOnInit() {
@@ -62,5 +63,15 @@ export class ConceptRelationshipComponent implements OnInit {
       result = { sources: [...this.conceptDisplay.selectedSources].join(',') };
     }
     return result;
+  }
+
+  scrollToTop() {
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
+
+  loadAll(scrollToId: string = null) {
+    if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
+      this.conceptDisplay.lookupConcept(false, scrollToId);
+    }
   }
 }

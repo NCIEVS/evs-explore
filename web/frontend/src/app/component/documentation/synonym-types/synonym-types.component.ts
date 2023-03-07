@@ -15,21 +15,22 @@ export class SynonymTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded synonyminology
+
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
     this.configService.getSynonymTypes(this.terminology)
       .subscribe(response => {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Synonym Types");
+    this.titleService.setTitle('EVS Explore - Synonym Types');
   }
+
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {

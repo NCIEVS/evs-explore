@@ -6,15 +6,16 @@
         [queryParams]="getSelectedSourcesQueryParam()" [label]="hierarchyButtonLabel" pButton
         type="button"></button>
     </span>
-    <span *ngIf="displayHierarchy && configService.isMultiSource()"> <button
-        (click)="termSuggestionUrl()" class="ui-button-coloring" [label]="termSuggestionButton"
-        pButton type="button"></button>
+    <span *ngIf="displayHierarchy && configService.isMultiSource()"> &nbsp;<button (click)="termSuggestionUrl()"
+        class="ui-button-coloring" [label]="termSuggestionButton" pButton type="button"></button>
     </span>
-    <span style="float:right" class="ui-button-back-to-search"><button [routerLink]="['/welcome']"
-        [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText"
-        pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+        label="New Search" pButton type="button" class="ui-button-coloring"></button></span>
+    <span style="float:right"><button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button"
+        class="ui-button-coloring"></button> &nbsp;</span>
+    <span style="float:right"><button type="button" pButton label="Export" icon="fa fa-download"
+        class="ui-button-coloring" pTooltip="Click to download concept details" (click)="exportDetails();"></button>
+      &nbsp;</span>
   </div>
   <div *ngIf="configService.isMultiSource()" class="center">
     <span *ngIf="sources.length > 1">
@@ -27,20 +28,7 @@
       </span>
     </span>
   </div>
-  <p-tabView [(activeIndex)]="activeIndex" (onChange)="handleChange($event)">
-    <p-tabPanel header="View All">
-      <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase"
-        [urlTarget]="urlTarget">
-      </app-concept-relationship>
-    </p-tabPanel>
-    <p-tabPanel header="Terms and Properties">
-      <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
-    </p-tabPanel>
-    <p-tabPanel header="Relationships">
-      <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase"
-        [urlTarget]="urlTarget">
-      </app-concept-relationship>
-    </p-tabPanel>
-  </p-tabView>
+  <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+  <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget">
+  </app-concept-relationship>
 </div>

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SortEvent } from 'primeng/api';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { Title } from '@angular/platform-browser';
 
@@ -10,15 +9,14 @@ import { Title } from '@angular/platform-browser';
 })
 export class AlldocsComponent {
 
+  terminology = null;
 
-  constructor(private configService: ConfigurationService, private titleService: Title) { }
+  constructor(private titleService: Title) { }
 
   ngOnInit() {
-
   }
 
   ngAfterViewInit(): void {
-    this.titleService.setTitle("EVS Explore - All Documentation");
-
+    this.titleService.setTitle('EVS Explore - All Documentation');
   }
 }

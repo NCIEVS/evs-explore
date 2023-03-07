@@ -5,7 +5,9 @@ import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { ParamMap } from '@angular/router';
+import { Concept } from '../model/concept';
+import { TreeNode } from 'primeng/api';
+
 
 // Configuration service
 @Injectable({
@@ -15,10 +17,15 @@ export class ConfigurationService {
 
   private code: string = null;
   selectedSources = null;
-  private terminology = null;
+  terminology = null;
   private terminologies: Array<any> = [];
   private subject: Subject<any>;
   private sources: string = null;
+  private defaultTerminologyName = 'ncit';
+  public subsets: TreeNode[];
+
+  private MAX_EXPORT_SIZE = 10000;
+  private EXPORT_PAGE_SIZE = 1000;
 
   constructor(private injector: Injector, private http: HttpClient,
     private notificationService: NotificationService,
@@ -28,30 +35,54 @@ export class ConfigurationService {
 
   }
 
+  getExportPageSize() {
+    return this.EXPORT_PAGE_SIZE;
+  }
+
+  getMaxExportSize() {
+    return this.MAX_EXPORT_SIZE;
+  }
+
   getTerminology() {
     return this.terminology;
   }
 
   getTerminologyName(): string {
-    return this.terminology ? this.terminology.terminology : 'ncit';
+    return this.terminology ? this.terminology.terminology : this.defaultTerminologyName;
   }
 
   getTerminologies(): Array<any> {
     return this.terminologies;
   }
 
+  getTerminologyMap(): Map<string, any> {
+    let terminologyMap = new Map();
+    this.terminologies.forEach(t => terminologyMap[t.terminology] = t);
+    return terminologyMap;
+  }
+
+  getMetadataMap(): Map<string, any> {
+    let metadataMap = new Map();
+    this.terminologies.forEach(t => { metadataMap[t.terminology] = t.metadata; });
+    return metadataMap;
+  }
+
+  getDefaultTerminologyName(): string {
+    return this.defaultTerminologyName;
+  }
+
   // filter out terminologies that shouldn't be in the list on the search page
   // mostly just the weekly ncit that's loaded
-  terminologySearchListFilter(term) {
-    if (term.terminology != 'ncit')
+  terminologySearchListFilter(term, defaultTerminologyName) {
+    if (term.terminology != defaultTerminologyName)
       return true;
-    if (term.tags && "monthly" in term.tags && term.latest == true)
+    if (term.tags && 'monthly' in term.tags && term.latest == true)
       return true;
     return false;
   }
 
   getTerminologyByName(name) { // reverse search terminology by short name
-    var terms = this.terminologies.filter(this.terminologySearchListFilter);
+    var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {
         return terms[term];
@@ -82,7 +113,7 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
-  // Indicates whether current terminology is loaded from RDF (e.g. ncit) 
+  // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
   }
@@ -111,12 +142,28 @@ export class ConfigurationService {
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
     if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
-      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? 'ncit' : paramMap.get('terminology');
-      // filter down
+      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
+      // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>
         t.latest && t.terminology == term
-        && (term != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
-      this.setTerminology(terminology);
+        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
+
+
+      // If we are changing it, set the terminology
+      if (terminology && terminology != this.terminology) {
+        this.setTerminology(terminology);
+      }
+      // If blank, set terminology to the first one matching 'term'
+      else if (!terminology) {
+        let arr = this.terminologies.filter(a => a.terminology == term);
+        if (!arr || arr.length == 0) {
+          throw 'Unable to find terminology matching ' + term;
+        }
+        this.terminology = arr[0];
+      }
+
+
+
     }
 
 
@@ -134,26 +181,41 @@ export class ConfigurationService {
   // consider the local env and the 'evsexplore' context path in deploy envs
   setConfigFromPathname(path: string) {
     console.log('set config from path', path);
-    const splitPath = path.split("/");
+    const splitPath = path.split('/');
     var pterminology;
 
-    // Handle the /subsets/{terminology} path
-    if (splitPath[splitPath.length - 2] === 'subsets') {
-      // The terminology is last field
-      pterminology = splitPath[splitPath.length - 1];
-    }
-    // otherwise handle /hierarchy/concept/{terminology}/{code}
-    else {
+    // Handle /hierarchy/{terminology}/{code}
+    // Handle concept//{terminology}/{code}
+    if (splitPath[splitPath.length - 3] === 'hierarchy' ||
+      splitPath[splitPath.length - 3] === 'concept' ||
+      splitPath[splitPath.length - 3] === 'subset'
+    ) {
       // The code is the last field
       this.code = splitPath[splitPath.length - 1];
       // The terminology is second-to-last field
       pterminology = splitPath[splitPath.length - 2];
     }
+    // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
+    else {
+      // The terminology is last field
+      pterminology = splitPath[splitPath.length - 1];
+    }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
-      && (pterminology != 'ncit' || (t.tags && t.tags["monthly"] == "true")))[0];
-    this.setTerminology(terminology);
+      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
 
+    // If we are changing it, set the terminology
+    if (terminology && terminology != this.terminology) {
+      this.setTerminology(terminology);
+    }
+    // If blank, set terminology to the first one matching 'term'
+    else if (!terminology) {
+      let arr = this.terminologies.filter(a => a.terminology == pterminology);
+      if (!arr || arr.length == 0) {
+        throw 'Unable to find terminology matching ' + pterminology;
+      }
+      this.terminology = arr[0];
+    }
 
   }
 
@@ -168,39 +230,72 @@ export class ConfigurationService {
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
   loadConfig(): Promise<any> {
     // Extract the cookie value on instantiation if not passed in
-    var term = this.cookieService.get('term');
-
-    // Default to "ncit" if not passed in and no cookie
-    if (!term) {
-      this.cookieService.set('term', 'ncit')
-      term = 'ncit';
-    }
-    if (this.cookieService.get('sources')) {
-      this.setSources(this.cookieService.get('sources'));
-    }
+    var term = this.getTerminologyName();
 
     // defining subject object for subscription
     if (this.getSubject() == undefined) {
       this.setSubject(new Subject<any>());
     }
     return new Promise((resolve, reject) => {
-      this.http.get('/api/v1/metadata/terminologies').toPromise()
+      this.http.get('/api/v1/metadata/terminologies',
+        {
+          params: {
+            hideLoader: 'true'
+          }
+        }).toPromise()
         .then(response => {
-          // response is an array of terminologies, find the "latest" one
+          // response is an array of terminologies, find the 'latest' one
           var arr = response as any[];
-          arr = arr.filter(t => t.latest && t.terminology == term); // filter down to latest of terminology name
-          if (term == 'ncit') {
-            arr = arr.filter(t => t.tags && t.tags["monthly"] == "true");
+
+          // Fail if there are no entries
+          if (arr.length == 0) {
+            throw 'Unable to find any terminologies with /metadata/terminologies';
+          }
+
+          // Sort terminologies by 'latest' and 'tags=monthly' and
+          // pick the first one for the termniology.
+          arr.sort((a, b) => {
+            // Start with 'terminology'
+            if (a.terminology != b.terminology) {
+              return a.terminology.localeCompare(b.terminology, undefined, { sensitivity: 'base' });
+            }
+            // Then by 'latest'
+            if (a.latest != b.latest) {
+              return a.latest ? -1 : 1;
+            }
+            // Then by 'monthly'
+            if (a.tags && a.tags.monthly == 'true' && b.tags && b.tags.monthly != 'true') {
+              return -1;
+            } else if (b.tags && b.tags.monthly == 'true' && a.tags && a.tags.monthly != 'true') {
+              return 1;
+            }
+            return a.version.localeCompare(b.version, undefined, { sensitivity: 'base' });;
+          });
+
+          // Set terminologies based on this list and pick the first one
+          var seen = {};
+          this.terminologies = arr.filter(t => {
+            var keep = false;
+            if (!seen[t.terminology]) {
+              seen[t.terminology] = 1;
+              keep = true;
+            }
+            return keep;
+          });
+
+          // Set terminology to the first one matching 'term'
+          arr = this.terminologies.filter(a => a.terminology == term);
+          if (!arr || arr.length == 0) {
+            throw 'Unable to find terminology matching ' + term;
           }
           this.terminology = arr[0];
-          this.terminologies = response as any[];
+
           resolve(true);
         }).catch(error => {
           resolve(false);
         });
     });
   }
-
 
   // Load associations
   getAssociations(terminology: string): Observable<any> {
@@ -277,6 +372,9 @@ export class ConfigurationService {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
       }
     )
       .pipe(
@@ -326,5 +424,27 @@ export class ConfigurationService {
       );
   }
 
+  getWelcomeText(terminology: String) {
+    var url = '/api/v1/metadata/' + terminology + '/welcomeText';
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'text',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
+      })
+    );
+  }
+
+  getSubsetLink(terminology: string, subsetCode: String) {
+    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
+    return this.http.get(encodeURI(url))
+      .toPromise()
+      .then(res => <Concept>res);
+  }
 
 }

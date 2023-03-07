@@ -68,10 +68,11 @@ export class SearchResultTableFormat {
 
         const data = new TableData();
         data.column1 = searchResult.concepts[i].code;
-        data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? "yes" : "no";
+        data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? 'yes' : 'no';
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
-        data.semanticType = searchResult.concepts[i].semanticTypes.join("<br />");
+        data.displayName = searchResult.concepts[i].name;
+        data.semanticType = searchResult.concepts[i].semanticTypes ? searchResult.concepts[i].semanticTypes.join('<br />') : '';
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
           let field = returnFields[k];
@@ -81,28 +82,28 @@ export class SearchResultTableFormat {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
                 .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length == 0);
             }
-            if (searchResult.concepts[i].getDefinitionsText().split("<br />").join("").length > 100
-              || searchResult.concepts[i].getDefinitionsText().split("<br />").length > 3) {
-              data["expandedDefinitions"] = searchResult.concepts[i].getDefinitionsText();
-              data["collapsedDefinitions"] = searchResult.concepts[i].getPartialDefText();
-              data["defValue"] = data["collapsedDefinitions"];
+            if (searchResult.concepts[i].getDefinitionsText().split('<br />').join('').length > 100
+              || searchResult.concepts[i].getDefinitionsText().split('<br />').length > 3) {
+              data['expandedDefinitions'] = searchResult.concepts[i].getDefinitionsText();
+              data['collapsedDefinitions'] = searchResult.concepts[i].getPartialDefText();
+              data['defValue'] = data['collapsedDefinitions'];
             }
             else
-              data["defValue"] = searchResult.concepts[i].getDefinitionsText();
+              data['defValue'] = searchResult.concepts[i].getDefinitionsText();
             data['column' + count] = searchResult.concepts[i].getDefinitionsText();
           } else if (field === 'Synonyms') {
             if (searchResult.concepts[i].synonyms) {
               searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
                 .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length == 0);
             }
-            if (searchResult.concepts[i].getFullSynText().split("<br />").join("").length > 100
-              || searchResult.concepts[i].getFullSynText().split("<br />").length > 3) {
-              data["expandedSynonyms"] = searchResult.concepts[i].getFullSynText();
-              data["collapsedSynonyms"] = searchResult.concepts[i].getPartialSynText();
-              data["synValue"] = data["collapsedSynonyms"];
+            if (searchResult.concepts[i].getFullSynText().split('<br />').join('').length > 100
+              || searchResult.concepts[i].getFullSynText().split('<br />').length > 3) {
+              data['expandedSynonyms'] = searchResult.concepts[i].getFullSynText();
+              data['collapsedSynonyms'] = searchResult.concepts[i].getPartialSynText();
+              data['synValue'] = data['collapsedSynonyms'];
             }
             else {
-              data["synValue"] = searchResult.concepts[i].getFullSynText();
+              data['synValue'] = searchResult.concepts[i].getFullSynText();
             }
             data['column' + count] = searchResult.concepts[i].getFullSynText();
           } else if (field === 'Role') {
@@ -149,7 +150,8 @@ export class SearchResultTableFormat {
             //   data['column' + count] = goannotationinfo;
 
           } else if (returnFields[k] === 'Preferred Name') {
-            data['column' + count] = searchResult.concepts[i].preferredName;
+
+            data['column' + count] = searchResult.concepts[i].name;
             // } else {
             //   console.log('NEED TO SUPPORT THIS', returnFields[k]);
           }

@@ -14,7 +14,7 @@ See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
 This is how things run in production.
 
-Run `./gradlew clean build"` from the "web" folder.
+Run `make clean build` from the top level or `./gradlew clean build -x test"` from the "web/" folder.
 
 ### Deploying to AWS servers
 
@@ -30,8 +30,7 @@ There are three ways to launch EVS-EXPLORE for development:
 
 * If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `web/frontend`
 * To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `web/frontend`
-* To simulate the production environment, perform the gradle build and then launch
-  the .war file.  For example:
+* To simulate the production environment, perform the gradle build and then launch the .war file.  For example:
 
 ```bash
 cd web

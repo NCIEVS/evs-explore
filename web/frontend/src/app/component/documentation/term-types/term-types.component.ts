@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
 
@@ -14,20 +14,20 @@ export class TermTypesComponent implements OnInit {
   terminology: string;
 
   constructor(
-    private configService: ConfigurationService, private titleService: Title
-  ) {
-    this.terminology = configService.getTerminologyName();
+    private configService: ConfigurationService, private titleService: Title) {
   }
 
   // On initialization
   ngOnInit() {
-    // NOTE: hardcoded terminology
+    this.configService.setConfigFromPathname(window.location.pathname);
+    this.terminology = this.configService.getTerminologyName();
+
     this.configService.getTermTypes(this.terminology)
       .subscribe(response => {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle("EVS Explore - Term Types");
+    this.titleService.setTitle('EVS Explore - Term Types');
   }
 
 }

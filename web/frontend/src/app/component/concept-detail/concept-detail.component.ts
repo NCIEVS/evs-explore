@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SortEvent } from 'primeng/api';
 import { Concept } from './../../model/concept';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
-import { ignoreElements } from 'rxjs-compat/operator/ignoreElements';
+import { ViewportScroller } from '@angular/common';
 
 // Component for displaying concept details
 @Component({
@@ -35,17 +35,24 @@ export class ConceptDetailComponent implements OnInit {
   )
 
   terminology: string = null;
+  metadataMap: Map<String, any> = null;
+  metadata: any = null;
   titleSet = false;
   collapsed: boolean = false;
+  conceptIsSubset: boolean = false;
+  httpRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/g;
 
   constructor(
     private sanitizer: DomSanitizer,
     private conceptDisplay: ConceptDisplayComponent,
     private configService: ConfigurationService,
-    private titleService: Title
+    private titleService: Title,
+    private viewportScroller: ViewportScroller
   ) {
 
     this.terminology = configService.getTerminologyName();
+    this.metadataMap = configService.getMetadataMap();
+    this.metadata = this.metadataMap[this.terminology];
   }
 
   // On initialization
@@ -56,12 +63,49 @@ export class ConceptDetailComponent implements OnInit {
     })
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.concept) {
+      this.conceptIsSubset = this.conceptIsSubsetHelper(this.concept);
+
+      // build metadata entries for each synonym source
+      this.concept.synonyms.forEach(s => {
+        if (s.source) {
+          let term = this.getTerminologyBySource(s.source);
+          // don't do for the current terminology
+          if (this.terminology != term && !this.metadataMap[s.source] && this.metadataMap[term]) {
+            this.metadataMap[s.source] = {
+              'terminology': term,
+              'hierarchy': this.metadataMap[term].hierarchy
+            };
+          }
+        }
+
+      });
+    }
+  }
+
+  conceptIsSubsetHelper(concept): boolean {
+    let isSubset = false;
+    if (concept.inverseAssociations) {
+      for (let IA of concept.inverseAssociations) {
+        if (IA.type == 'Concept_In_Subset') {
+          isSubset = true;
+          break;
+        }
+      }
+    }
+    // Currently only NCIT has subsets
+    return concept.terminology == 'ncit' && isSubset;
+  }
+
+
   checkFilter(item: any): Boolean {
-    if (!this.titleSet && this.concept)
+    if (!this.titleSet && this.concept) {
       this.setTitle();
+    }
     var flag = (
       // no source field -> show
-      (this.terminology == 'ncit' && !item.hasOwnProperty('source') &&
+      (!item.hasOwnProperty('source') &&
         this.conceptDisplay.selectedSources.has('NCI'))
       // source is one of the selected ones
       || this.conceptDisplay.selectedSources.has(item.source)
@@ -70,7 +114,7 @@ export class ConceptDetailComponent implements OnInit {
     return flag;
   }
 
-  // Render links appropriately if they are defined in "external Links"
+  // Render links appropriately if they are defined in 'external Links'
   checkExternalLink(property) {
     if (this.externalLinks.has(property.type)) {
       let values = [];
@@ -84,10 +128,20 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   bypassHTML(value) {
-    if (!value)
+    // if blank return null
+    if (!value) {
       return null;
-    if (value.search("<") == -1 || value.search(">") == -1)
+    }
+    // if no tags
+    else if (value.search('<') == -1 || value.search('>') == -1) {
+      // if contains raw links, make then links
+      if (value.match(this.httpRegex)) {
+        console.log('xxx', value)
+        return this.sanitizer.bypassSecurityTrustHtml(value.replace(this.httpRegex, '<a href="$1">$1</a>'));
+      }
+      // normal value
       return value;
+    }
     return this.sanitizer.bypassSecurityTrustHtml(value);
   }
 
@@ -95,38 +149,43 @@ export class ConceptDetailComponent implements OnInit {
     event.data.sort((data1, data2) => {
       let value1 = data1[event.field];
       let value2 = data2[event.field];
-      if (value1 == undefined)
+      if (value1 == undefined) {
         return 0;
+      }
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
   public setTitle() {
-    this.titleService.setTitle(this.concept.code + " - " + this.concept.name);
+    this.titleService.setTitle(this.concept.code + ' - ' + this.concept.name);
     this.titleSet = true;
   }
 
   getTerminologyBySource(source) {
-    if (!source)
-      return "";
-    if (source == "NCI") {
-      return "ncit";
+    if (!source) {
+      return '';
     }
-    else {
-      return source.toLowerCase();
+    if (source == 'NCI') {
+      return 'ncit';
     }
+    return source.toLowerCase();
   }
 
-  getHierarchy(source) {
-    var termName = this.getTerminologyBySource(source);
-    if (termName == "") {
-      return false;
-    }
-    var terminology = this.configService.getTerminologyByName(termName);
-    if (terminology == null || terminology.metadata.hierarchy == null) {
-      return false;
-    }
-    return this.configService.getTerminologyByName(termName).metadata.hierarchy;
+  getCodeLabel() {
+    this.configService.getTerminology().metadata.codeLabel;
   }
 
+  clickScroll(elementId: string): void {
+    this.viewportScroller.scrollToAnchor(elementId);
+  }
+
+  scrollToTop() {
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
+
+  loadAll(scrollToId: string = null) {
+    if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
+      this.conceptDisplay.lookupConcept(false, scrollToId);
+    }
+  }
 }

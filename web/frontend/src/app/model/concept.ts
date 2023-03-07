@@ -12,24 +12,39 @@ export class Concept {
 
   code: string;
   name: string;
-  displayName: string;
-  preferredName: string;
+  leaf: boolean;
   terminology: string;
+  version: string;
   highlight: string;
   synonyms: Synonym[];
+  synonymsCt: number = 0;
   definitions: Definition[];
+  definitionsCt: number = 0;
   properties: Property[];
+  propertiesCt: number = 0;
   semanticTypes: String[];
   parents: ConceptReference[];
+  parentsCt: number = 0;
   children: ConceptReference[];
+  childrenCt: number = 0;
   roles: Relationship[];
+  rolesCt: number = 0;
   inverseRoles: Relationship[];
+  inverseRolesCt: number = 0;
   associations: Relationship[];
+  associationsCt: number = 0;
   inverseAssociations: Relationship[];
+  inverseAssociationsCt: number = 0;
   broader: Relationship[];
+  broaderCt: number = 0;
   narrower: Relationship[];
+  narrowerCt: number = 0;
   other: Relationship[];
+  otherCt: number = 0;
   maps: Map[];
+  mapsCt: number = 0;
+  disjointWith: Relationship[];
+  disjointWithCt: number = 0;
   subsetLink: string;
   synonymUniqueArray: any[];
   definitionUniqueArray: any[];
@@ -37,10 +52,17 @@ export class Concept {
   uniqProps: any[];
 
   constructor(input: any, configService: ConfigurationService) {
-    Object.assign(this, input);
+    this.highlight = input.highlight;
+    this.terminology = input.terminology;
+    this.version = input.version;
+    this.code = input.code;
+    this.name = input.name;
+    this.leaf = input.leaf;
+    this.subsetLink = input.subsetLink;
+    this.synonyms = new Array();
+    this.properties = new Array();
+
     if (input.synonyms) {
-      this.synonyms = new Array();
-      this.properties = new Array();
       for (let i = 0; i < input.synonyms.length; i++) {
         var synonym = new Synonym(input.synonyms[i]);
         this.synonyms.push(synonym);
@@ -55,21 +77,22 @@ export class Concept {
         }
       }
       // Case-insensitive search
-      this.synonyms.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+      this.synonyms.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+      this.synonymsCt = this.getCt(this.synonyms)
     }
+
+    this.definitions = new Array();
     if (input.definitions) {
-      this.definitions = new Array();
       for (let i = 0; i < input.definitions.length; i++) {
         this.definitions.push(new Definition(input.definitions[i]));
       }
+      this.definitionsCt = this.getCt(this.definitions);
     }
+
     if (input.properties) {
       this.semanticTypes = new Array();
-
-      // if properties not already initialized in synonyms section
-      if (!input.properties) {
-        this.properties = new Array();
-      }
 
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
@@ -79,84 +102,152 @@ export class Concept {
         }
 
       }
-      this.properties.sort((a, b) => (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
+      this.properties.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        (a.type + a.value).localeCompare(b.type + b.value, undefined, { sensitivity: 'base' }));
+
+      this.propertiesCt = this.getCt(this.properties);
+
     }
 
     // children
+    this.children = new Array();
     if (input.children) {
-      this.children = new Array();
       for (let i = 0; i < input.children.length; i++) {
         this.children.push(new ConceptReference(input.children[i]));
       }
+      this.childrenCt = this.getCt(this.children);
+
     }
 
     // parents
+    this.parents = new Array();
     if (input.parents) {
-      this.parents = new Array();
       for (let i = 0; i < input.parents.length; i++) {
         this.parents.push(new ConceptReference(input.parents[i]));
       }
+      this.parentsCt = this.getCt(this.parents);
     }
 
     // roles
+    this.roles = new Array();
     if (input.roles) {
-      this.roles = new Array();
       for (let i = 0; i < input.roles.length; i++) {
         this.roles.push(new Relationship(input.roles[i], configService));
       }
+      this.rolesCt = this.getCt(this.roles);
     }
 
     // inverse roles
+    this.inverseRoles = new Array();
     if (input.inverseRoles) {
-      this.inverseRoles = new Array();
       for (let i = 0; i < input.inverseRoles.length; i++) {
         this.inverseRoles.push(new Relationship(input.inverseRoles[i], configService));
       }
+      this.inverseRolesCt = this.getCt(this.inverseRoles);
     }
 
     // associations
+    this.associations = new Array();
+    this.broader = new Array();
+    this.narrower = new Array();
+    this.other = new Array();
     if (input.associations) {
-      this.associations = new Array();
-      this.broader = new Array();
-      this.narrower = new Array();
-      this.other = new Array();
 
       for (let i = 0; i < input.associations.length; i++) {
+        if (input.associations[i].ct) {
+          this.associationsCt = input.associations[i].ct;
+          this.associations.push(new Relationship(input.associations[i], configService));
+          continue;
+        }
+
         // Handle the RB/RN/RO ncim case
         // This seems backwards but an RB means 'broader than' so the
         // related concept is actually narrower than the current one
-        if (this.terminology == 'ncim' && input.associations[i].type == 'RN') {
+        // configService.isRrf() && configService.isMultiSource() == ncim
+        if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type == 'RN') {
           this.broader.push(new Relationship(input.associations[i], configService));
-        } else if (this.terminology == 'ncim' && input.associations[i].type == 'RB') {
+        } else if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type == 'RB') {
           this.narrower.push(new Relationship(input.associations[i], configService));
-        } else if (this.terminology == 'ncim' && input.associations[i].type.startsWith('R')) {
+        } else if (configService.isRrf() && configService.isMultiSource() && input.associations[i].type.startsWith('R')) {
           this.other.push(new Relationship(input.associations[i], configService));
         } else {
           this.associations.push(new Relationship(input.associations[i], configService));
         }
       }
+
+      // If in RRF mode, associationsCt being set means there is 'more' data.
+      if (configService.isRrf()) {
+
+        this.broaderCt = this.getCt(this.broader);
+        this.narrowerCt = this.getCt(this.narrower);
+        this.otherCt = this.getCt(this.other);
+
+        // If there is an associationsCt, we know there are more rels
+        // So set flags to reflect numbers greater than the number of entries.
+        if (this.associationsCt > 0) {
+          this.broader.push(new Relationship({ 'ct': this.associationsCt }, configService));
+          this.narrower.push(new Relationship({ 'ct': this.associationsCt }, configService));
+          this.other.push(new Relationship({ 'ct': this.associationsCt }, configService));
+        }
+        // Otherwise, compute association ct for single RRF sources
+        else {
+          this.associationsCt = this.getCt(this.associations);
+        }
+      }
+      // Otherwise, it operates normally
+      else {
+        this.associationsCt = this.getCt(this.associations);
+      }
     }
 
+
     // inverse associations
+    this.inverseAssociations = new Array();
     if (input.inverseAssociations) {
       this.inverseAssociations = new Array();
       for (let i = 0; i < input.inverseAssociations.length; i++) {
         this.inverseAssociations.push(new Relationship(input.inverseAssociations[i], configService));
       }
+      this.inverseAssociationsCt = this.getCt(this.inverseAssociations);
     }
 
     // maps
+    this.maps = new Array();
     if (input.maps) {
-      this.maps = new Array();
       for (let i = 0; i < input.maps.length; i++) {
         this.maps.push(new Map(input.maps[i]));
       }
-      this.maps.sort((a, b) => a.targetName.localeCompare(b.targetName, undefined, { sensitivity: 'base' }));
+      this.maps.sort((a, b) =>
+        (a.ct && !b.ct && 1) || (!a.ct && b.ct && -1) ||
+        a.targetName.localeCompare(b.targetName, undefined, { sensitivity: 'base' }));
+      this.mapsCt = this.getCt(this.maps);
+    }
 
+    // disjoint with
+    this.disjointWith = new Array();
+    if (input.disjointWith) {
+      for (let i = 0; i < input.disjointWith.length; i++) {
+        this.disjointWith.push(new Relationship(input.disjointWith[i], configService));
+      }
+      this.disjointWithCt = this.getCt(this.disjointWith);
     }
 
     this.computeDisplayName();
     this.computePreferredName();
+  }
+
+  getCt(list: Array<any>): number {
+    if (!list) {
+      return 0;
+    }
+    if (list.length == 0) {
+      return 0;
+    }
+    if (list[list.length - 1].ct) {
+      return list[list.length - 1].ct;
+    }
+    return list.length;
   }
 
   // Indicates whether properties suggest this is a retired concept.
@@ -196,7 +287,7 @@ export class Concept {
     }
     // properties
     headerFlag = false;
-    this.uniqProps = this.filterSetByUniqueObjects(this.properties);
+    this.uniqProps = this.filterSetByUniqueObjects(this.properties, this.name);
     if (this.uniqProps) {
       for (let i = 0; i < this.uniqProps.length; i++) {
         if (this.uniqProps[i].highlight) {
@@ -210,7 +301,7 @@ export class Concept {
     }
     // definitions
     headerFlag = false;
-    this.uniqDefs = (this.definitions != undefined ? this.filterSetByUniqueObjects(this.definitions) : null);
+    this.uniqDefs = (this.definitions != undefined ? this.filterSetByUniqueObjects(this.definitions, this.name) : null);
     if (this.uniqDefs) {
       for (let i = 0; i < this.uniqDefs.length; i++) {
         if (this.uniqDefs[i].highlight) {
@@ -225,25 +316,12 @@ export class Concept {
     return text;
   }
 
-  filterSetByUniqueObjects = function (set) {
+  filterSetByUniqueObjects = function (set, name) {
     var seen = {};
     return set.filter(function (x) {
       var key = JSON.stringify(x);
-      return !(key in seen) && (seen[key] = x);
+      return !(key in seen) && (seen[key] = x) && key.toLowerCase().includes(name.toLowerCase());
     });
-  }
-
-  // Return the preferred name
-  computePreferredName(): string {
-    if (this.synonyms.length > 0) {
-      for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'Preferred Name') {
-          this.preferredName = this.synonyms[i].name;
-          return;
-        }
-      }
-    }
-    this.preferredName = this.name;
   }
 
   // Return the display name
@@ -257,6 +335,7 @@ export class Concept {
         }
       }
     }
+    return null;
   }
 
   // Get value from Concept_Status parameter
@@ -373,13 +452,31 @@ export class Concept {
       }
     }
     // case-insensitive sort
-    syns = syns.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    syns = syns.sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' }));
     return syns;
   }
 
   // Returns SubsetLink if it exists
   getSubsetLink() {
     return this.subsetLink ? this.subsetLink : null;
+  }
+
+  // returns the value for the specified type
+  getProperty(type) {
+    for (let i = 0; i < this.properties.length; i++) {
+      // ncit specific
+      if (this.properties[i].type == type) {
+        return this.properties[i].value;
+      }
+    }
+    return null;
+  }
+
+  // returns the subset descritpion
+  getSubsetDescription() {
+    // NCIt-specific
+    return this.getProperty('Term_Browser_Value_Set_Description');
   }
 
   // Return roles text
@@ -404,7 +501,6 @@ export class Concept {
 
   // Helper
   getRelationshipsText(relationships: Relationship[]): string {
-    // console.log('In roles and associations');
 
     let relationshipInfo = '';
     if (relationships) {
