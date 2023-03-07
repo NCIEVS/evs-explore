@@ -35,7 +35,7 @@ apply plugin: 'maven-publish'
 def bomVersion = "Greenwich.RELEASE"
 
 group = "gov.nih.nci.term.browser.web"
-version = "1.7.0.RELEASE"
+version = "1.8.0.RELEASE"
 
 sourceCompatibility = 11
 targetCompatibility = 11
