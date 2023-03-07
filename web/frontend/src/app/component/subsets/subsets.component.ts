@@ -227,6 +227,7 @@ export class SubsetsComponent implements OnInit {
     this.expandDisabled = false;
     this.hierarchyData = JSON.parse(JSON.stringify(this.configService.subsets));
     this.sortNcitFirst();
+    this.NCItermFirst();
   }
 
   sortNcitFirst() {
