@@ -233,8 +233,6 @@ export class Concept {
       this.disjointWithCt = this.getCt(this.disjointWith);
     }
 
-    this.computeDisplayName();
-    this.computePreferredName();
   }
 
   getCt(list: Array<any>): number {
@@ -326,12 +324,11 @@ export class Concept {
 
   // Return the display name
   // TODO: very NCIt specific, need an alternative for other terminologies
-  computeDisplayName(): string {
+  getDisplayName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Display_Name') {
-          this.displayName = this.synonyms[i].name;
-          return;
+          return this.synonyms[i].name;
         }
       }
     }
