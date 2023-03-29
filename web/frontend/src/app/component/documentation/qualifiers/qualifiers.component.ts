@@ -11,7 +11,8 @@ import { Title } from '@angular/platform-browser';
 export class QualifiersComponent implements OnInit {
 
   qualifiers: any;
-  terminology: string = null;;
+  terminology: string = null;
+  remodeledDesc: string = null;
 
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
@@ -32,5 +33,22 @@ export class QualifiersComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+  }
+
+  isRemodeled(qualifier): boolean {
+    if (!qualifier.properties) {
+      return false;
+    }
+    else {
+      var remodeledProperty = qualifier.properties.filter(prop => prop.type == "remodeledDescription");
+      if (remodeledProperty.length > 0) {
+        this.remodeledDesc = remodeledProperty[0].value;
+        this.remodeledDesc = this.remodeledDesc.replace("as a null", "as unknown");
+      }
+      else {
+        this.remodeledDesc = null;
+      }
+      return remodeledProperty.length > 0;
+    }
   }
 }
