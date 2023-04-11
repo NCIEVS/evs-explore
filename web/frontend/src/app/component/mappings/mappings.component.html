@@ -1,10 +1,25 @@
-<div align="center">
-  <h2>Future Mappings Page</h2>
-  <img class="construction-logo" src="assets/images/under-construction.png" />
-  <br />
-  In 10 seconds, you will be redirected to the production Mapping page.
-  <br />
-  If the redirect does not happen automatically click
-  <a href="https://ncit.nci.nih.gov/ncitbrowser/pages/mapping_search.jsf?nav_type=mappings&b=0&m=0"
-    target="_blank">Here.</a>
+<div class="page-header mapping-spacing">
+  Mappings
+</div>
+<p class="mapping-spacing">Select a mapping data set to search here, or click on a mapping data set name to go to its
+  home page and browse or
+  search from there. It is not yet possible to search more than one mapping data set at a time.</p>
+
+<div class="page-subheader mapping-spacing">Viewable Mappings</div>
+<div class="mapping-spacing">
+  <div *ngFor="let enum of dummyList">
+    <input id="enum" [value]='enum.name' type="radio" name="enums" [(ngModel)]="radioSelected">
+    {{enum}}
+  </div>
+
+</div>
+<div style="float:left"><button [routerLink]="['/mappings']" [queryParams]="{}" label="Search" pButton type="button"
+    class="ui-button-coloring mapping-spacing"></button></div><br /><br />
+
+<div class="page-subheader mapping-spacing">Download Mappings</div>
+<div class="mapping-spacing">
+  <div *ngFor="let enum of dummyList">
+    <a (click)="downloadMapping('enum')" class="top-link" title="Click to download mapping">&emsp;{{enum}}</a>
+  </div>
+
 </div>

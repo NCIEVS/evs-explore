@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 
 // Component for mappings.  Currently, this just redirects to another page.
 @Component({
@@ -8,12 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MappingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private configService: ConfigurationService) { }
+
+  dummyList = ["one", "two", "three"];
+  mappings: any = null;
+  viewMappings: any = null;
+  downloadMappings: any = null;
 
   ngOnInit() {
-    setTimeout(() => {
-      window.open('https://ncit.nci.nih.gov/ncitbrowser/pages/mapping_search.jsf?nav_type=mappings&b=0&m=0')
-    }, 10000);
+    /* this.configService.getMapsets('ncit').subscribe(response => {
+      this.mappings = response;
+
+    }); */
+  }
+
+  downloadMapping(mapName: string) {
+    /* this.configService.getMapsetMappings('ncit', mapName).subscribe(response => {
+
+    });*/
   }
 
 }
