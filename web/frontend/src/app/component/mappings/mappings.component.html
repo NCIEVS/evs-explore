@@ -7,19 +7,21 @@
 
 <div class="page-subheader mapping-spacing">Viewable Mappings</div>
 <div class="mapping-spacing">
-  <div *ngFor="let enum of dummyList">
-    <input id="enum" [value]='enum.name' type="radio" name="enums" [(ngModel)]="radioSelected">
-    {{enum}}
+  <div *ngFor="let map of viewMappings; let first = first;">
+    <input [(ngModel)]="selectedMapping" type="radio" [value]="map" name="map" (click)="setMapping(map)"> {{map}}
   </div>
-
 </div>
-<div style="float:left"><button [routerLink]="['/mappings']" [queryParams]="{}" label="Search" pButton type="button"
-    class="ui-button-coloring mapping-spacing"></button></div><br /><br />
+
+<div style="float:left">
+  <button label="Search" pButton type="button" class="ui-button-coloring mapping-spacing"
+    [disabled]="selectedMapping == null" (click)="viewMapping(selectedView)">
+  </button>
+</div><br /><br />
 
 <div class="page-subheader mapping-spacing">Download Mappings</div>
 <div class="mapping-spacing">
-  <div *ngFor="let enum of dummyList">
-    <a (click)="downloadMapping('enum')" class="top-link" title="Click to download mapping">&emsp;{{enum}}</a>
+  <div *ngFor="let map of downloadMappings">
+    <a (click)="downloadMapping('map')" class="top-link" title="Click to download mapping">&emsp;{{map}}</a>
   </div>
 
 </div>
