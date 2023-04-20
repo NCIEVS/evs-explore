@@ -43,8 +43,4 @@ export class MappingsComponent implements OnInit {
     });
   }
 
-  viewMapping() {
-    console.log(this.selectedMapping);
-  }
-
 }

@@ -237,3 +237,7 @@ body .alert-info {
 .pointer {
   cursor: pointer;
 }
+
+.mapping-container {
+  width: 90%
+}

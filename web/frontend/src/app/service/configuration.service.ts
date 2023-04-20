@@ -463,8 +463,8 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetByCode(terminology: string, code: string) {
-    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code;
+  getMapsetByCode(terminology: string, code: string, include = "minimal") {
+    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + '?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -479,8 +479,9 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetMappings(terminology: string, code: string) {
-    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + "/mappings";
+  getMapsetMappings(terminology: string, code: string, pageSize = 10, fromRecord = 0) {
+
+    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',

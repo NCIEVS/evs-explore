@@ -14,7 +14,7 @@
 
 <div style="float:left">
   <button label="Search" pButton type="button" class="ui-button-coloring mapping-spacing"
-    [disabled]="selectedMapping == null" (click)="viewMapping(selectedView)">
+    [disabled]="selectedMapping == null" [routerLink]="['/mappings', selectedMapping]">
   </button>
 </div><br /><br />
 
@@ -23,5 +23,4 @@
   <div *ngFor="let map of downloadMappings">
     <a (click)="downloadMapping('map')" class="top-link" title="Click to download mapping">&emsp;{{map}}</a>
   </div>
-
 </div>
