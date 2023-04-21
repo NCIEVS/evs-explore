@@ -479,9 +479,9 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetMappings(terminology: string, code: string, pageSize = 10, fromRecord = 0) {
+  getMapsetMappings(terminology: string, code: string, pageSize = 10, fromRecord = 0, term = "") {
 
-    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord;
+    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',

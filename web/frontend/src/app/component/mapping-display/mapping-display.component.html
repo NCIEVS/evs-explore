@@ -1,7 +1,7 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      {{ mapsetCode}}<span style="float:right">
+      {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span><span style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="mappingExportButton"
           class="ui-button-coloring" pTooltip="Click to download mapping search results" (click)="exportMapping()"
           [disabled]="hitsFound == 0"></button>
@@ -38,22 +38,26 @@
           (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
           <ng-template pTemplate="header">
             <tr>
-              <th>Source Name</th>
-              <th>Source Code</th>
-              <th>Source Terminology</th>
-              <th>Target Code</th>
-              <th>Target Name</th>
-              <th>Target Terminology</th>
+              <th class="mappingTitle">Source</th>
+              <th class="mappingTitle">Source Code</th>
+              <th class="mappingTitle">Source Name</th>
+              <th class="mappingTitle">Relationship</th>
+              <th class="mappingTitle">Map Rank</th>
+              <th class="mappingTitle">Target</th>
+              <th class="mappingTitle">Target Code</th>
+              <th class="mappingTitle">Target Name</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-mapping>
             <tr>
-              <td>{{ mapping.sourceName }}</td>
+              <td>{{ mapping.source }}</td>
               <td>{{ mapping.sourceCode }}</td>
-              <td>{{ mapping.sourceTerminology }}</td>
+              <td>{{ mapping.sourceName }}</td>
+              <td>{{ mapping.type }}</td>
+              <td>{{ mapping.rank }}</td>
+              <td>{{ mapping.targetTerminology }}</td>
               <td>{{ mapping.targetCode }}</td>
               <td>{{ mapping.targetName }}</td>
-              <td>{{ mapping.targetTerminology }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="paginatorright" let-state style="padding-top:4em;">
