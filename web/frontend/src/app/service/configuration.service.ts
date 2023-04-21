@@ -447,8 +447,8 @@ export class ConfigurationService {
       .then(res => <Concept>res);
   }
 
-  getMapsets(terminology: string, include = "minimal") {
-    var url = '/api/v1/metadata/' + terminology + '/mapsets?include=' + include;
+  getMapsets(include = "minimal") {
+    var url = '/api/v1/metadata/mapsets?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -463,8 +463,8 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetByCode(terminology: string, code: string, include = "minimal") {
-    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + '?include=' + include;
+  getMapsetByCode(code: string, include = "minimal") {
+    var url = '/api/v1/metadata/mapset/' + code + '?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -479,9 +479,9 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetMappings(terminology: string, code: string, pageSize = 10, fromRecord = 0, term = "") {
+  getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "") {
 
-    var url = '/api/v1/metadata/' + terminology + '/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
+    var url = '/api/v1/metadata/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',

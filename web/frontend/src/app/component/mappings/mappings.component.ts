@@ -18,17 +18,24 @@ export class MappingsComponent implements OnInit {
   viewMappings: any = [];
   downloadMappings: any = [];
   selectedMapping: any = null;
+  versionMapping: any = {};
   MAX_PAGE = 10000;
 
   ngOnInit() {
-    this.configService.getMapsets('ncit', 'properties').subscribe(response => {
+    this.configService.getMapsets('properties').subscribe(response => {
       this.mappings = response;
       this.mappings.forEach(map => {
         if (map.properties.find(obj => obj.type == "downloadOnly" && obj.value == "false")) {
           this.viewMappings.push(map.name);
+          if (map.version) {
+            this.versionMapping[map.name] = map.version
+          }
         }
         else {
           this.downloadMappings.push(map.name);
+          if (map.version) {
+            this.versionMapping[map.name] = map.version
+          }
         }
       });
     });
@@ -39,8 +46,8 @@ export class MappingsComponent implements OnInit {
     this.selectedMapping = map;
   }
 
-  downloadMapping(mapName: string) {
-    this.configService.getMapsetByCode('ncit', mapName, "properties").subscribe(response => {
+  async downloadMapping(mapName: string) {
+    this.configService.getMapsetByCode(mapName, "properties").subscribe(response => {
       var mapset = response;
       var properties = mapset["properties"];
       if (properties.find(obj => obj.type == "mapsetLink" && obj.value == null)) {
@@ -53,15 +60,16 @@ export class MappingsComponent implements OnInit {
   }
 
   async downloadStoredMapping(mapName) {
+    this.loaderService.showLoader();
     var mappingText = "";
     var total = 0;
-    await this.configService.getMapsetMappings('ncit', mapName)
+    await this.configService.getMapsetMappings(mapName)
       .toPromise().then(response => {
         total = response["total"];
       });
     const pages = Math.ceil(total / this.MAX_PAGE);
     for (let i = 0; i < pages; i++) {
-      await this.configService.getMapsetMappings('ncit', mapName, Math.min(this.MAX_PAGE, total - i * this.MAX_PAGE), i * this.MAX_PAGE)
+      await this.configService.getMapsetMappings(mapName, Math.min(this.MAX_PAGE, total - i * this.MAX_PAGE), i * this.MAX_PAGE)
         .toPromise().then(response => {
           var mapsetMappings = response["maps"];
           mapsetMappings.forEach(map => {

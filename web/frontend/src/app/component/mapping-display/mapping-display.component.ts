@@ -32,7 +32,7 @@ export class MappingDisplayComponent implements OnInit {
     this.route.params.subscribe((params: any) => {
       console.log(params.code)
       this.mapsetCode = params.code
-      this.configService.getMapsetMappings("ncit", this.mapsetCode).subscribe(response => {
+      this.configService.getMapsetMappings(this.mapsetCode).subscribe(response => {
         this.mapsetMappings = response["maps"];
         this.total = response["total"];
         this.fullTotal = this.total;
@@ -40,7 +40,7 @@ export class MappingDisplayComponent implements OnInit {
         console.log(this.total);
       });
     });
-    this.configService.getMapsetByCode('ncit', this.mapsetCode).subscribe(response => {
+    this.configService.getMapsetByCode(this.mapsetCode).subscribe(response => {
       this.version = response["version"];
     });
 
@@ -54,7 +54,7 @@ export class MappingDisplayComponent implements OnInit {
     } else {
       const pageSize = event.rows;
       const fromRecord = event.first;
-      this.configService.getMapsetMappings('ncit', this.mapsetCode, pageSize, fromRecord)
+      this.configService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord)
         .subscribe(response => {
           this.mapsetMappings = response["maps"];
           this.total = response["total"];
@@ -67,7 +67,7 @@ export class MappingDisplayComponent implements OnInit {
   }
 
   search(event) {
-    this.configService.getMapsetMappings('ncit', this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch)
+    this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch)
       .subscribe(response => {
         this.mapsetMappings = response["maps"];
         this.total = response["total"];
@@ -87,7 +87,7 @@ export class MappingDisplayComponent implements OnInit {
     var mappingText = "";
 
     for (let i = 0; i < pages; i++) {
-      await this.configService.getMapsetMappings('ncit', this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE).toPromise().then(
+      await this.configService.getMapsetMappings(this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE).toPromise().then(
         result => {
           result["maps"].forEach(c => {
             // get titles and pretty-fy them
