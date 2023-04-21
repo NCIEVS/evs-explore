@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { LoaderService } from 'src/app/service/loader.service';
@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './mapping-display.component.html',
   styleUrls: ['./mapping-display.component.css']
 })
+
 export class MappingDisplayComponent implements OnInit {
 
   avoidLazyLoading = true;
@@ -20,7 +21,7 @@ export class MappingDisplayComponent implements OnInit {
   total = 0;
   fullTotal = 0;
   version = null;
-  MAX_PAGE = 50000;
+  MAX_PAGE = 10000;
   termAutoSearch: string;
   textSuggestions: any;
 
@@ -77,7 +78,10 @@ export class MappingDisplayComponent implements OnInit {
   }
 
 
-  async exportMapping() {
+  async exportMapping(code: string) {
+    if (code != null) {
+      return;
+    }
     this.loaderService.showLoader();
     const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
     var mappingText = "";

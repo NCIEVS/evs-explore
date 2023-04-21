@@ -21,6 +21,7 @@
 <div class="page-subheader mapping-spacing">Download Mappings</div>
 <div class="mapping-spacing">
   <div *ngFor="let map of downloadMappings">
-    <a (click)="downloadMapping('map')" class="top-link" title="Click to download mapping">&emsp;{{map}}</a>
+    <button type="button" (click)="downloadMapping(map)" class="download-btn-link"
+      title="Click to download mapping">{{map}}</button>
   </div>
 </div>

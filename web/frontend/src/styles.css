@@ -53,6 +53,14 @@ p-dialog .ui-dialog {
   background-color: transparent;
 }
 
+.download-btn-link {
+  font-weight: 400;
+  color: #428bca;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+
 img,
 svg {
   vertical-align: middle;
