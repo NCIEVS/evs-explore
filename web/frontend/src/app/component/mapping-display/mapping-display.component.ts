@@ -78,10 +78,7 @@ export class MappingDisplayComponent implements OnInit {
   }
 
 
-  async exportMapping(code: string) {
-    if (code != null) {
-      return;
-    }
+  async exportMapping() {
     this.loaderService.showLoader();
     const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
     var mappingText = "";
