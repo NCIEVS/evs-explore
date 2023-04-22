@@ -447,4 +447,53 @@ export class ConfigurationService {
       .then(res => <Concept>res);
   }
 
+  getMapsets(include = "minimal") {
+    var url = '/api/v1/metadata/mapsets?include=' + include;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapsets'));
+      })
+    );
+  }
+
+  getMapsetByCode(code: string, include = "minimal") {
+    var url = '/api/v1/metadata/mapset/' + code + '?include=' + include;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapset for ' + code));
+      })
+    );
+  }
+
+  getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "") {
+
+    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapset mappings for ' + code));
+      })
+    );
+  }
+
 }
