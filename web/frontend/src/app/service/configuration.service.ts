@@ -481,7 +481,7 @@ export class ConfigurationService {
 
   getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "") {
 
-    var url = '/api/v1/metadata/mapset/' + code + "/mappings?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
+    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
