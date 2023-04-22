@@ -241,6 +241,7 @@ export class ConceptDisplayComponent implements OnInit {
     const mapWorksheet = utils.json_to_sheet(this.mapsTable());
     const parentWorksheet = utils.json_to_sheet(this.parentTable());
     const childrenWorksheet = utils.json_to_sheet(this.childrenTable());
+    const historyWorksheet = utils.json_to_sheet(this.historyTable());
 
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
       var roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
@@ -255,7 +256,7 @@ export class ConceptDisplayComponent implements OnInit {
       var otherRelationshipsWorksheet = utils.json_to_sheet(this.otherRelationshipsTable());
     }
 
-    const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet);
+    const workbook = this.getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet, historyWorksheet);
     const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
     const data: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
@@ -295,6 +296,28 @@ export class ConceptDisplayComponent implements OnInit {
     else
       defTable.push({ 'None': '' });
     return defTable;
+  }
+
+  historyTable() {
+    var historyTable = [];
+    if (this.concept.history != undefined && this.concept.history.length > 0) {
+      this.concept.history.forEach(history => {
+        if (history.ct) {
+          historyTable.push({ "Relationship": "More Data Available..." });
+          return;
+        }
+        var historyEntry = {};
+        historyEntry['Code'] = history.code;
+        historyEntry['Action'] = history.action;
+        historyEntry['Date'] = history.date;
+        historyEntry['Replacement Code'] = history.replacementCode;
+        historyEntry['Replacement Name'] = history.replacementName;
+        historyTable.push(historyEntry);
+      });
+    }
+    else
+      historyTable.push({ 'None': '' });
+    return historyTable;
   }
 
   synTable() {
@@ -496,7 +519,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   broaderConceptTable() {
     var broaderConceptTable = [];
-    if (!this.concept.broader)
+    if (!this.concept.broader && this.concept.associations != null)
       this.concept.broader = this.concept.associations.filter(x => x.type == "RN");
     if (this.concept.broader != undefined && this.concept.broader.length > 0) {
       this.concept.broader.forEach(broad => {
@@ -539,7 +562,7 @@ export class ConceptDisplayComponent implements OnInit {
 
   narrowerConceptTable() {
     var narrowerConceptTable = [];
-    if (!this.concept.narrower)
+    if (!this.concept.narrower && this.concept.associations != null)
       this.concept.narrower = this.concept.associations.filter(x => x.type == "RB");
     if (this.concept.narrower != undefined && this.concept.narrower.length > 0) {
       this.concept.narrower.forEach(narrow => {
@@ -602,7 +625,8 @@ export class ConceptDisplayComponent implements OnInit {
 
   otherRelationshipsTable() {
     var associationsTable = [];
-    this.concept.otherRelationships = this.concept.associations.filter(x => !["RB", "RN"].includes(x.type));
+    if (!this.concept.otherRelationships && this.concept.associations != null)
+      this.concept.otherRelationships = this.concept.associations.filter(x => !["RB", "RN"].includes(x.type));
     if (this.concept.otherRelationships != undefined && this.concept.otherRelationships.length > 0) {
       this.concept.otherRelationships.forEach(otherRelationship => {
         if (otherRelationship.ct)
@@ -646,7 +670,7 @@ export class ConceptDisplayComponent implements OnInit {
     return qualifiersString;
   }
 
-  getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet) {
+  getWorkbook(nameWorksheet, defWorksheet, synWorksheet, otherPropWorksheet, mapWorksheet, parentWorksheet, childrenWorksheet, roleRelationshipsWorksheet, associationsWorksheet, broaderConceptWorksheet, incomingRoleRelationshipsWorksheet, narrowerConceptWorksheet, incomingAssociationsWorksheet, disjointWithWorksheet, otherRelationshipsWorksheet, historyWorksheet) {
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
       return {
         Sheets: {
@@ -661,7 +685,8 @@ export class ConceptDisplayComponent implements OnInit {
           'Associations': associationsWorksheet,
           'Incoming Role Relationships': incomingRoleRelationshipsWorksheet,
           'Incoming Associations': incomingAssociationsWorksheet,
-          'Disjoint With': disjointWithWorksheet
+          'Disjoint With': disjointWithWorksheet,
+          'History': historyWorksheet
         },
         SheetNames: [
           'Name',
@@ -675,7 +700,8 @@ export class ConceptDisplayComponent implements OnInit {
           'Associations',
           'Incoming Role Relationships',
           'Incoming Associations',
-          'Disjoint With'
+          'Disjoint With',
+          'History'
         ]
       };
     }
@@ -691,7 +717,8 @@ export class ConceptDisplayComponent implements OnInit {
           'Child Concepts': childrenWorksheet,
           'Broader Concepts': broaderConceptWorksheet,
           'Narrower Concepts': narrowerConceptWorksheet,
-          'Other Relationships': otherRelationshipsWorksheet
+          'Other Relationships': otherRelationshipsWorksheet,
+          'History': historyWorksheet
         },
         SheetNames: [
           'Name',
@@ -704,7 +731,8 @@ export class ConceptDisplayComponent implements OnInit {
           'Role Relationships',
           'Broader Concepts',
           'Narrower Concepts',
-          'Other Relationships'
+          'Other Relationships',
+          'History'
         ]
       };
     }
