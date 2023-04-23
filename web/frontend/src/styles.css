@@ -30,6 +30,17 @@ table a:hover {
   border-bottom: 1px solid #ccc !important;
 }
 
+.page-subheader {
+  font-weight: bold;
+  padding: 6px 10px;
+  background-color: #fff !important;
+  color: black !important;
+  font-size: 18px !important;
+  padding: 0px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ccc !important;
+}
+
 p-dialog .ui-dialog {
   overflow: scroll;
   max-height: 70%;
@@ -41,6 +52,14 @@ p-dialog .ui-dialog {
   color: #428bca;
   background-color: transparent;
 }
+
+.download-btn-link {
+  font-weight: 400;
+  color: #428bca;
+  background-color: transparent;
+  border-color: transparent;
+}
+
 
 img,
 svg {
@@ -91,6 +110,13 @@ body .alert-info {
   margin-left: 10px;
   margin-right: 10px;
   min-height: 400px;
+}
+
+.mapping-spacing {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .prime-dropdown-override {
@@ -211,6 +237,7 @@ body .alert-info {
 .pl-3 {
   padding-left: 3px !important;
 }
+
 .pr-3 {
   padding-right: 3px !important;
 }
@@ -219,3 +246,6 @@ body .alert-info {
   cursor: pointer;
 }
 
+.mapping-container {
+  width: 90%
+}
