@@ -13,7 +13,7 @@ export class MappingsComponent implements OnInit {
 
   constructor(private configService: ConfigurationService, private loaderService: LoaderService) { }
 
-  dummyList = ["one", "two", "three"];
+  dummyList = ['one', 'two', 'three'];
   mappings: any = null;
   viewMappings: any = [];
   downloadMappings: any = [];
@@ -25,7 +25,7 @@ export class MappingsComponent implements OnInit {
     this.configService.getMapsets('properties').subscribe(response => {
       this.mappings = response;
       this.mappings.forEach(map => {
-        if (map.properties.find(obj => obj.type == "downloadOnly" && obj.value == "false")) {
+        if (map.properties.find(obj => obj.type == 'downloadOnly' && obj.value == 'false')) {
           this.viewMappings.push(map.name);
           if (map.version) {
             this.versionMapping[map.name] = map.version
@@ -47,13 +47,13 @@ export class MappingsComponent implements OnInit {
   }
 
   async downloadMapping(mapName: string) {
-    this.configService.getMapsetByCode(mapName, "properties").subscribe(response => {
+    this.configService.getMapsetByCode(mapName, 'properties').subscribe(response => {
       var mapset = response;
-      var properties = mapset["properties"];
-      if (properties.find(obj => obj.type == "mapsetLink" && obj.value == null)) {
+      var properties = mapset['properties'];
+      if (properties.find(obj => obj.type == 'mapsetLink' && obj.value == null)) {
         this.downloadStoredMapping(mapName);
       }
-      else if (properties.find(obj => obj.type == "mapsetLink" && obj.value != null)) {
+      else if (properties.find(obj => obj.type == 'mapsetLink' && obj.value != null)) {
         window.open(properties.find(obj => obj.type == 'mapsetLink').value);
       }
     });
@@ -61,27 +61,27 @@ export class MappingsComponent implements OnInit {
 
   async downloadStoredMapping(mapName) {
     this.loaderService.showLoader();
-    var mappingText = "";
+    var mappingText = '';
     var total = 0;
     await this.configService.getMapsetMappings(mapName)
       .toPromise().then(response => {
-        total = response["total"];
+        total = response['total'];
       });
     const pages = Math.ceil(total / this.MAX_PAGE);
     for (let i = 0; i < pages; i++) {
       await this.configService.getMapsetMappings(mapName, Math.min(this.MAX_PAGE, total - i * this.MAX_PAGE), i * this.MAX_PAGE)
         .toPromise().then(response => {
-          var mapsetMappings = response["maps"];
+          var mapsetMappings = response['maps'];
           mapsetMappings.forEach(map => {
             // get titles and pretty-fy them
-            if (mappingText == "") {
+            if (mappingText == '') {
               // first replace: split words by lowercase letter -> uppercase letter
               // second replace: capitalize new first word
               mappingText += Object.keys(map).map((fieldName) =>
-                fieldName.replace(/([a-z])([A-Z])/g, "$1 $2")
-                  .replace(/^\w/, c => c.toUpperCase())).join(",") + "\r\n";
+                fieldName.replace(/([a-z])([A-Z])/g, '$1 $2')
+                  .replace(/^\w/, c => c.toUpperCase())).join(',') + '\r\n';
             }
-            mappingText += this.exportCodeFormatter(map) + "\r\n";
+            mappingText += this.exportCodeFormatter(map) + '\r\n';
           });
         });
     }
@@ -94,7 +94,7 @@ export class MappingsComponent implements OnInit {
 
   exportCodeFormatter(map: Object) {
     // extraneous commas are the bane of my existence
-    return "\"" + Object.values(map).join("\",\"") + "\"";
+    return '\"' + Object.values(map).join('\",\"') + '\"';
   }
 
 }

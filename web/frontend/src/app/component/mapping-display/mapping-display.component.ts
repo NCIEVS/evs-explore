@@ -33,18 +33,18 @@ export class MappingDisplayComponent implements OnInit {
       console.log(params.code)
       this.mapsetCode = params.code
       this.configService.getMapsetMappings(this.mapsetCode).subscribe(response => {
-        this.mapsetMappings = response["maps"];
-        this.total = response["total"];
+        this.mapsetMappings = response['maps'];
+        this.total = response['total'];
         this.fullTotal = this.total;
         console.log(this.mapsetMappings);
         console.log(this.total);
       });
     });
     this.configService.getMapsetByCode(this.mapsetCode).subscribe(response => {
-      this.version = response["version"];
+      this.version = response['version'];
     });
 
-    this.termAutoSearch = "";
+    this.termAutoSearch = '';
   }
 
   // Handle lazy loading of table
@@ -56,8 +56,8 @@ export class MappingDisplayComponent implements OnInit {
       const fromRecord = event.first;
       this.configService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord)
         .subscribe(response => {
-          this.mapsetMappings = response["maps"];
-          this.total = response["total"];
+          this.mapsetMappings = response['maps'];
+          this.total = response['total'];
           console.log(this.mapsetMappings);
           console.log(this.total);
         });
@@ -69,8 +69,8 @@ export class MappingDisplayComponent implements OnInit {
   search(event) {
     this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch)
       .subscribe(response => {
-        this.mapsetMappings = response["maps"];
-        this.total = response["total"];
+        this.mapsetMappings = response['maps'];
+        this.total = response['total'];
         console.log(this.mapsetMappings);
         console.log(this.total);
       });
@@ -81,26 +81,26 @@ export class MappingDisplayComponent implements OnInit {
   async exportMapping() {
     this.loaderService.showLoader();
     const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
-    var mappingText = "";
+    var mappingText = '';
 
     for (let i = 0; i < pages; i++) {
       await this.configService.getMapsetMappings(this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE).toPromise().then(
         result => {
-          result["maps"].forEach(c => {
+          result['maps'].forEach(c => {
             // get titles and pretty-fy them
-            if (mappingText == "") {
+            if (mappingText == '') {
               // first replace: split words by lowercase letter -> uppercase letter
               // second replace: capitalize new first word
               mappingText += Object.keys(c).map((fieldName) =>
-                fieldName.replace(/([a-z])([A-Z])/g, "$1 $2")
-                  .replace(/^\w/, c => c.toUpperCase())).join(",") + "\r\n";
+                fieldName.replace(/([a-z])([A-Z])/g, '$1 $2')
+                  .replace(/^\w/, c => c.toUpperCase())).join(',') + '\r\n';
             }
-            mappingText += this.exportCodeFormatter(c) + "\r\n";
+            mappingText += this.exportCodeFormatter(c) + '\r\n';
           });
         }
       );
     }
-    var fileName = this.mapsetCode + "_" + (this.version != null ? "Version" + this.version + "_" : "");
+    var fileName = this.mapsetCode + '_' + (this.version != null ? 'Version' + this.version + '_' : '');
     saveAs(new Blob([mappingText], {
       type: 'text/plain'
     }), fileName + new Date().toISOString() + '.csv');
@@ -109,7 +109,7 @@ export class MappingDisplayComponent implements OnInit {
 
   exportCodeFormatter(map) {
     // extraneous commas are the bane of my existence
-    return "\"" + Object.values(map).join("\",\"") + "\"";
+    return '\"' + Object.values(map).join('\",\"') + '\"';
   }
 
 }
