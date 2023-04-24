@@ -7,7 +7,7 @@
 
 <div class="page-subheader mapping-spacing">Viewable Mappings</div>
 <div class="mapping-spacing">
-  <div *ngFor="let map of viewMappings">
+  <div *ngFor="let map of viewMappings.sort()">
     <button type="button" [routerLink]="['/mappings', map]" class="download-btn-link"
       title="Click to view mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
         Version
@@ -18,7 +18,7 @@
 
 <div class="page-subheader mapping-spacing">Download Mappings</div>
 <div class="mapping-spacing">
-  <div *ngFor="let map of downloadMappings">
+  <div *ngFor="let map of downloadMappings.sort()">
     <button type="button" (click)="downloadMapping(map)" class="download-btn-link"
       title="Click to download mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
         Version
