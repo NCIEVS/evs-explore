@@ -7,17 +7,14 @@
 
 <div class="page-subheader mapping-spacing">Viewable Mappings</div>
 <div class="mapping-spacing">
-  <div *ngFor="let map of viewMappings; let first = first;">
-    <input [(ngModel)]="selectedMapping" type="radio" [value]="map" name="map" (click)="setMapping(map)"> {{map}}<span
-      style="font-weight:550;" *ngIf="versionMapping[map] != null">: Version {{versionMapping[map]}}</span>
+  <div *ngFor="let map of viewMappings">
+    <button type="button" [routerLink]="['/mappings', map]" class="download-btn-link"
+      title="Click to view mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
+        Version
+        {{versionMapping[map]}}</span></button>
   </div>
-</div>
 
-<div style="float:left">
-  <button label="Search" pButton type="button" class="ui-button-coloring mapping-spacing"
-    [disabled]="selectedMapping == null" [routerLink]="['/mappings', selectedMapping]">
-  </button>
-</div><br /><br />
+</div>
 
 <div class="page-subheader mapping-spacing">Download Mappings</div>
 <div class="mapping-spacing">
