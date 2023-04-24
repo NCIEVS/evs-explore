@@ -1,4 +1,4 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
+import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ConceptDetailService } from './../../service/concept-detail.service';
@@ -15,6 +15,10 @@ import { LoaderService } from '../../service/loader.service';
 })
 export class SubsetDetailsComponent implements OnInit {
 
+  @ViewChild('subsetList', { static: false }) subsetList: any;
+
+  first = 0;
+  lastSearch: string;
   pageSize = 10;
   fromRecord = 0;
   hitsFound = 0;
@@ -106,6 +110,7 @@ export class SubsetDetailsComponent implements OnInit {
             }
           }
           this.setTitle();
+          this.lastSearch = "";
         });
     });
   }
@@ -116,7 +121,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows)
+      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch)
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
@@ -162,6 +167,10 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   search(event, columnName = null) {
+    if (this.lastSearch != event.query) {
+      this.subsetList._first = 0
+      this.fromRecord = 0
+    }
     var sort = null;
     var sortDirection = null;
     var sortCols = document.getElementsByClassName('sortable');

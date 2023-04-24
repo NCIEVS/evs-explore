@@ -27,7 +27,8 @@
           <div class="ui-inputgroup" style="padding-bottom: 6px;">
             <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
               [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
+            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch"
+              (click)="this.mappings._first = 0; ngOnInit()"></button>
           </div>
         </div>
       </div>
@@ -35,7 +36,7 @@
         <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
       </div>
       <div *ngIf="mapsetMappings" class="table-responsive">
-        <p-table *ngIf="mapsetMappings" [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
+        <p-table *ngIf="mapsetMappings" #mappings [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
           [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true"
           (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
           <ng-template pTemplate="header">

@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit, SecurityContext } from '@angular/core';
+import { Component, Injectable, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { LoaderService } from 'src/app/service/loader.service';
@@ -13,10 +13,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 export class MappingDisplayComponent implements OnInit {
 
+  @ViewChild('mappings', { static: false }) mappings: any;
+
   avoidLazyLoading = true;
   mapsetCode: string;
   mapsetMappings: any;
 
+  lastQuery: string;
   pageSize = 10;
   fromRecord = 0;
   total = 0;
@@ -34,7 +37,6 @@ export class MappingDisplayComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
-      console.log(params.code)
       this.mapsetCode = params.code
       this.configService.getMapsetMappings(this.mapsetCode).subscribe(response => {
         this.mapsetMappings = response['maps'];
@@ -46,6 +48,8 @@ export class MappingDisplayComponent implements OnInit {
         this.properties = response["properties"];
         this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
         this.setWelcomeText();
+        this.lastQuery = "";
+
       });
     });
 
@@ -64,12 +68,10 @@ export class MappingDisplayComponent implements OnInit {
     } else {
       const pageSize = event.rows;
       const fromRecord = event.first;
-      this.configService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord)
+      this.configService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery)
         .subscribe(response => {
           this.mapsetMappings = response['maps'];
           this.total = response['total'];
-          console.log(this.mapsetMappings);
-          console.log(this.total);
         });
       this.fromRecord = fromRecord;
       this.pageSize = pageSize;
@@ -77,6 +79,12 @@ export class MappingDisplayComponent implements OnInit {
   }
 
   search(event) {
+    if (this.lastQuery != event.query) {
+      this.mappings._first = 0
+      this.fromRecord = 0
+    }
+    this.lastQuery = event.query
+
     this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch)
       .subscribe(response => {
         this.mapsetMappings = response['maps'];
