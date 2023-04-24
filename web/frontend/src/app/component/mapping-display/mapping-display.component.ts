@@ -1,8 +1,9 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit, SecurityContext } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { LoaderService } from 'src/app/service/loader.service';
 import { saveAs } from 'file-saver';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-mapping-display',
@@ -20,13 +21,16 @@ export class MappingDisplayComponent implements OnInit {
   fromRecord = 0;
   total = 0;
   fullTotal = 0;
+  properties = null;
+  welcomeText = null;
   version = null;
   MAX_PAGE = 10000;
   termAutoSearch: string;
   textSuggestions: any;
 
   constructor(private route: ActivatedRoute,
-    private configService: ConfigurationService, private loaderService: LoaderService) { }
+    private configService: ConfigurationService, private loaderService: LoaderService,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
@@ -36,15 +40,21 @@ export class MappingDisplayComponent implements OnInit {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
         this.fullTotal = this.total;
-        console.log(this.mapsetMappings);
-        console.log(this.total);
       });
-    });
-    this.configService.getMapsetByCode(this.mapsetCode).subscribe(response => {
-      this.version = response['version'];
+      this.configService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
+        this.version = response['version'];
+        this.properties = response["properties"];
+        this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
+        this.setWelcomeText();
+      });
     });
 
     this.termAutoSearch = '';
+  }
+
+  // Sets the welcome text
+  setWelcomeText(): any {
+    document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
   }
 
   // Handle lazy loading of table
