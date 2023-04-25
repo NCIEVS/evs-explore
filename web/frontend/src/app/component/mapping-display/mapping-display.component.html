@@ -54,12 +54,19 @@
           <ng-template pTemplate="body" let-mapping>
             <tr>
               <td>{{ mapping.source }}</td>
-              <td>{{ mapping.sourceCode }}</td>
+              <td>
+                <a *ngIf="sourceTermSaved" [routerLink]="[conceptUrlBase, sourceTerm, mapping.sourceCode]"
+                  target='_top'>{{ mapping.sourceCode }}</a><span *ngIf="!sourceTermSaved">{{ mapping.sourceCode
+                  }}</span>
+              </td>
               <td>{{ mapping.sourceName }}</td>
               <td>{{ mapping.type }}</td>
               <td>{{ mapping.rank }}</td>
               <td>{{ mapping.targetTerminology }}</td>
-              <td>{{ mapping.targetCode }}</td>
+              <td><a *ngIf="targetTermSaved" [routerLink]="[conceptUrlBase, targetTerm, mapping.targetCode]"
+                  target='_top'>{{ mapping.targetCode }}</a><span *ngIf="!targetTermSaved">{{
+                  mapping.targetCode
+                  }}</span></td>
               <td>{{ mapping.targetName }}</td>
             </tr>
           </ng-template>

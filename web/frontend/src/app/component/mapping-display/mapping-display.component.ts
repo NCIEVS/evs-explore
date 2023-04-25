@@ -31,6 +31,12 @@ export class MappingDisplayComponent implements OnInit {
   termAutoSearch: string;
   textSuggestions: any;
 
+  conceptUrlBase = '/concept';
+  sourceTermSaved: boolean = false;
+  sourceTerm: string;
+  targetTermSaved: boolean = false;
+  targetTerm: string;
+
   constructor(private route: ActivatedRoute,
     private configService: ConfigurationService, private loaderService: LoaderService,
     private sanitizer: DomSanitizer) { }
@@ -42,6 +48,13 @@ export class MappingDisplayComponent implements OnInit {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
         this.fullTotal = this.total;
+        var validTerminmologies = this.configService.getTerminologies().map(obj => obj.terminology);
+        var splitTitleForTerminologies = this.mapsetCode.split("_");
+        this.sourceTerm = splitTitleForTerminologies[0].toLowerCase();
+        this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
+        this.targetTerm = splitTitleForTerminologies[splitTitleForTerminologies.length - 2].toLowerCase();
+        this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
+
       });
       this.configService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
         this.version = response['version'];
@@ -49,7 +62,6 @@ export class MappingDisplayComponent implements OnInit {
         this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
         this.setWelcomeText();
         this.lastQuery = "";
-
       });
     });
 
