@@ -1,30 +1,29 @@
-<div class="page-header mapping-spacing">
-  Mappings
-</div>
-<p class="mapping-spacing">Select a mapping data set to search here, or click on a mapping data set name to go to its
-  home page and browse or
-  search from there. It is not yet possible to search more than one mapping data set at a time.</p>
-
-<div class="page-subheader mapping-spacing">Viewable Mappings</div>
-<div class="mapping-spacing">
-  <div *ngFor="let map of viewMappings; let first = first;">
-    <input [(ngModel)]="selectedMapping" type="radio" [value]="map" name="map" (click)="setMapping(map)"> {{map}}<span
-      style="font-weight:550;" *ngIf="versionMapping[map] != null">: Version {{versionMapping[map]}}</span>
+<div class="container">
+  <div class="page-header mapping-spacing">
+    Mappings
   </div>
-</div>
+  <p class="mapping-spacing">Select a mapping data set to search here, or click on a mapping data set name to go to its
+    home page and browse or
+    search from there. It is not yet possible to search more than one mapping data set at a time.</p>
 
-<div style="float:left">
-  <button label="Search" pButton type="button" class="ui-button-coloring mapping-spacing"
-    [disabled]="selectedMapping == null" [routerLink]="['/mappings', selectedMapping]">
-  </button>
-</div><br /><br />
+  <div class="page-subheader mapping-spacing">Viewable Mappings</div>
+  <div class="mapping-spacing">
+    <div *ngFor="let map of viewMappings.sort()">
+      <button type="button" [routerLink]="['/mappings', map]" class="download-btn-link"
+        title="Click to view mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
+          Version
+          {{versionMapping[map]}}</span></button>
+    </div>
 
-<div class="page-subheader mapping-spacing">Download Mappings</div>
-<div class="mapping-spacing">
-  <div *ngFor="let map of downloadMappings">
-    <button type="button" (click)="downloadMapping(map)" class="download-btn-link"
-      title="Click to download mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
-        Version
-        {{versionMapping[map]}}</span></button>
+  </div>
+
+  <div class="page-subheader mapping-spacing">Download Mappings</div>
+  <div class="mapping-spacing">
+    <div *ngFor="let map of downloadMappings.sort()">
+      <button type="button" (click)="downloadMapping(map)" class="download-btn-link"
+        title="Click to download mapping">{{map}}<span style="font-weight:550;" *ngIf="versionMapping[map] != null">:
+          Version
+          {{versionMapping[map]}}</span></button>
+    </div>
   </div>
 </div>

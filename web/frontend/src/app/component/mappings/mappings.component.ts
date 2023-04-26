@@ -39,7 +39,6 @@ export class MappingsComponent implements OnInit {
         }
       });
     });
-    console.log(this.viewMappings, this.downloadMappings);
   }
 
   setMapping(map: string) {

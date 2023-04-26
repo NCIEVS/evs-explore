@@ -479,15 +479,21 @@ export class ConfigurationService {
     );
   }
 
-  getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "") {
+  getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "", ascending = null, sort = null) {
 
-    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord + "&term=" + term;
+    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
+    if (ascending != null) {
+      url += '&ascending=' + ascending;
+    }
+    if (sort != null) {
+      url += '&sort=' + sort;
+    }
+    if (term) {
+      url += '&term=' + term;
+    }
     return this.http.get(encodeURI(url),
       {
-        responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
+        responseType: 'json'
       }
     ).pipe(
       catchError((error) => {
