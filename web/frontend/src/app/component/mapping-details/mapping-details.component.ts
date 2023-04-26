@@ -1,17 +1,18 @@
-import { Component, Injectable, OnInit, SecurityContext, ViewChild } from '@angular/core';
+import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { LoaderService } from 'src/app/service/loader.service';
 import { saveAs } from 'file-saver';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MapsetService } from 'src/app/service/mapset.service';
 
 @Component({
-  selector: 'app-mapping-display',
-  templateUrl: './mapping-display.component.html',
-  styleUrls: ['./mapping-display.component.css']
+  selector: 'app-mapping-details',
+  templateUrl: './mapping-details.component.html',
+  styleUrls: ['./mapping-details.component.css']
 })
 
-export class MappingDisplayComponent implements OnInit {
+export class MappingDetailsComponent implements OnInit {
 
   @ViewChild('mappings', { static: false }) mappings: any;
 
@@ -45,13 +46,13 @@ export class MappingDisplayComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute,
-    private configService: ConfigurationService, private loaderService: LoaderService,
+    private configService: ConfigurationService, private loaderService: LoaderService, private mapsetService: MapsetService,
     private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.mapsetCode = params.code
-      this.configService.getMapsetMappings(this.mapsetCode).subscribe(response => {
+      this.mapsetService.getMapsetMappings(this.mapsetCode).subscribe(response => {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
         this.fullTotal = this.total;
@@ -63,7 +64,7 @@ export class MappingDisplayComponent implements OnInit {
         this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
 
       });
-      this.configService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
+      this.mapsetService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
         this.version = response['version'];
         this.properties = response["properties"];
         this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
@@ -87,7 +88,7 @@ export class MappingDisplayComponent implements OnInit {
     } else {
       const pageSize = event.rows;
       const fromRecord = event.first;
-      this.configService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery)
+      this.mapsetService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery)
         .subscribe(response => {
           this.mapsetMappings = response['maps'];
           this.total = response['total'];
@@ -127,7 +128,7 @@ export class MappingDisplayComponent implements OnInit {
     }
     this.lastQuery = event.query
 
-    this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
+    this.mapsetService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
       .subscribe(response => {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];

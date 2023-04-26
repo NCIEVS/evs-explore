@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { saveAs } from 'file-saver';
 import { LoaderService } from 'src/app/service/loader.service';
+import { MapsetService } from 'src/app/service/mapset.service';
 
 // Component for mappings.  Currently, this just redirects to another page.
 @Component({
@@ -11,7 +12,7 @@ import { LoaderService } from 'src/app/service/loader.service';
 })
 export class MappingsComponent implements OnInit {
 
-  constructor(private configService: ConfigurationService, private loaderService: LoaderService) { }
+  constructor(private configService: ConfigurationService, private loaderService: LoaderService, private mapsetService: MapsetService) { }
 
   dummyList = ['one', 'two', 'three'];
   mappings: any = null;
@@ -22,7 +23,7 @@ export class MappingsComponent implements OnInit {
   MAX_PAGE = 10000;
 
   ngOnInit() {
-    this.configService.getMapsets('properties').subscribe(response => {
+    this.mapsetService.getMapsets('properties').subscribe(response => {
       this.mappings = response;
       this.mappings.forEach(map => {
         if (map.properties.find(obj => obj.type == 'downloadOnly' && obj.value == 'false')) {
@@ -46,7 +47,7 @@ export class MappingsComponent implements OnInit {
   }
 
   async downloadMapping(mapName: string) {
-    this.configService.getMapsetByCode(mapName, 'properties').subscribe(response => {
+    this.mapsetService.getMapsetByCode(mapName, 'properties').subscribe(response => {
       var mapset = response;
       var properties = mapset['properties'];
       if (properties.find(obj => obj.type == 'mapsetLink' && obj.value == null)) {
@@ -62,13 +63,13 @@ export class MappingsComponent implements OnInit {
     this.loaderService.showLoader();
     var mappingText = '';
     var total = 0;
-    await this.configService.getMapsetMappings(mapName)
+    await this.mapsetService.getMapsetMappings(mapName)
       .toPromise().then(response => {
         total = response['total'];
       });
     const pages = Math.ceil(total / this.MAX_PAGE);
     for (let i = 0; i < pages; i++) {
-      await this.configService.getMapsetMappings(mapName, Math.min(this.MAX_PAGE, total - i * this.MAX_PAGE), i * this.MAX_PAGE)
+      await this.mapsetService.getMapsetMappings(mapName, Math.min(this.MAX_PAGE, total - i * this.MAX_PAGE), i * this.MAX_PAGE)
         .toPromise().then(response => {
           var mapsetMappings = response['maps'];
           mapsetMappings.forEach(map => {

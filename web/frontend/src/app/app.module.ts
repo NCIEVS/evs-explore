@@ -88,7 +88,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
-import { MappingDisplayComponent } from './component/mapping-display/mapping-display.component';
+import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -127,7 +127,7 @@ import { MappingDisplayComponent } from './component/mapping-display/mapping-dis
     SubsetDetailsComponent,
     SubsetNcitComponent,
     EvsApiComponent,
-    MappingDisplayComponent
+    MappingDetailsComponent
   ],
   imports: [
     NgbModule,
