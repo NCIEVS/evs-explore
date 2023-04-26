@@ -37,6 +37,13 @@ export class MappingDisplayComponent implements OnInit {
   targetTermSaved: boolean = false;
   targetTerm: string;
 
+  currentSortColumn = 'sourceName';
+  currentSortDirection = false;
+  sortDirection = {
+    'ASC': true,
+    'DESC': false
+  }
+
   constructor(private route: ActivatedRoute,
     private configService: ConfigurationService, private loaderService: LoaderService,
     private sanitizer: DomSanitizer) { }
@@ -90,14 +97,37 @@ export class MappingDisplayComponent implements OnInit {
     }
   }
 
-  search(event) {
+  search(event, columnName = null) {
+    this.loaderService.showLoader();
     if (this.lastQuery != event.query) {
       this.mappings._first = 0
       this.fromRecord = 0
     }
+    var sort = null;
+    var sortDirection = null;
+    var sortCols = document.getElementsByClassName('sortable');
+    for (var i = 0; i < sortCols.length; i++) {
+      var str = sortCols[i].innerHTML;
+      var text = str.replace('↓', '').replace('↑', '');
+      sortCols[i].innerHTML = text;
+    }
+    if (columnName) { // setup for sorting
+      var sortCols = document.getElementsByClassName('sortable');
+      if (this.currentSortColumn == columnName) {
+        this.currentSortDirection = !this.currentSortDirection;
+      }
+      else {
+        this.currentSortColumn = columnName;
+        this.currentSortDirection = this.sortDirection.ASC;
+      }
+      this.currentSortColumn = columnName;
+      sort = this.currentSortColumn;
+      sortDirection = this.currentSortDirection
+      document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓');
+    }
     this.lastQuery = event.query
 
-    this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch)
+    this.configService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
       .subscribe(response => {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
@@ -105,6 +135,7 @@ export class MappingDisplayComponent implements OnInit {
         console.log(this.total);
       });
     this.textSuggestions = [];
+    this.loaderService.hideLoader();
   }
 
 
