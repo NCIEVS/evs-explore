@@ -111,6 +111,13 @@ export class ConceptDetailService {
       .then(res => <Array<Concept>[]>res);
   }
 
+  getSubsetMembersDirect(code: string, include: string) {
+    var url = encodeURI('/api/v1/subset/' + this.configService.getTerminologyName() + "/" + code + '/members?include=' + include);
+    return this.http.get(encodeURI(url))
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
+  }
+
   getRoots(terminology: string, hideLoader: boolean = false) {
     var url = '/api/v1/concept/' + this.configService.getTerminology().terminology + '/roots';
     return this.http.get(encodeURI(url),
