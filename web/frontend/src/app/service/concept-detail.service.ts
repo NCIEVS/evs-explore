@@ -63,7 +63,7 @@ export class ConceptDetailService {
 
   // Get Value Set Top Level
   getSubsetTopLevel() {
-    const url = encodeURI('/api/v1/subsets/' + this.configService.getTerminologyName() + '?include=minimal');
+    const url = encodeURI('/api/v1/subset/' + this.configService.getTerminologyName() + '?include=minimal');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);

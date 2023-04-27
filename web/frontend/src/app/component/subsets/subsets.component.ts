@@ -36,7 +36,6 @@ export class SubsetsComponent implements OnInit {
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
 
-  urlBase = '/subsets'
   urlTarget = '_top'
 
   constructor(
