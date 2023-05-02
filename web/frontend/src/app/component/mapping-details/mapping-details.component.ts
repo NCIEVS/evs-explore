@@ -51,8 +51,9 @@ export class MappingDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
+      this.lastQuery = "";
       this.mapsetCode = params.code
-      this.mapsetService.getMapsetMappings(this.mapsetCode).subscribe(response => {
+      this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
         this.fullTotal = this.total;
@@ -62,14 +63,12 @@ export class MappingDetailsComponent implements OnInit {
         this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
         this.targetTerm = splitTitleForTerminologies[splitTitleForTerminologies.length - 2].toLowerCase();
         this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
-
       });
       this.mapsetService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
         this.version = response['version'];
         this.properties = response["properties"];
         this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
         this.setWelcomeText();
-        this.lastQuery = "";
       });
     });
 
@@ -79,6 +78,8 @@ export class MappingDetailsComponent implements OnInit {
   // Sets the welcome text
   setWelcomeText(): any {
     document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
+    if (this.mappings)
+      this.mappings._first = 0;
   }
 
   // Handle lazy loading of table
@@ -100,10 +101,6 @@ export class MappingDetailsComponent implements OnInit {
 
   search(event, columnName = null) {
     this.loaderService.showLoader();
-    if (this.lastQuery != event.query) {
-      this.mappings._first = 0
-      this.fromRecord = 0
-    }
     var sort = null;
     var sortDirection = null;
     var sortCols = document.getElementsByClassName('sortable');
@@ -126,16 +123,19 @@ export class MappingDetailsComponent implements OnInit {
       sortDirection = this.currentSortDirection
       document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓');
     }
-    this.lastQuery = event.query
-
+    if (this.lastQuery != event.query) {
+      this.fromRecord = 0
+    }
     this.mapsetService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
       .subscribe(response => {
         this.mapsetMappings = response['maps'];
         this.total = response['total'];
-        console.log(this.mapsetMappings);
-        console.log(this.total);
       });
     this.textSuggestions = [];
+    if (this.lastQuery != event.query && this.mappings) {
+      this.mappings._first = 0
+    }
+    this.lastQuery = event.query
     this.loaderService.hideLoader();
   }
 
