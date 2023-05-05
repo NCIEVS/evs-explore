@@ -18,6 +18,7 @@ export class MappingsComponent implements OnInit {
   mappings: any = null;
   viewMappings: any = [];
   downloadMappings: any = [];
+  nameToCodeMaps: any = [];
   selectedMapping: any = null;
   versionMapping: any = {};
   MAX_PAGE = 10000;
@@ -26,6 +27,8 @@ export class MappingsComponent implements OnInit {
     this.mapsetService.getMapsets('properties').subscribe(response => {
       this.mappings = response;
       this.mappings.forEach(map => {
+        this.nameToCodeMaps.push(map.name);
+        this.nameToCodeMaps[map.name] = map.code;
         if (map.properties.find(obj => obj.type == 'downloadOnly' && obj.value == 'false')) {
           this.viewMappings.push(map.name);
           if (map.version) {
@@ -40,6 +43,10 @@ export class MappingsComponent implements OnInit {
         }
       });
     });
+  }
+
+  getCodeFromName(name) {
+    return this.nameToCodeMaps[name];
   }
 
   setMapping(map: string) {
