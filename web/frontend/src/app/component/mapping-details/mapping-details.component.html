@@ -42,12 +42,14 @@
             <tr>
               <th class="mappingTitle">Source</th>
               <th class="mappingTitle">Source Code</th>
-              <th class="mappingTitle sortable" id="sourceName" (click)="search($event, 'sourceName')">Source Name</th>
+              <th class="mappingTitle sortable" style="cursor: pointer" id="sourceName"
+                (click)="search($event, 'sourceName')">Source Name</th>
               <th class="mappingTitle">Relationship</th>
               <th class="mappingTitle">Map Rank</th>
               <th class="mappingTitle">Target</th>
               <th class="mappingTitle">Target Code</th>
-              <th class="mappingTitle sortable" id="targetName" (click)="search($event, 'targetName')">Target Name</th>
+              <th class="mappingTitle sortable" style="cursor: pointer" id="targetName"
+                (click)="search($event, 'targetName')">Target Name</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-mapping>
