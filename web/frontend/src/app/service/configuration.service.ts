@@ -246,10 +246,18 @@ export class ConfigurationService {
         .then(response => {
           // response is an array of terminologies, find the 'latest' one
           var arr = response as any[];
+          let foundDefault = false;
 
-          // Fail if there are no entries
-          if (arr.length == 0) {
-            throw 'Unable to find any terminologies with /metadata/terminologies';
+          for (let returnedTerminology of arr) {
+
+            if (returnedTerminology.terminology == this.defaultTerminologyName) {
+              foundDefault = true;
+            }
+          }
+
+          // Fail if there are no entries or can't find the default
+          if (arr.length == 0 || !foundDefault) {
+            throw 'Unable to find any terminologies with /metadata/terminologies or can not find ' + this.defaultTerminologyName;
           }
 
           // Sort terminologies by 'latest' and 'tags=monthly' and
@@ -293,6 +301,7 @@ export class ConfigurationService {
           resolve(true);
         }).catch(error => {
           resolve(false);
+          throw error;
         });
     });
   }
