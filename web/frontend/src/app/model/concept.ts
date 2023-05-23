@@ -54,7 +54,6 @@ export class Concept {
   uniqHistory: any[];
   uniqProps: any[];
   retired: boolean = false;
-  displayName: string;
 
   constructor(input: any, configService: ConfigurationService) {
     this.highlight = input.highlight;
