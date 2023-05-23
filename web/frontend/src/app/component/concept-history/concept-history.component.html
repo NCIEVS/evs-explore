@@ -1,0 +1,64 @@
+<div *ngIf="concept && concept.history.length > 0 && !showTable && !concept.retired" class="show-history-link">
+  <a (click)="showTable=true">Show History</a>
+</div>
+
+<div *ngIf="concept && concept.history.length > 0 && (showTable || concept.retired)">
+  <p-panel [toggleable]="true" [collapsed]="collapsed">
+    <p-header class="bold-heading" id="historyHeader">
+      History (
+      <span *ngIf="concept.historyCt == concept.history.length">{{concept.historyCt}}</span>
+      <span *ngIf="concept.historyCt > concept.history.length">
+        <a (click)="loadAll('historyHeader')" class="top-link"
+          title="More data available, click to load full concept details">...{{concept.historyCt}}</a></span>
+      ) <a (click)="scrollToTop()" class="top-link" title="Scroll To the Top of the Page">[top]</a>
+    </p-header>
+    <div class="table-responsive">
+      <p-table [value]="concept.history" sortMode="single" class="table table-striped table-bordered" *ngIf="
+          concept.history &&
+            concept.history.length > 0;
+          else elseBlockhistoryConcept" (sortFunction)="customSort($event)" [customSort]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-20" [pSortableColumn]="'code'">Code
+              <p-sortIcon [field]="'code'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'action'">
+              Action
+              <p-sortIcon [field]="'action'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'date'">
+              Date
+              <p-sortIcon [field]="'date'"></p-sortIcon>
+            </th>
+            <th class="w-20" [pSortableColumn]="'replacementCode'">Replacement Code
+              <p-sortIcon [field]="'replacementCode'"></p-sortIcon>
+            </th>
+            <th class="w-40" [pSortableColumn]="'replacementName'">Replacement Name
+              <p-sortIcon [field]="'replacementName'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td *ngIf="item.ct"><a (click)="loadAll('historyHeader')" class="top-link"
+                title="More data available, click to load full concept details">More data available...</a></td>
+            <td *ngIf="!item.ct" class="w-20">{{ item.code }}</td>
+            <td class="w-20">{{ item.action }}</td>
+            <td class="w-20">{{ item.date }}</td>
+            <td class="w-20">{{ item.replacementCode }}</td>
+
+            <td class="w-40">
+              <span *ngIf="item.replacementCode != '' && item.replacementName != ''">
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
+                  [target]="urlTarget">{{ item.replacementName }} 
+                </a>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockHistoryConcept>None</ng-template>
+  </p-panel>
+  <br />
+</div>

@@ -34,8 +34,7 @@ export class SubsetsComponent implements OnInit {
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
 
-  urlBase = '/subsets';
-  urlTarget = '_top';
+  urlTarget = '_top'
 
   constructor(
     private subsetDetailService: ConceptDetailService,
@@ -242,7 +241,6 @@ export class SubsetsComponent implements OnInit {
     this.expandDisabled = false;
     this.hierarchyData = JSON.parse(JSON.stringify(this.configService.subsets));
     this.sortNcitFirst();
-    this.NCItermFirst();
   }
   NCItermFirst() {
     throw new Error('Method not implemented.');

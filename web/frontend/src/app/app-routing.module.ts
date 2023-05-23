@@ -21,6 +21,7 @@ import { SynonymTypesComponent } from './component/documentation/synonym-types/s
 import { AlldocsComponent } from './component/documentation/alldocs/alldocs.component';
 import { SubsetNcitComponent } from './component/documentation/subset-ncit/subset-ncit.component';
 import { EvsApiComponent } from './component/evs-api/evs-api.component';
+import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -33,6 +34,7 @@ const routes: Routes = [
   { path: 'subset/:terminology/:code', component: SubsetDetailsComponent },
   { path: 'subset/:code', redirectTo: 'subset/ncit/:code' },
   { path: 'mappings', component: MappingsComponent },
+  { path: "mappings/:code", component: MappingDetailsComponent },
   { path: 'subsets/:terminology', component: SubsetsComponent },
   { path: 'subsets', redirectTo: 'subsets/ncit' },
   { path: 'associations', redirectTo: 'associations/ncit', pathMatch: 'full' },

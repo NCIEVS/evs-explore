@@ -1,5 +1,6 @@
 import { Property } from './property';
 import { Definition } from './definition';
+import { History } from './history';
 import { Synonym } from './synonym';
 import { Relationship } from './relationship';
 import { Map } from './map';
@@ -19,6 +20,8 @@ export class Concept {
   synonymsCt: number = 0;
   definitions: Definition[];
   definitionsCt: number = 0;
+  history: History[];
+  historyCt: number = 0;
   properties: Property[];
   propertiesCt: number = 0;
   semanticTypes: String[];
@@ -48,7 +51,9 @@ export class Concept {
   synonymUniqueArray: any[];
   definitionUniqueArray: any[];
   uniqDefs: any[];
+  uniqHistory: any[];
   uniqProps: any[];
+  retired: boolean = false;
   displayName: string;
 
   constructor(input: any, configService: ConfigurationService) {
@@ -61,6 +66,7 @@ export class Concept {
     this.subsetLink = input.subsetLink;
     this.synonyms = new Array();
     this.properties = new Array();
+    this.retired = false;
 
     if (input.synonyms) {
       for (let i = 0; i < input.synonyms.length; i++) {
@@ -97,6 +103,18 @@ export class Concept {
         this.definitions.push(new Definition(input.definitions[i]));
       }
       this.definitionsCt = this.getCt(this.definitions);
+    }
+
+    this.history = new Array();
+    if (input.history) {
+      for (let i = 0; i < input.history.length; i++) {
+        this.history.push(new History(input.history[i]));
+      }
+      this.historyCt = this.getCt(this.history);
+
+      if (input.history.length > 0 && (input.terminology == "ncim" || (input.terminology == "ncit" && this.synonymsCt == 0))) {
+        this.retired = true;
+      }
     }
 
     if (input.properties) {
@@ -279,8 +297,6 @@ export class Concept {
       this.disjointWithCt = this.getCt(this.disjointWith);
     }
 
-    this.computeDisplayName();
-    this.computePreferredName();
   }
   computePreferredName() {
     throw new Error('Method not implemented.');
@@ -389,6 +405,20 @@ export class Concept {
         }
       }
     }
+    // history
+    headerFlag = false;
+    this.uniqHistory = (this.history != undefined ? this.filterSetByUniqueObjects(this.history, this.name) : null);
+    if (this.uniqHistory) {
+      for (let i = 0; i < this.uniqHistory.length; i++) {
+        if (this.uniqHistory[i].highlight) {
+          if (!headerFlag) {
+            text += '<strong>History</strong>:<br/>';
+            headerFlag = true;
+          }
+          text += '<font color="#428bca">' + this.uniqHistory[i].type + ' - ' + this.uniqHistory[i].highlight + '</font><br/>';
+        }
+      }
+    }
     return text;
   }
 
@@ -406,12 +436,11 @@ export class Concept {
 
   // Return the display name
   // TODO: very NCIt specific, need an alternative for other terminologies
-  computeDisplayName(): string {
+  getDisplayName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         if (this.synonyms[i].type == 'Display_Name') {
-          this.displayName = this.synonyms[i].name;
-          return;
+          return this.synonyms[i].name;
         }
       }
     }

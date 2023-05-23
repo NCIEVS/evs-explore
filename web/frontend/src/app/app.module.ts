@@ -33,6 +33,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { GeneralSearchComponent } from './component/general-search/general-search.component';
 import { ConceptDetailComponent } from './component/concept-detail/concept-detail.component';
 import { ConceptRelationshipComponent } from './component/concept-relationship/concept-relationship.component';
+import { ConceptHistoryComponent } from './component/concept-history/concept-history.component';
 import { ConceptDisplayComponent } from './component/concept-display/concept-display.component';
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
 import { SubsetsComponent } from './component/subsets/subsets.component';
@@ -87,6 +88,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
 import { ButtonModule } from 'primeng/button';
 import { NotificationComponent } from './component/notifications/notifications.component';
+import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -102,6 +104,7 @@ import { NotificationComponent } from './component/notifications/notifications.c
     GeneralSearchComponent,
     ConceptDetailComponent,
     ConceptRelationshipComponent,
+    ConceptHistoryComponent,
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
     MappingsComponent,
@@ -124,6 +127,7 @@ import { NotificationComponent } from './component/notifications/notifications.c
     SubsetNcitComponent,
     EvsApiComponent,
     NotificationComponent,
+    MappingDetailsComponent
   ],
   imports: [
     NgbModule,

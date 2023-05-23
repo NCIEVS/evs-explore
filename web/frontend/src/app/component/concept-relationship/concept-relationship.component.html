@@ -1,4 +1,4 @@
-<div *ngIf="concept">
+<div *ngIf="concept && !concept.retired">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="parentsHeader">
       Parent Concepts (

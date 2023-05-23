@@ -13,6 +13,7 @@ export class PropertiesComponent implements OnInit {
 
   properties: any;
   terminology: string = null;
+  remodeledDesc: string = null;
 
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
@@ -53,6 +54,23 @@ export class PropertiesComponent implements OnInit {
         return 0;
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
+  }
+
+  isRemodeled(property): boolean {
+    if (!property.properties) {
+      return false;
+    }
+    else {
+      var remodeledProperty = property.properties.filter(prop => prop.type == "remodeledDescription");
+      if (remodeledProperty.length > 0) {
+        this.remodeledDesc = remodeledProperty[0].value;
+        this.remodeledDesc = this.remodeledDesc.replace("as a null", "as unknown");
+      }
+      else {
+        this.remodeledDesc = null;
+      }
+      return remodeledProperty.length > 0;
+    }
   }
 
 }

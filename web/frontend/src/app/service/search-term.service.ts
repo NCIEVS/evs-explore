@@ -39,7 +39,9 @@ export class SearchTermService {
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Failure to get search results = <p> ' + error.message + '</p>'));
+          return observableThrowError(new EvsError(error,
+            error.error ? error.error.message : (
+              'Failure to get search results = <p> ' + error.error.message + '</p>')));
         })
       );
 
@@ -115,7 +117,9 @@ export class SearchTermService {
     )
       .pipe(
         catchError((error) => {
-          return observableThrowError(new EvsError(error, 'Failure to get search results = <p> ' + error.message + '</p>'));
+          return observableThrowError(new EvsError(error,
+            error.error ? error.error.message : (
+              'Failure to get search results = <p> ' + error.error.message + '</p>')));
         })
       );
   }

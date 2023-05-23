@@ -63,7 +63,7 @@ export class ConceptDetailService {
 
   // Get Value Set Top Level
   getSubsetTopLevel() {
-    const url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subsets?include=minimal');
+    const url = encodeURI('/api/v1/subset/' + this.configService.getTerminologyName() + '?include=minimal');
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <TreeNode[]>res);
@@ -105,7 +105,14 @@ export class ConceptDetailService {
   }
 
   getSubsetInfo(code: string, include: string) {
-    var url = encodeURI('/api/v1/metadata/' + this.configService.getTerminologyName() + '/subset/' + code + '?include=' + include);
+    var url = encodeURI('/api/v1/subset/' + this.configService.getTerminologyName() + "/" + code + '?include=' + include);
+    return this.http.get(encodeURI(url))
+      .toPromise()
+      .then(res => <Array<Concept>[]>res);
+  }
+
+  getSubsetMembersDirect(code: string, include: string) {
+    var url = encodeURI('/api/v1/subset/' + this.configService.getTerminologyName() + "/" + code + '/members?include=' + include);
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Array<Concept>[]>res);
