@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewEncapsulation, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
@@ -13,7 +22,6 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
-import { TreeTableModule } from 'primeng/primeng';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -29,16 +37,16 @@ import { TreeTableModule } from 'primeng/primeng';
   selector: 'app-general-search',
   templateUrl: './general-search.component.html',
   styleUrls: ['./general-search.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class GeneralSearchComponent implements OnInit, OnDestroy,
-  AfterViewInit {
-
+export class GeneralSearchComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   // Set dtSearch and handle case where the ngIf conditions change
   // When accessing dtSearch, need to use setTimeout()
-  @ViewChild('dtSearch', { static: false }) dtSearch: Table;
+  @ViewChild("dtSearch", { static: false }) dtSearch: Table;
   @Input() welcomePage: boolean;
-  @ViewChild('termauto', { static: false }) termauto: AutoComplete;
+  @ViewChild("termauto", { static: false }) termauto: AutoComplete;
 
   // fields
   searchCriteria: SearchCriteria;
@@ -50,7 +58,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   noMatchedConcepts = false;
 
   // TODO: VERY NCIt specific
-  selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
+  selectedPropertiesReturn: string[] = [
+    "Preferred Name",
+    "Synonyms",
+    "Definitions",
+    "Semantic Type",
+  ];
   showMoreSearchOption = false;
   avoidLazyLoading = false;
 
@@ -72,7 +85,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   selectedPropertiesSearch: string[] = [];
   propertiesReturn = null;
   totalRecords = 0;
-  timetaken = '';
+  timetaken = "";
   showMore = true;
 
   // filter for sources
@@ -86,43 +99,41 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   routeListener = null;
 
   // get the parameters for the search
-  constructor(private searchTermService: SearchTermService,
+  constructor(
+    private searchTermService: SearchTermService,
     public configService: ConfigurationService,
     private cookieService: CookieService,
     private changeDetector: ChangeDetectorRef,
     public router: Router,
-    private titleService: Title) {
-
+    private titleService: Title
+  ) {
     // Determine if we are on the welcome page
-    const path = '' + window.location.pathname;
-    if (path.includes('welcome')) {
+    const path = "" + window.location.pathname;
+    if (path.includes("welcome")) {
       this.welcomePage = true;
     } else {
       this.welcomePage = false;
     }
 
     // Set up listener for back/forward browser events
-    this.routeListener =
-      this.router.events
-        .pipe(filter((event) => event instanceof NavigationStart))
-        .subscribe((event: NavigationStart) => {
-          if (event.restoredState) {
-            // Handle the search page
-            if (event.url.indexOf('/search') != -1) {
-              this.configFromQueryParams();
-              this.avoidLazyLoading = true;
-              this.performSearch();
-            }
-            // Handle the welcome page
-            else if (event.url.indexOf('/welcome') != -1) {
-              this.configFromQueryParams();
-            }
-            // Otherwise, we're navigating back to somthing else
-            // and this component should be destroyed
+    this.routeListener = this.router.events
+      .pipe(filter((event) => event instanceof NavigationStart))
+      .subscribe((event: NavigationStart) => {
+        if (event.restoredState) {
+          // Handle the search page
+          if (event.url.indexOf("/search") != -1) {
+            this.configFromQueryParams();
+            this.avoidLazyLoading = true;
+            this.performSearch();
           }
-        });
-
-
+          // Handle the welcome page
+          else if (event.url.indexOf("/welcome") != -1) {
+            this.configFromQueryParams();
+          }
+          // Otherwise, we're navigating back to somthing else
+          // and this component should be destroyed
+        }
+      });
   }
 
   // On init, print console message
@@ -132,21 +143,21 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
     this.configFromQueryParams();
 
     // Populate terms list from application metadata
-    this.termsAll = this.configService.getTerminologies().map(terminology => {
+    this.termsAll = this.configService.getTerminologies().map((terminology) => {
       return {
-        label: terminology.metadata.uiLabel.replace(/\:.*/, ''),
+        label: terminology.metadata.uiLabel.replace(/\:.*/, ""),
         value: terminology,
-        description: terminology.metadata.uiLabel.replace(/.*?\: /, '')
+        description: terminology.metadata.uiLabel.replace(/.*?\: /, ""),
       };
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-    console.log('search component initialized');
+    console.log("search component initialized");
   }
 
   // Unsubscribe
   ngOnDestroy() {
-    console.log('search component destroyed');
+    console.log("search component destroyed");
     // unsubscribe to ensure no memory leaks
     if (!this.welcomePage) {
       this.routeListener.unsubscribe();
@@ -155,7 +166,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Send focus to the search field
   ngAfterViewInit() {
-    console.log('after content initialized');
+    console.log("after content initialized");
     setTimeout(() => this.termauto.focusInput());
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
@@ -166,79 +177,102 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
   // Set state variables from the query parameters
   configFromQueryParams() {
     this.queryParams = new URLSearchParams(window.location.search);
-    console.log('setup query params', this.queryParams);
+    console.log("setup query params", this.queryParams);
 
     // Setup terminology for both /welcome and /search pages
-    if (this.queryParams.get('terminology')) {
-      this.selectedTerminology = this.configService.getTerminologyByName(this.queryParams.get('terminology'));
+    if (this.queryParams.get("terminology")) {
+      this.selectedTerminology = this.configService.getTerminologyByName(
+        this.queryParams.get("terminology")
+      );
     } else {
-      this.selectedTerminology
-        = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
+      this.selectedTerminology = this.configService.getTerminologyByName(
+        this.configService.getDefaultTerminologyName()
+      );
     }
     this.configService.setTerminology(this.selectedTerminology);
 
     this.loadAllSources();
 
     // set search criteria if there's stuff from the url
-    if (this.queryParams && this.queryParams.get('term') != undefined) {
-      this.searchCriteria.term = this.queryParams.get('term');
-      if (this.queryParams.get('type')) {
-        this.searchCriteria.type = this.queryParams.get('type');
+    if (this.queryParams && this.queryParams.get("term") != undefined) {
+      this.searchCriteria.term = this.queryParams.get("term");
+      if (this.queryParams.get("type")) {
+        this.searchCriteria.type = this.queryParams.get("type");
       }
-      if (this.queryParams.get('fromRecord')) {
-        this.searchCriteria.fromRecord = parseInt(this.queryParams.get('fromRecord'));
+      if (this.queryParams.get("fromRecord")) {
+        this.searchCriteria.fromRecord = parseInt(
+          this.queryParams.get("fromRecord")
+        );
       }
-      if (this.queryParams.get('pageSize')) {
-        this.pageSize = parseInt(this.queryParams.get('pageSize'));
+      if (this.queryParams.get("pageSize")) {
+        this.pageSize = parseInt(this.queryParams.get("pageSize"));
         this.searchCriteria.pageSize = this.pageSize;
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get('source') != '') {
-        console.debug('xxx', this.queryParams.get('source').split(','), this.searchCriteria.synonymSource);
-        console.debug('xxx', this.sourcesAll);
-        this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
+      if (this.queryParams.get("source") != "") {
+        console.debug(
+          "xxx",
+          this.queryParams.get("source").split(","),
+          this.searchCriteria.synonymSource
+        );
+        console.debug("xxx", this.sourcesAll);
+        this.searchCriteria.synonymSource = this.queryParams
+          .get("source")
+          .split(",");
       }
-      if (this.searchCriteria.type == 'phrase' ||
-        this.searchCriteria.type == 'fuzzy' ||
-        this.searchCriteria.type == 'AND' ||
-        this.searchCriteria.type == 'OR') {
+      if (
+        this.searchCriteria.type == "phrase" ||
+        this.searchCriteria.type == "fuzzy" ||
+        this.searchCriteria.type == "AND" ||
+        this.searchCriteria.type == "OR"
+      ) {
         this.showMoreSearchOption = true;
       }
     }
-
   }
 
   // Route to a search URL (which should perform the search)
   setQueryUrl() {
-    console.log('set query url');
-    this.router.navigate(['/search'], {
+    console.log("set query url");
+    this.router.navigate(["/search"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
-        fromRecord: this.searchCriteria.fromRecord ? this.searchCriteria.fromRecord : 0,
-        pageSize: this.searchCriteria.pageSize ? this.searchCriteria.pageSize : 10,
-        source: this.searchCriteria.synonymSource ? this.searchCriteria.synonymSource.join(',') : ''
-      }
+        fromRecord: this.searchCriteria.fromRecord
+          ? this.searchCriteria.fromRecord
+          : 0,
+        pageSize: this.searchCriteria.pageSize
+          ? this.searchCriteria.pageSize
+          : 10,
+        source: this.searchCriteria.synonymSource
+          ? this.searchCriteria.synonymSource.join(",")
+          : "",
+      },
     });
-    this.titleService.setTitle('EVS Explore - ' + this.searchCriteria.toString());
+    this.titleService.setTitle(
+      "EVS Explore - " + this.searchCriteria.toString()
+    );
   }
 
   // filter out terminologies that shouldn't be in the list on the search page
   terminologySearchListFilter(value) {
-    if (value.value.terminology != 'ncit') {
+    if (value.value.terminology != "ncit") {
       return true;
     }
-    if (value.value.tags && 'monthly' in value.value.tags && value.value.latest == true) {
+    if (
+      value.value.tags &&
+      "monthly" in value.value.tags &&
+      value.value.latest == true
+    ) {
       return true;
     }
     return false;
   }
 
-
   // Toggle the show more details
   toggleShowMoreDetails() {
-    console.log('toggleShowMoreDetails');
+    console.log("toggleShowMoreDetails");
     if (this.showMore) {
       this.showMore = false;
     } else {
@@ -248,7 +282,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Toggle setting for more search options
   toggleShowMoreSearchOptions() {
-    console.log('toggleShowMoreSearchOptions');
+    console.log("toggleShowMoreSearchOptions");
     if (this.showMoreSearchOption) {
       this.showMoreSearchOption = false;
     } else {
@@ -258,8 +292,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Clear search text, no need to re-perform search
   clearSearchText(event) {
-    console.log('clear search text');
-    this.searchCriteria.term = '';
+    console.log("clear search text");
+    this.searchCriteria.term = "";
   }
 
   // Reset paging
@@ -270,16 +304,16 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
-    this.router.navigate(['/welcome'], {
+    this.router.navigate(["/welcome"], {
       queryParams: {
-        terminology: this.selectedTerminology.terminology
-      }
+        terminology: this.selectedTerminology.terminology,
+      },
     });
   }
 
   // Reset the search table
   resetTable() {
-    console.log('resetTable', this.dtSearch);
+    console.log("resetTable", this.dtSearch);
     this.resetPaging();
     if (this.dtSearch !== null && this.dtSearch !== undefined) {
       this.dtSearch.reset();
@@ -288,7 +322,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Load table data
   loadDataLazily(event) {
-    console.log('loadDataLazily', event, this.avoidLazyLoading);
+    console.log("loadDataLazily", event, this.avoidLazyLoading);
     if (this.avoidLazyLoading) {
       this.avoidLazyLoading = false;
     } else {
@@ -303,16 +337,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Handle a key event with 'backspace' or 'delete'
   onChipsKeyEvent(event) {
-    console.log('onChipsKeyEvent', event);
+    console.log("onChipsKeyEvent", event);
     if (!(event.keyCode === 8 || event.keyCode === 46)) {
       return false;
     }
-
   }
 
   // Handle search type changing
   changeSearchType(event) {
-    console.log('changeSearchType', event);
+    console.log("changeSearchType", event);
     this.searchCriteria.type = event;
     this.resetPaging();
     this.setQueryUrl();
@@ -321,7 +354,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Perform search
   search(event) {
-    console.log('search', event);
+    console.log("search", event);
     this.resetPaging();
     this.setQueryUrl();
     if (!this.welcomePage) {
@@ -331,8 +364,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Handle a change of the source - save in session storage and re-search
   onChangeSources(event) {
-    console.log('onChangeSource');
-    this.configService.setSources(this.searchCriteria.synonymSource.join(','));
+    console.log("onChangeSource");
+    this.configService.setSources(this.searchCriteria.synonymSource.join(","));
     this.resetPaging();
     this.setQueryUrl();
     this.performSearch();
@@ -340,37 +373,40 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
-    console.log('onChangeTerminology', terminology.value.terminology);
-    this.searchCriteria.term = '';
+    console.log("onChangeTerminology", terminology.value.terminology);
+    this.searchCriteria.term = "";
     this.configService.setTerminology(terminology.value);
     this.loadAllSources();
 
     // reset to the welcome page
-    this.router.navigate(['/welcome'], {
+    this.router.navigate(["/welcome"], {
       queryParams: {
-        terminology: this.selectedTerminology.terminology
-      }
+        terminology: this.selectedTerminology.terminology,
+      },
     });
   }
 
   // Load source list
   loadAllSources() {
-    this.configService.getSynonymSources(this.selectedTerminology.terminology)
-      .subscribe(response => {
-        this.sourcesAll = response.map(element => {
+    this.configService
+      .getSynonymSources(this.selectedTerminology.terminology)
+      .subscribe((response) => {
+        this.sourcesAll = response.map((element) => {
           return {
             label: element.code,
-            value: element.code
+            value: element.code,
           };
         });
-        this.sourcesAll.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
+        this.sourcesAll.sort((a, b) =>
+          a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
+        );
       });
   }
 
   // Handle deselecting a source
   onSourceDeselect(event) {
-    console.log('onSourceDeselect', event);
-    this.configService.setSources(this.searchCriteria.synonymSource.join(','));
+    console.log("onSourceDeselect", event);
+    this.configService.setSources(this.searchCriteria.synonymSource.join(","));
     this.resetPaging();
     this.setQueryUrl();
     this.performSearch();
@@ -378,7 +414,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Handler for clicking the 'Search' button
   onPerformSearch() {
-    console.log('onPerformSeach');
+    console.log("onPerformSeach");
     this.resetPaging();
     this.setQueryUrl();
     this.performSearch();
@@ -386,61 +422,92 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
 
   // Set columns
   setColumns() {
-    this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header))];
-    this.cookieService.set('displayColumns', this.selectedColumns.join());
+    this.displayColumns = [
+      ...this.cols.filter((a) => this.selectedColumns.includes(a.header)),
+    ];
+    this.cookieService.set("displayColumns", this.selectedColumns.join());
   }
 
   // Perform the search
   performSearch() {
-    if (this.searchCriteria.term == null || this.searchCriteria.term.length < 3) {
+    if (
+      this.searchCriteria.term == null ||
+      this.searchCriteria.term.length < 3
+    ) {
       if (!this.firstSearchFlag) {
-        console.log('skip search - first search has not happened, reroute to /welcome', this.searchCriteria.term);
-        this.router.navigate(['/welcome'], {
+        console.log(
+          "skip search - first search has not happened, reroute to /welcome",
+          this.searchCriteria.term
+        );
+        this.router.navigate(["/welcome"], {
           queryParams: {
-            terminology: this.selectedTerminology.terminology
-          }
+            terminology: this.selectedTerminology.terminology,
+          },
         });
       }
-      console.log('skip search - not enough characters in term', this.searchCriteria.term);
+      console.log(
+        "skip search - not enough characters in term",
+        this.searchCriteria.term
+      );
       return;
-
     }
     this.firstSearchFlag = true;
 
-    if (this.selectedPropertiesSearch !== null && this.selectedPropertiesSearch !== undefined
-      && this.selectedPropertiesSearch.length > 0) {
+    if (
+      this.selectedPropertiesSearch !== null &&
+      this.selectedPropertiesSearch !== undefined &&
+      this.selectedPropertiesSearch.length > 0
+    ) {
       this.searchCriteria.property = this.selectedPropertiesSearch;
     } else {
-      this.searchCriteria.property = ['full_syn', 'code', 'preferred_name'];
+      this.searchCriteria.property = ["full_syn", "code", "preferred_name"];
     }
 
-    if (this.searchCriteria.term !== undefined && this.searchCriteria.term != null && this.searchCriteria.term !== '') {
+    if (
+      this.searchCriteria.term !== undefined &&
+      this.searchCriteria.term != null &&
+      this.searchCriteria.term !== ""
+    ) {
       // Remove tabs and quotes from search term
-      this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
-      this.searchCriteria.term = String(this.searchCriteria.term).replace(/"/g, '');
+      this.searchCriteria.term = String(this.searchCriteria.term).replace(
+        "\t",
+        ""
+      );
+      this.searchCriteria.term = String(this.searchCriteria.term).replace(
+        /"/g,
+        ""
+      );
       this.searchCriteria.terminology = this.selectedTerminology.terminology;
       this.loadedMultipleConcept = false;
       // call search term service
-      this
-        .searchTermService
+      this.searchTermService
         .search(this.searchCriteria)
-        .subscribe(response => {
-          console.log('  search result = ', response);
+        .subscribe((response) => {
+          console.log("  search result = ", response);
 
           // Build the search results table
           this.searchResultTableFormat = new SearchResultTableFormat(
-            new SearchResult(response, this.configService), this.selectedPropertiesReturn.slice(), this.configService, this.searchCriteria.synonymSource);
+            new SearchResult(response, this.configService),
+            this.selectedPropertiesReturn.slice(),
+            this.configService,
+            this.searchCriteria.synonymSource
+          );
 
           this.totalRecords = this.searchResultTableFormat.total;
           this.timetaken = this.searchResultTableFormat.timeTaken;
 
           if (this.totalRecords > 0) {
-            this.title = 'Found ' + this.totalRecords + ' concepts in ' + this.timetaken + ' ms';
+            this.title =
+              "Found " +
+              this.totalRecords +
+              " concepts in " +
+              this.timetaken +
+              " ms";
             this.cols = [...this.searchResultTableFormat.header];
-            this.multiSelectCols = this.cols.map(element => {
+            this.multiSelectCols = this.cols.map((element) => {
               return {
                 label: element.header,
-                value: element.header
+                value: element.header,
               };
             });
             this.setDefaultSelectedColumns();
@@ -451,98 +518,114 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
             this.loadedMultipleConcept = true;
             this.noMatchedConcepts = false;
             // detect changes if not a destroyed view, then set paging
-            if (!this.changeDetector['destroyed']) {
+            if (!this.changeDetector["destroyed"]) {
               this.changeDetector.detectChanges();
-              if (this.dtSearch && this.dtSearch.first != this.searchCriteria.fromRecord) {
-                this.dtSearch.first = this.searchCriteria.fromRecord
+              if (
+                this.dtSearch &&
+                this.dtSearch.first != this.searchCriteria.fromRecord
+              ) {
+                this.dtSearch.first = this.searchCriteria.fromRecord;
               }
             }
-
           } else {
             this.noMatchedConcepts = true;
             this.loadedMultipleConcept = false;
           }
           this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
-
         });
     } else {
       this.loadedMultipleConcept = false;
       this.noMatchedConcepts = true;
-      this.searchResult = new SearchResult({ 'total': 0 }, this.configService);
+      this.searchResult = new SearchResult({ total: 0 }, this.configService);
       this.reportData = [];
       this.termauto.loading = false; // removing the spinning loader from textbox after search finishes
-
     }
   }
 
   // export search results
   async exportSearch() {
-    var columnHeaders = this.displayColumns.map(col => col.header);
-    var toJoin = columnHeaders.join('\t').replace('Highlights\t', '') + '\n';
+    var columnHeaders = this.displayColumns.map((col) => col.header);
+    var toJoin = columnHeaders.join("\t").replace("Highlights\t", "") + "\n";
     var exportPageSize = this.configService.getExportPageSize();
     var maxExport = this.configService.getMaxExportSize();
-    var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
+    var pages = Math.ceil(
+      Math.min(maxExport, this.totalRecords) / exportPageSize
+    );
     this.searchCriteria.pageSize = exportPageSize;
     this.searchCriteria.export = true;
 
     var pageList = Array.from(Array(pages).keys());
     for (const page of pageList) {
       this.searchCriteria.fromRecord = exportPageSize * page;
-      await this.searchTermService.export(this.searchCriteria, this.displayColumns).toPromise().then(
-        result => {
-          result.concepts.forEach(concept => {
+      await this.searchTermService
+        .export(this.searchCriteria, this.displayColumns)
+        .toPromise()
+        .then((result) => {
+          result.concepts.forEach((concept) => {
             toJoin += this.exportCodeFormatter(concept, columnHeaders);
           });
-        }
-      );
+        });
     }
-    saveAs(new Blob([toJoin], {
-      type: 'text/plain'
-    }), this.searchCriteria.term + '.' + new Date().toISOString() + '.xls');
+    saveAs(
+      new Blob([toJoin], {
+        type: "text/plain",
+      }),
+      this.searchCriteria.term + "." + new Date().toISOString() + ".xls"
+    );
   }
 
   exportCodeFormatter(concept, displayColumns) {
-    var conceptFormatString = '';
-    if (displayColumns.includes('Code'))
-      conceptFormatString += concept.code + '\t';
-    if (displayColumns.includes('Preferred Name'))
-      conceptFormatString += concept.name + '\t';
+    var conceptFormatString = "";
+    if (displayColumns.includes("Code"))
+      conceptFormatString += concept.code + "\t";
+    if (displayColumns.includes("Preferred Name"))
+      conceptFormatString += concept.name + "\t";
 
-    if (displayColumns.includes('Synonyms')) {
-      var synonymString = '';
+    if (displayColumns.includes("Synonyms")) {
+      var synonymString = "";
       if (concept.synonyms != undefined && concept.synonyms.length > 0) {
         synonymString += '"';
         // get unique synonyms
-        let uniqueSynonyms = [...concept.synonyms.reduce((map, obj) => map.has(obj.name) ? map : map.set(obj.name, obj), new Map()).values()];
+        let uniqueSynonyms = [
+          ...concept.synonyms
+            .reduce(
+              (map, obj) => (map.has(obj.name) ? map : map.set(obj.name, obj)),
+              new Map()
+            )
+            .values(),
+        ];
         for (let syn of uniqueSynonyms) {
-          synonymString += syn.name.replace(/"/g, '""') + '\n';
+          synonymString += syn.name.replace(/"/g, '""') + "\n";
         }
         // remove last newline
-        synonymString = synonymString.substring(0, synonymString.length - 1) + '"';
+        synonymString =
+          synonymString.substring(0, synonymString.length - 1) + '"';
       }
-      synonymString += '\t';
+      synonymString += "\t";
       conceptFormatString += synonymString;
     }
 
-    if (displayColumns.includes('Definitions')) {
-      var definitionString = '';
+    if (displayColumns.includes("Definitions")) {
+      var definitionString = "";
       if (concept.definitions != undefined && concept.definitions.length > 0) {
         definitionString += '"';
         for (let def of concept.definitions) {
-          definitionString += def.source + ': ' + def.definition.replace(/"/g, '""') + '\n';
+          definitionString +=
+            def.source + ": " + def.definition.replace(/"/g, '""') + "\n";
         }
         // remove last newline
-        definitionString = definitionString.substring(0, definitionString.length - 1) + '"';
+        definitionString =
+          definitionString.substring(0, definitionString.length - 1) + '"';
       }
-      definitionString += '\t';
+      definitionString += "\t";
       conceptFormatString += definitionString;
     }
 
-    if (displayColumns.includes('Semantic Type')) {
-      var semString = '';
+    if (displayColumns.includes("Semantic Type")) {
+      var semString = "";
       if (concept.properties != undefined && concept.properties.length > 0) {
         for (let prop of concept.properties) {
-          if (prop.type == 'Semantic_Type') {
+          if (prop.type == "Semantic_Type") {
             semString += prop.value;
             // only one semantic type
             break;
@@ -551,40 +634,52 @@ export class GeneralSearchComponent implements OnInit, OnDestroy,
       }
       conceptFormatString += semString;
     }
-    conceptFormatString += '\n';
+    conceptFormatString += "\n";
     return conceptFormatString;
   }
 
   // Set default selected columns
   setDefaultSelectedColumns() {
-
-    if (this.cookieService.check('displayColumns')) {
-      var cookieColumns = this.cookieService.get('displayColumns').split(',');
-      this.displayColumns = [...this.cols.filter(a => cookieColumns.includes(a.header)
-        || (a.header == 'Code' && cookieColumns.includes('CUI'))
-        || (a.header == 'CUI' && cookieColumns.includes('Code'))
-      )];
+    if (this.cookieService.check("displayColumns")) {
+      var cookieColumns = this.cookieService.get("displayColumns").split(",");
+      this.displayColumns = [
+        ...this.cols.filter(
+          (a) =>
+            cookieColumns.includes(a.header) ||
+            (a.header == "Code" && cookieColumns.includes("CUI")) ||
+            (a.header == "CUI" && cookieColumns.includes("Code"))
+        ),
+      ];
+    } else {
+      this.selectedColumns = [
+        "Highlights",
+        "Preferred Name",
+        "Definitions",
+        this.selectedTerminology.terminology == "ncim" ? "CUI" : "Code",
+        "Synonyms",
+      ];
+      this.displayColumns = [
+        ...this.cols.filter(
+          (a) =>
+            this.selectedColumns.includes(a.header) ||
+            (a.header == "Code" && this.selectedColumns.includes("CUI")) ||
+            (a.header == "CUI" && this.selectedColumns.includes("Code"))
+        ),
+      ];
     }
-    else {
-      this.selectedColumns = ['Highlights', 'Preferred Name', 'Definitions',
-        (this.selectedTerminology.terminology == 'ncim' ? 'CUI' : 'Code'), 'Synonyms'];
-      this.displayColumns = [...this.cols.filter(a => this.selectedColumns.includes(a.header)
-        || (a.header == 'Code' && this.selectedColumns.includes('CUI'))
-        || (a.header == 'CUI' && this.selectedColumns.includes('Code'))
-      )];
-
-    }
-    console.log('  columns', this.displayColumns)
-    this.selectedColumns = this.displayColumns.map(element => element.header);
+    console.log("  columns", this.displayColumns);
+    this.selectedColumns = this.displayColumns.map((element) => element.header);
   }
 
   // Prep data for the sources= query param
   // Used in the HTML for concept detail query params
   getSelectedSourcesQueryParam() {
-    if (this.searchCriteria.synonymSource && this.searchCriteria.synonymSource.length > 0) {
-      return { sources: this.searchCriteria.synonymSource.join(',') };
+    if (
+      this.searchCriteria.synonymSource &&
+      this.searchCriteria.synonymSource.length > 0
+    ) {
+      return { sources: this.searchCriteria.synonymSource.join(",") };
     }
     return {};
   }
-
 }

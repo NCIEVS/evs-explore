@@ -1,16 +1,16 @@
 <!--<p-growl [(value)]="msgs" baseZIndex="4" [(sticky)]="stickNotification" life="7000"></p-growl>-->
 <p-toast [style]="{marginTop: '70px', width: '24em'}" class="custom-toast" key="tc">
-    <ng-template let-message pTemplate="message">
-        <div style="max-height: 300px; overflow-y: auto; ">
-            <div style="text-align: left" class="custom-toast">
-                <div class="ui-toast-summary" innerHtml="{{message.summary}}"></div>
-            </div>
-            <div style="text-align: left;" class="custom-toast">
-                <p style="word-wrap: break-word;" innerHtml="{{message.detail}}"></p>
-            </div>
-            <div style="text-align: left" class="custom-toast">
-                <p innerHtml="{{link}}"></p>
-            </div>
-        </div>
-    </ng-template>
+  <ng-template let-message pTemplate="message">
+    <div style="max-height: 300px; overflow-y: auto; ">
+      <div style="text-align: left" class="custom-toast">
+        <div class="ui-toast-summary" innerHtml="{{message.summary}}"></div>
+      </div>
+      <div style="text-align: left;" class="custom-toast">
+        <p style="word-wrap: break-word;" innerHtml="{{message.detail}}"></p>
+      </div>
+      <div style="text-align: left" class="custom-toast">
+        <p innerHtml="{{link}}"></p>
+      </div>
+    </div>
+  </ng-template>
 </p-toast>
