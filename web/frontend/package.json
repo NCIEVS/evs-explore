@@ -24,7 +24,7 @@
     "@angular/router": "^15.2.6",
     "@fullcalendar/core": "4.4.0",
     "@ng-bootstrap/ng-bootstrap": "^14.1.1",
-    "@schematics/angular": "^9.1.15",
+    "@schematics/angular": "^15.2.8",
     "angular-split": "^3.0.1",
     "bootstrap": "4.3.1",
     "chart.js": "^2.9.4",
