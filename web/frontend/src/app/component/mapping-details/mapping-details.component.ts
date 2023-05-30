@@ -174,4 +174,10 @@ export class MappingDetailsComponent implements OnInit {
     return '\"' + Object.values(map).join('\",\"') + '\"';
   }
 
+  resetMapset() {
+    this.mapsetMappings = null;
+    this.termAutoSearch = null;
+    this.ngOnInit();
+  }
+
 }

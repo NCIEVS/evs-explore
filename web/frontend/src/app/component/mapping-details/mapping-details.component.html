@@ -27,12 +27,19 @@
           <div class="ui-inputgroup" style="padding-bottom: 6px;">
             <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
               [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
+            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" (click)="resetMapset()"></button>
           </div>
         </div>
       </div>
       <div *ngIf="!mapsetMappings && termAutoSearch">
         <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
+      </div>
+      <div class="text-center" *ngIf="!mapsetMappings && !termAutoSearch">
+        <br />
+        <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <br /><br />
       </div>
       <div *ngIf="mapsetMappings" class="table-responsive">
         <p-table *ngIf="mapsetMappings" #mappings [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
