@@ -111,7 +111,8 @@ export class Concept {
       }
       this.historyCt = this.getCt(this.history);
 
-      if (input.history.length > 0 && (input.terminology == "ncim" || (input.terminology == "ncit" && this.synonymsCt == 0))) {
+      // this should catch things that are only historical
+      if (input.history.length > 0 && this.synonymsCt == 0) {
         this.retired = true;
       }
     }
