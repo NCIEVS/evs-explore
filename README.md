@@ -59,7 +59,7 @@ npm-windows-upgrade
 To update Node/ng, first install `nvm`:
 
 ```
-# node version
+# node version (google "windows install nvm" for how to install "nvm")
 nvm install 18.16.0
 nvm use 18.16.0
 # ng version
