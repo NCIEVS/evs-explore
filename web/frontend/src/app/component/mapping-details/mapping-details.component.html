@@ -34,13 +34,6 @@
       <div *ngIf="!mapsetMappings && termAutoSearch">
         <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
       </div>
-      <div class="text-center" *ngIf="!mapsetMappings && !termAutoSearch">
-        <br />
-        <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
-          <span class="sr-only">Loading...</span>
-        </div>
-        <br /><br />
-      </div>
       <div *ngIf="mapsetMappings" class="table-responsive">
         <p-table *ngIf="mapsetMappings" #mappings [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
           [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true"
