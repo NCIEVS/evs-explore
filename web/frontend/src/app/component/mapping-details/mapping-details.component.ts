@@ -54,27 +54,26 @@ export class MappingDetailsComponent implements OnInit {
   }
 
   setupMappings() {
-    this.loaderService.showLoader();
     this.route.params
       .subscribe((params: any) => {
         this.lastQuery = "";
         this.mapsetCode = params.code
-        this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
-          this.mapsetMappings = response['maps'];
-          this.total = response['total'];
-          this.fullTotal = this.total;
-          var validTerminmologies = this.configService.getTerminologies().map(obj => obj.terminology);
-          var splitTitleForTerminologies = this.mapsetCode.split("_");
-          this.sourceTerm = splitTitleForTerminologies[0].toLowerCase();
-          this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
-          this.targetTerm = splitTitleForTerminologies[splitTitleForTerminologies.length - 2].toLowerCase();
-          this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
-        });
         this.mapsetService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
           this.version = response['version'];
           this.properties = response["properties"];
           this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
           this.setWelcomeText();
+          this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
+            this.mapsetMappings = response['maps'];
+            this.total = response['total'];
+            this.fullTotal = this.total;
+            var validTerminmologies = this.configService.getTerminologies().map(obj => obj.terminology);
+            var splitTitleForTerminologies = this.mapsetCode.split("_");
+            this.sourceTerm = splitTitleForTerminologies[0].toLowerCase();
+            this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
+            this.targetTerm = splitTitleForTerminologies[splitTitleForTerminologies.length - 2].toLowerCase();
+            this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
+          });
         });
       });
     this.termAutoSearch = '';
