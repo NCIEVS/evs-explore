@@ -34,7 +34,7 @@
               </p-multiSelect>
 
               <span><button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring"
-                  style="border:0; margin-top:1px; margin-left:0px" icon="fa fa-undo" (click)="onResetSearch($event)"
+                  style="border:0; margin-left:0px" icon="fa fa-undo" (click)="onResetSearch($event)"
                   pTooltip="Click to start new search" label="New Search" tooltipPosition="bottom"></button></span>
 
               <div class="large-divider"></div>
@@ -56,8 +56,8 @@
         </div>
         <div class="row">
           <div class="col-sm-6" style="padding-top:3px;">
-            <p-radioButton class="radio-padding" name="searchtype" value="contains" label="Contains"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('contains')">
+            <p-radioButton class="radio-padding" styleClass="radio-style" name="searchtype" value="contains"
+              label="Contains" [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('contains')">
             </p-radioButton>
             <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
               [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('match')">
