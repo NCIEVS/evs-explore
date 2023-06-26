@@ -82,3 +82,8 @@ em {
   background-color: #ffffff;
   color: #555555;
 }
+
+.p-tooltip {
+  background-color: #555555;
+  color: white;
+}

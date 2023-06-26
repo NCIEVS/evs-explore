@@ -429,52 +429,6 @@
 
 /*end custom ui-multiselect */
 
-.p-spinner:not(.ui-state-disabled) .p-spinner-button:enabled:hover {
-  border-color: #c0c0c0;
-  background-color: #eeeeee;
-  color: #212121;
-}
-
-.p-spinner:not(.ui-state-disabled) .p-spinner-button:enabled:hover a {
-  color: #212121;
-}
-
-.p-spinner:not(.ui-state-disabled) .p-spinner-button:enabled:active {
-  border-color: #bebebe;
-  background-color: #d6d6d6;
-  color: #212121;
-}
-
-.p-selectbutton .p-button:not(.ui-state-disabled):not(.ui-state-active):hover {
-  border-color: #c0c0c0;
-  background-color: #eeeeee;
-  color: #212121;
-}
-
-.p-selectbutton .p-button:not(.ui-state-disabled):not(.ui-state-active):hover a {
-  color: #212121;
-}
-
-.p-togglebutton:not(.ui-state-disabled):not(.ui-state-active):hover {
-  border-color: #c0c0c0;
-  background-color: #eeeeee;
-  color: #212121;
-}
-
-.p-togglebutton:not(.ui-state-disabled):not(.ui-state-active):hover a {
-  color: #212121;
-}
-
-.p-paginator a:not(.ui-state-disabled):not(.ui-state-active):hover {
-  border-color: #c0c0c0;
-  background-color: #eeeeee;
-  color: #212121;
-}
-
-.p-paginator a:not(.ui-state-disabled):not(.ui-state-active):hover a {
-  color: #212121;
-}
-
 .p-paginator a {
   color: #555555;
 }
@@ -1502,7 +1456,7 @@ body .p-paginator .p-paginator-pages .p-paginator-page {
 }
 
 body .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background-color: #0173ae;
+  background-color: #0173ae !important;
   color: #ffffff;
 }
 
