@@ -1854,7 +1854,7 @@ body .p-toast .p-toast-message.p-toast-message-success {
   color: #295629;
 }
 
-body .p-toast .p-toast-message.p-toast-message-success .p-toast-close-icon {
+body .p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
   color: #295629 !important;
 }
 
@@ -1864,7 +1864,7 @@ body .p-toast .p-toast-message.p-toast-message-info {
   color: #1a5465;
 }
 
-body .p-toast .p-toast-message.p-toast-message-info .p-toast-close-icon {
+body .p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
   color: #1a5465;
 }
 
@@ -1874,8 +1874,15 @@ body .p-toast .p-toast-message.p-toast-message-error {
   color: #7a231f;
 }
 
-body .p-toast .p-toast-message.p-toast-message-error .p-toast-close-icon {
+body .p-toast .p-toast-message.p-toast-message-error .custom-toast,
+body .p-toast .p-toast-message.p-toast-message-warning .custom-toast,
+body .p-toast .p-toast-message.p-toast-message-info .custom-toast {
+  margin: 5px
+}
+
+body .p-toast .p-toast-message.p-toast-message-error .p-toast-icon-close {
   color: #7a231f !important;
+  margin: 5px
 }
 
 body .p-toast .p-toast-message.p-toast-message-warn {
