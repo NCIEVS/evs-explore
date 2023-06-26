@@ -947,6 +947,7 @@
 .p-treetable .p-treetable-tbody>tr>td {
   border: 1px solid #D5D5D5;
   background-color: inherit;
+  padding: .25em .5em
 }
 
 .p-treetable .p-treetable-tbody>tr.ui-state-highlight {
