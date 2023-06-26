@@ -77,13 +77,13 @@
   color: #555555;
 }
 
-.ui-state-active {
+.p-highlight {
   border-color: #bebebe;
   background-color: #d6d6d6;
   color: #212121;
 }
 
-.ui-state-active a {
+.p-highlight a {
   color: #212121;
 }
 
@@ -217,23 +217,23 @@
   color: #212121;
 }
 
-.p-checkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover {
+.p-checkbox-box:not(.ui-state-disabled):not(.p-highlight):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
 }
 
-.p-checkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover a {
+.p-checkbox-box:not(.ui-state-disabled):not(.p-highlight):hover a {
   color: #212121;
 }
 
-.p-radiobutton-box:not(.ui-state-disabled):not(.ui-state-active):hover {
+.p-radiobutton-box:not(.ui-state-disabled):not(.p-highlight):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
 }
 
-.p-radiobutton-box:not(.ui-state-disabled):not(.ui-state-active):hover a {
+.p-radiobutton-box:not(.ui-state-disabled):not(.p-highlight):hover a {
   color: #212121;
 }
 
@@ -280,7 +280,7 @@
   border-color: #d6d6d6;
 }
 
-.p-listbox.ui-state-disabled .p-checkbox-box:not(.ui-state-active):hover {
+.p-listbox.ui-state-disabled .p-checkbox-box:not(.p-highlight):hover {
   border-color: #d6d6d6;
   background-color: #ffffff;
   color: #555555;
@@ -437,7 +437,7 @@
   color: #1b1d1f;
 }
 
-.p-datatable .p-sortable-column:not(.ui-state-active):hover {
+.p-datatable .p-sortable-column:not(.p-highlight):hover {
   background-color: #eeeeee;
   color: #212121;
 }
@@ -535,13 +535,13 @@
   color: #212121;
 }
 
-.p-accordion .p-accordion-header:not(.ui-state-active):not(.ui-state-disabled):hover {
+.p-accordion .p-accordion-header:not(.p-highlight):not(.ui-state-disabled):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
 }
 
-.p-accordion .p-accordion-header:not(.ui-state-active):not(.ui-state-disabled):hover a {
+.p-accordion .p-accordion-header:not(.p-highlight):not(.ui-state-disabled):hover a {
   color: #212121;
 }
 
@@ -579,13 +579,13 @@
   color: #212121;
 }
 
-.p-tabview .p-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover {
+.p-tabview .p-tabview-nav li:not(.p-highlight):not(.ui-state-disabled):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
 }
 
-.p-tabview .p-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover a {
+.p-tabview .p-tabview-nav li:not(.p-highlight):not(.ui-state-disabled):hover a {
   color: #212121;
 }
 
@@ -683,13 +683,13 @@
   color: #212121;
 }
 
-.p-tabmenu .p-tabmenu-nav li:not(.ui-state-active):hover {
+.p-tabmenu .p-tabmenu-nav li:not(.p-highlight):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
 }
 
-.p-tabmenu .p-tabmenu-nav li:not(.ui-state-active):hover a {
+.p-tabmenu .p-tabmenu-nav li:not(.p-highlight):hover a {
   color: #212121;
 }
 
@@ -703,22 +703,22 @@
   color: #212121;
 }
 
-.p-panelmenu .p-panelmenu-header:not(.ui-state-active):hover {
+.p-panelmenu .p-panelmenu-header:not(.p-highlight):hover {
   border-color: #c0c0c0;
   background-color: #eeeeee;
   color: #212121;
   border-color: #d6d6d6;
 }
 
-.p-panelmenu .p-panelmenu-header:not(.ui-state-active):hover a {
+.p-panelmenu .p-panelmenu-header:not(.p-highlight):hover a {
   color: #212121;
 }
 
-.p-panelmenu .p-panelmenu-header:not(.ui-state-active):hover a {
+.p-panelmenu .p-panelmenu-header:not(.p-highlight):hover a {
   color: #212121;
 }
 
-.p-panelmenu .p-panelmenu-header.ui-state-active a {
+.p-panelmenu .p-panelmenu-header.p-highlight a {
   color: #212121;
 }
 
@@ -1146,7 +1146,7 @@ textarea {
   line-height: normal;
 }
 
-.ui-state-active {
+.p-highlight {
   border-color: #d9d9d9;
   background-color: #f6f7f9;
   color: #212121;
@@ -1180,12 +1180,6 @@ body .p-component.p-radiobutton {
   vertical-align: middle
 }
 
-body .p-component.p-radiobutton-checked {
-  border-color: #d9d9d9;
-  background-color: #f6f7f9;
-  color: #212121;
-}
-
 .p-radiobutton-box {
   width: 1.125em;
   height: 1.125em;
@@ -1195,8 +1189,12 @@ body .p-component.p-radiobutton-checked {
   position: relative;
   display: block;
   border: 1px solid #d6d6d6;
-  background-color: #fff;
-  color: #555;
+}
+
+.p-radiobutton-box.p-highlight,
+.p-radiobutton-box.p-highlight .p-radiobutton-icon,
+.p-radiobutton-box.p-focus {
+  background-color: black;
 }
 
 .p-label-active {
@@ -1368,13 +1366,13 @@ body .p-fieldset .p-fieldset-legend a .p-fieldset-toggler {
 }
 
 /*
-.p-tabview-selected.ui-state-active {
+.p-tabview-selected.p-highlight {
   border-color: #0173ae !important;
   background-color: #0173ae !important;
   color: #ffffff !important; }
 */
 
-.p-tabview-selected.ui-state-active {
+.p-tabview-selected.p-highlight {
   border-color: #0173ae !important;
   background-color: #0173ae !important;
   color: #fff !important;
@@ -1466,7 +1464,7 @@ body .p-paginator .p-paginator-pages .p-paginator-page:hover {
   background-color: #f4f3f4;
 }
 
-body .p-paginator .p-paginator-pages .p-paginator-page:hover.ui-state-active {
+body .p-paginator .p-paginator-pages .p-paginator-page:hover.p-highlight {
   background-color: #0173ae;
 }
 
@@ -1493,17 +1491,17 @@ body .p-datatable .p-datatable-tfoot>tr>td {
   color: #373a3c;
 }
 
-body .p-datatable thead th.p-sortable-column:not(.ui-state-active):hover {
+body .p-datatable thead th.p-sortable-column:not(.p-highlight):hover {
   background-color: #e3e3e3;
 }
 
-body .p-datatable thead th.ui-state-active {
+body .p-datatable thead th.p-highlight {
   background-color: #0173ae;
   border-color: #0173ae;
   color: #ffffff;
 }
 
-body .p-datatable thead th.ui-state-active .p-dropdown-item {
+body .p-datatable thead th.p-highlight .p-dropdown-item {
   color: #373a3c;
 }
 
@@ -1512,7 +1510,7 @@ body .p-datatable thead th:focus {
   background-color: #f0f3f5;
 }
 
-body .p-datatable thead th:focus.ui-state-active {
+body .p-datatable thead th:focus.p-highlight {
   background-color: #0283f1;
 }
 
@@ -1941,13 +1939,13 @@ body .p-toast .p-toast-message.p-toast-message-success .p-toast-close-icon {
   background: none;
 }
 
-.p-tabmenuitem.ui-state-active {
+.p-tabmenuitem.p-highlight {
   border-color: #0173ae !important;
   background-color: #0173ae !important;
   color: #fff !important;
 }
 
-.p-tabmenuitem.ui-state-active a.p-menuitem-link {
+.p-tabmenuitem.p-highlight a.p-menuitem-link {
   color: #fff !important;
 }
 

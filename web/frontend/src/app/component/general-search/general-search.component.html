@@ -57,8 +57,8 @@
         <div class="row">
           <div class="col-sm-6" style="padding-top:3px;">
             <p-radioButton class="radio-padding" styleClass="radio-style" name="searchtype" value="contains"
-              label="Contains" [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('contains')">
-            </p-radioButton>
+              label="Contains" [(ngModel)]="searchCriteria.type"
+              (onClick)="changeSearchType('contains')"></p-radioButton>
             <p-radioButton class="radio-padding" name="searchtype" value="match" label="Exact Match"
               [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('match')">
             </p-radioButton>
