@@ -3,7 +3,7 @@
 </div>
 
 <div *ngIf="concept && concept.history.length > 0 && (showTable || concept.retired)">
-  <p-panel [toggleable]="true" [collapsed]="collapsed">
+  <p-panel [toggleable]="true">
     <p-header class="bold-heading" id="historyHeader">
       History (
       <span *ngIf="concept.historyCt == concept.history.length">{{concept.historyCt}}</span>
@@ -49,8 +49,8 @@
 
             <td class="w-40">
               <span *ngIf="item.replacementCode != '' && item.replacementName != ''">
-                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
-                  [target]="urlTarget">{{ item.replacementName }} 
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]"
+                  [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ item.replacementName }}
                 </a>
               </span>
             </td>

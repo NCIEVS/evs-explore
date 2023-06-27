@@ -84,7 +84,7 @@
 
   </p-panel>
 
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="!concept.retired" [toggleable]="true">
     <p-header class="bold-heading" id="definitionsHeader">
       Definitions (
       <span *ngIf="concept.definitionsCt == concept.definitions.length">{{concept.definitionsCt}}</span>
@@ -137,7 +137,7 @@
     <ng-template #elseBlockDefinitions>None</ng-template>
   </p-panel>
   <br *ngIf="!concept.retired" />
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="!concept.retired" [toggleable]="true">
     <p-header class="bold-heading" id="synonymsHeader">
       Synonyms & Abbreviations (
       <span *ngIf="concept.synonymsCt == concept.synonyms.length">{{concept.synonymsCt}}</span>
@@ -224,7 +224,7 @@
   </p-panel>
   <br *ngIf="!concept.retired" />
 
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="!concept.retired" [toggleable]="true">
     <p-header class="bold-heading" id="otherHeader">
       Other Properties (
       <span *ngIf="concept.propertiesCt == concept.properties.length">{{concept.propertiesCt}}</span>
@@ -279,7 +279,7 @@
   </p-panel>
   <br *ngIf="!concept.retired" />
 
-  <p-panel *ngIf="!concept.retired && configService.isRdf()" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="!concept.retired && configService.isRdf()" [toggleable]="true">
     <p-header class="bold-heading" id="mapsHeader">
       Maps To (
       <span *ngIf="concept.mapsCt == concept.maps.length">{{concept.mapsCt}}</span>
@@ -328,7 +328,7 @@
     <ng-template #elseBlockMaps>None</ng-template>
 
   </p-panel>
-  <p-panel *ngIf="!concept.retired && configService.isRrf()" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="!concept.retired && configService.isRrf()" [toggleable]="true">
     <p-header class="bold-heading">
       Mappings ({{concept.mapsCt}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
