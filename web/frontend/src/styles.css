@@ -278,3 +278,7 @@ body .alert-info {
 .source-table {
   margin-left: 40px;
 }
+
+.modal-backdrop.fade.show {
+  z-index: 1050 !important
+}
