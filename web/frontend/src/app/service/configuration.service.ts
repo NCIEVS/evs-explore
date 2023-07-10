@@ -457,7 +457,7 @@ export class ConfigurationService {
   }
 
   getMapsets(include = "minimal") {
-    var url = '/api/v1/mapsets?include=' + include;
+    var url = '/api/v1/mapset?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
