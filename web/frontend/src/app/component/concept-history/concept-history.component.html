@@ -1,8 +1,8 @@
-<div *ngIf="concept && concept.history.length > 0 && !showTable && !concept.retired" class="show-history-link">
+<div *ngIf="concept && concept.history.length > 0 && !showTable && concept.active" class="show-history-link">
   <a (click)="showTable=true">Show History</a>
 </div>
 
-<div *ngIf="concept && concept.history.length > 0 && (showTable || concept.retired)">
+<div *ngIf="concept && concept.history.length > 0 && (showTable || !concept.active)">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="historyHeader">
       History (
