@@ -45,7 +45,13 @@
             <td *ngIf="!item.ct" class="w-20">{{ item.code }}</td>
             <td class="w-20">{{ item.action }}</td>
             <td class="w-20">{{ item.date }}</td>
-            <td class="w-20">{{ item.replacementCode }}</td>
+            <td class="w-20">
+              <span *ngIf="item.replacementCode != ''">
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
+                  [target]="urlTarget">{{ item.replacementCode }} 
+                </a>
+              </span>
+            </td>
 
             <td class="w-40">
               <span *ngIf="item.replacementCode != '' && item.replacementName != ''">
