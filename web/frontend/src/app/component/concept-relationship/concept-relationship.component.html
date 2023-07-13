@@ -1,4 +1,4 @@
-<div *ngIf="concept && (concept.active || concept.parentsCt > 0)">
+<div *ngIf="concept && (concept.active || concept.synonymsCt > 0)">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="parentsHeader">
       Parent Concepts (
@@ -52,7 +52,7 @@
     <ng-template #elseBlockParentConcept>None</ng-template>
   </p-panel>
   <br />
-  <p-panel *ngIf="concept.active || concept.childrenCt > 0" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="concept.active || concept.synonymsCt > 0" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="childrenHeader">
       Child Concepts (
       <span *ngIf="concept.childrenCt == concept.children.length">{{concept.childrenCt}}</span>
@@ -104,10 +104,10 @@
     </div>
     <ng-template #elseBlockChildConcept>None</ng-template>
   </p-panel>
-  <br *ngIf="concept.active || concept.childrenCt > 0" />
+  <br *ngIf="concept.active || concept.synonymsCt > 0" />
 
   <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.rolesCt > 0)">
+    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="roleRelationshipsHeader">
       Role Relationships (
       <span *ngIf="concept.rolesCt == concept.roles.length">{{concept.rolesCt}}</span>
@@ -153,9 +153,9 @@
     </div>
     <ng-template #elseBlockRole>None</ng-template>
   </p-panel>
-  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.rolesCt > 0)" />
+  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.associationsCt > 0)">
+    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="associationsHeader">
       Associations (
       <span *ngIf="concept.associationsCt == concept.associations.length">{{concept.associationsCt}}</span>
@@ -209,8 +209,8 @@
     </div>
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
-  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.associationsCt > 0)" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)">
+  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="broaderHeader">
       Broader Concepts (
       <span *ngIf="concept.associationsCt == 0">{{concept.broaderCt}}</span>
@@ -262,9 +262,9 @@
     </div>
     <ng-template #elseBlockAssociation>None</ng-template>
   </p-panel>
-  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)" />
+  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.inverseRolesCt > 0)">
+    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="iroleHeader">
       Incoming Role Relationships (
       <span *ngIf="concept.inverseRolesCt == concept.inverseRoles.length">{{concept.inverseRolesCt}}</span>
@@ -313,8 +313,8 @@
       None
     </ng-template>
   </p-panel>
-  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.inverseRolesCt > 0)" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)">
+  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="narrowerHeader">
       Narrower Concepts (
       <span *ngIf="concept.associationsCt == 0">{{concept.narrowerCt}}</span>
@@ -370,9 +370,9 @@
       None
     </ng-template>
   </p-panel>
-  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)" />
+  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.inverseAssociationsCt > 0)">
+    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="iassociationsHeader">
       Incoming Associations (
       <span
@@ -429,8 +429,8 @@
       None
     </ng-template>
   </p-panel>
-  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.inverseAssociationsCt > 0)" />
-  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)">
+  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
+  <p-panel [toggleable]="true" [collapsed]="collapsed" *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="otherRelationshipsHeader">
       Other Relationships (
       <span *ngIf="concept.associationsCt == 0">{{concept.otherCt}}</span>
@@ -486,9 +486,9 @@
       None
     </ng-template>
   </p-panel>
-  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.associationsCt > 0)" />
+  <br *ngIf="configService.isMultiSource() && configService.isRrf() && (concept.active || concept.synonymsCt > 0)" />
   <p-panel [toggleable]="true" [collapsed]="collapsed"
-    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.disjointWithCt > 0)">
+    *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)">
     <p-header class="bold-heading" id="disjointHeader">
       Disjoint With (
       <span *ngIf="concept.disjointWithCt == concept.disjointWith.length">{{concept.disjointWithCt}}</span>
@@ -536,5 +536,5 @@
       None
     </ng-template>
   </p-panel>
-  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.disjointWithCt > 0)" />
+  <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
 </div>
