@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="col-4">
-        <div *ngIf="!concept.retired" class="table-responsive">
+        <div *ngIf="concept.active" class="table-responsive">
           <table class="table table-striped table-bordered">
             <tbody>
               <tr>
@@ -84,7 +84,7 @@
 
   </p-panel>
 
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="concept.active || concept.synonymsCt > 0" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="definitionsHeader">
       Definitions (
       <span *ngIf="concept.definitionsCt == concept.definitions.length">{{concept.definitionsCt}}</span>
@@ -136,8 +136,8 @@
     </div>
     <ng-template #elseBlockDefinitions>None</ng-template>
   </p-panel>
-  <br *ngIf="!concept.retired" />
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <br *ngIf="concept.active || concept.synonymsCt > 0" />
+  <p-panel *ngIf="concept.active || concept.synonymsCt > 0" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="synonymsHeader">
       Synonyms & Abbreviations (
       <span *ngIf="concept.synonymsCt == concept.synonyms.length">{{concept.synonymsCt}}</span>
@@ -222,9 +222,9 @@
       </p-table>
     </div>
   </p-panel>
-  <br *ngIf="!concept.retired" />
+  <br *ngIf="concept.active || concept.synonymsCt > 0" />
 
-  <p-panel *ngIf="!concept.retired" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="concept.active || concept.synonymsCt > 0" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="otherHeader">
       Other Properties (
       <span *ngIf="concept.propertiesCt == concept.properties.length">{{concept.propertiesCt}}</span>
@@ -277,9 +277,9 @@
       </p-table>
     </div>
   </p-panel>
-  <br *ngIf="!concept.retired" />
+  <br *ngIf="concept.active || concept.synonymsCt > 0" />
 
-  <p-panel *ngIf="!concept.retired && configService.isRdf()" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="(concept.active || concept.synonymsCt > 0) && configService.isRdf()" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="mapsHeader">
       Maps To (
       <span *ngIf="concept.mapsCt == concept.maps.length">{{concept.mapsCt}}</span>
@@ -328,7 +328,7 @@
     <ng-template #elseBlockMaps>None</ng-template>
 
   </p-panel>
-  <p-panel *ngIf="!concept.retired && configService.isRrf()" [toggleable]="true" [collapsed]="collapsed">
+  <p-panel *ngIf="(concept.active || concept.synonymsCt > 0) && configService.isRrf()" [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading">
       Mappings ({{concept.mapsCt}}) <a (click)="scrollToTop()" class="top-link"
         title="Scroll To the Top of the Page">[top]</a>
@@ -373,5 +373,5 @@
     </div>
     <ng-template #elseBlockMaps>None</ng-template>
   </p-panel>
-  <br />
+  <br *ngIf="(concept.active || concept.synonymsCt > 0) && (configService.isRdf() || configService.isRrf())"/>
 </div>
