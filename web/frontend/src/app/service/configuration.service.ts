@@ -133,6 +133,14 @@ export class ConfigurationService {
     return this.getTerminology().metadata['sourceCt'] > 1;
   }
 
+  getMultiTermQueryInfo() {
+    return {
+      label: "Multi-Terminology Search",
+      value: "Multiple",
+      description: "This is a special multiple terminology search setting."
+    }
+  }
+
   // Set configuration information from query params
   setConfigFromQuery(query: string) {
     console.log('set config from query params', query);

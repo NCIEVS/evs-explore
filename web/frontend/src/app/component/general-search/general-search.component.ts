@@ -151,6 +151,7 @@ export class GeneralSearchComponent
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
+    this.termsAll.push(this.configService.getMultiTermQueryInfo());
     console.log("search component initialized");
   }
 
@@ -374,15 +375,20 @@ export class GeneralSearchComponent
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
     this.searchCriteria.term = "";
-    this.configService.setTerminology(terminology.value);
-    this.loadAllSources();
+    if (terminology.value != "Multiple") {
+      this.configService.setTerminology(terminology.value);
+      this.loadAllSources();
+      // reset to the welcome page
+      this.router.navigate(["/welcome"], {
+        queryParams: {
+          terminology: this.selectedTerminology.terminology,
+        },
+      });
+    } else {
+      this.router.navigate(["/multisearch"]);
+    }
 
-    // reset to the welcome page
-    this.router.navigate(["/welcome"], {
-      queryParams: {
-        terminology: this.selectedTerminology.terminology,
-      },
-    });
+
   }
 
   // Load source list
