@@ -64,6 +64,7 @@ export class TableData {
     public column59?: string,
     public expandedSynonyms?: string,
     public expandedDefinitions?: string,
+    public terminology?: string,
     public collapsedSynonyms?: string,
     public collapsedDefinitions?: string,
     public displayName?: string,

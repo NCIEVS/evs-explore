@@ -40,8 +40,7 @@ import { saveAs } from 'file-saver';
   encapsulation: ViewEncapsulation.None,
 })
 export class GeneralSearchComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   // Set dtSearch and handle case where the ngIf conditions change
   // When accessing dtSearch, need to use setTimeout()
   @ViewChild("dtSearch", { static: false }) dtSearch: Table;
@@ -576,6 +575,8 @@ export class GeneralSearchComponent
 
   exportCodeFormatter(concept, displayColumns) {
     var conceptFormatString = "";
+    if (displayColumns.includes("Terminology"))
+      conceptFormatString += concept.terminology + "\t";
     if (displayColumns.includes("Code"))
       conceptFormatString += concept.code + "\t";
     if (displayColumns.includes("Preferred Name"))

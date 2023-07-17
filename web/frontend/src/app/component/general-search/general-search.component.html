@@ -181,6 +181,10 @@
                           pTooltip="Click to show/hide highlights" (click)="rowData.expanded=!rowData.expanded"></i>
                       </a>
                     </span>
+                    <span *ngSwitchCase="'Terminology'">
+                      <a target="_top" class="ml3" [routerLink]="['/welcome']"
+                        [queryParams]="{terminology: rowData['terminology']}">{{rowData['terminology']}}</a>
+                    </span>
                     <span pTooltip="Open concept details" *ngSwitchCase="'Code'">
                       <!--<a target="_top"
                         [routerLink]="['/concept/', selectedTerminology.terminology, rowData['column1'] ]"
