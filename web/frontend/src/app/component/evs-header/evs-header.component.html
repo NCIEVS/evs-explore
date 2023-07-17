@@ -21,18 +21,18 @@
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
 
-      <li class="nav-item" *ngIf="getTerminologySubset()">
+      <li class="nav-item" *ngIf="getTerminologySubset() && notMultiSearch()">
         <a class="nav-link nav-link-list" [routerLink]="['/subsets', terminology?.terminology]"
           title="Display Subsets">Subsets</a>
       </li>
       <li class="nav-item">
         <a class="nav-link nav-link-list" [routerLink]="['/mappings']" title="Display Mappings">Mappings</a>
       </li>
-      <li class="nav-item" *ngIf="getTerminologyHierarchy() && firstRoot != null">
-        <a class="nav-link nav-link-list" [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
+      <li class="nav-item" *ngIf="getTerminologyHierarchy() && firstRoot != null && notMultiSearch()">
+        <a class=" nav-link nav-link-list" [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
           title="Display Concept Hierarchy">Hierarchy</a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" *ngIf="notMultiSearch()">
         <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false" title="Display Documentation">Documentation</a>
         <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">

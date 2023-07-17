@@ -16,6 +16,7 @@ export class EvsHeaderComponent implements OnInit {
   firstRoot = '';
   private subscription = null;
   showTerminologyInfo = false;
+  currentUrl = "";
 
   constructor(private http: HttpClient,
     private configService: ConfigurationService,
@@ -23,8 +24,8 @@ export class EvsHeaderComponent implements OnInit {
     public router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const currentUrl = event.url;
-        this.showTerminologyInfo = !currentUrl.includes('/mappings');
+        this.currentUrl = event.url;
+        this.showTerminologyInfo = !["/mappings", "multisearch"].some(v => this.currentUrl.includes(v));
       }
     });
   }
@@ -88,6 +89,10 @@ export class EvsHeaderComponent implements OnInit {
     if (this.terminology && this.terminology.metadata) {
       return this.terminology.metadata.subset;
     }
+  }
+
+  notMultiSearch() {
+    return !this.currentUrl.includes('/multisearch');
   }
 
   ngOnDestroy() {
