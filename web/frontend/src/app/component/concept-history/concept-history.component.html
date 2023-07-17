@@ -47,16 +47,16 @@
             <td class="w-20">{{ item.date }}</td>
             <td class="w-20">
               <span *ngIf="item.replacementCode != ''">
-                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
-                  [target]="urlTarget">{{ item.replacementCode }} 
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]"
+                  [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ item.replacementCode }}
                 </a>
               </span>
             </td>
 
             <td class="w-40">
               <span *ngIf="item.replacementCode != '' && item.replacementName != ''">
-                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
-                  [target]="urlTarget">{{ item.replacementName }} 
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]"
+                  [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ item.replacementName }}
                 </a>
               </span>
             </td>

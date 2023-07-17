@@ -1,6 +1,6 @@
 # Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.2.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
 
 ## Development server
 
@@ -25,3 +25,30 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+### Upgrading to latest
+
+This should work on Linux and the Mac.
+
+```
+npm install -g n
+n lts
+```
+
+Windows, run PowerShell as Administrator:
+
+To update NPM:
+
+```
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+npm install -g npm-windows-upgrade
+npm-windows-upgrade
+```
+To update Node/ng, first install `nvm`:
+
+```
+nvm install 18.16.0
+nvm use 18.16.0
+npm uninstall -g @angular/cli
+npm sinstall -g @angular/cli@latest
+```
