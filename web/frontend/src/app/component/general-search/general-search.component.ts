@@ -11,7 +11,7 @@ import {
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
-import { NavigationStart } from '@angular/router';
+import { ActivatedRoute, NavigationStart } from '@angular/router';
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
 import { SearchResult } from './../../model/searchResult';
@@ -97,6 +97,9 @@ export class GeneralSearchComponent
   // Manage subscriptions
   routeListener = null;
 
+  // list of terms for multisearch
+  multiTermList = [];
+
   // get the parameters for the search
   constructor(
     private searchTermService: SearchTermService,
@@ -106,6 +109,7 @@ export class GeneralSearchComponent
     public router: Router,
     private titleService: Title
   ) {
+
     // Determine if we are on the welcome page
     const path = "" + window.location.pathname;
     if (path.includes("welcome")) {
@@ -124,6 +128,10 @@ export class GeneralSearchComponent
             this.configFromQueryParams();
             this.avoidLazyLoading = true;
             this.performSearch();
+          }
+          // handle multi-search
+          else if (event.url.includes("multi")) {
+            this.multiTermSearch();
           }
           // Handle the welcome page
           else if (event.url.indexOf("/welcome") != -1) {

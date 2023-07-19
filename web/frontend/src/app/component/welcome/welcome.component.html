@@ -57,9 +57,10 @@
             <p>Select NCI hosted terminologies to search, or click on a source name to go to its browser home page</p>
             <div *ngFor="let term of allTerminologies">
               <label>
-                <input type="checkbox" [(ngModel)]="checkedTerminologies" [ngModelOptions]="{standalone: true}"
-                  (change)="onCheckboxChange(term)">
-                <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}">{{ term.label
+                <input id="{{term.value.terminology}}" type="checkbox" [ngModelOptions]="{standalone: true}"
+                  style="margin-right: 3px" (change)="onChangeMultiSelect(term)">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{
+                  term.label
                   }}</a>: {{
                 term.description }} <b>Version {{ term.value.version }}</b>
               </label>

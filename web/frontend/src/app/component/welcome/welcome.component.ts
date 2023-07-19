@@ -17,6 +17,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   welcomeText: any = null;
   boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
   allTerminologies: any = null;
+  selectedMultiTerminologies = new Set();
   private subscription = null;
 
   // Constructor
@@ -27,20 +28,10 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private sanitizer: DomSanitizer,
     private titleService: Title,
     private route: ActivatedRoute) {
-    this.setupPage();
   }
 
   // On init, set up a terminology change subscription
   ngOnInit() {
-    this.setupPage();
-  }
-
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
-  }
-
-  setupPage() {
     this.route.queryParams
       .subscribe(params => {
         if (params.terminology != "multi") {
@@ -60,8 +51,12 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         // filter for list of terminologies presented
         this.allTerminologies = this.allTerminologies.filter(this.configService.terminologySearchListFilter);
-      }
-      );
+      });
+  }
+
+  ngOnDestroy() {
+    // unsubscribe to ensure no memory leaks
+    this.subscription.unsubscribe();
   }
 
   // Post initialization, check hhs banner and set welcome text
@@ -99,6 +94,16 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getMultiSearch() {
     return this.configService.getMultiSearch();
+  }
+
+  onChangeMultiSelect(event) {
+    console.log(this.selectedMultiTerminologies);
+    const normalizedTerm = event.label.toString().toLowerCase();
+    if (this.selectedMultiTerminologies.has(normalizedTerm)) {
+      this.selectedMultiTerminologies.delete(normalizedTerm);
+    } else {
+      this.selectedMultiTerminologies.add(normalizedTerm);
+    }
   }
 
 }
