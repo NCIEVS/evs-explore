@@ -17,7 +17,7 @@
           [queryParams]="{terminology: terminology?.terminology}" title="Home"><i class="fa fa-home"></i> Home
         </a>
       </li>
-      <li *ngIf="showTerminologyInfo" class="nav-item version-info">
+      <li *ngIf="showTerminologyInfo && notMultiSearch()" class="nav-item version-info">
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
 

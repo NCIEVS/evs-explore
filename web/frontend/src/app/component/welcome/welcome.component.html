@@ -53,7 +53,21 @@
               </form>
             </div>
           </ng-template>
-          <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+          <div *ngIf="configService.getMultiSearch() == true else singleSearch">
+            <p>Select NCI hosted terminologies to search, or click on a source name to go to its browser home page</p>
+            <div *ngFor="let term of allTerminologies">
+              <label>
+                <input type="checkbox" [(ngModel)]="checkedTerminologies" [ngModelOptions]="{standalone: true}"
+                  (change)="onCheckboxChange(term)">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}">{{ term.label
+                  }}</a>: {{
+                term.description }} <b>Version {{ term.value.version }}</b>
+              </label>
+            </div>
+          </div>
+          <ng-template #singleSearch>
+            <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+          </ng-template>
           <div *ngIf="!welcomeText" [innerHTML]="boilerPlateWelcomeText"></div>
         </div>
         <div class="col-md-4">
@@ -62,14 +76,12 @@
               <tr valign="top">
                 <td>
                   <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">
-                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS"
-                      border="0" />
+                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS"
-                    class="regular-link">NCI Enterprise
+                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">NCI Enterprise
                     Vocabulary Services</a>:
                   Terminology resources and services for NCI and the biomedical
                   community.
@@ -105,15 +117,15 @@
               -->
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads"
-                    target="_blank" alt="NCI Metathesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
+                    alt="NCI Metathesaurus" class="regular-link">
                     <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads"
-                    target="_blank" alt="NCI Metathesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
+                    alt="NCI Metathesaurus" class="regular-link">
 
                     NCI Metathesaurus</a>:
                   Comprehensive database of 8,000,000 terms from over 100 terminologies.
@@ -121,15 +133,15 @@
               </tr>
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank"
-                    alt="NCI Thesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
+                    class="regular-link">
                     <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank"
-                    alt="NCI Thesaurus" class="regular-link">
+                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
+                    class="regular-link">
 
                     NCI Thesaurus</a>:
                   Reference terminology for NCI, NCI Metathesaurus and NCI
@@ -139,16 +151,15 @@
               </tr>
               <tr valign="top">
                 <td>
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary"
-                    target="_blank" alt="NCI Terminology Resources" class="regular-link">
-                    <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources"
-                      border="0" />
+                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
+                    alt="NCI Terminology Resources" class="regular-link">
+                    <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary"
-                    target="_blank" alt="NCI Terminology Resources" class="regular-link">
+                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
+                    alt="NCI Terminology Resources" class="regular-link">
 
                     NCI Terminology Resources</a>:
                   More information on NCI dictionaries and resources.
@@ -157,20 +168,19 @@
               <tr valign="top">
                 <td>
                   <a [routerLink]="['/evsapi']" alt="Swagger API Documentation">
-                    <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0"
-                      width="38" height="38" />
+                    <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0" width="38"
+                      height="38" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a [routerLink]="['/evsapi']" alt="Swagger API Documentation"
-                    class="regular-link">
+                  <a [routerLink]="['/evsapi']" alt="Swagger API Documentation" class="regular-link">
                     Swagger API Documentation</a>:
                   View documentation for the EVS REST API providing data to this
                   application.
 
-                  Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK"
-                    target="_blank" class="regular-link">
+                  Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK" target="_blank"
+                    class="regular-link">
                     evsrestapi-client-SDK</a> project for code examples for
                   interacting with the
                   API.

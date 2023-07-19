@@ -89,7 +89,6 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
 import { ButtonModule } from 'primeng/button';
 import { NotificationComponent } from './component/notifications/notifications.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
-import { MultiSearchComponent } from './component/multi-search/multi-search.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -109,7 +108,6 @@ import { MultiSearchComponent } from './component/multi-search/multi-search.comp
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
     MappingsComponent,
-    MultiSearchComponent,
     AssociationsComponent,
     PropertiesComponent,
     SubsetsComponent,
@@ -129,8 +127,7 @@ import { MultiSearchComponent } from './component/multi-search/multi-search.comp
     SubsetNcitComponent,
     EvsApiComponent,
     NotificationComponent,
-    MappingDetailsComponent,
-    MultiSearchComponent
+    MappingDetailsComponent
   ],
   imports: [
     NgbModule,

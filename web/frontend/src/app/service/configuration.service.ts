@@ -22,6 +22,7 @@ export class ConfigurationService {
   private subject: Subject<any>;
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
+  private multiSearch = false;
   public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
@@ -81,7 +82,7 @@ export class ConfigurationService {
     return false;
   }
 
-  getTerminologyByName(name) { // reverse search terminology by short name
+  getTerminologyByName(name: string) { // reverse search terminology by short name
     var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {
@@ -131,14 +132,6 @@ export class ConfigurationService {
   // Indicates whether current terminology selection is a metathesaurus or a single source
   isMultiSource() {
     return this.getTerminology().metadata['sourceCt'] > 1;
-  }
-
-  getMultiTermQueryInfo() {
-    return {
-      label: "Multi-Terminology Search",
-      value: "Multiple",
-      description: "This is a special multiple terminology search setting."
-    }
   }
 
   // Set configuration information from query params
@@ -225,6 +218,14 @@ export class ConfigurationService {
       this.terminology = arr[0];
     }
 
+  }
+
+  getMultiSearch() {
+    return this.multiSearch;
+  }
+
+  setMultiSearch(multiSearch) {
+    this.multiSearch = multiSearch;
   }
 
   getCode(): string {

@@ -33,7 +33,13 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
-    this.configService.setConfigFromQuery(window.location.search);
+    if (window.location.search.includes("=multi")) {
+      this.configService.setMultiSearch(true);
+    } else {
+      this.configService.setMultiSearch(false);
+      this.configService.setConfigFromQuery(window.location.search);
+    }
+
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
@@ -92,7 +98,7 @@ export class EvsHeaderComponent implements OnInit {
   }
 
   notMultiSearch() {
-    return !this.currentUrl.includes('/multisearch');
+    return !this.configService.getMultiSearch();
   }
 
   ngOnDestroy() {

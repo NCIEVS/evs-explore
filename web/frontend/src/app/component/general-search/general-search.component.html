@@ -15,19 +15,19 @@
             </div>
 
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-1">
             <div class="ui-inputgroup" style="padding-top: 6px;">
               <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch();"
                 [disabled]="searchCriteria.term.length < 3"></button>
             </div>
           </div>
 
-          <div class="col-sm-6">
+          <div class="col-sm-7">
             <div class="ui-inputgroup" style="padding-top: 6px;float:left;">
-              <p-multiSelect *ngIf="configService.isMultiSource()" autoWidth="false" [showToggleAll]="true"
-                dropdownIcon="pi pi-caret-down" [options]="sourcesAll" [(ngModel)]="searchCriteria.synonymSource"
-                name="sourceSearch" defaultLabel="Source" [filter]="true" (onPanelHide)="onChangeSources($event)"
-                [displaySelectedLabel]="false" [resetFilterOnHide]="true">
+              <p-multiSelect *ngIf="configService.isMultiSource() && !configService.getMultiSearch()" autoWidth="false"
+                [showToggleAll]="true" dropdownIcon="pi pi-caret-down" [options]="sourcesAll"
+                [(ngModel)]="searchCriteria.synonymSource" name="sourceSearch" defaultLabel="Source" [filter]="true"
+                (onPanelHide)="onChangeSources($event)" [displaySelectedLabel]="false" [resetFilterOnHide]="true">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom;">{{source.label}}</span>
                 </ng-template>
@@ -38,14 +38,24 @@
                   pTooltip="Click to start new search" label="New Search" tooltipPosition="bottom"></button></span>
 
               <div class="large-divider"></div>
-              <p-dropdown styleClass="ui-button-info" [options]="termsAll" [(ngModel)]="selectedTerminology"
-                (onChange)="onChangeTerminology($event)">
+              <p-dropdown *ngIf="!configService.getMultiSearch()" styleClass="ui-button-info" [options]="termsAll"
+                [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
                 <ng-template let-terminology pTemplate="item">
                   <div [title]="terminology.description">
                     {{ terminology.label }}
                   </div>
                 </ng-template>
               </p-dropdown>
+              <span>
+                <button *ngIf="!configService.getMultiSearch()" styleClass="ui-button-info" type="button" pButton
+                  class="ui-button-coloring" style="border:0; margin-left:3px" (click)="multiTermSearch()"
+                  pTooltip="Click to start multi-terminology search" label="Multi-Term Search"
+                  tooltipPosition="bottom"></button>
+                <button *ngIf="configService.getMultiSearch()" styleClass="ui-button-info" type="button" pButton
+                  class="ui-button-coloring" style="border:0; margin-left:3px" (click)="singleTermSearch()"
+                  pTooltip="Click to start single-terminology search" label="Single-Term Search"
+                  tooltipPosition="bottom"></button>
+              </span>
               <div class="large-divider"></div>
               <span><button type="button" pButton label="Export" class="ui-button-coloring" style="border:0"
                   icon="fa fa-download" pTooltip="Click to download search results" (click)="exportSearch();"

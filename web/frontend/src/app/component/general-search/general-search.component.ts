@@ -139,9 +139,6 @@ export class GeneralSearchComponent
   ngOnInit() {
     // Instantiate new search criteria and load from query params
     this.searchCriteria = new SearchCriteria(this.configService);
-    this.configFromQueryParams();
-
-    // Populate terms list from application metadata
     this.termsAll = this.configService.getTerminologies().map((terminology) => {
       return {
         label: terminology.metadata.uiLabel.replace(/\:.*/, ""),
@@ -151,7 +148,15 @@ export class GeneralSearchComponent
     });
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
-    this.termsAll.push(this.configService.getMultiTermQueryInfo());
+    if (this.configService.getMultiSearch()) {
+      if (!this.selectedTerminology) {
+        this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
+      }
+      return;
+    }
+    this.configFromQueryParams();
+
+    // Populate terms list from application metadata
     console.log("search component initialized");
   }
 
@@ -209,7 +214,7 @@ export class GeneralSearchComponent
         this.searchCriteria.pageSize = this.pageSize;
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get("source") != "") {
+      if (this.queryParams.get("source") != "" && this.queryParams.get("source") != null) {
         console.debug(
           "xxx",
           this.queryParams.get("source").split(","),
@@ -304,6 +309,31 @@ export class GeneralSearchComponent
 
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
+    if (this.configService.getMultiSearch()) {
+      this.router.navigate(["/welcome"], {
+        queryParams: {
+          terminology: 'multi',
+        },
+      });
+    } else {
+      this.router.navigate(["/welcome"], {
+        queryParams: {
+          terminology: this.selectedTerminology.terminology,
+        },
+      });
+    }
+
+  }
+
+  multiTermSearch() {
+    this.router.navigate(["/welcome"], {
+      queryParams: {
+        terminology: "multi",
+      },
+    });
+  }
+
+  singleTermSearch() {
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
@@ -375,19 +405,15 @@ export class GeneralSearchComponent
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
     this.searchCriteria.term = "";
-    if (terminology.value != "Multiple") {
-      this.configService.setTerminology(terminology.value);
-      this.loadAllSources();
-      // reset to the welcome page
-      this.router.navigate(["/welcome"], {
-        queryParams: {
-          terminology: this.selectedTerminology.terminology,
-        },
-      });
-    } else {
-      this.router.navigate(["/multisearch"]);
-    }
+    this.configService.setTerminology(terminology.value);
+    this.loadAllSources();
+    this.router.navigate(["/welcome"], {
+      queryParams: {
+        terminology: this.selectedTerminology.terminology,
+      },
+    });
 
+    // reset to the welcome page
 
   }
 
