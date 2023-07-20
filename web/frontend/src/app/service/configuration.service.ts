@@ -23,6 +23,7 @@ export class ConfigurationService {
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
   private multiSearch = false;
+  private multiSearchTerminologies: Set<string> = null;
   public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
@@ -112,6 +113,14 @@ export class ConfigurationService {
   setSources(sources) {
     this.cookieService.set('sources', sources);
     this.sources = sources;
+  }
+
+  getMultiSearchTerminologies() {
+    return this.multiSearchTerminologies;
+  }
+
+  setMultiSearchTerminologies(terminologies) {
+    this.multiSearchTerminologies = terminologies;
   }
 
   // Indicates whether current terminology is loaded from RDF (e.g. ncit)

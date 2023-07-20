@@ -104,6 +104,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.selectedMultiTerminologies.add(normalizedTerm);
     }
+    this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
   }
 
   selectAllTerms(ncimFlag = true) {
@@ -117,7 +118,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
       checkboxes[i].toggleAttribute("checked", true);
       this.selectedMultiTerminologies.add(checkboxes[i].getAttribute("id"));
     }
-
+    this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
 
   }
 
@@ -127,6 +128,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     for (var i = 0, n = checkboxes.length; i < n; i++) {
       checkboxes[i].toggleAttribute("checked", false);
     }
+    this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
   }
 
 }

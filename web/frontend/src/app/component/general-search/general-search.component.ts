@@ -162,7 +162,9 @@ export class GeneralSearchComponent
       }
       return;
     }
-    this.configFromQueryParams();
+    if (!this.configService.getMultiSearch()) {
+      this.configFromQueryParams();
+    }
 
     // Populate terms list from application metadata
     console.log("search component initialized");
@@ -249,7 +251,7 @@ export class GeneralSearchComponent
     console.log("set query url");
     this.router.navigate(["/search"], {
       queryParams: {
-        terminology: this.selectedTerminology.terminology,
+        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : "multi",
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord
@@ -334,6 +336,7 @@ export class GeneralSearchComponent
   }
 
   multiTermSearch() {
+    this.configService.setMultiSearch(true);
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: "multi",
@@ -342,6 +345,7 @@ export class GeneralSearchComponent
   }
 
   singleTermSearch() {
+    this.configService.setMultiSearch(false);
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
@@ -480,7 +484,7 @@ export class GeneralSearchComponent
         );
         this.router.navigate(["/welcome"], {
           queryParams: {
-            terminology: this.selectedTerminology.terminology,
+            terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : this.configService.getMultiSearchTerminologies(),
           },
         });
       }
