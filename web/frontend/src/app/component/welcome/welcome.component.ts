@@ -106,4 +106,27 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  selectAllTerms(ncimFlag = true) {
+    var checkboxes = document.getElementsByClassName("multiTermSelect");
+    this.selectedMultiTerminologies.clear();
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+      if (!ncimFlag && checkboxes[i].getAttribute("id") == 'ncim') {
+        checkboxes[i].toggleAttribute("checked", false);
+        continue;
+      }
+      checkboxes[i].toggleAttribute("checked", true);
+      this.selectedMultiTerminologies.add(checkboxes[i].getAttribute("id"));
+    }
+
+
+  }
+
+  clearAllTerms() {
+    var checkboxes = document.getElementsByClassName("multiTermSelect");
+    this.selectedMultiTerminologies.clear();
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+      checkboxes[i].toggleAttribute("checked", false);
+    }
+  }
+
 }

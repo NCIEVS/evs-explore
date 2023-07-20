@@ -54,11 +54,24 @@
             </div>
           </ng-template>
           <div *ngIf="configService.getMultiSearch() == true else singleSearch">
-            <p>Select NCI hosted terminologies to search, or click on a source name to go to its browser home page</p>
+            <p style="margin-bottom: 0.5em">Select NCI hosted terminologies to search, or click on a source name to go
+              to
+              its browser home page</p>
+            <p *ngIf="configService.getMultiSearch()" style="margin-bottom: 0.5em">
+              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring" style="border:0;"
+                (click)="selectAllTerms(false)" pTooltip="Click to select all terminologies except NCIM"
+                label="All But NCIM" tooltipPosition="bottom"></button>
+              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring"
+                style="border:0; margin-left:3px" (click)="selectAllTerms()"
+                pTooltip="Click to select all terminologies" label="Select All" tooltipPosition="bottom"></button>
+              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring"
+                style="border:0; margin-left:3px" (click)="clearAllTerms()"
+                pTooltip="Click to de-select all terminologies" label="Clear" tooltipPosition="bottom"></button>
+            </p>
             <div *ngFor="let term of allTerminologies">
               <label>
-                <input id="{{term.value.terminology}}" type="checkbox" [ngModelOptions]="{standalone: true}"
-                  style="margin-right: 3px" (change)="onChangeMultiSelect(term)">
+                <input id="{{term.value.terminology}}" class="multiTermSelect" type="checkbox"
+                  [ngModelOptions]="{standalone: true}" style="margin-right: 3px" (change)="onChangeMultiSelect(term)">
                 <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{
                   term.label
                   }}</a>: {{
