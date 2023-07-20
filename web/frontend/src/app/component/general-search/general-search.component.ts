@@ -727,4 +727,8 @@ export class GeneralSearchComponent
     }
     return {};
   }
+
+  disableEntry() {
+    return this.configService.getMultiSearch() && (this.configService.getMultiSearchTerminologies() == null || this.configService.getMultiSearchTerminologies().size == 0);
+  }
 }

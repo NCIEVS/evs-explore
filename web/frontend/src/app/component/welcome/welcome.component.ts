@@ -97,7 +97,6 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onChangeMultiSelect(event) {
-    console.log(this.selectedMultiTerminologies);
     const normalizedTerm = event.label.toString().toLowerCase();
     if (this.selectedMultiTerminologies.has(normalizedTerm)) {
       this.selectedMultiTerminologies.delete(normalizedTerm);
@@ -105,6 +104,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedMultiTerminologies.add(normalizedTerm);
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
+    console.log(this.selectedMultiTerminologies);
   }
 
   selectAllTerms(ncimFlag = true) {
