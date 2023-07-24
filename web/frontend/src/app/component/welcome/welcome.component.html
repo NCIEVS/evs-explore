@@ -71,7 +71,8 @@
             <div *ngFor="let term of allTerminologies">
               <label>
                 <input id="{{term.value.terminology}}" class="multiTermSelect" type="checkbox" style="margin-right: 3px"
-                  (change)="onChangeMultiSelect(term)" name="{{term.value.terminology}}">
+                  (change)="onChangeMultiSelect(term)" name="{{term.value.terminology}}"
+                  [checked]="inMultiSearchList(term)">
                 <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{
                   term.label
                   }}</a>: {{

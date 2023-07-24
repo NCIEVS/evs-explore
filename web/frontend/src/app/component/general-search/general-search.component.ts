@@ -205,8 +205,10 @@ export class GeneralSearchComponent
       this.configService.setTerminology(this.selectedTerminology);
 
       this.loadAllSources();
-    } else {
+    } else if (this.queryParams.get("terminology").contains(",")) {
+      // set multiSearch terminologies only if we're doing a multi search
       this.configService.setMultiSearchTerminologies(this.queryParams.get("terminology").split(","));
+
     }
 
 
