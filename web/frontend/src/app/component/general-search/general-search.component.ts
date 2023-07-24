@@ -205,6 +205,8 @@ export class GeneralSearchComponent
       this.configService.setTerminology(this.selectedTerminology);
 
       this.loadAllSources();
+    } else {
+      this.configService.setMultiSearchTerminologies(this.queryParams.get("terminology").split(","));
     }
 
 

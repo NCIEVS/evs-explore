@@ -151,7 +151,8 @@ export class ConfigurationService {
       this.code = paramMap.get('code');
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
-    if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
+    // don't change terminology on multi-search
+    if ((paramMap.get('terminology') != null && !this.getMultiSearch()) || (paramMap.get('code') != null && !paramMap.get('terminology'))) {
       var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>

@@ -33,13 +33,13 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
-    if (window.location.search.includes("=multi")) {
+    if (window.location.search.includes("=multi") || new URLSearchParams(window.location.search).get("terminology").includes(",")) {
       this.configService.setMultiSearch(true);
     } else {
       this.configService.setMultiSearch(false);
-      this.configService.setConfigFromQuery(window.location.search);
-    }
 
+    }
+    this.configService.setConfigFromQuery(window.location.search);
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
