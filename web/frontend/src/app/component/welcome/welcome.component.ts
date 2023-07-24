@@ -56,7 +56,9 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   // Post initialization, check hhs banner and set welcome text
@@ -97,7 +99,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onChangeMultiSelect(event) {
-    const normalizedTerm = event.label.toString().toLowerCase();
+    const normalizedTerm = event.value.terminology.toString().toLowerCase();
     if (this.selectedMultiTerminologies.has(normalizedTerm)) {
       this.selectedMultiTerminologies.delete(normalizedTerm);
     } else {

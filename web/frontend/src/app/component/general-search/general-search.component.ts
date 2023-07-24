@@ -160,11 +160,8 @@ export class GeneralSearchComponent
       if (!this.selectedTerminology) {
         this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
       }
-      return;
     }
-    if (!this.configService.getMultiSearch()) {
-      this.configFromQueryParams();
-    }
+    this.configFromQueryParams();
 
     // Populate terms list from application metadata
     console.log("search component initialized");
@@ -195,18 +192,21 @@ export class GeneralSearchComponent
     console.log("setup query params", this.queryParams);
 
     // Setup terminology for both /welcome and /search pages
-    if (this.queryParams.get("terminology")) {
-      this.selectedTerminology = this.configService.getTerminologyByName(
-        this.queryParams.get("terminology")
-      );
-    } else {
-      this.selectedTerminology = this.configService.getTerminologyByName(
-        this.configService.getDefaultTerminologyName()
-      );
-    }
-    this.configService.setTerminology(this.selectedTerminology);
+    if (!this.configService.getMultiSearch()) {
+      if (this.queryParams.get("terminology")) {
+        this.selectedTerminology = this.configService.getTerminologyByName(
+          this.queryParams.get("terminology")
+        );
+      } else {
+        this.selectedTerminology = this.configService.getTerminologyByName(
+          this.configService.getDefaultTerminologyName()
+        );
+      }
+      this.configService.setTerminology(this.selectedTerminology);
 
-    this.loadAllSources();
+      this.loadAllSources();
+    }
+
 
     // set search criteria if there's stuff from the url
     if (this.queryParams && this.queryParams.get("term") != undefined) {
@@ -251,7 +251,7 @@ export class GeneralSearchComponent
     console.log("set query url");
     this.router.navigate(["/search"], {
       queryParams: {
-        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : "multi",
+        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(this.configService.getMultiSearchTerminologies()).join(","),
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord
@@ -346,6 +346,7 @@ export class GeneralSearchComponent
 
   singleTermSearch() {
     this.configService.setMultiSearch(false);
+    this.configService.setMultiSearchTerminologies(null);
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
@@ -389,9 +390,12 @@ export class GeneralSearchComponent
   changeSearchType(event) {
     console.log("changeSearchType", event);
     this.searchCriteria.type = event;
-    this.resetPaging();
-    this.setQueryUrl();
-    this.performSearch();
+    if (!this.welcomePage) {
+      this.resetPaging();
+      this.setQueryUrl();
+      this.performSearch();
+    }
+
   }
 
   // Perform search
@@ -520,7 +524,7 @@ export class GeneralSearchComponent
         /"/g,
         ""
       );
-      this.searchCriteria.terminology = this.selectedTerminology.terminology;
+      this.searchCriteria.terminology = this.configService.getMultiSearch() ? Array.from(this.configService.getMultiSearchTerminologies()).join(",") : this.selectedTerminology.terminology;
       this.loadedMultipleConcept = false;
       // call search term service
       this.searchTermService
