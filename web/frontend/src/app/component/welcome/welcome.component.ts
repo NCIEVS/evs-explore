@@ -134,6 +134,9 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   inMultiSearchList(term) {
+    if (this.configService.getMultiSearchTerminologies() == null) {
+      return false;
+    }
     const terms = Array.from(this.configService.getMultiSearchTerminologies());
     return terms.includes(term.value.terminology);
   }
