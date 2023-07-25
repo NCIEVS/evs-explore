@@ -107,7 +107,7 @@ export class EvsHeaderComponent implements OnInit {
   }
 
   displayMultiSearchTerms() {
-    return !this.notMultiSearch() && this.configService.getMultiSearchTerminologies() != null && this.configService.getMultiSearchTerminologies().size > 0;
+    return !this.notMultiSearch() && this.configService.getMultiSearchTerminologies() != null && Array.from(this.configService.getMultiSearchTerminologies()).length > 0;
   }
 
   getMultiSearchTerms() {

@@ -326,7 +326,7 @@ export class GeneralSearchComponent
     if (this.configService.getMultiSearch()) {
       this.router.navigate(["/welcome"], {
         queryParams: {
-          terminology: 'multi',
+          terminology: this.configService.getMultiSearchTerminologies() != null && Array.from(this.configService.getMultiSearchTerminologies()).length > 0 ? Array.from(this.configService.getMultiSearchTerminologies()).join(",") : 'multi',
         },
       });
     } else {
