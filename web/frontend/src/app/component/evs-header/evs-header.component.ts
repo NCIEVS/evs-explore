@@ -33,7 +33,7 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
-    if (window.location.search.includes("=multi") || new URLSearchParams(window.location.search).get("terminology").includes(",")) {
+    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology").includes(","))) {
       this.configService.setMultiSearch(true);
     } else {
       this.configService.setMultiSearch(false);
@@ -104,6 +104,14 @@ export class EvsHeaderComponent implements OnInit {
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+  }
+
+  displayMultiSearchTerms() {
+    return !this.notMultiSearch() && this.configService.getMultiSearchTerminologies() != null && this.configService.getMultiSearchTerminologies().size > 0;
+  }
+
+  getMultiSearchTerms() {
+    return [...this.configService.getMultiSearchTerminologies()].join(", ");
   }
 
 }
