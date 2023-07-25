@@ -711,6 +711,9 @@ export class GeneralSearchComponent
         this.selectedTerminology.terminology == "ncim" ? "CUI" : "Code",
         "Synonyms",
       ];
+      if (this.configService.getMultiSearch() && !this.selectedColumns.includes("Terminology")) {
+        this.selectedColumns.push("Terminology");
+      }
       this.displayColumns = [
         ...this.cols.filter(
           (a) =>
