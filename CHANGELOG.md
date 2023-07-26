@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.0.RELEASE] - 2023-05-31
+### Added
+- Feature for browsing/searching/downloading cross-terminology map sets.
+- Concept details now shows "history" information  where available
+- Deleted concepts for "ncim" are now explicitly represented and searchable by code with links to the corresponding active concepts.
+- Additional metadata for remodeled attributes is shown in documentation pages with details of how it is remodeled.
+### Changed
+- Added support for loading smaller concept payloads and "asking for more info"
+- Improved performance of subset loading
+- Bug fixes for pagination, bad links, subset loading issues
+
 ## [1.7.0.RELEASE] - 2023-01-13
 ### Added
 - Created a Page/Table export service for Search Results and Concept Details.

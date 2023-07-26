@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
-import { Router } from '@angular/router';
-import { LoaderService } from 'src/app/service/loader.service';
+import { NavigationEnd, Router } from '@angular/router';
 
 // Header component
 @Component({
@@ -16,12 +15,20 @@ export class EvsHeaderComponent implements OnInit {
   terminology = null;
   firstRoot = '';
   private subscription = null;
+  showTerminologyInfo = false;
 
   constructor(private http: HttpClient,
     private configService: ConfigurationService,
     private conceptService: ConceptDetailService,
-    private loaderService: LoaderService,
-    public router: Router) { }
+    public router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentUrl = event.url;
+        this.showTerminologyInfo = !currentUrl.includes('/mappings');
+      }
+    });
+  }
+
 
   ngOnInit() {
     this.firstRoot = null;

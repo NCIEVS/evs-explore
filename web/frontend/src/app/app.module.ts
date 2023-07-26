@@ -34,6 +34,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { GeneralSearchComponent } from './component/general-search/general-search.component';
 import { ConceptDetailComponent } from './component/concept-detail/concept-detail.component';
 import { ConceptRelationshipComponent } from './component/concept-relationship/concept-relationship.component';
+import { ConceptHistoryComponent } from './component/concept-history/concept-history.component';
 import { ConceptDisplayComponent } from './component/concept-display/concept-display.component';
 import { HierarchyDisplayComponent } from './component/hierarchy-display/hierarchy-display.component';
 import { SubsetsComponent } from './component/subsets/subsets.component';
@@ -87,6 +88,7 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
+import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -103,6 +105,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     GeneralSearchComponent,
     ConceptDetailComponent,
     ConceptRelationshipComponent,
+    ConceptHistoryComponent,
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
     SubsetsComponent,
@@ -123,7 +126,8 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
     ContactUsComponent,
     SubsetDetailsComponent,
     SubsetNcitComponent,
-    EvsApiComponent
+    EvsApiComponent,
+    MappingDetailsComponent
   ],
   imports: [
     NgbModule,

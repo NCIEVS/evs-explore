@@ -36,7 +36,6 @@ export class SubsetsComponent implements OnInit {
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
 
-  urlBase = '/subsets'
   urlTarget = '_top'
 
   constructor(
@@ -227,7 +226,6 @@ export class SubsetsComponent implements OnInit {
     this.expandDisabled = false;
     this.hierarchyData = JSON.parse(JSON.stringify(this.configService.subsets));
     this.sortNcitFirst();
-    this.NCItermFirst();
   }
 
   sortNcitFirst() {
