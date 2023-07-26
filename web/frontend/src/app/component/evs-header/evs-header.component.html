@@ -28,9 +28,8 @@
       <li class="nav-item">
         <a class="nav-link nav-link-list" [routerLink]="['/mappings']" title="Display Mappings">Mappings</a>
       </li>
-      <li class="nav-item" *ngIf="getTerminologyHierarchy()">
-        <a *ngIf="firstRoot != null" class="nav-link nav-link-list"
-          [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
+      <li class="nav-item" *ngIf="getTerminologyHierarchy() && firstRoot != null">
+        <a class="nav-link nav-link-list" [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
           title="Display Concept Hierarchy">Hierarchy</a>
       </li>
       <li class="nav-item dropdown">

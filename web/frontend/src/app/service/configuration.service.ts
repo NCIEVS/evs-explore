@@ -450,14 +450,14 @@ export class ConfigurationService {
   }
 
   getSubsetLink(terminology: string, subsetCode: String) {
-    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
+    var url = '/api/v1/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Concept>res);
   }
 
   getMapsets(include = "minimal") {
-    var url = '/api/v1/mapset?include=' + include;
+    var url = '/api/v1/metadata/mapsets?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -473,7 +473,7 @@ export class ConfigurationService {
   }
 
   getMapsetByCode(code: string, include = "minimal") {
-    var url = '/api/v1/mapset/' + code + '?include=' + include;
+    var url = '/api/v1/metadata/mapset/' + code + '?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -490,7 +490,7 @@ export class ConfigurationService {
 
   getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "", ascending = null, sort = null) {
 
-    var url = '/api/v1/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
+    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
     if (ascending != null) {
       url += '&ascending=' + ascending;
     }

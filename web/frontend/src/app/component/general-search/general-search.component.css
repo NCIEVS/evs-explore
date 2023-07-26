@@ -1,94 +1,89 @@
 .mh400 {
-    min-height: 400px;
+  min-height: 400px;
 }
 
 em {
-    background-color: lightyellow;
+  background-color: lightyellow;
 }
 
 .radio-padding {
-    padding-right: 0.2rem !important;
+  padding-right: 0.2rem !important;
 }
 
 /*toolbar*/
 
 .custom-toolbar {
-    padding: .25em .5em;
-    max-height: 35px;
+  padding: .25em .5em;
+  max-height: 35px;
 }
 
-.custom-toolbar.ui-toolbar {
-    border: 0px;
-    padding: .50em 0em;
-    background: none !important;
+.custom-toolbar.p-toolbar {
+  border: 0px;
+  padding: .50em 0em;
+  background: none !important;
 }
 
 .shared-logo-box {
-    padding: 6px;
-    box-shadow: 0 1px 12px 0 #ecf2f8;
-    border: 2px solid #ecf2f8;
-    border-radius: 3px;
+  padding: 6px;
+  box-shadow: 0 1px 12px 0 #ecf2f8;
+  border: 2px solid #ecf2f8;
+  border-radius: 3px;
 }
 
 .announcements-header {
-    color: #337ab7 !important;
-    font-size: 14px !important;
-    padding-bottom: 0px;
-    border-bottom: 1px solid #ccc !important;
-    margin-bottom: 5px;
-    cursor: pointer;
+  color: #337ab7 !important;
+  font-size: 14px !important;
+  padding-bottom: 0px;
+  border-bottom: 1px solid #ccc !important;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
 
-.ui-multiselect {
-    display: inline-flex;
-    position: relative;
-    width: auto;
-    cursor: pointer;
-}
-
-.ui-button {
-    color: #fff;
-    background-color: #2399e5;
-    border: 1px solid #2399e5;
-    padding-bottom: 1px;
-    margin-left: 2px;
-    margin-right: 2px;
+.p-multiselect {
+  display: inline-flex;
+  position: relative;
+  width: auto;
+  cursor: pointer;
 }
 
 .link {
-    background: none !important;
-    border: none;
-    padding: 0 !important;
-    color: #069;
-    text-decoration: underline;
-    cursor: pointer;
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .divider {
-    width: 5px;
-    height: auto;
-    display: inline-block;
+  width: 5px;
+  height: auto;
+  display: inline-block;
 }
 
 .large-divider {
-    width: 25px;
-    height: auto;
-    display: inline-block;
-}
-
-
-.ui-button {
-    border-radius: 0px !important;
-    background-color: #1c5e86;
-    border-color: #1c5e86;
+  width: 25px;
+  height: auto;
+  display: inline-block;
 }
 
 .terminology-button {
-    border-radius: 0px !important;
-    background-color: #706f6f;
-    border-color: #706f6f;
+  border-radius: 0px !important;
+  background-color: #706f6f;
+  border-color: #706f6f;
 }
 
 .ml3 {
-    margin-left: 3px;
+  margin-left: 3px;
+}
+
+.ui-state-default {
+  border: 1px solid #d6d6d6;
+  background-color: #ffffff;
+  color: #555555;
+}
+
+.p-tooltip {
+  background-color: #555555;
+  color: white;
 }
