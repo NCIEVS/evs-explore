@@ -58,15 +58,12 @@
               to
               its browser home page</p>
             <p *ngIf="configService.getMultiSearch()" style="margin-bottom: 0.5em">
-              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring" style="border:0;"
-                (click)="selectAllTerms(false)" pTooltip="Click to select all terminologies except NCIM"
-                label="All But NCIM" tooltipPosition="bottom"></button>
-              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring"
-                style="border:0; margin-left:3px" (click)="selectAllTerms()"
-                pTooltip="Click to select all terminologies" label="Select All" tooltipPosition="bottom"></button>
-              <button styleClass="ui-button-info" type="button" pButton class="ui-button-coloring"
-                style="border:0; margin-left:3px" (click)="clearAllTerms()"
-                pTooltip="Click to de-select all terminologies" label="Clear" tooltipPosition="bottom"></button>
+              <a class="multiSearchButtons" (click)="selectAllTerms(false)"
+                pTooltip="Click to select all terminologies except NCIM" tooltipPosition="bottom">All But NCIM</a>
+              <a class="multiSearchButtons" (click)="selectAllTerms()" pTooltip="Click to select all terminologies"
+                tooltipPosition="bottom" style="margin-left:3px">Select All</a>
+              <a class="multiSearchButtons" (click)="clearAllTerms()" pTooltip="Click to de-select all terminologies"
+                tooltipPosition="bottom" style="margin-left:3px">Clear</a>
             </p>
             <div *ngFor="let term of allTerminologies">
               <label>

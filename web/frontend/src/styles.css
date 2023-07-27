@@ -291,3 +291,13 @@ body .alert-info {
   /* Adjust this value to set the number of characters before truncation */
   cursor: pointer;
 }
+
+.multiSearchButtons {
+  color: #007bff !important;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.multiSearchButtons:hover {
+  text-decoration: underline !important;
+}
