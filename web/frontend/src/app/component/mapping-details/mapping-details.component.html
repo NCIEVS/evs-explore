@@ -46,7 +46,7 @@
               <th class="mappingTitle sortable" style="cursor: pointer" id="sourceName"
                 (click)="search($event, 'sourceName')">Source Name</th>
               <th class="mappingTitle">Relationship</th>
-              <th class="mappingTitle">Map Rank</th>
+              <th class="mappingTitle">Group / Rank</th>
               <th class="mappingTitle">Target</th>
               <th class="mappingTitle sortable" style="cursor: pointer" id="targetCode"
                 (click)="search($event, 'targetCode')">Target Code</th>
@@ -64,7 +64,7 @@
               </td>
               <td>{{ mapping.sourceName }}</td>
               <td>{{ mapping.type }}</td>
-              <td>{{ mapping.rank }}</td>
+              <td><span *ngIf="mapping.group != null">{{ mapping.group}} / </span>{{ mapping.rank }}</td>
               <td>{{ mapping.targetTerminology }}</td>
               <td><a *ngIf="targetTermSaved" [routerLink]="[conceptUrlBase, targetTerm, mapping.targetCode]"
                   target='_top'>{{ mapping.targetCode }}</a><span *ngIf="!targetTermSaved">{{

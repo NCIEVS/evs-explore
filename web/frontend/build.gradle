@@ -4,10 +4,10 @@ plugins {
 	//id "com.moowork.node" version "1.2.0"
 }
 
-version = '1.8.0.RELEASE'
+version = '1.9.0.RELEASE'
 
 node {
-  version = '18.16.0'
+  version = '16.14.1'
   npmVersion = '9.5.1'
   download = true
   workDir = file("${project.buildDir}/node")
