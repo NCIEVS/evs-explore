@@ -60,10 +60,12 @@
             <p *ngIf="configService.getMultiSearch()" style="margin-bottom: 0.5em">
               <a class="multiSearchButtons" (click)="selectAllTerms(false)"
                 pTooltip="Click to select all terminologies except NCIM" tooltipPosition="bottom">All But NCIM</a>
+              <span class="separator"></span>
               <a class="multiSearchButtons" (click)="selectAllTerms()" pTooltip="Click to select all terminologies"
-                tooltipPosition="bottom" style="margin-left:3px">Select All</a>
+                tooltipPosition="bottom">Select All</a>
+              <span class="separator"></span>
               <a class="multiSearchButtons" (click)="clearAllTerms()" pTooltip="Click to de-select all terminologies"
-                tooltipPosition="bottom" style="margin-left:3px">Clear</a>
+                tooltipPosition="bottom">Clear</a>
             </p>
             <div *ngFor="let term of allTerminologies">
               <label>

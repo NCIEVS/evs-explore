@@ -295,9 +295,29 @@ body .alert-info {
 .multiSearchButtons {
   color: #007bff !important;
   cursor: pointer;
-  margin-right: 10px;
 }
 
 .multiSearchButtons:hover {
   text-decoration: underline !important;
+}
+
+.hyperlink:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #007bff;
+}
+
+.separator {
+  display: inline-block;
+  width: 1px;
+  font-weight: 700;
+  height: 25px;
+  background-color: grey;
+  margin: 0 10px;
+  bottom: -5.5px;
+  position: relative;
 }
