@@ -20,8 +20,9 @@
       <li *ngIf="showTerminologyInfo && notMultiSearch()" class="nav-item version-info">
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
-      <li *ngIf="displayMultiSearchTerms()" class="nav-item version-info">
-        <span class="nav-link-list">Terminologies: {{ getMultiSearchTerms() }}</span>
+      <li *ngIf="displayMultiSearchTerms()" class="nav-item version-info" style="max-width:30em">
+        <span class="nav-link-list" id="truncateTermList">
+          Terminologies: {{ getMultiSearchTerms() }}</span>
       </li>
 
       <li class="nav-item" *ngIf="getTerminologySubset() && notMultiSearch()">

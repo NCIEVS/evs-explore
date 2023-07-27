@@ -282,3 +282,12 @@ body .alert-info {
 .modal-backdrop.fade.show {
   z-index: 1050 !important
 }
+
+#truncateTermList {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  /* Adjust this value to set the number of characters before truncation */
+  cursor: pointer;
+}

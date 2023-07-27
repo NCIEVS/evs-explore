@@ -17,6 +17,7 @@ export class EvsHeaderComponent implements OnInit {
   private subscription = null;
   showTerminologyInfo = false;
   currentUrl = "";
+  truncated: boolean = true;
 
   constructor(private http: HttpClient,
     private configService: ConfigurationService,
@@ -111,7 +112,16 @@ export class EvsHeaderComponent implements OnInit {
   }
 
   getMultiSearchTerms() {
-    return [...this.configService.getMultiSearchTerminologies()].join(", ");
+    var multiSearchTerms = [];
+    this.configService.getMultiSearchTerminologies().forEach(term => {
+      var fullTerm = this.configService.getTerminologyByName(term);
+      multiSearchTerms.push(fullTerm.metadata.uiLabel.replace(/\:.*/, ""));
+    });
+    return multiSearchTerms.join(", ");
+  }
+
+  toggleTruncation() {
+    this.truncated = !this.truncated;
   }
 
 }
