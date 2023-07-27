@@ -292,6 +292,14 @@ body .alert-info {
   cursor: pointer;
 }
 
+.multiTermSelect {
+  margin-right: 5px;
+  height: 15px;
+  width: 15px;
+  bottom: -1px;
+  position: relative;
+}
+
 .multiSearchButtons {
   color: #007bff !important;
   cursor: pointer;
