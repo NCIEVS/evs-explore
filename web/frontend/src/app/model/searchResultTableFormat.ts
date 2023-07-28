@@ -71,8 +71,8 @@ export class SearchResultTableFormat {
 
         const data = new TableData();
         data.column1 = searchResult.concepts[i].code;
-        const term = searchResult.concepts[i]?.terminology;
-        data.terminology = term ? configService.getTerminologyByName(term).metadata.uiLabel.replace(/\:.*/, "") : "";
+        data.termShorthand = searchResult.concepts[i]?.terminology;
+        data.terminology = data.termShorthand ? configService.getTerminologyByName(data.termShorthand).metadata.uiLabel.replace(/\:.*/, "") : "";
         data.retiredConcept = !searchResult.concepts[i].active ? 'yes' : 'no';
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;

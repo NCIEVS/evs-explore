@@ -628,7 +628,7 @@ export class GeneralSearchComponent
   exportCodeFormatter(concept, displayColumns) {
     var conceptFormatString = "";
     if (displayColumns.includes("Terminology"))
-      conceptFormatString += concept.terminology + "\t";
+      conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, "") + "\t";
     if (displayColumns.includes("Code"))
       conceptFormatString += concept.code + "\t";
     if (displayColumns.includes("Preferred Name"))
