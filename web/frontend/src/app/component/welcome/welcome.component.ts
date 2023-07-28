@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { ActivatedRoute } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -27,7 +28,8 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private configService: ConfigurationService,
     private sanitizer: DomSanitizer,
     private titleService: Title,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private appComponent: AppComponent) {
   }
 
   // On init, set up a terminology change subscription
@@ -121,6 +123,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.selectedMultiTerminologies.has(normalizedTerm)) {
       this.selectedMultiTerminologies.delete(normalizedTerm);
     } else {
+      this.appComponent.checkLicenseText(normalizedTerm);
       this.selectedMultiTerminologies.add(normalizedTerm);
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
