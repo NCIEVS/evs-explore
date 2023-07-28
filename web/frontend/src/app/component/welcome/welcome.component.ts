@@ -58,6 +58,9 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         // filter for list of terminologies presented
         this.allTerminologies = this.allTerminologies.filter(this.configService.terminologySearchListFilter);
+        if (this.configService.getMultiSearch()) {
+          this.allTerminologies.sort(this.ncitNcimMultiSearchSort);
+        }
       });
   }
 
@@ -75,6 +78,14 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.titleService.setTitle('EVS Explore');
     this.setWelcomeText(this.configService.getTerminologyName());
+  }
+
+  ncitNcimMultiSearchSort(a, b) {
+    if (a.value.terminology == "ncit") return -1;
+    if (b.value.terminology == "ncit") return 1;
+    if (a.value.terminology == "ncim") return -1;
+    if (b.value.terminology == "ncim") return 1;
+    return 0;
   }
 
   // Sets the welcome text
