@@ -57,9 +57,10 @@
                   tooltipPosition="bottom"></button>
               </span>
               <div class="large-divider"></div>
-              <span><button type="button" pButton label="Export" class="ui-button-coloring" style="border:0"
-                  icon="fa fa-download" pTooltip="Click to download search results" (click)="exportSearch();"
-                  [disabled]="totalRecords == 0"></button></span>
+              <span style="max-width: 400px"><button type="button" pButton label="Export" class="ui-button-coloring"
+                  style="border:0" icon="fa fa-download" pTooltip="Click to download search results"
+                  (click)="exportSearch();" [disabled]="totalRecords == 0 || !configService.canExport()"></button>
+              </span>
             </div>
           </div>
 
@@ -97,7 +98,7 @@
 
 
           </div>
-          <div class="col-sm-6" style="padding-top:3px;">
+          <div class="col-sm-2" style="padding-top:3px;">
             <p-chips (keydown)="onChipsKeyEvent($event)"
               *ngIf="searchCriteria.synonymSource && searchCriteria.synonymSource.length > 0"
               [(ngModel)]="searchCriteria.synonymSource" (onRemove)="onSourceDeselect($event)" addOnTab="false"
@@ -107,6 +108,9 @@
               </ng-template>
             </p-chips>
           </div>
+          <div class="col-sm-4"
+            *ngIf="!configService.canExport() && configService.getMultiSearchTerminologies() != null">
+            Restricted terminologies: {{ configService.getRestrictedTerms() }}</div>
         </div>
       </div>
 
