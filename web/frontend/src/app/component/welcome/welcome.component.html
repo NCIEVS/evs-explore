@@ -49,7 +49,7 @@
               <a class="multiSearchButtons" (click)="clearAllTerms()" pTooltip="Click to de-select all terminologies"
                 tooltipPosition="bottom">Clear</a>
             </p>
-            <div *ngFor="let term of allTerminologies">
+            <div *ngFor="let term of allTerminologies" style="margin-left: 5px">
               <label>
                 <input id="{{term.value.terminology}}" class="multiTermSelect" type="checkbox"
                   (change)="onChangeMultiSelect(term)" name="{{term.value.terminology}}"
