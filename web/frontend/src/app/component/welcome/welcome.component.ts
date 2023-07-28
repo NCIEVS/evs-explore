@@ -34,12 +34,12 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.route.queryParams
       .subscribe(params => {
-        if (params.size > 0 && params.terminology != "multi" && !params.terminology.includes(",")) {
+        if (Object.keys(params).length > 0 && params.terminology != "multi" && !params.terminology.includes(",")) {
           this.subscription = this.configService.getSubject().subscribe(terminology => {
             this.setWelcomeText(terminology.terminology);
           });
           this.configService.setMultiSearch(false);
-        } else if (params.size > 0) {
+        } else if (Object.keys(params).length > 0) {
           if (params.terminology.includes(",")) {
             // populating saved terminologies in url
             params.terminology.split(",").forEach(term => {
