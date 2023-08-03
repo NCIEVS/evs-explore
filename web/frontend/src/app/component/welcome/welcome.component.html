@@ -129,20 +129,37 @@
               </tr>
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
                     <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
 
                     NCI Thesaurus</a>:
                   Reference terminology for NCI, NCI Metathesaurus and NCI
                   informatics
                   infrastructure.
+                </td>
+              </tr>
+              <tr valign="top">
+                <td>
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top" alt="EVS"
+                    class="regular-link">
+                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS" style="border:0" />
+                  </a>
+                </td>
+                <td width="3px;"></td>
+                <td class="textbody" valign="top">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top"
+                    alt="NCI Thesaurus" class="regular-link">
+
+                    Multiple Terminology Search</a>:
+                  Search through a number of medical terminologies including NCI Thesaurus, NCI Metathesaurus, MedDRA,
+                  and more.
                 </td>
               </tr>
               <tr valign="top">
