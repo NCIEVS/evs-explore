@@ -114,6 +114,9 @@ export class ConfigurationService {
   }
 
   getTerminologyByName(name: string) { // reverse search terminology by short name
+    if (name == "multi") {
+      return { terminology: "multi" };
+    }
     var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {

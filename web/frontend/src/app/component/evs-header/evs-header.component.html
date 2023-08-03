@@ -13,8 +13,7 @@
   <div *ngIf="terminology" id="nciCollapse">
     <ul class="menu nav-menu nav-item-title">
       <li class="nav-item">
-        <a class="nav-link nav-link-list" [routerLink]="['/welcome']"
-          [queryParams]="{terminology: terminology?.terminology}" title="Home"><i class="fa fa-home"></i> Home
+        <a class="nav-link nav-link-list" [routerLink]="['/welcome']" title="Home"><i class="fa fa-home"></i> Home
         </a>
       </li>
       <li *ngIf="showTerminologyInfo && notMultiSearch()" class="nav-item version-info">
