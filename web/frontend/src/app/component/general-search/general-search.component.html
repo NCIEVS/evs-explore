@@ -38,7 +38,7 @@
                   pTooltip="Click to start new search" label="New Search" tooltipPosition="bottom"></button></span>
 
               <div class="large-divider"></div>
-              <p-dropdown *ngIf="!configService.getMultiSearch()" styleClass="ui-button-info" [options]="termsAll"
+              <p-dropdown class="term-dropdown" styleClass="ui-button-info" [options]="termsAll"
                 [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
                 <ng-template let-terminology pTemplate="item">
                   <div [title]="terminology.description">
@@ -46,16 +46,6 @@
                   </div>
                 </ng-template>
               </p-dropdown>
-              <span>
-                <button *ngIf="!configService.getMultiSearch()" styleClass="ui-button-info" type="button" pButton
-                  class="ui-button-coloring" style="border:0; margin-left:3px" (click)="multiTermSearch()"
-                  pTooltip="Click to start multi-terminology search" label="Multi-Term Search"
-                  tooltipPosition="bottom"></button>
-                <button *ngIf="configService.getMultiSearch()" styleClass="ui-button-info" type="button" pButton
-                  class="ui-button-coloring" style="border:0; margin-left:3px" (click)="singleTermSearch()"
-                  pTooltip="Click to start single-terminology search" label="Single-Term Search"
-                  tooltipPosition="bottom"></button>
-              </span>
               <div class="large-divider"></div>
               <span style="max-width: 400px"><button type="button" pButton label="Export" class="ui-button-coloring"
                   style="border:0" icon="fa fa-download" pTooltip="Click to download search results"
@@ -206,14 +196,14 @@
                          <i class="fa fa-external-link"></i>
                       </a>-->
                       <a target="_top" class="ml3"
-                        [routerLink]="['/concept', selectedTerminology.terminology, rowData['column1'] ]"
+                        [routerLink]="['/concept', rowData['termShorthand'], rowData['column1'] ]"
                         [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}<span
                           *ngIf="rowData.retiredConcept === 'yes'">
                           (Retired Concept)</span></a>
                     </span>
                     <span pTooltip="Open concept details" *ngSwitchCase="'CUI'">
                       <a target="_top" class="ml3"
-                        [routerLink]="['/concept', selectedTerminology.terminology, rowData['column1'] ]"
+                        [routerLink]="['/concept', rowData['termShorthand'], rowData['column1'] ]"
                         [queryParams]="getSelectedSourcesQueryParam()">{{rowData[col.field]}}</a>
                     </span>
                     <span *ngSwitchCase="'Preferred Name'"><span [innerHTML]="rowData['displayName']"></span>

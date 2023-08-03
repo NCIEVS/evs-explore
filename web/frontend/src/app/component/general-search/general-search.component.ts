@@ -154,6 +154,14 @@ export class GeneralSearchComponent
         description: terminology.metadata.uiLabel.replace(/.*?\: /, ""),
       };
     });
+    // add multi terminology option to dropdown
+    this.termsAll.push(
+      {
+        label: "Multi-Terminology",
+        value: { terminology: "multi" },
+        description: "Search Multiple Terminologies"
+      }
+    )
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
     if (this.configService.getMultiSearch()) {
@@ -183,6 +191,10 @@ export class GeneralSearchComponent
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
       setTimeout(() => this.performSearch());
+    }
+    if (this.configService.getMultiSearch()) {
+      this.selectedTerminology =
+        { terminology: 'multi' };
     }
   }
 
@@ -424,9 +436,11 @@ export class GeneralSearchComponent
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
+    if (terminology.value.terminology != "multi") {
+      this.configService.setTerminology(terminology.value);
+      this.loadAllSources();
+    }
     this.searchCriteria.term = "";
-    this.configService.setTerminology(terminology.value);
-    this.loadAllSources();
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,

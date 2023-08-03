@@ -87,3 +87,7 @@ em {
   background-color: #555555;
   color: white;
 }
+
+.term-dropdown [aria-label="Multi-Terminology"].p-dropdown-item {
+  border-top: 1px solid black;
+}
