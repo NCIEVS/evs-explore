@@ -17,7 +17,7 @@ em {
   max-height: 35px;
 }
 
-.custom-toolbar.ui-toolbar {
+.custom-toolbar.p-toolbar {
   border: 0px;
   padding: .50em 0em;
   background: none !important;
@@ -31,25 +31,22 @@ em {
 }
 
 .announcements-header {
-  color: #337ab7!important;
-  font-size: 14px!important;
+  color: #337ab7 !important;
+  font-size: 14px !important;
   padding-bottom: 0px;
-  border-bottom: 1px solid #ccc!important;
+  border-bottom: 1px solid #ccc !important;
   margin-bottom: 5px;
   cursor: pointer;
 }
 
-.ui-multiselect {
+.p-multiselect {
   display: inline-flex;
   position: relative;
   width: auto;
   cursor: pointer;
 }
 
-.ui-button {
-  color: #fff;
-  background-color: #2399e5;
-  border: 1px solid #2399e5;
+.p-button {
   padding-bottom: 1px;
   margin-left: 2px;
   margin-right: 2px;

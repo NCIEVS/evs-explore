@@ -248,7 +248,7 @@ export class HierarchyDisplayComponent implements OnInit {
     // console.log('scroll to selection', selectedNode);
     let index = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement.querySelectorAll(
-      '.ui-treetable-tbody>tr'
+      '.p-treetable-tbody>tr'
     );
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
@@ -259,11 +259,11 @@ export class HierarchyDisplayComponent implements OnInit {
     }
     if (
       this.hierarchyTable.el.nativeElement.querySelectorAll(
-        '.ui-treetable-tbody>tr'
+        '.p-treetable-tbody>tr'
       )[index] !== undefined
     ) {
       this.hierarchyTable.el.nativeElement
-        .querySelectorAll('.ui-treetable-tbody>tr')
+        .querySelectorAll('.p-treetable-tbody>tr')
       [index].scrollIntoView({
         behavior: 'smooth',
         block: 'center',

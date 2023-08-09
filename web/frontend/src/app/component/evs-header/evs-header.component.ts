@@ -32,6 +32,7 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
+    this.configService.setConfigFromQuery(window.location.search);
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
@@ -41,7 +42,7 @@ export class EvsHeaderComponent implements OnInit {
         // Look up the first root code
         this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
           // if first root is still null then set it
-          if (this.firstRoot == null) {
+          if (this.firstRoot == null && Object.values(response).length > 0) {
             this.firstRoot = response[0].code;
           }
         });
@@ -59,7 +60,8 @@ export class EvsHeaderComponent implements OnInit {
         if (this.terminology.metadata.hierarchy) {
           // Look up the first root code
           this.conceptService.getRoots(this.terminology.terminology).subscribe(response => {
-            this.firstRoot = response[0].code;
+            if (Object.values(response).length > 0)
+              this.firstRoot = response[0].code;
           });
         }
       }

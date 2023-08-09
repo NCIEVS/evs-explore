@@ -1,8 +1,8 @@
-<div *ngIf="concept && concept.history.length > 0 && !showTable && !concept.retired" class="show-history-link">
+<div *ngIf="concept && concept.history.length > 0 && !showTable && concept.active" class="show-history-link">
   <a (click)="showTable=true">Show History</a>
 </div>
 
-<div *ngIf="concept && concept.history.length > 0 && (showTable || concept.retired)">
+<div *ngIf="concept && concept.history.length > 0 && (showTable || !concept.active)">
   <p-panel [toggleable]="true" [collapsed]="collapsed">
     <p-header class="bold-heading" id="historyHeader">
       History (
@@ -45,12 +45,18 @@
             <td *ngIf="!item.ct" class="w-20">{{ item.code }}</td>
             <td class="w-20">{{ item.action }}</td>
             <td class="w-20">{{ item.date }}</td>
-            <td class="w-20">{{ item.replacementCode }}</td>
+            <td class="w-20">
+              <span *ngIf="item.replacementCode != ''">
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]"
+                  [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ item.replacementCode }}
+                </a>
+              </span>
+            </td>
 
             <td class="w-40">
               <span *ngIf="item.replacementCode != '' && item.replacementName != ''">
-                <a [routerLink]="[urlBase, terminology, item.replacementCode]" [queryParams]="getSelectedSourcesQueryParam()"
-                  [target]="urlTarget">{{ item.replacementName }} 
+                <a [routerLink]="[urlBase, terminology, item.replacementCode]"
+                  [queryParams]="getSelectedSourcesQueryParam()" [target]="urlTarget">{{ item.replacementName }}
                 </a>
               </span>
             </td>

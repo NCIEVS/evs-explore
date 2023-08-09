@@ -68,7 +68,7 @@ npm install -g @angular/cli@latest
 ```
 
 ### Supported Browsers
-The application has been specifically tested on the following browsers:
+The application has been specifically tested on the following browsers:The application has been specifically tested on the following browsers:
 
 * Google Chrome
 * Mozilla Firefox

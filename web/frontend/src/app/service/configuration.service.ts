@@ -450,7 +450,7 @@ export class ConfigurationService {
   }
 
   getSubsetLink(terminology: string, subsetCode: String) {
-    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
+    var url = '/api/v1/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
     return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => <Concept>res);

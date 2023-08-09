@@ -53,7 +53,7 @@ export class Concept {
   uniqDefs: any[];
   uniqHistory: any[];
   uniqProps: any[];
-  retired: boolean = false;
+  active: boolean = true;
 
   constructor(input: any, configService: ConfigurationService) {
     this.highlight = input.highlight;
@@ -65,7 +65,11 @@ export class Concept {
     this.subsetLink = input.subsetLink;
     this.synonyms = new Array();
     this.properties = new Array();
-    this.retired = false;
+    this.active = true;
+
+    if (input.active == false) {
+      this.active = false;
+    }
 
     if (input.synonyms) {
       for (let i = 0; i < input.synonyms.length; i++) {
@@ -110,11 +114,6 @@ export class Concept {
         this.history.push(new History(input.history[i]));
       }
       this.historyCt = this.getCt(this.history);
-
-      // this should catch things that are only historical
-      if (input.history.length > 0 && this.synonymsCt == 0) {
-        this.retired = true;
-      }
     }
 
     if (input.properties) {
