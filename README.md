@@ -37,8 +37,38 @@ cd web
 java -Xmx4096M -jar build/libs/evsexplore-*.war
 ```
 
+### Upgrading to latest
+
+This should work on Linux and the Mac.
+
+```
+npm install -g n
+n lts
+```
+
+Windows, run PowerShell as Administrator:
+
+To update NPM:
+
+```
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+npm install -g npm-windows-upgrade
+npm-windows-upgrade
+```
+
+To update Node/ng, first install `nvm`:
+
+```
+# node version (google "windows install nvm" for how to install "nvm")
+nvm install 18.16.0
+nvm use 18.16.0
+# ng version
+npm uninstall -g @angular/cli
+npm install -g @angular/cli@latest
+```
+
 ### Supported Browsers
-The application has been specifically tested on the following browsers:
+The application has been specifically tested on the following browsers:The application has been specifically tested on the following browsers:
 
 * Google Chrome
 * Mozilla Firefox
