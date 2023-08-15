@@ -157,7 +157,7 @@ export class GeneralSearchComponent
     // add multi terminology option to dropdown
     this.termsAll.push(
       {
-        label: "Multi-Terminology",
+        label: "Multi-Terminology Search",
         value: { terminology: "multi" },
         description: "Search Multiple Terminologies"
       }
@@ -217,7 +217,7 @@ export class GeneralSearchComponent
       this.configService.setTerminology(this.selectedTerminology);
 
       this.loadAllSources();
-    } else if (this.queryParams.get("terminology").includes(",")) {
+    } else if (this.queryParams.size > 0 && this.queryParams.get("terminology").includes(",")) {
       // set multiSearch terminologies only if we're doing a multi search
       this.configService.setMultiSearchTerminologies(this.queryParams.get("terminology").split(","));
 
@@ -543,6 +543,7 @@ export class GeneralSearchComponent
         ""
       );
       this.searchCriteria.terminology = this.configService.getMultiSearch() ? Array.from(this.configService.getMultiSearchTerminologies()).join(",") : this.selectedTerminology.terminology;
+      this.searchCriteria.export = false;
       this.loadedMultipleConcept = false;
       // call search term service
       this.searchTermService
