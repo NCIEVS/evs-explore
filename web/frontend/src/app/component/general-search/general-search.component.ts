@@ -157,7 +157,7 @@ export class GeneralSearchComponent
     // add multi terminology option to dropdown
     this.termsAll.push(
       {
-        label: "Multi-Terminology Search",
+        label: "Multiple Terminology Search",
         value: { terminology: "multi" },
         description: "Search Multiple Terminologies"
       }
