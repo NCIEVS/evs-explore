@@ -37,9 +37,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.route.queryParams
       .subscribe(params => {
         if (Object.keys(params).length > 0 && params.terminology != "multi" && !params.terminology.includes(",")) {
-          this.subscription = this.configService.getSubject().subscribe(terminology => {
-            this.setWelcomeText(terminology.terminology);
-          });
+          this.setWelcomeText(params.terminology);
           this.configService.setMultiSearch(false);
         } else if (Object.keys(params).length > 0) {
           if (params.terminology.includes(",")) {
