@@ -155,7 +155,7 @@ export class GeneralSearchComponent
       };
     });
     // add multi terminology option to dropdown
-    this.termsAll.push(
+    this.termsAll.unshift(
       {
         label: "Multiple Terminology Search",
         value: { terminology: "multi" },

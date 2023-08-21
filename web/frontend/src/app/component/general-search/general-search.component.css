@@ -88,6 +88,6 @@ em {
   color: white;
 }
 
-.term-dropdown [aria-label="Multi-Terminology"].p-dropdown-item {
-  border-top: 1px solid black;
+.term-dropdown [aria-label="Multiple Terminology Search"].p-dropdown-item {
+  border-bottom: 1px solid black;
 }
