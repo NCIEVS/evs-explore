@@ -45,23 +45,6 @@ export class ConfigurationService {
     return this.MAX_EXPORT_SIZE;
   }
 
-  canExport(): boolean {
-    if (!this.getMultiSearch()) {
-      return false;
-    }
-    const terms = this.getMultiSearchTerminologies();
-    if (terms == null) {
-      return false;
-    }
-    var licenseTerm = false;
-    terms.forEach(term => {
-      const terminology = this.getTerminologyByName(term);
-      if (terminology.metadata.licenseText) {
-        licenseTerm = true;
-      }
-    });
-    return !licenseTerm;
-  }
 
   getRestrictedTerms() {
     var restrictedTerms = []

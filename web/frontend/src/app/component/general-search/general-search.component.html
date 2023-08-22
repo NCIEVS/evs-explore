@@ -49,7 +49,7 @@
               <div class="large-divider"></div>
               <span style="max-width: 400px"><button type="button" pButton label="Export" class="ui-button-coloring"
                   style="border:0" icon="fa fa-download" pTooltip="Click to download search results"
-                  (click)="exportSearch();" [disabled]="totalRecords == 0 || !configService.canExport()"></button>
+                  (click)="exportSearch();" [disabled]="totalRecords == 0"></button>
               </span>
             </div>
           </div>
@@ -98,9 +98,6 @@
               </ng-template>
             </p-chips>
           </div>
-          <div class="col-sm-4"
-            *ngIf="!configService.canExport() && configService.getMultiSearchTerminologies() != null">
-            Restricted terminologies: {{ configService.getRestrictedTerms() }}</div>
         </div>
       </div>
 
