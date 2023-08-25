@@ -87,3 +87,7 @@ em {
   background-color: #555555;
   color: white;
 }
+
+.term-dropdown [aria-label="Multiple Terminology Search"].p-dropdown-item {
+  border-bottom: 1px solid black;
+}

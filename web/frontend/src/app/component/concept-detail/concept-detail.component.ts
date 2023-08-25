@@ -20,6 +20,7 @@ export class ConceptDetailComponent implements OnInit {
   externalLinks = new Map(
     [
       ['CAS_Registry', 'https://chem.nlm.nih.gov/chemidplus/rn/'],
+      ['caDSR', 'https://cadsr.cancer.gov/onedata/dmdirect/NIH/NCI/CO/CDEDD?filter=Administered%20Item%20%28Data%20Element%20CO%29.ConceptSearch.CNCPT_CONCAT='],
       ['CHEBI_ID', 'http://www.ebi.ac.uk/chebi/advancedSearchFT.do?searchString='],
       ['ClinVar_Variation_ID', 'https://www.ncbi.nlm.nih.gov/clinvar/variation/'],
       ['EntrezGene_ID', 'http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&amp;cmd=ShowDetailView&amp;TermToSearch='],
@@ -82,6 +83,10 @@ export class ConceptDetailComponent implements OnInit {
 
       });
     }
+  }
+
+  getcaDSRLink(code) {
+    return this.externalLinks.get('caDSR') + code;
   }
 
   conceptIsSubsetHelper(concept): boolean {

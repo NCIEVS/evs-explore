@@ -22,6 +22,8 @@ export class ConfigurationService {
   private subject: Subject<any>;
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
+  private multiSearch = false;
+  private multiSearchTerminologies: Set<string> = null;
   public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
@@ -41,6 +43,19 @@ export class ConfigurationService {
 
   getMaxExportSize() {
     return this.MAX_EXPORT_SIZE;
+  }
+
+
+  getRestrictedTerms() {
+    var restrictedTerms = []
+    const terms = this.getMultiSearchTerminologies();
+    terms.forEach(term => {
+      const terminology = this.getTerminologyByName(term);
+      if (terminology.metadata.licenseText) {
+        restrictedTerms.push(this.getTerminologyByName(term).metadata.uiLabel.replace(/\:.*/, ""));
+      }
+    });
+    return restrictedTerms.join(", ")
   }
 
   getTerminology() {
@@ -81,7 +96,10 @@ export class ConfigurationService {
     return false;
   }
 
-  getTerminologyByName(name) { // reverse search terminology by short name
+  getTerminologyByName(name: string) { // reverse search terminology by short name
+    if (name == "multi") {
+      return { terminology: "multi" };
+    }
     var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {
@@ -113,6 +131,14 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
+  getMultiSearchTerminologies() {
+    return this.multiSearchTerminologies;
+  }
+
+  setMultiSearchTerminologies(terminologies) {
+    this.multiSearchTerminologies = terminologies;
+  }
+
   // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
@@ -141,7 +167,8 @@ export class ConfigurationService {
       this.code = paramMap.get('code');
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
-    if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
+    // don't change terminology on multi-search
+    if ((paramMap.get('terminology') != null && !this.getMultiSearch()) || (paramMap.get('code') != null && !paramMap.get('terminology'))) {
       var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>
@@ -217,6 +244,14 @@ export class ConfigurationService {
       this.terminology = arr[0];
     }
 
+  }
+
+  getMultiSearch() {
+    return this.multiSearch;
+  }
+
+  setMultiSearch(multiSearch) {
+    this.multiSearch = multiSearch;
   }
 
   getCode(): string {
@@ -457,7 +492,7 @@ export class ConfigurationService {
   }
 
   getMapsets(include = "minimal") {
-    var url = '/api/v1/metadata/mapsets?include=' + include;
+    var url = '/api/v1/mapset?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -473,7 +508,7 @@ export class ConfigurationService {
   }
 
   getMapsetByCode(code: string, include = "minimal") {
-    var url = '/api/v1/metadata/mapset/' + code + '?include=' + include;
+    var url = '/api/v1/mapset/' + code + '?include=' + include;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
@@ -490,7 +525,7 @@ export class ConfigurationService {
 
   getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "", ascending = null, sort = null) {
 
-    var url = '/api/v1/metadata/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
+    var url = '/api/v1/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
     if (ascending != null) {
       url += '&ascending=' + ascending;
     }

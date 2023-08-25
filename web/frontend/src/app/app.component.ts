@@ -81,8 +81,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Check license text and show banner
-  checkLicenseText() {
-    let terminology = this.configService.getTerminology();
+  checkLicenseText(term = null) {
+    let terminology = null;
+    if (term != null) {
+      terminology = this.configService.getTerminologyByName(term);
+    }
+    else {
+      terminology = this.configService.getTerminology();
+    }
     if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License')) {
       this.licenseText = terminology.metadata.licenseText;
       var modalref = this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title' });

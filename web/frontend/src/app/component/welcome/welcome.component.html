@@ -35,7 +35,35 @@
               </form>
             </div>
           </ng-template>
-          <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+          <div *ngIf="getMultiSearch() == true else singleSearch">
+            <p style="margin-bottom: 0.5em">Select NCI hosted terminologies to search, or click on a source name to go
+              to
+              its browser home page</p>
+            <p *ngIf="getMultiSearch()" style="margin-bottom: 0.5em">
+              <a class="multiSearchButtons" (click)="selectAllTerms(false)"
+                pTooltip="Click to select all terminologies except NCIM" tooltipPosition="bottom">All But NCIM</a>
+              <span class="separator"></span>
+              <a class="multiSearchButtons" (click)="selectAllTerms()" pTooltip="Click to select all terminologies"
+                tooltipPosition="bottom">Select All</a>
+              <span class="separator"></span>
+              <a class="multiSearchButtons" (click)="clearAllTerms()" pTooltip="Click to de-select all terminologies"
+                tooltipPosition="bottom">Clear</a>
+            </p>
+            <div *ngFor="let term of allTerminologies" style="margin-left: 5px">
+              <label style="white-space: nowrap">
+                <input id="{{term.value.terminology}}" class="multiTermSelect" type="checkbox"
+                  (change)="onChangeMultiSelect(term)" name="{{term.value.terminology}}"
+                  [checked]="inMultiSearchList(term)">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{
+                  term.label
+                  }}</a>: {{
+                term.description }} <b>({{ term.value.version }})</b>
+              </label>
+            </div>
+          </div>
+          <ng-template #singleSearch>
+            <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+          </ng-template>
           <div *ngIf="!welcomeText" [innerHTML]="boilerPlateWelcomeText"></div>
         </div>
         <div class="col-md-4">
@@ -85,14 +113,14 @@
               -->
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
                     alt="NCI Metathesaurus" class="regular-link">
-                    <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" border="0" />
+                    <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" style="border:0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/metathesaurus-downloads" target="_blank"
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
                     alt="NCI Metathesaurus" class="regular-link">
 
                     NCI Metathesaurus</a>:
@@ -101,20 +129,37 @@
               </tr>
               <tr valign="top">
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
                     <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0" />
                   </a>
                 </td>
                 <td width="3px;"></td>
                 <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/evs-download/thesaurus-downloads" target="_blank" alt="NCI Thesaurus"
-                    class="regular-link">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                    alt="NCI Thesaurus" class="regular-link">
 
                     NCI Thesaurus</a>:
                   Reference terminology for NCI, NCI Metathesaurus and NCI
                   informatics
                   infrastructure.
+                </td>
+              </tr>
+              <tr valign="top">
+                <td>
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top" alt="multi"
+                    class="regular-link">
+                    <img src="assets/images/multiSearch.png" width="77" alt="multi" style="border: 0;" />
+                  </a>
+                </td>
+                <td width="3px;"></td>
+                <td class="textbody" valign="top">
+                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top"
+                    alt="NCI Thesaurus" class="regular-link">
+
+                    Multiple Terminology Search</a>:
+                  Search through a combination of medical terminologies including NCI Thesaurus, NCI Metathesaurus,
+                  MedDRA, and more.
                 </td>
               </tr>
               <tr valign="top">

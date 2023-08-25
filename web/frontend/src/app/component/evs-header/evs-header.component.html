@@ -13,26 +13,29 @@
   <div *ngIf="terminology" id="nciCollapse">
     <ul class="menu nav-menu nav-item-title">
       <li class="nav-item">
-        <a class="nav-link nav-link-list" [routerLink]="['/welcome']"
-          [queryParams]="{terminology: terminology?.terminology}" title="Home"><i class="fa fa-home"></i> Home
+        <a class="nav-link nav-link-list" [routerLink]="['/welcome']" title="Home"><i class="fa fa-home"></i> Home
         </a>
       </li>
-      <li *ngIf="showTerminologyInfo" class="nav-item version-info">
+      <li *ngIf="showTerminologyInfo && notMultiSearch()" class="nav-item version-info">
         <span class="nav-link-list">{{versionInfo}}</span>
       </li>
+      <li *ngIf="displayMultiSearchTerms()" class="nav-item version-info" style="max-width:30em">
+        <span class="nav-link-list" id="truncateTermList">
+          Terminologies: {{ getMultiSearchTerms() }}</span>
+      </li>
 
-      <li class="nav-item" *ngIf="getTerminologySubset()">
+      <li class="nav-item" *ngIf="getTerminologySubset() && notMultiSearch()">
         <a class="nav-link nav-link-list" [routerLink]="['/subsets', terminology?.terminology]"
           title="Display Subsets">Subsets</a>
       </li>
       <li class="nav-item">
         <a class="nav-link nav-link-list" [routerLink]="['/mappings']" title="Display Mappings">Mappings</a>
       </li>
-      <li class="nav-item" *ngIf="getTerminologyHierarchy() && firstRoot != null">
-        <a class="nav-link nav-link-list" [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
+      <li class="nav-item" *ngIf="getTerminologyHierarchy() && firstRoot != null && notMultiSearch()">
+        <a class=" nav-link nav-link-list" [routerLink]="['/hierarchy', terminology?.terminology, firstRoot]"
           title="Display Concept Hierarchy">Hierarchy</a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" *ngIf="notMultiSearch()">
         <a class="nav-link nav-link-list dropdown-toggle" href="#" id="documentationMenu" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false" title="Display Documentation">Documentation</a>
         <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">

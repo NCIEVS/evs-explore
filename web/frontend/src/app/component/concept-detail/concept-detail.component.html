@@ -14,7 +14,10 @@
                 <td *ngIf="terminology != 'ncit' && terminology != 'ncim'" class="w-20">
                   Code:
                 </td>
-                <td class="w-50">{{ concept.code }}</td>
+                <td class="w-50">{{ concept.code }}
+                  <a href="{{ getcaDSRLink(concept.code) }}" *ngIf="terminology == 'ncit'"> (Search for linked caDSR
+                    metadata)</a>
+                </td>
               </tr>
               <!-- <tr>
               <td *ngIf="getCodeLabel(); else noCodeLabel" class="w-20">{{getCodeLabel()}}: </td>

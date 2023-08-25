@@ -11,7 +11,7 @@ import {
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
-import { NavigationStart } from '@angular/router';
+import { ActivatedRoute, NavigationStart } from '@angular/router';
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
 import { SearchResult } from './../../model/searchResult';
@@ -40,8 +40,7 @@ import { saveAs } from 'file-saver';
   encapsulation: ViewEncapsulation.None,
 })
 export class GeneralSearchComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   // Set dtSearch and handle case where the ngIf conditions change
   // When accessing dtSearch, need to use setTimeout()
   @ViewChild("dtSearch", { static: false }) dtSearch: Table;
@@ -98,6 +97,9 @@ export class GeneralSearchComponent
   // Manage subscriptions
   routeListener = null;
 
+  // list of terms for multisearch
+  multiTermList = [];
+
   // get the parameters for the search
   constructor(
     private searchTermService: SearchTermService,
@@ -107,6 +109,7 @@ export class GeneralSearchComponent
     public router: Router,
     private titleService: Title
   ) {
+
     // Determine if we are on the welcome page
     const path = "" + window.location.pathname;
     if (path.includes("welcome")) {
@@ -126,6 +129,10 @@ export class GeneralSearchComponent
             this.avoidLazyLoading = true;
             this.performSearch();
           }
+          // handle multi-search
+          else if (event.url.includes("multi")) {
+            this.multiTermSearch();
+          }
           // Handle the welcome page
           else if (event.url.indexOf("/welcome") != -1) {
             this.configFromQueryParams();
@@ -140,9 +147,6 @@ export class GeneralSearchComponent
   ngOnInit() {
     // Instantiate new search criteria and load from query params
     this.searchCriteria = new SearchCriteria(this.configService);
-    this.configFromQueryParams();
-
-    // Populate terms list from application metadata
     this.termsAll = this.configService.getTerminologies().map((terminology) => {
       return {
         label: terminology.metadata.uiLabel.replace(/\:.*/, ""),
@@ -150,8 +154,24 @@ export class GeneralSearchComponent
         description: terminology.metadata.uiLabel.replace(/.*?\: /, ""),
       };
     });
+    // add multi terminology option to dropdown
+    this.termsAll.unshift(
+      {
+        label: "Multiple Terminology Search",
+        value: { terminology: "multi" },
+        description: "Search Multiple Terminologies"
+      }
+    )
     // filter for list of terminologies presented
     this.termsAll = this.termsAll.filter(this.terminologySearchListFilter);
+    if (this.configService.getMultiSearch()) {
+      if (!this.selectedTerminology) {
+        this.selectedTerminology = this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName());
+      }
+    }
+    this.configFromQueryParams();
+
+    // Populate terms list from application metadata
     console.log("search component initialized");
   }
 
@@ -172,6 +192,10 @@ export class GeneralSearchComponent
       this.avoidLazyLoading = true;
       setTimeout(() => this.performSearch());
     }
+    if (this.configService.getMultiSearch()) {
+      this.selectedTerminology =
+        { terminology: 'multi' };
+    }
   }
 
   // Set state variables from the query parameters
@@ -180,18 +204,25 @@ export class GeneralSearchComponent
     console.log("setup query params", this.queryParams);
 
     // Setup terminology for both /welcome and /search pages
-    if (this.queryParams.get("terminology")) {
-      this.selectedTerminology = this.configService.getTerminologyByName(
-        this.queryParams.get("terminology")
-      );
-    } else {
-      this.selectedTerminology = this.configService.getTerminologyByName(
-        this.configService.getDefaultTerminologyName()
-      );
-    }
-    this.configService.setTerminology(this.selectedTerminology);
+    if (!this.configService.getMultiSearch()) {
+      if (this.queryParams.get("terminology")) {
+        this.selectedTerminology = this.configService.getTerminologyByName(
+          this.queryParams.get("terminology")
+        );
+      } else {
+        this.selectedTerminology = this.configService.getTerminologyByName(
+          this.configService.getDefaultTerminologyName()
+        );
+      }
+      this.configService.setTerminology(this.selectedTerminology);
 
-    this.loadAllSources();
+      this.loadAllSources();
+    } else if (this.queryParams.size > 0 && this.queryParams.get("terminology").includes(",")) {
+      // set multiSearch terminologies only if we're doing a multi search
+      this.configService.setMultiSearchTerminologies(this.queryParams.get("terminology").split(","));
+
+    }
+
 
     // set search criteria if there's stuff from the url
     if (this.queryParams && this.queryParams.get("term") != undefined) {
@@ -209,7 +240,7 @@ export class GeneralSearchComponent
         this.searchCriteria.pageSize = this.pageSize;
       }
       // safety check against there being no sources selected
-      if (this.queryParams.get("source") != "") {
+      if (this.queryParams.get("source") != "" && this.queryParams.get("source") != null) {
         console.debug(
           "xxx",
           this.queryParams.get("source").split(","),
@@ -236,7 +267,7 @@ export class GeneralSearchComponent
     console.log("set query url");
     this.router.navigate(["/search"], {
       queryParams: {
-        terminology: this.selectedTerminology.terminology,
+        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(this.configService.getMultiSearchTerminologies()).join(","),
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord
@@ -304,6 +335,34 @@ export class GeneralSearchComponent
 
   // On reset search, clear everything and navigate back to /welcome
   onResetSearch(event) {
+    if (this.configService.getMultiSearch()) {
+      this.router.navigate(["/welcome"], {
+        queryParams: {
+          terminology: this.configService.getMultiSearchTerminologies() != null && Array.from(this.configService.getMultiSearchTerminologies()).length > 0 ? Array.from(this.configService.getMultiSearchTerminologies()).join(",") : 'multi',
+        },
+      });
+    } else {
+      this.router.navigate(["/welcome"], {
+        queryParams: {
+          terminology: this.selectedTerminology.terminology,
+        },
+      });
+    }
+
+  }
+
+  multiTermSearch() {
+    this.configService.setMultiSearch(true);
+    this.router.navigate(["/welcome"], {
+      queryParams: {
+        terminology: "multi",
+      },
+    });
+  }
+
+  singleTermSearch() {
+    this.configService.setMultiSearch(false);
+    this.configService.setMultiSearchTerminologies(null);
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
@@ -347,9 +406,12 @@ export class GeneralSearchComponent
   changeSearchType(event) {
     console.log("changeSearchType", event);
     this.searchCriteria.type = event;
-    this.resetPaging();
-    this.setQueryUrl();
-    this.performSearch();
+    if (!this.welcomePage) {
+      this.resetPaging();
+      this.setQueryUrl();
+      this.performSearch();
+    }
+
   }
 
   // Perform search
@@ -374,16 +436,19 @@ export class GeneralSearchComponent
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
+    if (terminology.value.terminology != "multi") {
+      this.configService.setTerminology(terminology.value);
+      this.loadAllSources();
+    }
     this.searchCriteria.term = "";
-    this.configService.setTerminology(terminology.value);
-    this.loadAllSources();
-
-    // reset to the welcome page
     this.router.navigate(["/welcome"], {
       queryParams: {
         terminology: this.selectedTerminology.terminology,
       },
     });
+
+    // reset to the welcome page
+
   }
 
   // Load source list
@@ -441,7 +506,7 @@ export class GeneralSearchComponent
         );
         this.router.navigate(["/welcome"], {
           queryParams: {
-            terminology: this.selectedTerminology.terminology,
+            terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : this.configService.getMultiSearchTerminologies(),
           },
         });
       }
@@ -477,7 +542,8 @@ export class GeneralSearchComponent
         /"/g,
         ""
       );
-      this.searchCriteria.terminology = this.selectedTerminology.terminology;
+      this.searchCriteria.terminology = this.configService.getMultiSearch() ? Array.from(this.configService.getMultiSearchTerminologies()).join(",") : this.selectedTerminology.terminology;
+      this.searchCriteria.export = false;
       this.loadedMultipleConcept = false;
       // call search term service
       this.searchTermService
@@ -576,6 +642,8 @@ export class GeneralSearchComponent
 
   exportCodeFormatter(concept, displayColumns) {
     var conceptFormatString = "";
+    if (displayColumns.includes("Terminology"))
+      conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, "") + "\t";
     if (displayColumns.includes("Code"))
       conceptFormatString += concept.code + "\t";
     if (displayColumns.includes("Preferred Name"))
@@ -658,6 +726,9 @@ export class GeneralSearchComponent
         this.selectedTerminology.terminology == "ncim" ? "CUI" : "Code",
         "Synonyms",
       ];
+      if (this.configService.getMultiSearch() && !this.selectedColumns.includes("Terminology")) {
+        this.selectedColumns.push("Terminology");
+      }
       this.displayColumns = [
         ...this.cols.filter(
           (a) =>
@@ -681,5 +752,9 @@ export class GeneralSearchComponent
       return { sources: this.searchCriteria.synonymSource.join(",") };
     }
     return {};
+  }
+
+  disableEntry() {
+    return this.configService.getMultiSearch() && (this.configService.getMultiSearchTerminologies() == null || this.configService.getMultiSearchTerminologies().size == 0);
   }
 }

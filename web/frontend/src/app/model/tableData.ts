@@ -1,6 +1,7 @@
 
 // Model for table data
 export class TableData {
+  term: string;
 
   constructor(
     public column1?: string,
@@ -64,6 +65,8 @@ export class TableData {
     public column59?: string,
     public expandedSynonyms?: string,
     public expandedDefinitions?: string,
+    public terminology?: string,
+    public termShorthand?: string,
     public collapsedSynonyms?: string,
     public collapsedDefinitions?: string,
     public displayName?: string,
