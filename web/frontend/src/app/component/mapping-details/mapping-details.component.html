@@ -31,7 +31,7 @@
         </div>
       </div>
       <div *ngIf="!mapsetMappings && termAutoSearch">
-        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
+        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No mappings found that matched the above search.
       </div>
       <div *ngIf="mapsetMappings" class="table-responsive">
         <p-table *ngIf="mapsetMappings" #mappings [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
