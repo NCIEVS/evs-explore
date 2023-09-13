@@ -3,10 +3,10 @@
     <div class="page-header" style="margin-bottom: 0.2em">
       Subset of {{ titleCode }} - {{titleDesc}}<span style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="subsetExportButton"
-          class="ui-button-coloring" pTooltip="Click to download subset search results" (click)="exportSubset()"
-          [disabled]="hitsFound == 0"></button>
+          class="p-button-coloring" pTooltip="Click to download subset search results" (click)="exportSubset()"
+          [disabled]="hitsFound == 0"></button> &nbsp;
         <button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}" label="New Search" pButton
-          type="button" class="ui-button-coloring"></button>
+          type="button" class="p-button-coloring"></button>
       </span>
     </div>
     <p [innerHTML]="subsetDescription"></p>

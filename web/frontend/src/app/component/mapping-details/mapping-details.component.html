@@ -3,10 +3,9 @@
     <div class="page-header" style="margin-bottom: 0.2em">
       {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span><span style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="mappingExportButton"
-          class="ui-button-coloring" pTooltip="Click to download mapping search results" (click)="exportMapping()"
-          [disabled]="total == 0"></button>
-        <button [routerLink]="['/welcome']" label="New Search" pButton type="button"
-          class="ui-button-coloring"></button>
+          class="p-button-coloring" pTooltip="Click to download mapping search results" (click)="exportMapping()"
+          [disabled]="total == 0"></button> &nbsp;
+        <button [routerLink]="['/welcome']" label="New Search" pButton type="button" class="p-button-coloring"></button>
       </span>
     </div>
     <p id="welcomeTextDiv"></p>

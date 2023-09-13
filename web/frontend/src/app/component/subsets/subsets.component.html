@@ -4,10 +4,10 @@
       Subsets
       <button id="expandOrCollapseButton" [label]="expandLabel" [disabled]="expandDisabled"
         pTooltip="Click to {{expandLabel}}" tooltipPosition="bottom" (click)="expandOrCollapseAllNodes(hierarchyData)"
-        pButton type="button" class="ui-button-coloring expandAll"></button>
+        pButton type="button" class="p-button-coloring expandAll"></button>
       <span class="newSearch"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
           label="New Search" pTooltip="Click to start new search" tooltipPosition="bottom" pButton type="button"
-          class="ui-button-coloring"></button></span>
+          class="p-button-coloring"></button></span>
     </div>
     <p>View subsets organized by standards category. Standards categories group the subsets
       supporting them; all other
@@ -27,7 +27,7 @@
         (completeMethod)="performSubsetSearch()" placeholder="{{placeholderText}}" [minLength]="3"
         [disabled]="searchDisabled">
       </p-autoComplete>
-      <button styleClass="ui-button-info" class="ui-button-coloring" type="button" pButton icon="fa fa-undo"
+      <button styleClass="ui-button-info" class="p-button-coloring" type="button" pButton icon="fa fa-undo"
         (click)="resetSearch()" pTooltip="Click to reset search" label="Reset Search" tooltipPosition="bottom"
         [disabled]="searchDisabled"></button>
     </div>
