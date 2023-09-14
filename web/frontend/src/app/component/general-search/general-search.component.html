@@ -3,7 +3,7 @@
     <div class="col-12 p-0">
       <div class="shared-logo-box">
         <div class="row">
-          <div class="col-sm-5">
+          <div class="col-sm-4">
             <div style="padding-top: 6px">
               <p-autoComplete
                 #termauto
@@ -34,6 +34,7 @@
               ></button>
               &nbsp;
               <p-multiSelect
+                title="Filter by sub-sources"
                 *ngIf="configService.isMultiSource() && !configService.getMultiSearch()"
                 autoWidth="false"
                 [showToggleAll]="true"
@@ -54,9 +55,15 @@
             </div>
           </div>
 
-          <div class="col-sm-4">
+          <div class="col-sm-5">
             <div style="padding-top: 6px; float: right">
-              <p-dropdown class="term-dropdown" [options]="termsAll" [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
+              <p-dropdown
+                title="Select terminology"
+                class="term-dropdown"
+                [options]="termsAll"
+                [(ngModel)]="selectedTerminology"
+                (onChange)="onChangeTerminology($event)"
+              >
                 <ng-template let-terminology pTemplate="item">
                   <div [title]="terminology.description">
                     {{ terminology.label }}
