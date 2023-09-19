@@ -554,4 +554,17 @@ export class ConfigurationService {
     );
   }
 
+  getSourceStats(code: string, term: string) {
+    var url = '/api/v1/metadata/' + term + "/stats/" + code;
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json'
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapset mappings for ' + code));
+      })
+    );
+  }
+
 }

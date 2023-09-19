@@ -10,7 +10,9 @@ import { ConfigurationService } from 'src/app/service/configuration.service';
 export class SourceStatsComponent {
 
   source: any;
+  sourceStats: any;
   terminology: string;
+  validStats: boolean = true;
   constructor(
     private configService: ConfigurationService, private titleService: Title) {
   }
@@ -21,6 +23,12 @@ export class SourceStatsComponent {
     const splitUrl = window.location.pathname.split("/");
     this.source = splitUrl[splitUrl.length - 1];
     this.terminology = this.configService.getTerminologyName();
+    this.configService.getSourceStats(this.source, this.terminology)
+      .subscribe(response => {
+        this.sourceStats = response;
+        this.validStats = (this.sourceStats.length > 0);
+        var overlap = response["Source Overlap"];
+      });
 
     this.titleService.setTitle('Source stats for ' + this.source + " in " + this.terminology);
   }
