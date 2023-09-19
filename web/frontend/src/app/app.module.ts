@@ -89,6 +89,7 @@ import { ContactUsComponent } from './component/contact-us/contact-us.component'
 import { ButtonModule } from 'primeng/button';
 import { NotificationComponent } from './component/notifications/notifications.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
+import { SourceStatsComponent } from './component/source-stats/source-stats.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -127,7 +128,8 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     SubsetNcitComponent,
     EvsApiComponent,
     NotificationComponent,
-    MappingDetailsComponent
+    MappingDetailsComponent,
+    SourceStatsComponent
   ],
   imports: [
     NgbModule,
