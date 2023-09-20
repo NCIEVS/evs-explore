@@ -26,8 +26,7 @@ export class SourceStatsComponent {
     this.configService.getSourceStats(this.source, this.terminology)
       .subscribe(response => {
         this.sourceStats = response;
-        this.validStats = (this.sourceStats.length > 0);
-        var overlap = response["Source Overlap"];
+        this.validStats = Object.keys(this.sourceStats).length > 0;
       });
 
     this.titleService.setTitle('Source stats for ' + this.source + " in " + this.terminology);
