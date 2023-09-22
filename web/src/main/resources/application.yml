@@ -65,3 +65,4 @@ gov:
       evsexplore:               
           web:
             evsApibasePath: ${EVS_API_BASE_PATH:http://localhost:8082}
+            uiLicense: ${UI_LICENSE:ui-license}

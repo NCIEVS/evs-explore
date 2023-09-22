@@ -1,13 +1,13 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span><span style="float:right">
+      {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span>
+      <div style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="mappingExportButton"
-          class="ui-button-coloring" pTooltip="Click to download mapping search results" (click)="exportMapping()"
+           pTooltip="Click to download mapping search results" (click)="exportMapping()"
           [disabled]="total == 0"></button>
-        <button [routerLink]="['/welcome']" label="New Search" pButton type="button"
-          class="ui-button-coloring"></button>
-      </span>
+        <button [routerLink]="['/welcome']" label="New Search" icon="fa fa-search" pButton type="button"></button>
+      </div>
     </div>
     <p id="welcomeTextDiv"></p>
     <div class="table-responsive">
@@ -19,15 +19,14 @@
               id="termauto" name="termauto" (onClear)="ngOnInit()" placeholder="Enter at least 3 letters of a term."
               [minLength]="3">
             </p-autoComplete>
-
           </div>
 
         </div>
         <div class="col-sm-2">
-          <div class="ui-inputgroup" style="padding-bottom: 6px;">
+          <div class="p-inputgroup" style="padding-bottom: 6px;">
             <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
-              [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
+              [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>&nbsp;
+            <button type="button" pButton label="Reset" icon="fa fa-undo" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
           </div>
         </div>
       </div>

@@ -1,33 +1,50 @@
 <div class="container" *ngIf="definitionTypes">
-  <div class="page-header">
-    <span class="ui-coloring">Definition Types</span>
-    <span style="float:right"><button [routerLink]="['/welcome']"
-        [queryParams]="{terminology: terminology}" label="New Search" pButton type="button"
-        class="ui-button-coloring"></button></span>
-  </div>
-  <p>Information about definition types</p>
-  <div class="table-responsive" style="font-size:14px;">
-    <p-table class="table table-striped table-bordered" [value]="definitionTypes"
-      *ngIf="definitionTypes && definitionTypes.length > 0;else elseBlockDefinitionTypes"
-      sortMode="single" (sortFunction)="customSort($event)" [customSort]="true">
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-20" [pSortableColumn]="'code'">Code
-            <p-sortIcon [field]="'code'"></p-sortIcon>
-          </th>
-          <th class="w-80" [pSortableColumn]="'name'">Name
-            <p-sortIcon [field]="'name'"></p-sortIcon>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-tty>
-        <tr>
-          <td>{{ tty.code }}</td>
-          <td>{{ tty.name }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-  <ng-template #elseBlockDefinitionTypes>None</ng-template>
+  <p-panel [showHeader]="false">
+    <div class="page-header">
+      <span class="p-coloring">Definition Types</span>
+      <span style="float: right"
+        ><button
+          [routerLink]="['/welcome']"
+          [queryParams]="{ terminology: terminology }"
+          label="New Search"
+          icon="fa fa-search"
+          pButton
+          type="button"
+          class="p-button-coloring"
+        ></button
+      ></span>
+    </div>
+    <p>Information about definition types</p>
+    <div class="table-responsive" style="font-size: 14px">
+      <p-table
+        class="table table-striped table-bordered"
+        [value]="definitionTypes"
+        *ngIf="definitionTypes && definitionTypes.length > 0; else elseBlockDefinitionTypes"
+        sortMode="single"
+        (sortFunction)="customSort($event)"
+        [customSort]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-20" [pSortableColumn]="'code'">
+              Code
+              <p-sortIcon [field]="'code'"></p-sortIcon>
+            </th>
+            <th class="w-80" [pSortableColumn]="'name'">
+              Name
+              <p-sortIcon [field]="'name'"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tty>
+          <tr>
+            <td>{{ tty.code }}</td>
+            <td>{{ tty.name }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #elseBlockDefinitionTypes>None</ng-template>
+  </p-panel>
 </div>
 <p>&nbsp;</p>
