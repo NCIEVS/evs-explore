@@ -224,8 +224,12 @@ export class ConfigurationService {
     }
     // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
     else {
-      // The terminology is last field
-      pterminology = splitPath[splitPath.length - 1];
+      if (splitPath.length > 3) {
+        pterminology = splitPath[splitPath.length - 2]
+      }
+      else
+        // The terminology is last field
+        pterminology = splitPath[splitPath.length - 1];
     }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
@@ -260,6 +264,10 @@ export class ConfigurationService {
 
   getSelectedSources(): Set<String> {
     return this.selectedSources;
+  }
+
+  hasSourceStats() {
+    return this.getTerminologyName() == "ncim";
   }
 
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
@@ -535,6 +543,19 @@ export class ConfigurationService {
     if (term) {
       url += '&term=' + term;
     }
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json'
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapset mappings for ' + code));
+      })
+    );
+  }
+
+  getSourceStats(code: string, term: string) {
+    var url = '/api/v1/metadata/' + term + "/stats/" + code;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json'

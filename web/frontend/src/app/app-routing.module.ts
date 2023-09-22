@@ -13,6 +13,7 @@ import { QualifiersComponent } from './component/documentation/qualifiers/qualif
 import { OverviewComponent } from './component/documentation/overview/overview.component';
 import { TermTypesComponent } from './component/documentation/term-types/term-types.component';
 import { SourcesComponent } from './component/documentation/sources/sources.component';
+import { SourceStatsComponent } from './component/source-stats/source-stats.component';
 import { RolesComponent } from './component/documentation/roles/roles.component';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
 import { DefinitionTypesComponent } from './component/documentation/definition-types/definition-types.component';
@@ -53,6 +54,7 @@ const routes: Routes = [
   { path: 'alldocs', redirectTo: 'alldocs/ncit', pathMatch: 'full' },
   { path: 'alldocs/:terminology', component: AlldocsComponent },
   { path: 'sources/:terminology', component: SourcesComponent },
+  { path: 'sources/:terminology/:source', component: SourceStatsComponent },
   { path: 'sources', redirectTo: 'sources/ncit', pathMatch: 'full' },
   { path: 'roles/:terminology', component: RolesComponent },
   { path: 'roles', redirectTo: 'roles/ncit', pathMatch: 'full' },
