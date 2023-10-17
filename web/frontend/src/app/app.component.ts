@@ -96,6 +96,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);
         console.log('License Text');
         modalref.close();
+      }, (result) => {
+        this.cookieService.set('hhsBanner', 'accepted', 90);
+        console.log('HHS Banner Accepted');
+        modalref.close();
       });
     }
   }
