@@ -592,7 +592,7 @@ export class ConceptDisplayComponent implements OnInit {
           return;
         }
         var inverseAssociationsEntry = {};
-        inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.getQualifiers(inverseAssociation.qualifiers);
+        inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.checkInverseAssociationQualifiers(inverseAssociation);
         inverseAssociationsEntry['Related Code'] = inverseAssociation.relatedCode;
         inverseAssociationsEntry['Related Name'] = inverseAssociation.relatedName;
         incomingAssociationsTable.push(inverseAssociationsEntry);
@@ -601,6 +601,11 @@ export class ConceptDisplayComponent implements OnInit {
     else
       incomingAssociationsTable.push({ 'None': '' });
     return incomingAssociationsTable;
+  }
+
+  checkInverseAssociationQualifiers(inverseAssociation) {
+    var qual = this.getQualifiers(inverseAssociation.qualifiers);
+    return qual ? qual : "";
   }
 
   disjointWithTable() {
