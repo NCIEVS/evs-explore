@@ -100,7 +100,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Opens the HHS banner
   open(content: TemplateRef<any>) {
-    var modalref = this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' });
+    var modalref = this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
     modalref.result.then((result) => {
       this.cookieService.set('hhsBanner', 'accepted', 90);
       console.log('HHS Banner Accepted');
