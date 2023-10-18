@@ -16,7 +16,6 @@ __pycache__
 WEB-INF/*
 node_modules
 log
-.idea
 
 # IDE - IntelliJ
 .idea/
