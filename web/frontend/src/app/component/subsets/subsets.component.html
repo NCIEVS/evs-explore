@@ -2,9 +2,6 @@
   <div class="hierarchy-div">
     <div class="page-header">
       Subsets
-      <button id="expandOrCollapseButton" [label]="expandLabel" [disabled]="expandDisabled"
-        pTooltip="Click to {{expandLabel}}" tooltipPosition="bottom" (click)="expandOrCollapseAllNodes(hierarchyData)"
-        pButton type="button" class="p-button-coloring expandAll"></button>
       <span class="newSearch"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
           label="New Search" icon="fa fa-search" pTooltip="Click to start new search" tooltipPosition="bottom" pButton type="button"
           class="p-button-coloring"></button></span>
@@ -33,15 +30,19 @@
           </div>
 
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-4">
           <div class="p-inputgroup" style="padding-bottom: 6px;">
             <button type="button" pButton label="Search" icon="fa fa-search" (click)="performSubsetSearch()"
               [disabled]="!enteredSearchText || enteredSearchText.length < 3"></button>&nbsp;
 
-              <button class="p-button-coloring" type="button" pButton icon="fa fa-undo"
+              <button type="button" pButton icon="fa fa-undo"
               (click)="resetSearch()" pTooltip="Click to reset search" label="Reset" tooltipPosition="bottom"
-              [disabled]="searchDisabled"></button>
-          </div>
+              [disabled]="searchDisabled"></button>&nbsp;
+
+              <button type="button" pButton [label]="expandLabel" [disabled]="expandDisabled"
+              pTooltip="Click to {{expandLabel}}" tooltipPosition="bottom" (click)="expandOrCollapseAllNodes(hierarchyData)"
+               ></button>
+            </div>
         </div>
       </div>
 
