@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License')) {
       this.licenseText = terminology.metadata.licenseText;
-      var modalref = this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title' });
+      var modalref = this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
       modalref.result.then((result) => {
         this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);
         console.log('License Text');
