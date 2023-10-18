@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.2.4.RELEASE'
+		springBootVersion = '2.7.16'
 	}
     repositories {
 
@@ -16,29 +16,29 @@ buildscript {
     }
 }
 
-// Fix for log4j vulnerability, remove when updating spring boot version
-ext['log4j2.version'] = '2.17.1'
-
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'war'
-apply plugin: 'org.springframework.boot'
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'war'
+    id 'org.springframework.boot' version '2.7.16'
 /*
  * The dependency management plugin remains a transitive dependency of spring-boot-gradle-plugin
  * so there’s no need for it to be listed as a classpath dependency in the buildscript configuration.
  */
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'maven-publish'
+}
+
+// Fix for log4j vulnerability, remove when updating spring boot version
+ext['log4j2.version'] = '2.17.1'
 
 def bomVersion = "Greenwich.RELEASE"
 
 group = "gov.nih.nci.term.browser.web"
 version = "1.10.0.RELEASE"
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 
 springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build
@@ -55,19 +55,21 @@ repositories {
 
 dependencies {
 
-    compile ('org.springframework.boot:spring-boot-starter-web')
-    compile 'org.springframework.boot:spring-boot-actuator'
-    compile 'org.springframework.boot:spring-boot-devtools'
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-zuul"
-    compile 'org.springframework.boot:spring-boot-properties-migrator'
-    compile 'org.springframework:spring-core:5.2.22.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-actuator'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-zuul"
+    implementation 'org.springframework.boot:spring-boot-properties-migrator'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.13.1'
+
 }
 
 jar {
-    baseName = project.name
+    archiveBaseName = project.name
     version =  project.version
      manifest {
         attributes 'Main-Class': 'main.java.gov.nih.evsexplore.web.Application'
@@ -100,7 +102,7 @@ test {
     
 }
 
-task zipFile(type: Zip) {
+tasks.register('zipFile', Zip) {
     def zipFileRootDirectory = "${project.name}-${project.version}"
 
     from('src/main/bin') {
@@ -119,6 +121,6 @@ task zipFile(type: Zip) {
 
 zipFile.dependsOn = [ bootWar ]
 build.dependsOn = [ test, bootWar, zipFile ]
-install.dependsOn = [ bootWar, zipFile ]
+publishToMavenLocal.dependsOn = [ bootWar, zipFile ]
 
 
