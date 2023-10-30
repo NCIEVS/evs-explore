@@ -208,7 +208,8 @@ export class ConfigurationService {
   // consider the local env and the 'evsexplore' context path in deploy envs
   setConfigFromPathname(path: string) {
     console.log('set config from path', path);
-    const splitPath = path.split('/');
+    const splitPath = path.split('/').filter(part => part !== "evsexplore");
+    splitPath
     var pterminology;
 
     // Handle /hierarchy/{terminology}/{code}
@@ -222,7 +223,7 @@ export class ConfigurationService {
       // The terminology is second-to-last field
       pterminology = splitPath[splitPath.length - 2];
     }
-    // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
+    // otherwise, assume it's the last field (subsets, properties, alldocs, etc.)
     else {
       if (splitPath.length > 3) {
         pterminology = splitPath[splitPath.length - 2]
