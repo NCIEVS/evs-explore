@@ -89,10 +89,16 @@
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
   </script>
-</head>
 
-<body>
-  <app-root>
+    <!-- NCI Banner JS -->
+    <script src="https://cbiit.github.io/nci-softwaresolutions-elements/components/include-html.js"></script>
+  </head>
+
+  <body>
+    <!-- NCI Banner HTML -->
+    <include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
+
+    <app-root>
     <div class="app-loading">
       <div class="logo">
         <img style="height: 100px;" src="assets/images/header/iconfinder_safari.png" />
