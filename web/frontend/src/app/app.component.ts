@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { filter } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ConfigurationService } from './service/configuration.service';
+import { Title } from '@angular/platform-browser';
 
 declare var gtag
 
@@ -19,22 +20,38 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('licenseModal', { static: true }) licenseModal: TemplateRef<any>;
   licenseText: string;
   private subscription = null;
+  private gtagConfig = false;
 
-  constructor(private router: Router, private modalService: NgbModal, private configService: ConfigurationService, private cookieService: CookieService) {
+  constructor(private router: Router, 
+    private modalService: NgbModal, 
+    private configService: ConfigurationService, 
+    private cookieService: CookieService,
+    private titleService: Title) {
+
     const navEndEvent$ = router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     );
     navEndEvent$.subscribe((e: NavigationEnd) => {
       // Only report google tags in prod mode
       if (environment.production && environment.productionHost == location.hostname) {
-        gtag('config', environment.code, { 'page_path': e.urlAfterRedirects });
+        if (!this.gtagConfig) {
+          gtag('config', environment.code);
+          this.gtagConfig = true;
+        }
+        gtag('event', 'page_view', { 
+          page_title: titleService.getTitle,
+          page_path: e.urlAfterRedirects,
+          page_location: this.router.url 
+        });
       }
     });
 
+    // Setup google tracking
     const script = document.createElement('script');
     script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + environment.code;
     document.head.prepend(script);
+
   }
 
   // Scroll to top whenever route changes
