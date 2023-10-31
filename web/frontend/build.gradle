@@ -4,7 +4,7 @@ plugins {
 	//id "com.moowork.node" version "1.2.0"
 }
 
-version = '1.8.0.RELEASE'
+version = '1.8.1.RELEASE'
 
 node {
   version = '16.14.1'
