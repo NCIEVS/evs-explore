@@ -7,41 +7,39 @@ import { environment } from '../environments/environment';
 import { ConfigurationService } from './service/configuration.service';
 import { Title } from '@angular/platform-browser';
 
-declare var gtag
+declare var gtag;
 
 // Application component
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
-
   @ViewChild('licenseModal', { static: true }) licenseModal: TemplateRef<any>;
   licenseText: string;
   private subscription = null;
   private gtagConfig = false;
 
-  constructor(private router: Router, 
-    private modalService: NgbModal, 
-    private configService: ConfigurationService, 
+  constructor(
+    private router: Router,
+    private modalService: NgbModal,
+    private configService: ConfigurationService,
     private cookieService: CookieService,
-    private titleService: Title) {
-
-    const navEndEvent$ = router.events.pipe(
-      filter(e => e instanceof NavigationEnd)
-    );
+    private titleService: Title,
+  ) {
+    const navEndEvent$ = router.events.pipe(filter((e) => e instanceof NavigationEnd));
     navEndEvent$.subscribe((e: NavigationEnd) => {
-      // Only report google tags in prod mode
-      if (environment.production && environment.productionHost == location.hostname) {
+      // Only report where google tags are present and hostname matches expectations
+      if (environment.code && environment.host == location.hostname) {
         if (!this.gtagConfig) {
           gtag('config', environment.code);
           this.gtagConfig = true;
         }
-        gtag('event', 'page_view', { 
-          page_title: titleService.getTitle,
+        gtag('event', 'page_view', {
+          page_title: titleService.getTitle(),
           page_path: e.urlAfterRedirects,
-          page_location: this.router.url 
+          page_location: this.router.url,
         });
       }
     });
@@ -51,7 +49,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + environment.code;
     document.head.prepend(script);
-
   }
 
   // Scroll to top whenever route changes
@@ -66,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     // Subscribe to terminology chagnes and check license text
-    this.subscription = this.configService.getSubject().subscribe(terminology => {
+    this.subscription = this.configService.getSubject().subscribe((terminology) => {
       this.checkLicenseText();
     });
 
@@ -102,22 +99,24 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let terminology = null;
     if (term != null) {
       terminology = this.configService.getTerminologyByName(term);
-    }
-    else {
+    } else {
       terminology = this.configService.getTerminology();
     }
     if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License')) {
       this.licenseText = terminology.metadata.licenseText;
       var modalref = this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
-      modalref.result.then((result) => {
-        this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);
-        console.log('License Text');
-        modalref.close();
-      }, (result) => {
-        this.cookieService.set('hhsBanner', 'accepted', 90);
-        console.log('HHS Banner Accepted');
-        modalref.close();
-      });
+      modalref.result.then(
+        (result) => {
+          this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);
+          console.log('License Text');
+          modalref.close();
+        },
+        (result) => {
+          this.cookieService.set('hhsBanner', 'accepted', 90);
+          console.log('HHS Banner Accepted');
+          modalref.close();
+        },
+      );
     }
   }
 }

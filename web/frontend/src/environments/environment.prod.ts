@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 export const environment = {
   production: true,
-  productionHost: 'explore.evs.cancer.gov',
+  host: 'https://evsexplore.semantics.cancer.gov',
   code: 'G-PBZTNWWRTN',
-  swagger: 'https://api-evsrest.nci.nih.gov/swagger-ui/index.html'
+  swagger: 'https://api-evsrest.nci.nih.gov/swagger-ui/index.html',
 };

@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  productionHost: 'explore.evs.cancer.gov',
+  host: 'localhost',
   code: 'G-C8Y98QQ6LR',
-  swagger: 'https://api-evsrest-dev.nci.nih.gov/swagger-ui/index.html'
+  swagger: 'https://api-evsrest-dev.nci.nih.gov/swagger-ui/index.html',
 };
 
 /*
