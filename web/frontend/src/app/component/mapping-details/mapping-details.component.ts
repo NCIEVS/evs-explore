@@ -5,6 +5,8 @@ import { LoaderService } from 'src/app/service/loader.service';
 import { saveAs } from 'file-saver';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapsetService } from 'src/app/service/mapset.service';
+import { ConceptDetailComponent } from '../concept-detail/concept-detail.component';
+import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 
 @Component({
   selector: 'app-mapping-details',
@@ -38,6 +40,13 @@ export class MappingDetailsComponent implements OnInit {
   targetTermSaved: boolean = false;
   targetTerm: string;
 
+  sourceTermLoaded: string = "false";
+  sourceTermVersion: string;
+  sourceTermCodes = [];
+  targetTermLoaded: string = "false";
+  targetTermVersion: string;
+  targetTermCodes = [];
+
   currentSortColumn = 'sourceName';
   currentSortDirection = false;
   sortDirection = {
@@ -46,7 +55,7 @@ export class MappingDetailsComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute,
-    private configService: ConfigurationService, private loaderService: LoaderService, private mapsetService: MapsetService,
+    private configService: ConfigurationService, private conceptDetailService: ConceptDetailService, private loaderService: LoaderService, private mapsetService: MapsetService,
     private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
@@ -58,22 +67,56 @@ export class MappingDetailsComponent implements OnInit {
         this.version = response['version'];
         this.properties = response["properties"];
         this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
+        this.targetTermLoaded = this.properties.find(prop => prop.type == "targetLoaded").value;
+        this.targetTermVersion = this.properties.find(prop => prop.type == "targetTerminologyVersion").value;
+        this.sourceTermLoaded = this.properties.find(prop => prop.type == "sourceLoaded").value;
+        this.sourceTermVersion = this.properties.find(prop => prop.type == "sourceTerminologyVersion").value;
         this.setWelcomeText();
         this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
           this.mapsetMappings = response['maps'];
           this.total = response['total'];
           this.fullTotal = this.total;
           var validTerminmologies = this.configService.getTerminologies().map(obj => obj.terminology);
-          var splitTitleForTerminologies = this.mapsetCode.split("_");
-          this.sourceTerm = splitTitleForTerminologies[0].toLowerCase();
+          this.sourceTerm = this.properties.find(prop => prop.type == "sourceTerminology").value;
           this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
-          this.targetTerm = splitTitleForTerminologies[splitTitleForTerminologies.length - 2].toLowerCase();
+          this.targetTerm = this.properties.find(prop => prop.type == "targetTerminology").value;
           this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
+          if (this.sourceTermLoaded == "true") {
+            this.conceptDetailService.getConcepts(this.sourceTerm, this.mapsetMappings.map(obj => obj.sourceCode).toString(), "minimal").subscribe(response => {
+              this.sourceTermCodes = response.map(obj => obj.code);
+            });
+          }
+          if (this.targetTermLoaded == "true") {
+            this.conceptDetailService.getConcepts(this.targetTerm, this.mapsetMappings.map(obj => obj.targetCode).toString(), "minimal").subscribe(response => {
+              this.targetTermCodes = response.map(obj => obj.code);
+            });
+          }
         });
+
       });
     });
 
     this.termAutoSearch = '';
+  }
+
+  showLink(sourceOrTarget: string, code: string) {
+    if (sourceOrTarget == "source") {
+      if (this.sourceTermLoaded == "false") {
+        return false;
+      }
+      else if (!(this.sourceTermVersion == this.configService.getTerminologyByName(this.sourceTerm).version)) {
+        return this.sourceTermCodes.includes(code);
+      }
+    }
+    else if (sourceOrTarget == "target") {
+      if (this.targetTermLoaded == "false") {
+        return false;
+      }
+      else if (!(this.targetTermVersion == this.configService.getTerminologyByName(this.targetTerm).version)) {
+        return this.targetTermCodes.includes(code);
+      }
+    }
+    return false;
   }
 
   // Sets the welcome text
