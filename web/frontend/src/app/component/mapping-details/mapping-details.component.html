@@ -58,20 +58,20 @@
             <tr>
               <td>{{ mapping.source }}</td>
               <td>
-                <a *ngIf="showLink('source', mapping.sourceCode)"
+                <a *ngIf="showSourceLink(mapping.sourceCode)"
                   [routerLink]="[conceptUrlBase, sourceTerm, mapping.sourceCode]" target='_top'>{{ mapping.sourceCode
                   }}</a>
-                <span *ngIf="!showLink('source', mapping.sourceCode)">{{ mapping.sourceCode }}</span>
+                <span *ngIf="!showSourceLink(mapping.sourceCode)">{{ mapping.sourceCode }}</span>
               </td>
               <td>{{ mapping.sourceName }}</td>
               <td>{{ mapping.type }}</td>
               <td><span *ngIf="mapping.group != null">{{ mapping.group}} / </span>{{ mapping.rank }}</td>
               <td>{{ mapping.targetTerminology }}</td>
               <td>
-                <a *ngIf="showLink('target', mapping.targetCode); else elseBlock"
+                <a *ngIf="showTargetLink(mapping.targetCode); else elseBlock"
                   [routerLink]="[conceptUrlBase, targetTerm, mapping.targetCode]" target='_top'>{{ mapping.targetCode
                   }}</a>
-                <span *ngIf="!showLink('target', mapping.targetCode)">{{ mapping.targetCode }}</span>
+                <span *ngIf="!showTargetLink( mapping.targetCode)">{{ mapping.targetCode }}</span>
               </td>
               <td>{{ mapping.targetName }}</td>
             </tr>

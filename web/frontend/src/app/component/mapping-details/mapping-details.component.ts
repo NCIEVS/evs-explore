@@ -40,10 +40,10 @@ export class MappingDetailsComponent implements OnInit {
   targetTermSaved: boolean = false;
   targetTerm: string;
 
-  sourceTermLoaded: string = "false";
+  sourceTermLoaded: boolean;
   sourceTermVersion: string;
   sourceTermCodes = [];
-  targetTermLoaded: string = "false";
+  targetTermLoaded: boolean;
   targetTermVersion: string;
   targetTermCodes = [];
 
@@ -66,31 +66,20 @@ export class MappingDetailsComponent implements OnInit {
       this.mapsetService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
         this.version = response['version'];
         this.properties = response["properties"];
-        this.welcomeText = this.properties.find(prop => prop.type == "welcomeText").value;
-        this.targetTermLoaded = this.properties.find(prop => prop.type == "targetLoaded").value;
-        this.targetTermVersion = this.properties.find(prop => prop.type == "targetTerminologyVersion").value;
-        this.sourceTermLoaded = this.properties.find(prop => prop.type == "sourceLoaded").value;
-        this.sourceTermVersion = this.properties.find(prop => prop.type == "sourceTerminologyVersion").value;
+        this.welcomeText = this.properties.find(prop => prop.type == "welcomeText")?.value;
+        this.targetTermLoaded = "true" == this.properties.find(prop => prop.type == "targetLoaded")?.value;
+        this.targetTermVersion = this.properties.find(prop => prop.type == "targetTerminologyVersion")?.value;
+        this.sourceTermLoaded = "true" == this.properties.find(prop => prop.type == "sourceLoaded")?.value;
+        this.sourceTermVersion = this.properties.find(prop => prop.type == "sourceTerminologyVersion")?.value;
         this.setWelcomeText();
+
         this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
-          this.mapsetMappings = response['maps'];
           this.total = response['total'];
+          this.mapsetMappings = this.total == 0 ? [] : response['maps'];
           this.fullTotal = this.total;
-          var validTerminmologies = this.configService.getTerminologies().map(obj => obj.terminology);
-          this.sourceTerm = this.properties.find(prop => prop.type == "sourceTerminology").value;
-          this.sourceTermSaved = validTerminmologies.includes(this.sourceTerm);
-          this.targetTerm = this.properties.find(prop => prop.type == "targetTerminology").value;
-          this.targetTermSaved = validTerminmologies.includes(this.targetTerm);
-          if (this.sourceTermLoaded == "true") {
-            this.conceptDetailService.getConcepts(this.sourceTerm, this.mapsetMappings.map(obj => obj.sourceCode).toString(), "minimal").subscribe(response => {
-              this.sourceTermCodes = response.map(obj => obj.code);
-            });
-          }
-          if (this.targetTermLoaded == "true") {
-            this.conceptDetailService.getConcepts(this.targetTerm, this.mapsetMappings.map(obj => obj.targetCode).toString(), "minimal").subscribe(response => {
-              this.targetTermCodes = response.map(obj => obj.code);
-            });
-          }
+
+          this.computeLinkCodes();
+
         });
 
       });
@@ -99,24 +88,32 @@ export class MappingDetailsComponent implements OnInit {
     this.termAutoSearch = '';
   }
 
-  showLink(sourceOrTarget: string, code: string) {
-    if (sourceOrTarget == "source") {
-      if (this.sourceTermLoaded == "false") {
-        return false;
-      }
-      else if (!(this.sourceTermVersion == this.configService.getTerminologyByName(this.sourceTerm).version)) {
-        return this.sourceTermCodes.includes(code);
-      }
+  // After loading map records compute source/target term codes to link
+  computeLinkCodes() {
+    var validTerminologies = this.configService.getTerminologies().map(obj => obj.terminology);
+    this.sourceTerm = this.properties.find(prop => prop.type == "sourceTerminology")?.value;
+    this.sourceTermSaved = validTerminologies.includes(this.sourceTerm);
+    this.targetTerm = this.properties.find(prop => prop.type == "targetTerminology")?.value;
+    this.targetTermSaved = validTerminologies.includes(this.targetTerm);
+    if (this.sourceTermLoaded && this.total > 0) {
+      this.conceptDetailService.getConcepts(this.sourceTerm, this.mapsetMappings.map(obj => obj.sourceCode).toString(), "minimal").subscribe(response => {
+        this.sourceTermCodes = response.map(obj => obj.code);
+      });
     }
-    else if (sourceOrTarget == "target") {
-      if (this.targetTermLoaded == "false") {
-        return false;
-      }
-      else if (!(this.targetTermVersion == this.configService.getTerminologyByName(this.targetTerm).version)) {
-        return this.targetTermCodes.includes(code);
-      }
+    if (this.targetTermLoaded && this.total > 0) {
+      this.conceptDetailService.getConcepts(this.targetTerm, this.mapsetMappings.map(obj => obj.targetCode).toString(), "minimal").subscribe(response => {
+        this.targetTermCodes = response.map(obj => obj.code);
+      });
     }
-    return false;
+  }
+
+  // predicate for whether to show a link for a particular source or target code
+  showSourceLink(code: string) {
+    return this.targetTermLoaded && this.targetTermCodes.includes(code);
+  }
+
+  showTargetLink(code: string) {
+    return this.targetTermLoaded && this.targetTermCodes.includes(code);
   }
 
   // Sets the welcome text
@@ -135,8 +132,9 @@ export class MappingDetailsComponent implements OnInit {
       const fromRecord = event.first;
       this.mapsetService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery)
         .subscribe(response => {
-          this.mapsetMappings = response['maps'];
           this.total = response['total'];
+          this.mapsetMappings = this.total == 0 ? [] : response['maps'];
+          this.computeLinkCodes();
         });
       this.fromRecord = fromRecord;
       this.pageSize = pageSize;
@@ -172,8 +170,9 @@ export class MappingDetailsComponent implements OnInit {
     }
     this.mapsetService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
       .subscribe(response => {
-        this.mapsetMappings = response['maps'];
         this.total = response['total'];
+        this.mapsetMappings = this.total == 0 ? [] : response['maps'];
+      this.computeLinkCodes();
       });
     this.textSuggestions = [];
     if (this.lastQuery != event.query && this.mappings) {
