@@ -18,6 +18,16 @@ export class ConceptDetailService {
     private configService: ConfigurationService
   ) { }
 
+  // Get concept list
+  getConcepts(terminology: string, codes: string, include: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/concept/' + terminology + '?include=' + include + "&list=" + codes)
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch concepts = ' + codes));
+      })
+    );
+  }
+
   // Get concept with summary includes
   getConceptSummary(conceptCode: string, include: string, limit: number = null): Observable<any> {
     return this.http.get(encodeURI('/api/v1/concept/' + this.configService.getTerminology().terminology + '/' + conceptCode + '?include=' + include
