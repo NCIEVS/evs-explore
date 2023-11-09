@@ -13,7 +13,18 @@
   <div *ngIf="terminology" id="nciCollapse">
     <ul class="menu nav-menu nav-item-title">
       <li class="nav-item">
-        <a class="nav-link nav-link-list" [routerLink]="['/welcome']" title="Home"><i class="fa fa-home"></i> Home
+        <a *ngIf="!this.configService.getMultiSearch()" class="nav-link nav-link-list" [routerLink]="['/welcome']"
+          [queryParams]="{terminology: this.configService.getTerminologyName()}" title="Home"><i class="fa fa-home"></i>
+          Home
+        </a>
+        <a *ngIf="this.configService.getMultiSearch() && !displayMultiSearchTerms()" class="nav-link nav-link-list"
+          [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" title="Home"><i class="fa fa-home"></i>
+          Home
+        </a>
+        <a *ngIf="this.configService.getMultiSearch() && displayMultiSearchTerms()" class="nav-link nav-link-list"
+          [routerLink]="['/welcome']" [queryParams]="{terminology: this.getMultiSearchTermsUrl()}" title="Home"><i
+            class="fa fa-home"></i>
+          Home
         </a>
       </li>
       <li *ngIf="showTerminologyInfo && notMultiSearch()" class="nav-item version-info">

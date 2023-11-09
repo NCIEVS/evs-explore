@@ -120,6 +120,10 @@ export class EvsHeaderComponent implements OnInit {
     return multiSearchTerms.join(", ");
   }
 
+  getMultiSearchTermsUrl() {
+    return [...this.configService.getMultiSearchTerminologies()].join(',');
+  }
+
   toggleTruncation() {
     this.truncated = !this.truncated;
   }
