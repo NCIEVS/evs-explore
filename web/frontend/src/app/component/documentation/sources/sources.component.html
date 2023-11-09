@@ -25,7 +25,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-source>
           <tr>
-            <td><a [routerLink]="[source.code]" target='_top'>{{ source.code }}</a></td>
+            <td><a *ngIf="hasSourceLinks()" [routerLink]="[source.code]" target='_top'>{{ source.code }}</a>
+              <span *ngIf="!hasSourceLinks()">{{ source.code }}</span>
+            </td>
             <td>{{ source.name }}</td>
           </tr>
         </ng-template>
