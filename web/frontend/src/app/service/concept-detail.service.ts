@@ -20,7 +20,7 @@ export class ConceptDetailService {
 
   // Get concept list
   getConcepts(terminology: string, codes: string, include: string): Observable<any> {
-    return this.http.get(encodeURI('/api/v1/concept/' + terminology + '?include=' + include + "&list=" + codes)
+    return this.http.get(encodeURI('/api/v1/concept/' + terminology.toLowerCase() + '?include=' + include + "&list=" + codes)
     ).pipe(
       catchError((error) => {
         return observableThrowError(new EvsError(error, 'Could not fetch concepts = ' + codes));
