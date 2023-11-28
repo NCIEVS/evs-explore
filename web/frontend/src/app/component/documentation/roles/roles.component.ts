@@ -23,16 +23,16 @@ export class RolesComponent implements OnInit {
 
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
+    this.titleService.setTitle('EVS Explore - Roles');
+  }
+
+  ngAfterViewInit(): void {
 
     this.configService.getRoles(this.terminology)
       .subscribe(response => {
         this.roles = response;
         this.roles.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle('EVS Explore - Roles');
-  }
-
-  ngAfterViewInit(): void {
   }
 
   customSort(event: SortEvent) {

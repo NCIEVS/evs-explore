@@ -23,16 +23,16 @@ export class QualifiersComponent implements OnInit {
 
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
+    this.titleService.setTitle('EVS Explore - Qualifiers');
+  }
+
+  ngAfterViewInit(): void {
 
     this.configService.getQualifiers(this.terminology)
       .subscribe(response => {
         this.qualifiers = response;
         this.qualifiers.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle('EVS Explore - Qualifiers');
-  }
-
-  ngAfterViewInit(): void {
   }
 
   isRemodeled(qualifier): boolean {

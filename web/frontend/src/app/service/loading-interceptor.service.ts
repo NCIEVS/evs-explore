@@ -51,7 +51,11 @@ export class LoadingInterceptor implements HttpInterceptor {
     // if the event is for http response
     if (event instanceof HttpResponse) {
       // stop our loader here
-      this.loaderService.hideLoader();
+      let hideLoader = event.url.includes("hideLoader=true");
+    
+      if (!hideLoader) {
+        this.loaderService.hideLoader();
+      }
     }
   }
 

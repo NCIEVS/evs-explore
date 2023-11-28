@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LoaderService } from './../../service/loader.service';
@@ -17,7 +17,8 @@ export class LoaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private loaderService: LoaderService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -48,6 +49,10 @@ export class LoaderComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  ngAfterViewChecked(): void {
+    this.changeDetector.detectChanges();
+}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

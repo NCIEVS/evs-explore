@@ -20,9 +20,6 @@ export class MapsetService {
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
       }
     ).pipe(
       catchError((error) => {
@@ -36,9 +33,6 @@ export class MapsetService {
     return this.http.get(encodeURI(url),
       {
         responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
       }
     ).pipe(
       catchError((error) => {

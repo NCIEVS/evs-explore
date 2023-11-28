@@ -23,14 +23,17 @@ export class SynonymTypesComponent implements OnInit {
 
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
+    this.titleService.setTitle('EVS Explore - Synonym Types');
+  }
+
+  ngAfterViewInit(): void {
+
     this.configService.getSynonymTypes(this.terminology)
       .subscribe(response => {
         this.synonymTypes = response;
         this.synonymTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle('EVS Explore - Synonym Types');
   }
-
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {

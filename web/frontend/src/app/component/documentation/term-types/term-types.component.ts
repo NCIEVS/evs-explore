@@ -21,13 +21,16 @@ export class TermTypesComponent implements OnInit {
   ngOnInit() {
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
+    this.titleService.setTitle('EVS Explore - Term Types');
+  }
+
+  ngAfterViewInit(): void {
 
     this.configService.getTermTypes(this.terminology)
       .subscribe(response => {
         this.termTypes = response;
         this.termTypes.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle('EVS Explore - Term Types');
   }
 
 }

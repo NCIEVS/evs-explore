@@ -21,19 +21,20 @@ export class AssociationsComponent implements OnInit {
 
   // On initialization
   ngOnInit() {
+    
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
+    this.titleService.setTitle('EVS Explore - Associations');
+  }
+
+  ngAfterViewInit(): void {
 
     this.configService.getAssociations(this.terminology)
       .subscribe(response => {
         this.associations = response;
         this.associations.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
       });
-    this.titleService.setTitle('EVS Explore - Associations');
-
-  }
-
-  ngAfterViewInit(): void {
+    
   }
 
   customSort(event: SortEvent) {

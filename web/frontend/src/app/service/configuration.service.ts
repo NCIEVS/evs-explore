@@ -425,9 +425,6 @@ export class ConfigurationService {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
       }
     )
       .pipe(
@@ -489,45 +486,6 @@ export class ConfigurationService {
     ).pipe(
       catchError((error) => {
         return observableThrowError(new EvsError(error, 'Could not fetch welcome text for ' + terminology));
-      })
-    );
-  }
-
-  getSubsetLink(terminology: string, subsetCode: String) {
-    var url = '/api/v1/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
-    return this.http.get(encodeURI(url))
-      .toPromise()
-      .then(res => <Concept>res);
-  }
-
-  getMapsets(include = "minimal") {
-    var url = '/api/v1/mapset?include=' + include;
-    return this.http.get(encodeURI(url),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
-      }
-    ).pipe(
-      catchError((error) => {
-        return observableThrowError(new EvsError(error, 'Could not fetch mapsets'));
-      })
-    );
-  }
-
-  getMapsetByCode(code: string, include = "minimal") {
-    var url = '/api/v1/mapset/' + code + '?include=' + include;
-    return this.http.get(encodeURI(url),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
-      }
-    ).pipe(
-      catchError((error) => {
-        return observableThrowError(new EvsError(error, 'Could not fetch mapset for ' + code));
       })
     );
   }
