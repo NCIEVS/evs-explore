@@ -59,7 +59,7 @@ export class MappingDetailsComponent implements OnInit {
     private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.loaderService.showLoader();
+    
     this.route.params.subscribe((params: any) => {
       this.lastQuery = "";
       this.mapsetCode = params.code
