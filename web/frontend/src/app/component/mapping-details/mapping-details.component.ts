@@ -59,7 +59,7 @@ export class MappingDetailsComponent implements OnInit {
     private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.loaderService.showLoader();
+
     this.route.params.subscribe((params: any) => {
       this.lastQuery = "";
       this.mapsetCode = params.code
@@ -109,7 +109,7 @@ export class MappingDetailsComponent implements OnInit {
 
   // predicate for whether to show a link for a particular source or target code
   showSourceLink(code: string) {
-    return this.targetTermLoaded && this.targetTermCodes.includes(code);
+    return this.sourceTermCodes && this.sourceTermCodes.includes(code);
   }
 
   showTargetLink(code: string) {
@@ -172,7 +172,7 @@ export class MappingDetailsComponent implements OnInit {
       .subscribe(response => {
         this.total = response['total'];
         this.mapsetMappings = this.total == 0 ? [] : response['maps'];
-      this.computeLinkCodes();
+        this.computeLinkCodes();
       });
     this.textSuggestions = [];
     if (this.lastQuery != event.query && this.mappings) {

@@ -154,6 +154,20 @@ export class GeneralSearchComponent
         description: terminology.metadata.uiLabel.replace(/.*?\: /, ""),
       };
     });
+    this.termsAll.sort((a, b) => {
+      // sort ncit and ncim to the top of the single terminologies
+      if (a.label === "NCI Thesaurus") {
+        return -1;
+      } else if (b.label === "NCI Thesaurus") {
+        return 1;
+      } else if (a.label === "NCI Metathesaurus") {
+        return -1;
+      } else if (b.label === "NCI Metathesaurus") {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     // add multi terminology option to dropdown
     this.termsAll.unshift(
       {
@@ -437,8 +451,11 @@ export class GeneralSearchComponent
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
     if (terminology.value.terminology != "multi") {
+      this.configService.setMultiSearch(false);
       this.configService.setTerminology(terminology.value);
       this.loadAllSources();
+    } else {
+      this.configService.setMultiSearch(true);
     }
     this.searchCriteria.term = "";
     this.router.navigate(["/welcome"], {
