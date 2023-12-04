@@ -451,8 +451,11 @@ export class GeneralSearchComponent
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
     if (terminology.value.terminology != "multi") {
+      this.configService.setMultiSearch(false);
       this.configService.setTerminology(terminology.value);
       this.loadAllSources();
+    } else {
+      this.configService.setMultiSearch(true);
     }
     this.searchCriteria.term = "";
     this.router.navigate(["/welcome"], {
