@@ -94,7 +94,7 @@ export class EvsHeaderComponent implements OnInit {
   // Get terminology subsets flag
   getTerminologySubset() {
     if (this.terminology && this.terminology.metadata) {
-      return this.terminology.metadata.subset;
+      return this.terminology.metadata.subsetLink;
     }
   }
 
