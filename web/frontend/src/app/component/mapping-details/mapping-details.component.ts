@@ -77,6 +77,12 @@ export class MappingDetailsComponent implements OnInit {
           this.total = response['total'];
           this.mapsetMappings = this.total == 0 ? [] : response['maps'];
           this.fullTotal = this.total;
+          var sortCols = document.getElementsByClassName('sortable');
+          for (var i = 0; i < sortCols.length; i++) {
+            var str = sortCols[i].innerHTML;
+            var text = str.replace('↓', '').replace('↑', '');
+            sortCols[i].innerHTML = text;
+          }
 
           this.computeLinkCodes();
 
@@ -130,7 +136,7 @@ export class MappingDetailsComponent implements OnInit {
     } else {
       const pageSize = event.rows;
       const fromRecord = event.first;
-      this.mapsetService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery)
+      this.mapsetService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery, this.currentSortDirection, this.currentSortColumn)
         .subscribe(response => {
           this.total = response['total'];
           this.mapsetMappings = this.total == 0 ? [] : response['maps'];
@@ -178,7 +184,10 @@ export class MappingDetailsComponent implements OnInit {
     if (this.lastQuery != event.query && this.mappings) {
       this.mappings._first = 0
     }
-    this.lastQuery = event.query
+    if (event.query) {
+      this.lastQuery = event.query
+    }
+
     this.loaderService.hideLoader();
   }
 
