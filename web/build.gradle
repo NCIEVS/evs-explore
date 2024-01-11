@@ -20,7 +20,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'war'
-    id 'org.springframework.boot' version '2.7.16'
+    id 'org.springframework.boot' version '2.7.17'
 /*
  * The dependency management plugin remains a transitive dependency of spring-boot-gradle-plugin
  * so there’s no need for it to be listed as a classpath dependency in the buildscript configuration.
