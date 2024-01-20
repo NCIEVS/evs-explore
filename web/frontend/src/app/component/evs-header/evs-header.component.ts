@@ -34,7 +34,8 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
-    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology").includes(","))) {
+    // Determine if we are in multi mode
+    if (window.location.search.includes("=multi")) {
       this.configService.setMultiSearch(true);
     } else {
       this.configService.setMultiSearch(false);

@@ -11,11 +11,9 @@ import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 @Component({
   selector: 'app-mapping-details',
   templateUrl: './mapping-details.component.html',
-  styleUrls: ['./mapping-details.component.css']
+  styleUrls: ['./mapping-details.component.css'],
 })
-
 export class MappingDetailsComponent implements OnInit {
-
   @ViewChild('mappings', { static: false }) mappings: any;
 
   avoidLazyLoading = true;
@@ -50,30 +48,34 @@ export class MappingDetailsComponent implements OnInit {
   currentSortColumn = 'sourceName';
   currentSortDirection = false;
   sortDirection = {
-    'ASC': true,
-    'DESC': false
-  }
+    ASC: true,
+    DESC: false,
+  };
 
-  constructor(private route: ActivatedRoute,
-    private configService: ConfigurationService, private conceptDetailService: ConceptDetailService, private loaderService: LoaderService, private mapsetService: MapsetService,
-    private sanitizer: DomSanitizer) { }
+  constructor(
+    private route: ActivatedRoute,
+    private configService: ConfigurationService,
+    private conceptDetailService: ConceptDetailService,
+    private loaderService: LoaderService,
+    private mapsetService: MapsetService,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   ngOnInit(): void {
-
     this.route.params.subscribe((params: any) => {
-      this.lastQuery = "";
-      this.mapsetCode = params.code
-      this.mapsetService.getMapsetByCode(this.mapsetCode, "properties").subscribe(response => {
+      this.lastQuery = '';
+      this.mapsetCode = params.code;
+      this.mapsetService.getMapsetByCode(this.mapsetCode, 'properties').subscribe((response) => {
         this.version = response['version'];
-        this.properties = response["properties"];
-        this.welcomeText = this.properties.find(prop => prop.type == "welcomeText")?.value;
-        this.targetTermLoaded = "true" == this.properties.find(prop => prop.type == "targetLoaded")?.value;
-        this.targetTermVersion = this.properties.find(prop => prop.type == "targetTerminologyVersion")?.value;
-        this.sourceTermLoaded = "true" == this.properties.find(prop => prop.type == "sourceLoaded")?.value;
-        this.sourceTermVersion = this.properties.find(prop => prop.type == "sourceTerminologyVersion")?.value;
+        this.properties = response['properties'];
+        this.welcomeText = this.properties.find((prop) => prop.type == 'welcomeText')?.value;
+        this.targetTermLoaded = 'true' == this.properties.find((prop) => prop.type == 'targetLoaded')?.value;
+        this.targetTermVersion = this.properties.find((prop) => prop.type == 'targetTerminologyVersion')?.value;
+        this.sourceTermLoaded = 'true' == this.properties.find((prop) => prop.type == 'sourceLoaded')?.value;
+        this.sourceTermVersion = this.properties.find((prop) => prop.type == 'sourceTerminologyVersion')?.value;
         this.setWelcomeText();
 
-        this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, "").subscribe(response => {
+        this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, '').subscribe((response) => {
           this.total = response['total'];
           this.mapsetMappings = this.total == 0 ? [] : response['maps'];
           this.fullTotal = this.total;
@@ -85,9 +87,7 @@ export class MappingDetailsComponent implements OnInit {
           }
 
           this.computeLinkCodes();
-
         });
-
       });
     });
 
@@ -96,20 +96,24 @@ export class MappingDetailsComponent implements OnInit {
 
   // After loading map records compute source/target term codes to link
   computeLinkCodes() {
-    var validTerminologies = this.configService.getTerminologies().map(obj => obj.terminology);
-    this.sourceTerm = this.properties.find(prop => prop.type == "sourceTerminology")?.value;
+    var validTerminologies = this.configService.getTerminologies().map((obj) => obj.terminology);
+    this.sourceTerm = this.properties.find((prop) => prop.type == 'sourceTerminology')?.value.toLowerCase();
     this.sourceTermSaved = validTerminologies.includes(this.sourceTerm);
-    this.targetTerm = this.properties.find(prop => prop.type == "targetTerminology")?.value;
+    this.targetTerm = this.properties.find((prop) => prop.type == 'targetTerminology')?.value.toLowerCase();
     this.targetTermSaved = validTerminologies.includes(this.targetTerm);
     if (this.sourceTermLoaded && this.total > 0) {
-      this.conceptDetailService.getConcepts(this.sourceTerm, this.mapsetMappings.map(obj => obj.sourceCode).toString(), "minimal").subscribe(response => {
-        this.sourceTermCodes = response.map(obj => obj.code);
-      });
+      this.conceptDetailService
+        .getConcepts(this.sourceTerm, this.mapsetMappings.map((obj) => obj.sourceCode).toString(), 'minimal')
+        .subscribe((response) => {
+          this.sourceTermCodes = response.map((obj) => obj.code);
+        });
     }
     if (this.targetTermLoaded && this.total > 0) {
-      this.conceptDetailService.getConcepts(this.targetTerm, this.mapsetMappings.map(obj => obj.targetCode).toString(), "minimal").subscribe(response => {
-        this.targetTermCodes = response.map(obj => obj.code);
-      });
+      this.conceptDetailService
+        .getConcepts(this.targetTerm, this.mapsetMappings.map((obj) => obj.targetCode).toString(), 'minimal')
+        .subscribe((response) => {
+          this.targetTermCodes = response.map((obj) => obj.code);
+        });
     }
   }
 
@@ -125,8 +129,7 @@ export class MappingDetailsComponent implements OnInit {
   // Sets the welcome text
   setWelcomeText(): any {
     document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
-    if (this.mappings)
-      this.mappings._first = 0;
+    if (this.mappings) this.mappings._first = 0;
   }
 
   // Handle lazy loading of table
@@ -136,8 +139,9 @@ export class MappingDetailsComponent implements OnInit {
     } else {
       const pageSize = event.rows;
       const fromRecord = event.first;
-      this.mapsetService.getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery, this.currentSortDirection, this.currentSortColumn)
-        .subscribe(response => {
+      this.mapsetService
+        .getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery, this.currentSortDirection, this.currentSortColumn)
+        .subscribe((response) => {
           this.total = response['total'];
           this.mapsetMappings = this.total == 0 ? [] : response['maps'];
           this.computeLinkCodes();
@@ -157,40 +161,40 @@ export class MappingDetailsComponent implements OnInit {
       var text = str.replace('↓', '').replace('↑', '');
       sortCols[i].innerHTML = text;
     }
-    if (columnName) { // setup for sorting
+    if (columnName) {
+      // setup for sorting
       var sortCols = document.getElementsByClassName('sortable');
       if (this.currentSortColumn == columnName) {
         this.currentSortDirection = !this.currentSortDirection;
-      }
-      else {
+      } else {
         this.currentSortColumn = columnName;
         this.currentSortDirection = this.sortDirection.ASC;
       }
       this.currentSortColumn = columnName;
       sort = this.currentSortColumn;
-      sortDirection = this.currentSortDirection
-      document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓');
+      sortDirection = this.currentSortDirection;
+      document.getElementById(columnName).innerText += this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓';
     }
     if (this.lastQuery != event.query) {
-      this.fromRecord = 0
+      this.fromRecord = 0;
     }
-    this.mapsetService.getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
-      .subscribe(response => {
+    this.mapsetService
+      .getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
+      .subscribe((response) => {
         this.total = response['total'];
         this.mapsetMappings = this.total == 0 ? [] : response['maps'];
         this.computeLinkCodes();
       });
     this.textSuggestions = [];
     if (this.lastQuery != event.query && this.mappings) {
-      this.mappings._first = 0
+      this.mappings._first = 0;
     }
     if (event.query) {
-      this.lastQuery = event.query
+      this.lastQuery = event.query;
     }
 
     this.loaderService.hideLoader();
   }
-
 
   async exportMapping() {
     this.loaderService.showLoader();
@@ -198,32 +202,36 @@ export class MappingDetailsComponent implements OnInit {
     var mappingText = '';
 
     for (let i = 0; i < pages; i++) {
-      await this.configService.getMapsetMappings(this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE).toPromise().then(
-        result => {
-          result['maps'].forEach(c => {
+      await this.configService
+        .getMapsetMappings(this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE)
+        .toPromise()
+        .then((result) => {
+          result['maps'].forEach((c) => {
             // get titles and pretty-fy them
             if (mappingText == '') {
               // first replace: split words by lowercase letter -> uppercase letter
               // second replace: capitalize new first word
-              mappingText += Object.keys(c).map((fieldName) =>
-                fieldName.replace(/([a-z])([A-Z])/g, '$1 $2')
-                  .replace(/^\w/, c => c.toUpperCase())).join(',') + '\r\n';
+              mappingText +=
+                Object.keys(c)
+                  .map((fieldName) => fieldName.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w/, (c) => c.toUpperCase()))
+                  .join(',') + '\r\n';
             }
             mappingText += this.exportCodeFormatter(c) + '\r\n';
           });
-        }
-      );
+        });
     }
     var fileName = this.mapsetCode + '_' + (this.version != null ? 'Version' + this.version + '_' : '');
-    saveAs(new Blob([mappingText], {
-      type: 'text/plain'
-    }), fileName + new Date().toISOString() + '.csv');
+    saveAs(
+      new Blob([mappingText], {
+        type: 'text/plain',
+      }),
+      fileName + new Date().toISOString() + '.csv',
+    );
     this.loaderService.hideLoader();
   }
 
   exportCodeFormatter(map) {
     // extraneous commas are the bane of my existence
-    return '\"' + Object.values(map).join('\",\"') + '\"';
+    return '"' + Object.values(map).join('","') + '"';
   }
-
 }

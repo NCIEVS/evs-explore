@@ -163,7 +163,7 @@
             </p-radioButton>
             <p-button icon="pi pi-angle-double-left" (onClick)="toggleShowMoreSearchOptions()" *ngIf="showMoreSearchOption"> </p-button>
           </div>
-          <div class="col-sm-2" style="padding-top: 3px">
+          <div class="col-md-12" style="padding-top: 3px">
             <p-chips
               (keydown)="onChipsKeyEvent($event)"
               *ngIf="searchCriteria.synonymSource && searchCriteria.synonymSource.length > 0"
@@ -172,9 +172,7 @@
               addOnTab="false"
               addOnBlur="false"
             >
-              <ng-template let-item pTemplate="item">
-                {{ item }}
-              </ng-template>
+              <ng-template let-item pTemplate="item"> {{ item }}&nbsp; </ng-template>
             </p-chips>
           </div>
         </div>
