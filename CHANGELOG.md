@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.10.0.RELEASE] - YYYY-MM-DD
+### Added
+### Changed
+
+## [1.9.0.RELEASE] - 2024-02-01
+### Added
+- Use concept active flag instead of "Retired_Concept"
+- Ability to display terminology in search results
+- Initial "multi terminology" search experience
+- Implement support for NCIm "source statistics"
+### Changed
+- Fixed paging/sorting for mapsets
+- Fix history to link to replacement concept
+- Fixed inactive conepts to show all sections if synonyms are present
+- Handle MedDRA license header
+- Show map "group / rank" in the mappings table (#241)
+- Update to the HHS warning banner (#242)
+- Reorder terminologies picklist
+- Update google analytics to G4
+- Angular 15 Upgrade (and primeng libraries and style fixes)
+
+## [1.8.1.RELEASE] - 2023-10-31
+### Added
+- Updated index.html for global header
+
 ## [1.8.0.RELEASE] - 2023-05-31
 ### Added
 - Feature for browsing/searching/downloading cross-terminology map sets.
