@@ -34,7 +34,8 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
-    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology").includes(","))) {
+    // Determine if we are in multi mode
+    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology")?.includes(","))) {
       this.configService.setMultiSearch(true);
     } else {
       this.configService.setMultiSearch(false);
@@ -94,7 +95,7 @@ export class EvsHeaderComponent implements OnInit {
   // Get terminology subsets flag
   getTerminologySubset() {
     if (this.terminology && this.terminology.metadata) {
-      return this.terminology.metadata.subset;
+      return this.terminology.metadata.subsetLink;
     }
   }
 

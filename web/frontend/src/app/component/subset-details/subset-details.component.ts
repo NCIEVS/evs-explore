@@ -109,6 +109,12 @@ export class SubsetDetailsComponent implements OnInit {
               }
             }
           }
+          var sortCols = document.getElementsByClassName('sortable');
+          for (var i = 0; i < sortCols.length; i++) {
+            var str = sortCols[i].innerHTML;
+            var text = str.replace('↓', '').replace('↑', '');
+            sortCols[i].innerHTML = text;
+          }
           this.setTitle();
           this.lastSearch = "";
         });
@@ -121,7 +127,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch)
+      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch, this.currentSortDirection, this.currentSortColumn)
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
