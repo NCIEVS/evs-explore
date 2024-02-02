@@ -232,7 +232,7 @@ export class ConceptDisplayComponent implements OnInit {
       nameWorksheet[utils.encode_cell({ c: 1, r: nameTableLength - 1 })] =
       {
         f: '=HYPERLINK("' + subsetLink.baseURI + 'subset/' + this.configService.getTerminologyName() +
-          '/' + subsetLink.innerText + '","' + this.conceptCode + '"'
+          '/' + subsetLink.innerText + '","' + this.conceptCode + '"' + ")"
       };
     }
     const defWorksheet = utils.json_to_sheet(this.defTable());
@@ -506,7 +506,7 @@ export class ConceptDisplayComponent implements OnInit {
           return;
         }
         var associationsEntry = {};
-        associationsEntry['Relationship'] = association.type + this.getQualifiers(association.qualifiers);
+        associationsEntry['Relationship'] = association.type + this.checkAssociationQualifiers(association);
         associationsEntry['Related Code'] = association.relatedCode;
         associationsEntry['Related Name'] = association.relatedName;
         associationsTable.push(associationsEntry);
@@ -592,7 +592,7 @@ export class ConceptDisplayComponent implements OnInit {
           return;
         }
         var inverseAssociationsEntry = {};
-        inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.getQualifiers(inverseAssociation.qualifiers);
+        inverseAssociationsEntry['Relationship'] = inverseAssociation.type + this.checkAssociationQualifiers(inverseAssociation);
         inverseAssociationsEntry['Related Code'] = inverseAssociation.relatedCode;
         inverseAssociationsEntry['Related Name'] = inverseAssociation.relatedName;
         incomingAssociationsTable.push(inverseAssociationsEntry);
@@ -601,6 +601,11 @@ export class ConceptDisplayComponent implements OnInit {
     else
       incomingAssociationsTable.push({ 'None': '' });
     return incomingAssociationsTable;
+  }
+
+  checkAssociationQualifiers(association) {
+    var qual = this.getQualifiers(association.qualifiers);
+    return qual ? qual : "";
   }
 
   disjointWithTable() {

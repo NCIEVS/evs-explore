@@ -22,6 +22,8 @@ export class ConfigurationService {
   private subject: Subject<any>;
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
+  private multiSearch = false;
+  private multiSearchTerminologies: Set<string> = null;
   public subsets: TreeNode[];
 
   private MAX_EXPORT_SIZE = 10000;
@@ -41,6 +43,19 @@ export class ConfigurationService {
 
   getMaxExportSize() {
     return this.MAX_EXPORT_SIZE;
+  }
+
+
+  getRestrictedTerms() {
+    var restrictedTerms = []
+    const terms = this.getMultiSearchTerminologies();
+    terms.forEach(term => {
+      const terminology = this.getTerminologyByName(term);
+      if (terminology.metadata.licenseText) {
+        restrictedTerms.push(this.getTerminologyByName(term).metadata.uiLabel.replace(/\:.*/, ""));
+      }
+    });
+    return restrictedTerms.join(", ")
   }
 
   getTerminology() {
@@ -81,7 +96,10 @@ export class ConfigurationService {
     return false;
   }
 
-  getTerminologyByName(name) { // reverse search terminology by short name
+  getTerminologyByName(name: string) { // reverse search terminology by short name
+    if (name == "multi") {
+      return { terminology: "multi" };
+    }
     var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
     for (var term in terms) {
       if (terms[term].terminology == name) {
@@ -113,6 +131,14 @@ export class ConfigurationService {
     this.sources = sources;
   }
 
+  getMultiSearchTerminologies() {
+    return this.multiSearchTerminologies;
+  }
+
+  setMultiSearchTerminologies(terminologies) {
+    this.multiSearchTerminologies = terminologies;
+  }
+
   // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
     return this.getTerminology().metadata['loader'] == 'rdf';
@@ -141,7 +167,8 @@ export class ConfigurationService {
       this.code = paramMap.get('code');
     }
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
-    if (paramMap.get('terminology') || (paramMap.get('code') && !paramMap.get('terminology'))) {
+    // don't change terminology on multi-search
+    if ((paramMap.get('terminology') != null && !this.getMultiSearch()) || (paramMap.get('code') != null && !paramMap.get('terminology'))) {
       var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down to latest (and optionally monthly)
       var terminology = this.terminologies.filter(t =>
@@ -181,7 +208,8 @@ export class ConfigurationService {
   // consider the local env and the 'evsexplore' context path in deploy envs
   setConfigFromPathname(path: string) {
     console.log('set config from path', path);
-    const splitPath = path.split('/');
+    const splitPath = path.split('/').filter(part => part !== "evsexplore");
+    splitPath
     var pterminology;
 
     // Handle /hierarchy/{terminology}/{code}
@@ -195,10 +223,14 @@ export class ConfigurationService {
       // The terminology is second-to-last field
       pterminology = splitPath[splitPath.length - 2];
     }
-    // otherwise, assume it's the last field (subses, properties, alldocs, etc.)
+    // otherwise, assume it's the last field (subsets, properties, alldocs, etc.)
     else {
-      // The terminology is last field
-      pterminology = splitPath[splitPath.length - 1];
+      if (splitPath.length > 3) {
+        pterminology = splitPath[splitPath.length - 2]
+      }
+      else
+        // The terminology is last field
+        pterminology = splitPath[splitPath.length - 1];
     }
     var terminology = this.terminologies.filter(t =>
       t.latest && t.terminology == pterminology
@@ -219,12 +251,24 @@ export class ConfigurationService {
 
   }
 
+  getMultiSearch() {
+    return this.multiSearch;
+  }
+
+  setMultiSearch(multiSearch) {
+    this.multiSearch = multiSearch;
+  }
+
   getCode(): string {
     return this.code;
   }
 
   getSelectedSources(): Set<String> {
     return this.selectedSources;
+  }
+
+  hasSourceStats() {
+    return this.getTerminologyName() == "ncim";
   }
 
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
@@ -381,9 +425,6 @@ export class ConfigurationService {
     return this.http.get(encodeURI('/api/v1/metadata/' + terminology + '/synonymSources'),
       {
         responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
       }
     )
       .pipe(
@@ -449,45 +490,6 @@ export class ConfigurationService {
     );
   }
 
-  getSubsetLink(terminology: string, subsetCode: String) {
-    var url = '/api/v1/metadata/' + terminology + '/subset/' + subsetCode + '?include=subsetLink';
-    return this.http.get(encodeURI(url))
-      .toPromise()
-      .then(res => <Concept>res);
-  }
-
-  getMapsets(include = "minimal") {
-    var url = '/api/v1/mapset?include=' + include;
-    return this.http.get(encodeURI(url),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
-      }
-    ).pipe(
-      catchError((error) => {
-        return observableThrowError(new EvsError(error, 'Could not fetch mapsets'));
-      })
-    );
-  }
-
-  getMapsetByCode(code: string, include = "minimal") {
-    var url = '/api/v1/mapset/' + code + '?include=' + include;
-    return this.http.get(encodeURI(url),
-      {
-        responseType: 'json',
-        params: {
-          hideLoader: 'true'
-        }
-      }
-    ).pipe(
-      catchError((error) => {
-        return observableThrowError(new EvsError(error, 'Could not fetch mapset for ' + code));
-      })
-    );
-  }
-
   getMapsetMappings(code: string, pageSize = 10, fromRecord = 0, term = "", ascending = null, sort = null) {
 
     var url = '/api/v1/mapset/' + code + "/maps?pageSize=" + pageSize + "&fromRecord=" + fromRecord
@@ -500,6 +502,19 @@ export class ConfigurationService {
     if (term) {
       url += '&term=' + term;
     }
+    return this.http.get(encodeURI(url),
+      {
+        responseType: 'json'
+      }
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch mapset mappings for ' + code));
+      })
+    );
+  }
+
+  getSourceStats(code: string, term: string) {
+    var url = '/api/v1/metadata/' + term + "/stats/" + code;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json'

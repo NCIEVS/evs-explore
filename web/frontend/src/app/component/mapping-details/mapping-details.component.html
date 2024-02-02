@@ -1,13 +1,13 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span><span style="float:right">
+      {{ mapsetCode}}<span *ngIf="version != null">: Version {{version}}</span>
+      <div style="float:right">
         <button type="button" pButton label="Export" icon="fa fa-download" id="mappingExportButton"
-          class="ui-button-coloring" pTooltip="Click to download mapping search results" (click)="exportMapping()"
+          pTooltip="Click to download mapping search results" (click)="exportMapping()"
           [disabled]="total == 0"></button>
-        <button [routerLink]="['/welcome']" label="New Search" pButton type="button"
-          class="ui-button-coloring"></button>
-      </span>
+        <button [routerLink]="['/welcome']" label="New Search" icon="fa fa-search" pButton type="button"></button>
+      </div>
     </div>
     <p id="welcomeTextDiv"></p>
     <div class="table-responsive">
@@ -19,20 +19,20 @@
               id="termauto" name="termauto" (onClear)="ngOnInit()" placeholder="Enter at least 3 letters of a term."
               [minLength]="3">
             </p-autoComplete>
-
           </div>
 
         </div>
         <div class="col-sm-2">
-          <div class="ui-inputgroup" style="padding-bottom: 6px;">
+          <div class="p-inputgroup" style="padding-bottom: 6px;">
             <button type="button" pButton label="Search" icon="fa fa-search" (click)="search($event);"
-              [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>
-            <button type="button" pButton label="Reset" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
+              [disabled]="!termAutoSearch || termAutoSearch.length < 3"></button>&nbsp;
+            <button type="button" pButton label="Reset" icon="fa fa-undo" [disabled]="!termAutoSearch"
+              (click)="ngOnInit()"></button>
           </div>
         </div>
       </div>
       <div *ngIf="!mapsetMappings && termAutoSearch">
-        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No concepts found that matched the above search.
+        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No mappings found that matched the above search.
       </div>
       <div *ngIf="mapsetMappings" class="table-responsive">
         <p-table *ngIf="mapsetMappings" #mappings [value]="mapsetMappings" [rows]="pageSize" [totalRecords]="total"
@@ -46,7 +46,7 @@
               <th class="mappingTitle sortable" style="cursor: pointer" id="sourceName"
                 (click)="search($event, 'sourceName')">Source Name</th>
               <th class="mappingTitle">Relationship</th>
-              <th class="mappingTitle">Map Rank</th>
+              <th class="mappingTitle">Group / Rank</th>
               <th class="mappingTitle">Target</th>
               <th class="mappingTitle sortable" style="cursor: pointer" id="targetCode"
                 (click)="search($event, 'targetCode')">Target Code</th>
@@ -58,18 +58,21 @@
             <tr>
               <td>{{ mapping.source }}</td>
               <td>
-                <a *ngIf="sourceTermSaved" [routerLink]="[conceptUrlBase, sourceTerm, mapping.sourceCode]"
-                  target='_top'>{{ mapping.sourceCode }}</a><span *ngIf="!sourceTermSaved">{{ mapping.sourceCode
-                  }}</span>
+                <a *ngIf="showSourceLink(mapping.sourceCode)"
+                  [routerLink]="[conceptUrlBase, sourceTerm, mapping.sourceCode]" target='_top'>{{ mapping.sourceCode
+                  }}</a>
+                <span *ngIf="!showSourceLink(mapping.sourceCode)">{{ mapping.sourceCode }}</span>
               </td>
               <td>{{ mapping.sourceName }}</td>
               <td>{{ mapping.type }}</td>
-              <td>{{ mapping.rank }}</td>
+              <td><span *ngIf="mapping.group != null">{{ mapping.group}} / </span>{{ mapping.rank }}</td>
               <td>{{ mapping.targetTerminology }}</td>
-              <td><a *ngIf="targetTermSaved" [routerLink]="[conceptUrlBase, targetTerm, mapping.targetCode]"
-                  target='_top'>{{ mapping.targetCode }}</a><span *ngIf="!targetTermSaved">{{
-                  mapping.targetCode
-                  }}</span></td>
+              <td>
+                <a *ngIf="showTargetLink(mapping.targetCode); else elseBlock"
+                  [routerLink]="[conceptUrlBase, targetTerm, mapping.targetCode]" target='_top'>{{ mapping.targetCode
+                  }}</a>
+                <span *ngIf="!showTargetLink( mapping.targetCode)">{{ mapping.targetCode }}</span>
+              </td>
               <td>{{ mapping.targetName }}</td>
             </tr>
           </ng-template>

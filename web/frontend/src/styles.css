@@ -41,7 +41,7 @@ table a:hover {
   border-bottom: 1px solid #ccc !important;
 }
 
-p-dialog .ui-dialog {
+p-dialog .p-dialog {
   overflow: scroll;
   max-height: 70%;
 }
@@ -134,7 +134,7 @@ body .alert-info {
   padding: 1em !important;
 }
 
-.ui-tabview .ui-tabview-panel {
+.p-tabview .p-tabview-panel {
   border-width: 0;
   padding-top: 0em;
   padding-left: 0em;
@@ -143,12 +143,12 @@ body .alert-info {
   background: 0;
 }
 
-.ui-tabview .ui-tabview-title {
+.p-tabview .p-tabview-title {
   font-weight: bold;
   font-size: 16px !important;
 }
 
-.ui-panel .ui-panel-footer {
+.p-panel .p-panel-footer {
   border-width: 1px 0 0;
   padding: .25em .5em;
   text-align: left;
@@ -198,25 +198,25 @@ body .alert-info {
   height: 120px;
 }
 
-.ui-treetable .ui-treetable-toggler {
-  top: 7% !important;
+.p-treetable .p-treetable-toggler {
+  top: -10% !important
 }
 
-.ui-button-coloring {
+.p-button-coloring {
   border-radius: 0px !important;
   background-color: #1c5e86 !important;
   border-color: #1c5e86 !important;
 }
 
-.ui-coloring {
+.p-coloring {
   color: #1c5e86 !important;
 }
 
-.ui-button-text-icon-left .ui-button-text {
+.p-button-text-icon-left .p-button-text {
   padding: .28em 1em .28em 1.8em !important
 }
 
-.ui-tabview-selected.ui-state-active {
+.p-tabview-selected.ui-state-active {
   background-color: #1c5e86 !important;
   border-color: #1c5e86 !important;
 }
@@ -225,7 +225,7 @@ body .alert-info {
   color: #319fbe !important;
 }
 
-.ui-table-scrollable-header-box {
+.p-table-scrollable-header-box {
   margin-right: 17px
 }
 
@@ -278,3 +278,88 @@ body .alert-info {
 .source-table {
   margin-left: 40px;
 }
+
+.modal-backdrop.fade.show {
+  z-index: 1050 !important
+}
+
+#truncateTermList {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  /* Adjust this value to set the number of characters before truncation */
+  cursor: pointer;
+}
+
+.multiTermSelect {
+  margin-right: 5px;
+  height: 15px;
+  width: 15px;
+  bottom: -1px;
+  position: relative;
+}
+
+.multiSearchButtons {
+  color: #007bff !important;
+  cursor: pointer;
+}
+
+.multiSearchButtons:hover {
+  text-decoration: underline !important;
+}
+
+.hyperlink:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #007bff;
+}
+
+.separator {
+  display: inline-block;
+  width: 1px;
+  font-weight: 700;
+  height: 25px;
+  background-color: grey;
+  margin: 0 10px;
+  bottom: -5.5px;
+  position: relative;
+}
+
+
+.w-10 {
+  width: 10%
+}
+.w-20 {
+  width: 20%
+}
+.w-30 {
+  width: 30%
+}
+.w-40 {
+  width: 40%
+}
+.w-50 {
+  width: 50%
+}
+.w-60 {
+  width: 60%
+}
+.w-70 {
+  width: 70%
+}
+.w-80 {
+  width: 80%
+}
+.w-90 {
+  width: 90%
+}
+.w-100 {
+  width: 100%
+}
+
+

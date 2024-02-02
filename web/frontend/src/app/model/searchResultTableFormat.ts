@@ -28,6 +28,9 @@ export class SearchResultTableFormat {
       const tableHeaderCode0 = new TableHeader('column0', 'Highlights', '70px');
       this.header.push(tableHeaderCode0);
 
+      const tableHeaderTerminology = new TableHeader('terminology', 'Terminology', '70px');
+      this.header.push(tableHeaderTerminology);
+
       if (configService.getTerminologyName() == 'ncim') {
         const tableHeaderCode = new TableHeader('column1', 'CUI', '70px');
         this.header.push(tableHeaderCode);
@@ -68,7 +71,9 @@ export class SearchResultTableFormat {
 
         const data = new TableData();
         data.column1 = searchResult.concepts[i].code;
-        data.retiredConcept = searchResult.concepts[i].isRetiredConcept() ? 'yes' : 'no';
+        data.termShorthand = searchResult.concepts[i]?.terminology;
+        data.terminology = data.termShorthand ? configService.getTerminologyByName(data.termShorthand).metadata.uiLabel.replace(/\:.*/, "") : "";
+        data.retiredConcept = !searchResult.concepts[i].active ? 'yes' : 'no';
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
         data.displayName = searchResult.concepts[i].name;

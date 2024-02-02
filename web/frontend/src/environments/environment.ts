@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  productionHost: 'explore.evs.cancer.gov',
-  code: 'UA-150112876-3',
-  swagger: 'https://api-evsrest-dev.nci.nih.gov/swagger-ui/index.html'
+  host: 'localhost',
+  code: 'G-C8Y98QQ6LR',
+  swagger: 'https://api-evsrest-dev.nci.nih.gov/swagger-ui/index.html',
 };
 
 /*
@@ -16,4 +16,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

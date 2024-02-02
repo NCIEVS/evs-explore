@@ -44,4 +44,8 @@ export class SourcesComponent implements OnInit {
   ngAfterViewInit(): void {
   }
 
+  hasSourceLinks() {
+    return this.terminology == 'ncim';
+  }
+
 }

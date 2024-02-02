@@ -1,4 +1,4 @@
-.customtabview .ui-panel-titlebar {
+.customtabview .p-panel-titlebar {
   background: #000000
 }
 
@@ -9,5 +9,7 @@
   margin-bottom: 5px;
 }
 
-
-
+.p-button {
+  margin-left: 2px;
+  margin-right: 2px;
+}

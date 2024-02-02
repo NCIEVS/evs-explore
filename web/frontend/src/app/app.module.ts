@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 // import { Injector, ModuleWithProviders } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AngularSplitModule } from 'angular-split'
+import { AngularSplitModule } from 'angular-split';
 
 // Facebook modules
 import { FacebookModule } from 'ngx-facebook';
@@ -14,12 +14,10 @@ import { MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { BlockUIModule } from 'primeng/blockui';
-import { ToastModule } from 'primeng/toast';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { ButtonModule, ProgressSpinnerModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChipsModule } from 'primeng/chips';
 import { TooltipModule } from 'primeng/tooltip';
@@ -28,6 +26,7 @@ import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { TreeTableModule } from 'primeng/treetable';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ToastModule } from 'primeng/toast';
 
 // ngx
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -58,7 +57,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Local components
-import { NotificationComponent } from './component/notifications/notifications.component';
 import { ErrorComponent } from './component/error/error.component';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 import { EvsApiComponent } from './component/evs-api/evs-api.component';
@@ -88,7 +86,10 @@ import { AutofocusDirective } from './directive/autofocus/autofocus.directive';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 import { ContactUsComponent } from './component/contact-us/contact-us.component';
+import { ButtonModule } from 'primeng/button';
+import { NotificationComponent } from './component/notifications/notifications.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
+import { SourceStatsComponent } from './component/source-stats/source-stats.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -97,7 +98,6 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     EvsApiComponent,
     EvsHeaderComponent,
     EvsFooterComponent,
-    NotificationComponent,
     ErrorComponent,
     PageNotFoundComponent,
     LoaderComponent,
@@ -108,10 +108,10 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     ConceptHistoryComponent,
     ConceptDisplayComponent,
     HierarchyDisplayComponent,
-    SubsetsComponent,
     MappingsComponent,
     AssociationsComponent,
     PropertiesComponent,
+    SubsetsComponent,
     QualifiersComponent,
     OverviewComponent,
     RolesComponent,
@@ -127,7 +127,9 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     SubsetDetailsComponent,
     SubsetNcitComponent,
     EvsApiComponent,
-    MappingDetailsComponent
+    NotificationComponent,
+    MappingDetailsComponent,
+    SourceStatsComponent
   ],
   imports: [
     NgbModule,
@@ -141,11 +143,10 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     FormsModule,
     BlockUIModule,
     NgxSpinnerModule,
-    ToastModule,
     MultiSelectModule,
+    ToastModule,
     PanelModule,
     AutoCompleteModule,
-    ButtonModule,
     RadioButtonModule,
     ChipsModule,
     TooltipModule,
@@ -155,13 +156,10 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     TreeTableModule,
     DropdownModule,
     ToggleButtonModule,
-    ProgressSpinnerModule,
-    AngularSplitModule.forRoot()
+    ButtonModule,
+    AngularSplitModule.forRoot(),
   ],
-  exports: [
-    NotificationComponent,
-    DisplayPipe
-  ],
+  exports: [DisplayPipe],
   providers: [
     CookieService,
     NotificationService,
@@ -177,24 +175,25 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
     GlobalErrorHandler,
     {
       provide: ErrorHandler,
-      useClass: GlobalErrorHandler
+      useClass: GlobalErrorHandler,
     },
     ConfigurationService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigurationService) => function () {
-        return configService.loadConfig();
-      },
+      useFactory: (configService: ConfigurationService) =>
+        function () {
+          return configService.loadConfig();
+        },
       deps: [ConfigurationService],
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true,
-    }
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 
 // Export this module

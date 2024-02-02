@@ -16,6 +16,8 @@ export class EvsHeaderComponent implements OnInit {
   firstRoot = '';
   private subscription = null;
   showTerminologyInfo = false;
+  currentUrl = "";
+  truncated: boolean = true;
 
   constructor(private http: HttpClient,
     private configService: ConfigurationService,
@@ -23,8 +25,8 @@ export class EvsHeaderComponent implements OnInit {
     public router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const currentUrl = event.url;
-        this.showTerminologyInfo = !currentUrl.includes('/mappings');
+        this.currentUrl = event.url;
+        this.showTerminologyInfo = !["/mappings", "multisearch"].some(v => this.currentUrl.includes(v));
       }
     });
   }
@@ -32,6 +34,14 @@ export class EvsHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.firstRoot = null;
+    // Determine if we are in multi mode
+    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology")?.includes(","))) {
+      this.configService.setMultiSearch(true);
+    } else {
+      this.configService.setMultiSearch(false);
+
+    }
+    this.configService.setConfigFromQuery(window.location.search);
     this.terminology = this.configService.getTerminology();
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
@@ -41,7 +51,7 @@ export class EvsHeaderComponent implements OnInit {
         // Look up the first root code
         this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
           // if first root is still null then set it
-          if (this.firstRoot == null) {
+          if (this.firstRoot == null && Object.values(response).length > 0) {
             this.firstRoot = response[0].code;
           }
         });
@@ -59,7 +69,8 @@ export class EvsHeaderComponent implements OnInit {
         if (this.terminology.metadata.hierarchy) {
           // Look up the first root code
           this.conceptService.getRoots(this.terminology.terminology).subscribe(response => {
-            this.firstRoot = response[0].code;
+            if (Object.values(response).length > 0)
+              this.firstRoot = response[0].code;
           });
         }
       }
@@ -84,13 +95,38 @@ export class EvsHeaderComponent implements OnInit {
   // Get terminology subsets flag
   getTerminologySubset() {
     if (this.terminology && this.terminology.metadata) {
-      return this.terminology.metadata.subset;
+      return this.terminology.metadata.subsetLink;
     }
+  }
+
+  notMultiSearch() {
+    return !this.configService.getMultiSearch();
   }
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+  }
+
+  displayMultiSearchTerms() {
+    return !this.notMultiSearch() && this.configService.getMultiSearchTerminologies() != null && Array.from(this.configService.getMultiSearchTerminologies()).length > 0;
+  }
+
+  getMultiSearchTerms() {
+    var multiSearchTerms = [];
+    this.configService.getMultiSearchTerminologies().forEach(term => {
+      var fullTerm = this.configService.getTerminologyByName(term);
+      multiSearchTerms.push(fullTerm.metadata.uiLabel.replace(/\:.*/, ""));
+    });
+    return multiSearchTerms.join(", ");
+  }
+
+  getMultiSearchTermsUrl() {
+    return [...this.configService.getMultiSearchTerminologies()].join(',');
+  }
+
+  toggleTruncation() {
+    this.truncated = !this.truncated;
   }
 
 }
