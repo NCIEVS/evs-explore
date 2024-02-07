@@ -32,7 +32,7 @@ export class ConceptDetailComponent implements OnInit {
       ['OMIM_Number', 'https://omim.org/entry/'],
       ['PubMedID_Primary_Reference', 'http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids='],
       ['Swiss_Prot', 'https://www.uniprot.org/uniprot/'],
-      ['ena', 'https://www.ebi.ac.uk/ena/browser/view/${attributeValue}'],
+      ['ena', 'https://www.ebi.ac.uk/ena/browser/view/'],
     ]
   )
 
