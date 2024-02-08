@@ -44,6 +44,14 @@ springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build
 }
 
+// Java Toolchain to detect which version of Java to use, if not present
+// it will automatically download and install the required version of Java
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 repositories {
     mavenLocal()
     jcenter()
