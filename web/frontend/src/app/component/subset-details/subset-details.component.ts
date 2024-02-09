@@ -60,16 +60,17 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
       this.subsetDetailService.getSubsetMembers(this.titleCode)
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          nodes['concepts'].forEach(c => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
+          if (nodes['concepts']) {
+            nodes['concepts'].forEach(c => {
+              this.subsets.push(new Concept(c, this.configService));
+            });
+          }
 
           var synonymMap = new Array<Map<string, string>>();
           this.subsets.forEach(c => {
