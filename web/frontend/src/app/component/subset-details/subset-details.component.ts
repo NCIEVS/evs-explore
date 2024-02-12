@@ -92,6 +92,10 @@ export class SubsetDetailsComponent implements OnInit {
           if (ContSource.length == 1) {
             if (ContSource[0].value == 'CTRP')
               this.subsetFormat = 'CTRP';
+            // CHECK FOR CDISC
+            else if (ContSource[0].value == 'CDISC') {
+              this.subsetFormat = 'CDISC';
+            }
             else
               this.subsetFormat = ContSource[0].value;
           }
