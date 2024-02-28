@@ -149,15 +149,25 @@
       </p-table>
 
       <!-- "CDISC" Subset Format -->
-      <p-table *ngIf="subsets && subsetFormat == 'CDISC'" #subsetList [value]="subsets" [rows]="pageSize"
-        [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both" [rowsPerPageOptions]="[10, 20, 50, 100]"
-        [lazy]="true" (onLazyLoad)="onLazyLoadData($event)" class="table table-striped table-bordered">
+      <p-table
+        *ngIf="subsets && subsetFormat == 'CDISC'"
+        #subsetList
+        [value]="subsets"
+        [rows]="pageSize"
+        [totalRecords]="hitsFound"
+        [paginator]="true"
+        paginatorPosition="both"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        [lazy]="true"
+        (onLazyLoad)="onLazyLoadData($event)"
+        class="table table-striped table-bordered"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10 subsetTitle sortable" style="cursor: pointer" id="code" (click)="search($event, 'code')">CDISC Code</th>
             <th class="w-10 subsetTitle">Codelist Code</th>
-            <th class="w-10 subsetTitle">Extensible</th>
-            <th class="w-20 subsetTitle">CDISC Name</th>
+            <th class="w-10 subsetTitle">Codelist Extensible</th>
+            <th class="w-20 subsetTitle">Codelist Name</th>
             <th class="w-10 subsetTitle">CDISC Sumbission Value</th>
             <th class="w-15 subsetTitle">CDISC Synonyms(s)</th>
             <th class="w-20 subsetTitle">CDISC Definition</th>
@@ -173,29 +183,32 @@
                 {{ value.code }}
               </a>
             </td>
-            <td class="w-10">{{ codelist_code}}</td>
-            <td class="w-10">{{ extensible_list}}</td>
-
+            <td class="w-10">
+              <span *ngFor="let assoc of value.associations">
+                <span *ngIf="assoc.type == 'Concept_In_Subset'"> {{ assoc.relatedCode }}</span>
+              </span>
+            </td>
+            <td class="w-10">
+              <span *ngFor="let prop of value.properties">
+                <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
+              </span>
+            </td>
+            <td class="w-20">{{ value.name }}</td>
+            <td class="w-10">
+              <span *ngFor="let syn of value.getSynonymNames('CDISC', 'PT'); last as isLast">
+                <span
+                  >{{ syn }} <span *ngIf="!isLast"><br /></span>
+                </span>
+              </span>
+            </td>
             <td class="w-20">
               <span *ngFor="let syn of value.getSynonymNames('CDISC', 'SY'); last as isLast">
                 <span
                   >{{ syn }} <span *ngIf="!isLast"><br /></span>
                 </span>
               </span>
-              <td class="w-10">
-                <span *ngFor="let syn of value.getSynonymNames('CDISC', 'PT'); last as isLast">
-                  <span
-                    >{{ syn }} <span *ngIf="!isLast"><br /></span>
-                  </span>
-                </span>
-              </td>
-            <td class="w-15">
-              <span *ngFor="let syn of value.getSynonymNames(subsetFormat); last as isLast">
-                <span
-                  >{{ syn }} <span *ngIf="!isLast"><br /></span>
-                </span>
-              </span>
             </td>
+
             <td class="w-20">
               <span *ngFor="let def of value.definitions; last as isLast">
                 <span *ngIf="def.source == subsetFormat"> {{ def.definition }} </span>
@@ -206,18 +219,26 @@
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state style="padding-top: 4em">
           <div class="paginator-stats">
-            Showing {{ state.first + 1 }} to {{ state.first + state.rows > state.totalRecords ? state.totalRecords :
-            state.first + state.rows }} of
+            Showing {{ state.first + 1 }} to {{ state.first + state.rows > state.totalRecords ? state.totalRecords : state.first + state.rows }} of
             {{ state.totalRecords }}
           </div>
         </ng-template>
       </p-table>
 
       <!-- "Other" Subset Format -->
-      <p-table *ngIf="subsets && subsets.length > 0 && subsetFormat != 'NCIt' && subsetFormat != 'CTRP'" #subsetList
-        [value]="subsets" [rows]="pageSize" [totalRecords]="hitsFound" [paginator]="true" paginatorPosition="both"
-        [rowsPerPageOptions]="[10, 20, 50, 100]" [lazy]="true" (onLazyLoad)="onLazyLoadData($event)"
-        class="table table-striped table-bordered">
+      <p-table
+        *ngIf="subsets && subsetFormat != 'NCIt' && subsetFormat != 'CTRP' && subsetFormat != 'CDISC'"
+        #subsetList
+        [value]="subsets"
+        [rows]="pageSize"
+        [totalRecords]="hitsFound"
+        [paginator]="true"
+        paginatorPosition="both"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        [lazy]="true"
+        (onLazyLoad)="onLazyLoadData($event)"
+        class="table table-striped table-bordered"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th class="w-10 subsetTitle sortable" style="cursor: pointer" id="code" (click)="search($event, 'code')">
