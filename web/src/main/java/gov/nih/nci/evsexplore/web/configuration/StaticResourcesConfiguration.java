@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
  */
 @Configuration
 @EnableConfigurationProperties({
-    ResourceProperties.class
+    Resources.class
 })
 public class StaticResourcesConfiguration implements WebMvcConfigurer {
 
@@ -30,8 +30,7 @@ public class StaticResourcesConfiguration implements WebMvcConfigurer {
   };
 
   /** The resource properties. */
-  @Autowired
-  private ResourceProperties resourceProperties = new ResourceProperties();
+  private Resources resourceProperties = new Resources();
 
   /* see superclass */
   @Override

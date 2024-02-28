@@ -59,6 +59,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   }
 
+  // initialize the component
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
@@ -92,6 +93,10 @@ export class SubsetDetailsComponent implements OnInit {
           if (ContSource.length == 1) {
             if (ContSource[0].value == 'CTRP')
               this.subsetFormat = 'CTRP';
+            // CHECK FOR CDISC
+            else if (ContSource[0].value == 'CDISC') {
+              this.subsetFormat = 'CDISC';
+            }
             else
               this.subsetFormat = ContSource[0].value;
           }
@@ -147,6 +152,7 @@ export class SubsetDetailsComponent implements OnInit {
     }
   }
 
+  // get synonym sources for a concept
   getSynonymSources(synonyms) {
     var synonymSourceMap = new Map<string, string>();
     synonyms.forEach(synonym => {
@@ -163,7 +169,7 @@ export class SubsetDetailsComponent implements OnInit {
         if (!(synonymSourceMap.has(synonym['source']))) {
           synonymSourceMap.set(synonym['source'], synonym['name']);
         }
-        else {
+        else {5
           var key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
           synonymSourceMap.set(synonym['source'], key);
         }
@@ -173,6 +179,7 @@ export class SubsetDetailsComponent implements OnInit {
     return synonymSourceMap;
   }
 
+  // search for a concept
   search(event, columnName = null) {
     if (this.lastSearch != event.query) {
       this.subsetList._first = 0
@@ -252,6 +259,7 @@ export class SubsetDetailsComponent implements OnInit {
     this.loaderService.hideLoader();
   }
 
+  // format the export file
   exportCodeFormatter(concept: Concept) {
     var rowText = '';
     if (this.subsetFormat == 'NCIt') {
@@ -308,6 +316,7 @@ export class SubsetDetailsComponent implements OnInit {
     return rowText;
   }
 
+  // get synonym names for a concept
   getSynonymNames(concept: Concept, source, termType): string[] {
     var syns: string[] = [];
     if (concept.synonyms && concept.synonyms.length > 0) {
@@ -329,8 +338,22 @@ export class SubsetDetailsComponent implements OnInit {
     return syns;
   }
 
+  // set the title
   setTitle() {
     this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc)
   }
 
+  // get properties for a concept
+  getProperties(concept: Concept, propType): string[] {
+    var propList: string[] = [];
+    if (concept.properties && concept.properties.length > 0) {
+      for (let i = 0; i < concept.properties.length; i++) {
+        if (propType != null && concept.properties[i].type!= propType) {
+          continue;
+        }
+         propList.push(concept.properties[i].type);
+      }
+    }
+    return propList
+  }
 }
