@@ -11,8 +11,10 @@ spring:
             INDENT_OUTPUT: true
     # jmx
     jmx:
-        enabled: false        
-    
+        enabled: false
+    main:
+      web-application-type: reactive
+
 #
 # Server Properties
 #

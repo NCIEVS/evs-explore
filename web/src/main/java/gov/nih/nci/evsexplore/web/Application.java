@@ -7,12 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Entry point REST application.
  */
-@EnableZuulProxy
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
@@ -41,4 +42,16 @@ public class Application extends SpringBootServletInitializer {
     return application.sources(Application.class);
   }
 
+  /**
+   * Gateway routes.
+   *
+   * @param builder the route locator builder
+   * @return the route locator
+   */
+  @Bean
+  public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+    // Define your routes here
+    return builder.routes()
+            .build();
+  }
 }

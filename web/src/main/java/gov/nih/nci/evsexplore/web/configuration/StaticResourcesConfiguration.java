@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
  */
 @Configuration
 @EnableConfigurationProperties({
-    Resources.class
+    WebProperties.class
 })
 public class StaticResourcesConfiguration implements WebMvcConfigurer {
 
