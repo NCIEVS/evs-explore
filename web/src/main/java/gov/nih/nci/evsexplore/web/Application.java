@@ -1,19 +1,24 @@
 
 package gov.nih.nci.evsexplore.web;
 
+import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
 /**
  * Entry point REST application.
  */
-@EnableZuulProxy
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        // This is to avoid "Failed to configure a DataSource: 'url' attribute is not specified and no
+        // embedded datasource could be configured" error after using Spring Cloud Gateway
+        DataSourceAutoConfiguration.class})
+@EnableConfigurationProperties(PropertiesConfiguration.class)
 public class Application extends SpringBootServletInitializer {
 
   /** The Constant log. */

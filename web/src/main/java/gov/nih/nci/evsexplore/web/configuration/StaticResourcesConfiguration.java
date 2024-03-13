@@ -3,30 +3,38 @@ package gov.nih.nci.evsexplore.web.configuration;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.resource.PathResourceResolver;
+import org.springframework.http.CacheControl;
+import org.springframework.web.reactive.config.ResourceHandlerRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.resource.PathResourceResolver;
+import reactor.core.publisher.Mono;
 
 /**
  * Static resources config.
  */
 @Configuration
 @EnableConfigurationProperties({
-    Resources.class
+    WebProperties.class
 })
-public class StaticResourcesConfiguration implements WebMvcConfigurer {
+public class StaticResourcesConfiguration implements WebFluxConfigurer {
 
-  /** The Constant STATIC_RESOURCES. */
+  /**
+   * The Constant STATIC_RESOURCES.
+   * PathPatternParse is used by default, which doesn't support /** at the beginning of a pattern.
+   * Need to have our patterns start with a specific path.
+   */
+
   static final String[] STATIC_RESOURCES = new String[] {
-      "/**/*.css", "/**/*.html", "/**/*.js", "/**/*.json", "/**/*.bmp",
-      "/**/*.jpeg", "/**/*.jpg", "/**/*.png", "/**/*.ttf", "/**/*.eot",
-      "/**/*.svg", "/**/*.woff", "/**/*.woff2"
+          "/css/*.css", "/html/*.html", "/js/*.js", "/json/*.json", "/bmp/*.bmp", "/jpeg/*.jpeg",
+          "/jpg/*.jpg", "/png/*.png", "/ttf/*.ttf", "/eot/*.eot", "/svg/*", "/woff/*.woff",
+          "/woff2/*.woff2"
   };
 
   /** The resource properties. */
@@ -40,21 +48,20 @@ public class StaticResourcesConfiguration implements WebMvcConfigurer {
     // resourceProperties.getCache().getPeriod().getSeconds();
     Long cachePeriodLong = 30L;
     int cachePeriodInt = cachePeriodLong.intValue();
-    Integer cachePeriod = Integer.valueOf(cachePeriodInt);
+    CacheControl cacheControl = CacheControl.maxAge(cachePeriodLong, TimeUnit.SECONDS);
 
     registry.addResourceHandler(STATIC_RESOURCES)
         .addResourceLocations(resourceProperties.getStaticLocations())
-        .setCachePeriod(cachePeriod);
+            .setCacheControl(cacheControl);
 
     // Create mapping to index.html for Angular HTML5 mode.
     String[] indexLocations = getIndexLocations();
     registry.addResourceHandler("/**").addResourceLocations(indexLocations)
-        .setCachePeriod(cachePeriod).resourceChain(true)
+        .setCacheControl(cacheControl).resourceChain(true)
         .addResolver(new PathResourceResolver() {
           @Override
-          protected Resource getResource(String resourcePath, Resource location)
-            throws IOException {
-            return location.exists() && location.isReadable() ? location : null;
+          protected Mono<Resource> getResource(String resourcePath, Resource location) {
+            return location.exists() && location.isReadable() ? (Mono<Resource>) location : null;
           }
         });
   }

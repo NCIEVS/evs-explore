@@ -20,7 +20,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'war'
-    id 'org.springframework.boot' version '2.7.17'
+    id 'org.springframework.boot' version "${springBootVersion}"
 /*
  * The dependency management plugin remains a transitive dependency of spring-boot-gradle-plugin
  * so there’s no need for it to be listed as a classpath dependency in the buildscript configuration.
@@ -32,7 +32,7 @@ plugins {
 // Fix for log4j vulnerability, remove when updating spring boot version
 ext['log4j2.version'] = '2.17.1'
 
-def bomVersion = "Greenwich.RELEASE"
+def bomVersion = "2021.0.8"
 
 group = "gov.nih.nci.term.browser.web"
 version = "1.10.0.RELEASE"
@@ -63,11 +63,14 @@ repositories {
 
 dependencies {
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
     implementation 'org.springframework.boot:spring-boot-actuator'
     implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation "org.springframework.cloud:spring-cloud-starter-netflix-zuul"
+    implementation "org.springframework.cloud:spring-cloud-starter-gateway"
     implementation 'org.springframework.boot:spring-boot-properties-migrator'
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 

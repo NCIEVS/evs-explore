@@ -14,7 +14,7 @@ import gov.nih.nci.evsexplore.web.properties.WebProperties;
  * Properties configuration.
  */
 @Configuration
-@EnableConfigurationProperties
+@ConfigurationProperties(prefix = "gov.nih.nci.evsexplore.web")
 public class PropertiesConfiguration {
 
   /** The logger. */
@@ -37,7 +37,7 @@ public class PropertiesConfiguration {
    * Stardog Properties
    */
   @Bean
-  @ConfigurationProperties(prefix = "gov.nih.nci.evsexplore.web", ignoreUnknownFields = false)
+  @ConfigurationProperties(prefix = "web")
   WebProperties webProperties() {
     return new WebProperties();
   }

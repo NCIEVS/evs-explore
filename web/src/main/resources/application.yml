@@ -11,8 +11,16 @@ spring:
             INDENT_OUTPUT: true
     # jmx
     jmx:
-        enabled: false        
-    
+        enabled: false
+    # Cloud Properties
+    cloud:
+      gateway:
+        routes:
+          - id: evsrestapi
+            uri: ${EVS_REST_API_URL:http://localhost:8082/api/v1}
+            predicates:
+              - Path=/api/v1/**
+
 #
 # Server Properties
 #
@@ -34,18 +42,18 @@ management:
       exposure:
         include: heapdump,liquibase,loggers,prometheus,threaddump,info,metrics,health,hystrix.stream
 
-# Zuul Properties
-#
-# The sensitiveHeaders are a blacklist, and the default is not empty. 
-# Consequently, to make Zuul send all headers (except the ignored ones), 
-# you must explicitly set it to the empty list. 
-#
-zuul:
-  routes:
-    evsrestapi:
-      path: /api/v1/**
-      sensitiveHeaders:
-      url: ${EVS_REST_API_URL:http://localhost:8082/api/v1}
+## DEPRECATED - Zuul Properties
+##
+## The sensitiveHeaders are a blacklist, and the default is not empty.
+## Consequently, to make Zuul send all headers (except the ignored ones),
+## you must explicitly set it to the empty list.
+##
+#zuul:
+#  routes:
+#    evsrestapi:
+#      path: /api/v1/**
+#      sensitiveHeaders:
+#      url: ${EVS_REST_API_URL:http://localhost:8082/api/v1}
    
 #
 # Logging Properties
