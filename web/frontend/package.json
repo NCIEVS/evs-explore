@@ -31,7 +31,7 @@
     "cookie": "^0.4.1",
     "eventsource": "^1.1.1",
     "file-saver": "^2.0.5",
-    "follow-redirects": "^1.14.8",
+    "follow-redirects": "^1.15.6",
     "font-awesome": "^4.7.0",
     "jquery": "^3.6.0",
     "ngx-cookie-service": "^15.0.0",
