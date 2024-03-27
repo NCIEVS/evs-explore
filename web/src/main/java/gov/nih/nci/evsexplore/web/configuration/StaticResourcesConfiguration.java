@@ -31,11 +31,7 @@ public class StaticResourcesConfiguration implements WebFluxConfigurer {
    * Need to have our patterns start with a specific path.
    */
 
-  static final String[] STATIC_RESOURCES = new String[] {
-          "/css/*.css", "/html/*.html", "/js/*.js", "/json/*.json", "/bmp/*.bmp", "/jpeg/*.jpeg",
-          "/jpg/*.jpg", "/png/*.png", "/ttf/*.ttf", "/eot/*.eot", "/svg/*", "/woff/*.woff",
-          "/woff2/*.woff2"
-  };
+  static final String STATIC_RESOURCES = "/evsexplore/**";
 
   /** The resource properties. */
   private Resources resourceProperties = new Resources();
@@ -51,14 +47,16 @@ public class StaticResourcesConfiguration implements WebFluxConfigurer {
     CacheControl cacheControl = CacheControl.maxAge(cachePeriodLong, TimeUnit.SECONDS);
 
     registry.addResourceHandler(STATIC_RESOURCES)
-        .addResourceLocations(resourceProperties.getStaticLocations())
+            .addResourceLocations(resourceProperties.getStaticLocations())
             .setCacheControl(cacheControl);
 
     // Create mapping to index.html for Angular HTML5 mode.
     String[] indexLocations = getIndexLocations();
-    registry.addResourceHandler("/**").addResourceLocations(indexLocations)
-        .setCacheControl(cacheControl).resourceChain(true)
-        .addResolver(new PathResourceResolver() {
+    registry.addResourceHandler("/**")
+            .addResourceLocations(indexLocations)
+            .setCacheControl(cacheControl)
+            .resourceChain(true)
+            .addResolver(new PathResourceResolver() {
           @Override
           protected Mono<Resource> getResource(String resourcePath, Resource location) {
             return location.exists() && location.isReadable() ? (Mono<Resource>) location : null;
