@@ -47,9 +47,9 @@ management:
 #
 logging:
     level:
-        org.springframework: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK:DEBUG}
-        org.springframework.boot: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT:DEBUG}
-        gov.nih.nci.evsexplore.web: ${LOGGING_LEVEL_GOV_EVSEXPLORE:DEBUG}
+        org.springframework: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK:INFO}
+        org.springframework.boot: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT:WARN}
+        gov.nih.nci.evsexplore.web: ${LOGGING_LEVEL_GOV_EVSEXPLORE:INFO}
 
 #
 # EVS Explore properties

@@ -59,7 +59,7 @@ public class StaticResourcesConfiguration implements WebFluxConfigurer {
             .addResolver(new PathResourceResolver() {
           @Override
           protected Mono<Resource> getResource(String resourcePath, Resource location) {
-            return location.exists() && location.isReadable() ? (Mono<Resource>) location : null;
+            return location.exists() && location.isReadable() ? Mono.just(location) : null;
           }
         });
   }
