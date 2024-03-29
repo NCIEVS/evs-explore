@@ -19,12 +19,12 @@ public class UiHeaderPreFilter implements GlobalFilter, Ordered {
   WebProperties properties;
 
   /**
-   * Gets the order.
+   * Gets the order to execute the filter in the chain.
    * @return the order
    */
   @Override
   public int getOrder() {
-    // The order can be set based on your requirements
+    // Pre-filter value
     return -1;
   }
 

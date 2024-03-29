@@ -25,8 +25,6 @@ public class EVSWebApplication {
      */
     private static final Logger log = LoggerFactory.getLogger(EVSWebApplication.class);
 
-    @Value("")
-
     /**
      * Application entry point.
      *

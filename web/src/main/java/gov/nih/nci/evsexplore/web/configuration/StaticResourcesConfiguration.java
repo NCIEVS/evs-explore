@@ -34,7 +34,7 @@ public class StaticResourcesConfiguration implements WebFluxConfigurer {
   static final String STATIC_RESOURCES = "/evsexplore/**";
 
   /** The resource properties. */
-  private Resources resourceProperties = new Resources();
+  private final Resources resourceProperties = new Resources();
 
   /* see superclass */
   @Override
