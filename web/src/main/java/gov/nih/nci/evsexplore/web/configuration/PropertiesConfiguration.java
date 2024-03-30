@@ -18,8 +18,7 @@ import gov.nih.nci.evsexplore.web.properties.WebProperties;
 public class PropertiesConfiguration {
 
   /** The logger. */
-  private static final Logger log =
-      LoggerFactory.getLogger(PropertiesConfiguration.class);
+  private static final Logger log = LoggerFactory.getLogger(PropertiesConfiguration.class);
 
   /**
    * Instantiates an empty {@link PropertiesConfiguration}.

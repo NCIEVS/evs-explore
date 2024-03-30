@@ -4,7 +4,6 @@ package gov.nih.nci.evsexplore.web;
 import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -34,4 +33,5 @@ public class EVSWebApplication {
         log.info("STARTING APPLICATION");
         SpringApplication.run(EVSWebApplication.class, args);
     }
+
 }

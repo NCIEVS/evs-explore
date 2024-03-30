@@ -25,14 +25,6 @@ import reactor.core.publisher.Mono;
 })
 public class StaticResourcesConfiguration implements WebFluxConfigurer {
 
-  /**
-   * The Constant STATIC_RESOURCES.
-   * PathPatternParse is used by default, which doesn't support /** at the beginning of a pattern.
-   * Need to have our patterns start with a specific path.
-   */
-
-  static final String STATIC_RESOURCES = "/evsexplore/**";
-
   /** The resource properties. */
   private final Resources resourceProperties = new Resources();
 
@@ -42,26 +34,28 @@ public class StaticResourcesConfiguration implements WebFluxConfigurer {
     // Add all static files
     // Long cachePeriodLong =
     // resourceProperties.getCache().getPeriod().getSeconds();
+
     Long cachePeriodLong = 30L;
     int cachePeriodInt = cachePeriodLong.intValue();
     CacheControl cacheControl = CacheControl.maxAge(cachePeriodLong, TimeUnit.SECONDS);
 
-    registry.addResourceHandler(STATIC_RESOURCES)
-            .addResourceLocations(resourceProperties.getStaticLocations())
-            .setCacheControl(cacheControl);
-
-    // Create mapping to index.html for Angular HTML5 mode.
-    String[] indexLocations = getIndexLocations();
     registry.addResourceHandler("/**")
-            .addResourceLocations(indexLocations)
+            .addResourceLocations(resourceProperties.getStaticLocations())
             .setCacheControl(cacheControl)
-            .resourceChain(true)
-            .addResolver(new PathResourceResolver() {
-          @Override
-          protected Mono<Resource> getResource(String resourcePath, Resource location) {
-            return location.exists() && location.isReadable() ? Mono.just(location) : null;
-          }
-        });
+            .resourceChain(true);
+
+//    // Create mapping to index.html for Angular HTML5 mode.
+//    String[] indexLocations = getIndexLocations();
+//    registry.addResourceHandler("/**")
+//            .addResourceLocations(indexLocations)
+//            .setCacheControl(cacheControl)
+//            .resourceChain(true)
+//            .addResolver(new PathResourceResolver() {
+//          @Override
+//          protected Mono<Resource> getResource(String resourcePath, Resource location) {
+//            return location.exists() && location.isReadable() ? Mono.just(location) : null;
+//          }
+//        });
   }
 
   /**

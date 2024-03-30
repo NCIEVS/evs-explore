@@ -17,12 +17,11 @@ spring:
       gateway:
         routes:
           - id: evsrestapi
-            uri: ${EVS_REST_API_URL:http://localhost:8082/api/v1}
+            uri: ${EVS_REST_API_URL:http://localhost:8082}
             predicates:
               - Path=/api/v1/**
-#    # Webflux Properties
-#    main:
-#      web-application-type: reactive
+    webflux:
+      base-path: "/evsexplore"
 
 #
 # Server Properties
