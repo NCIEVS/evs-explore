@@ -20,8 +20,6 @@ spring:
             uri: ${EVS_REST_API_URL:http://localhost:8082}
             predicates:
               - Path=/api/v1/**
-    webflux:
-      base-path: "/evsexplore"
 
 #
 # Server Properties

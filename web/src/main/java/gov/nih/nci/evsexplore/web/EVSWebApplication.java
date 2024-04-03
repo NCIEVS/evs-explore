@@ -22,7 +22,7 @@ public class EVSWebApplication {
     /**
      * The Constant log.
      */
-    private static final Logger log = LoggerFactory.getLogger(EVSWebApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(EVSWebApplication.class);
 
     /**
      * Application entry point.
@@ -30,7 +30,7 @@ public class EVSWebApplication {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        log.info("STARTING APPLICATION");
+        logger.info("STARTING APPLICATION");
         SpringApplication.run(EVSWebApplication.class, args);
     }
 
