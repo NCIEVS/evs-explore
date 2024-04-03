@@ -9,9 +9,11 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
 /**
  * Static resources config.
@@ -32,11 +34,25 @@ public class StaticResourcesConfiguration implements WebMvcConfigurer {
     Long cachePeriodLong = 30L;
     int cachePeriodInt = cachePeriodLong.intValue();
     CacheControl cacheControl = CacheControl.maxAge(cachePeriodLong, TimeUnit.SECONDS);
+    Integer cachePeriod = Integer.valueOf(cachePeriodInt);
 
+    // Load all static resources
     registry.addResourceHandler("/**")
             .addResourceLocations(resourceProperties.getStaticLocations())
             .setCacheControl(cacheControl)
             .resourceChain(true);
+
+    // Create mapping to index.html for Angular HTML5 mode. all urls route to the index page (SPA).
+    String[] indexLocations = getIndexLocations();
+    registry.addResourceHandler("/**").addResourceLocations(indexLocations)
+            .setCachePeriod(cachePeriod).resourceChain(true)
+            .addResolver(new PathResourceResolver() {
+              @Override
+              protected Resource getResource(String resourcePath, Resource location)
+                      throws IOException {
+                return location.exists() && location.isReadable() ? location : null;
+              }
+            });
   }
 
   /**
