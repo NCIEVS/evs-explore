@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -47,7 +48,7 @@ public class ProxyService {
      * @param response  The response.
      * @return  The response entity.
      */
-    public ResponseEntity<String> processProxyRequest(
+    public ResponseEntity<byte[]> processProxyRequest(
             String body,
             HttpMethod method,
             HttpServletRequest request,
@@ -80,16 +81,15 @@ public class ProxyService {
 
         // Send the request to the EVS REST API
         try {
-            ResponseEntity<String> serverResponse = restTemplate.exchange(uri, method, httpEntity, String.class);
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.put(HttpHeaders.CONTENT_TYPE, serverResponse.getHeaders().get(HttpHeaders.CONTENT_TYPE));
-            logger.info(serverResponse.toString());
+            ResponseEntity<byte[]> serverResponse = restTemplate.exchange(uri, method, httpEntity,
+                   byte[].class);
+            logger.info("Server response = " + serverResponse);
             return serverResponse;
         } catch (HttpStatusCodeException e) {
             logger.warn("Error in processing request: ", e);
             return ResponseEntity.status(e.getStatusCode())
                     .headers(e.getResponseHeaders())
-                    .body(e.getResponseBodyAsString());
+                    .body(e.getResponseBodyAsByteArray());
         }
     }
 }
