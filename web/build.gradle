@@ -1,10 +1,13 @@
 buildscript {
-	ext {
-		springBootVersion = '3.2.0'
-	}
+    ext {
+        springBootVersion = '3.2.0'
+    }
     repositories {
         mavenCentral()
+        jcenter()
+        maven { url "https://repo.spring.io/release" }
         maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/snapshot" }
     }
 
     dependencies {
@@ -38,7 +41,6 @@ def bomVersion = "2023.0.0"
 group = "gov.nih.nci.term.browser.web"
 version = "1.10.0.RELEASE"
 
-
 springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build
 }
@@ -53,7 +55,11 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven { url "https://repo.spring.io/release" }
     maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo.spring.io/snapshot" }
 }
 
 dependencies {
@@ -68,6 +74,21 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+jar {
+    archiveBaseName = project.name
+    version = project.version
+    manifest {
+        attributes 'Main-Class': 'main.java.gov.nih.evsexplore.web.Application'
+    }
+}
+
+jar {
+    from('frontend/dist') {
+        //Public is a default supported Spring Boot resources directory.
+        into 'public'
+    }
+}
+
 //frontend:build will be run before the processResources
 processResources.dependsOn('frontend:build')
 
@@ -77,6 +98,34 @@ dependencyManagement {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+
+test {
+    /*
+     * Configure gradle to show standard out and standard error
+     * of the test JVM(s) on the console
+     */
+    testLogging.showStandardStreams = true
+
+
 }
+
+tasks.register('zipFile', Zip) {
+    def zipFileRootDirectory = "${project.name}-${project.version}"
+
+    from('src/main/bin') {
+        fileMode = 0755
+        into "$zipFileRootDirectory/bin"
+    }
+    from("$buildDir/libs") {
+        include '*.war'
+        into "$zipFileRootDirectory/lib"
+    }
+    rename { String fileName ->
+        fileName.replace("-${project.version}", "")
+    }
+}
+
+
+zipFile.dependsOn = [bootWar]
+build.dependsOn = [test, bootWar, zipFile]
+publishToMavenLocal.dependsOn = [bootWar, zipFile]
