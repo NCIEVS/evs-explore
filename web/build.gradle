@@ -64,10 +64,10 @@ repositories {
 
 dependencies {
 
-    // fixes netty resolver error for macos
-    implementation 'io.netty:netty-resolver-dns-native-macos'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway-mvc'
+    // fixes netty resolver error for macos
+    implementation 'io.netty:netty-resolver-dns-native-macos'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 

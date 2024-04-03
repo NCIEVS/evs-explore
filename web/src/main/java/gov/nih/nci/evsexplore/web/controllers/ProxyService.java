@@ -36,7 +36,7 @@ public class ProxyService {
     /**
      * The domain uri, pulled from our application.yml.
      */
-    @Value("${spring.cloud.gateway.routes[0].uri}")
+    @Value("${gov.nih.nci.evsexplore.web.evsApibasePath}")
     private String domain;
 
     /**

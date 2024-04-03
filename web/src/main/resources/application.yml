@@ -17,15 +17,6 @@ spring:
       pathmatch:
         matching-strategy: ant_path_matcher
 
-  # Cloud Properties
-    cloud:
-      gateway:
-        routes:
-          - id: evsrestapi
-            uri: ${EVS_REST_API_URL:http://localhost:8082}
-            predicates:
-              - Path=/api/v1/**
-
 #
 # Server Properties
 #
@@ -66,3 +57,4 @@ gov:
           web:
             evsApibasePath: ${EVS_API_BASE_PATH:http://localhost:8082}
             uiLicense: ${UI_LICENSE:ui-license}
+
