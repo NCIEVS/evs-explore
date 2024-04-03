@@ -37,7 +37,7 @@ public class EVSController {
      * @return  The response entity.
      */
     @RequestMapping("api/v1/**")
-    public ResponseEntity<byte[]> sendRequestToEVSRestApi(
+    public ResponseEntity<String> sendRequestToEVSRestApi(
             @RequestBody(required = false) String body,
             HttpMethod method,
             HttpServletRequest request,

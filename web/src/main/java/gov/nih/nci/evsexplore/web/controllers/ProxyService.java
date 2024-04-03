@@ -48,7 +48,7 @@ public class ProxyService {
      * @param response  The response.
      * @return  The response entity.
      */
-    public ResponseEntity<byte[]> processProxyRequest(
+    public ResponseEntity<String> processProxyRequest(
             String body,
             HttpMethod method,
             HttpServletRequest request,
@@ -81,15 +81,15 @@ public class ProxyService {
 
         // Send the request to the EVS REST API
         try {
-            ResponseEntity<byte[]> serverResponse = restTemplate.exchange(uri, method, httpEntity,
-                   byte[].class);
+            ResponseEntity<String> serverResponse = restTemplate.exchange(uri, method, httpEntity,
+                   String.class);
             logger.info("Server response = " + serverResponse);
             return serverResponse;
         } catch (HttpStatusCodeException e) {
             logger.warn("Error in processing request: ", e);
             return ResponseEntity.status(e.getStatusCode())
                     .headers(e.getResponseHeaders())
-                    .body(e.getResponseBodyAsByteArray());
+                    .body(e.getResponseBodyAsString());
         }
     }
 }
