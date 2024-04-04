@@ -36,7 +36,7 @@ public class ProxyService {
     /**
      * The domain uri, pulled from our application.yml.
      */
-    @Value("${gov.nih.nci.evsexplore.web.evsApibasePath}")
+    @Value("${gov.nih.nci.evsexplore.web.evsRestApiUrl}")
     private String domain;
 
     /**
@@ -52,14 +52,16 @@ public class ProxyService {
             String body,
             HttpMethod method,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            String apiPath
     ) {
         // Get the request URL
         String requestUrl = request.getServletPath();
         logger.info("REQUEST PATH: " + requestUrl);
 
-        // replacing context path from urI to match actual gateway URI
-        URI uri = UriComponentsBuilder.fromUriString(domain)
+        // replacing context path from URI to match actual gateway URI. Filter by replacing
+        // /api/v1 with empty string to append path url from controller to domain.
+        URI uri = UriComponentsBuilder.fromUriString(domain.replace(apiPath, ""))
                 .path(requestUrl)
                 .query(request.getQueryString())
                 .build(true).toUri();

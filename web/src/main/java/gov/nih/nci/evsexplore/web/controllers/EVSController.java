@@ -3,6 +3,7 @@ package gov.nih.nci.evsexplore.web.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,10 @@ public class EVSController {
     @Autowired
     ProxyService service;
 
+    @Value("${gov.nih.nci.evsexplore.web.pathSegment}")
+    private String path;
+
+
     /**
      * Send our request to the EVS REST API.
      * @param body  The body of the request.
@@ -45,6 +50,6 @@ public class EVSController {
     ) {
         logger.info("Received request to send to EVS REST API");
         // Send the request to the proxy service
-        return service.processProxyRequest(body, method, request, response);
+        return service.processProxyRequest(body, method, request, response, path);
     }
 }
