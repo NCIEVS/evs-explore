@@ -3,8 +3,6 @@ package gov.nih.nci.evsexplore.web.controllers;
 import java.net.URI;
 import java.util.Enumeration;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Proxy Service for handling the requests to the EVS REST API.
