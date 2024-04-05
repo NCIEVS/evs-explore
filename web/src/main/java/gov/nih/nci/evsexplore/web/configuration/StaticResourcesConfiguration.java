@@ -24,7 +24,11 @@ import java.util.concurrent.TimeUnit;
 })
 public class StaticResourcesConfiguration implements WebMvcConfigurer {
 
-    /** The Constant STATIC_RESOURCES. */
+    /**
+     * The Constant STATIC_RESOURCES. Need to be explicitly listed to ensure our routes will
+     * set the MIME type correctly
+     */
+
     static final String[] STATIC_RESOURCES = new String[] {
             "/**/*.css", "/**/*.html", "/**/*.js", "/**/*.json", "/**/*.bmp",
             "/**/*.jpeg", "/**/*.jpg", "/**/*.png", "/**/*.ttf", "/**/*.eot",
