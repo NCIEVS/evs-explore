@@ -14,3 +14,6 @@ setenv.sh
 __pycache__
 /build/
 WEB-INF/*
+node_modules
+log
+.idea

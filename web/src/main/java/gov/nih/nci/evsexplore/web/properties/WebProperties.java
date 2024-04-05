@@ -1,9 +1,13 @@
 
 package gov.nih.nci.evsexplore.web.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 /**
  * Web properties. Bootstrapped via PropertiesConfiguration.
  */
+//@Primary
+@ConfigurationProperties(prefix = "gov.nih.nci.evsexplore.web")
 public class WebProperties {
 
   /** The evs apibase path. */
