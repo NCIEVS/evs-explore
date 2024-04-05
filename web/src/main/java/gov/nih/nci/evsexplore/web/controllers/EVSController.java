@@ -1,7 +1,9 @@
 package gov.nih.nci.evsexplore.web.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -9,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.logging.Logger;
 
 /**
  * The controller for sending proxy request to the EVS REST API.
@@ -35,22 +35,19 @@ public class EVSController {
   /**
    * Send our request to the EVS REST API.
    * 
-   * @param body     The body of the request.
-   * @param method   The method of the request.
-   * @param request  The request.
+   * @param body The body of the request.
+   * @param method The method of the request.
+   * @param request The request.
    * @param response The response.
    * @return The response entity.
    */
   @RequestMapping("api/v1/**")
-  public ResponseEntity<String> sendRequestToEVSRestApi(
-      @RequestBody(required = false) String body,
-      HttpMethod method,
-      HttpServletRequest request,
-      HttpServletResponse response) {
+  public ResponseEntity<String> sendRequestToEVSRestApi(@RequestBody(required = false) String body,
+    HttpMethod method, HttpServletRequest request) {
     try {
-      logger.info("Received request to send to EVS REST API");
       // Send the request to the proxy service
-      ResponseEntity<String> result = service.processProxyRequest(body, method, request, response, path);
+      final ResponseEntity<String> result =
+          service.processProxyRequest(body, method, request, path);
       return result;
 
     } catch (Exception e) {
