@@ -3,9 +3,10 @@ package gov.nih.nci.evsexplore.web.controllers;
 import java.net.URI;
 import java.util.Enumeration;
 
+import gov.nih.nci.evsexplore.web.properties.WebProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,32 +32,30 @@ public class ProxyService {
    */
   private static final Logger logger = LoggerFactory.getLogger(ProxyService.class);
 
-  /**
-   * The domain uri, pulled from our application.yml.
-   */
-  @Value("${gov.nih.nci.evsexplore.web.evsRestApiUrl}")
-  private String domain;
+  /** The web properties. */
+  @Autowired
+  WebProperties properties;
 
   /**
-   * Proocess the proxy request and handle the various components we need to send with the request
+   * Process the proxy request and handle the various components we need to send with the request
    * to the EVS REST API.
-   * 
+   *
    * @param body The body of the request.
    * @param method The method of the request.
    * @param request The request.
-   * @param response The response.
    * @return The response entity.
    */
   public ResponseEntity<String> processProxyRequest(final String body, final HttpMethod method,
-    final HttpServletRequest request, final String apiPath) {
+    final HttpServletRequest request) {
     // Get the request URL
     String requestUrl = request.getServletPath();
 
-    // replacing context path from URI to match actual gateway URI. Filter by
-    // replacing /api/v1 with empty string to append path url from controller to domain.
-    URI uri = UriComponentsBuilder.fromUriString(domain.replace(apiPath, "")).path(requestUrl)
-        .query(request.getQueryString()).build(true).toUri();
-    logger.info("  request uri = " + uri);
+    // replacing context path from URI to match actual gateway URI.
+       URI uri = UriComponentsBuilder.fromUriString(
+               properties.getEvsApibasePath())
+               .path(requestUrl)
+               .query(request.getQueryString())
+               .build(true).toUri();
 
     // Create the headers for the request
     HttpHeaders headers = new HttpHeaders();
@@ -74,11 +73,11 @@ public class ProxyService {
         new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
     RestTemplate restTemplate = new RestTemplate(factory);
 
-    // Send the request to the EVS REST API
+    // Send the request to the EVS REST API. Make sure we are always using new HttpHeaders,
+    // otherwise you will hit a 502 Gateway Error on Dev/Prod env.
     try {
       ResponseEntity<String> serverResponse =
           restTemplate.exchange(uri, method, httpEntity, String.class);
-      logger.info("Server response = " + serverResponse);
 
       return new ResponseEntity<>(serverResponse.getBody(), new HttpHeaders(), HttpStatus.OK);
 

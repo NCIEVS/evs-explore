@@ -1,7 +1,7 @@
 
 package gov.nih.nci.evsexplore.web;
 
-import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
+import gov.nih.nci.evsexplore.web.properties.WebProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,12 +16,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  */
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableConfigurationProperties(PropertiesConfiguration.class)
+@EnableConfigurationProperties(WebProperties.class)
 public class EVSWebApplication {
 
-    /**
-     * The Constant log.
-     */
+    /** The Constant log. */
     private static final Logger logger = LoggerFactory.getLogger(EVSWebApplication.class);
 
     /**

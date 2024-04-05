@@ -1,5 +1,6 @@
 package gov.nih.nci.evsexplore.web.filters;
 
+//import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,7 +8,12 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import gov.nih.nci.evsexplore.web.properties.WebProperties;
@@ -24,7 +30,10 @@ import java.util.Set;
  * Class to add a header prefilter to the UI.
  */
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class UiHeaderPreFilter implements Filter {
+  /** The logger. */
+  private static final Logger logger = LoggerFactory.getLogger(UiHeaderPreFilter.class);
 
   /** The web properties. */
   @Autowired
