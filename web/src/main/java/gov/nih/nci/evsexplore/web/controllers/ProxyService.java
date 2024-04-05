@@ -84,7 +84,7 @@ public class ProxyService {
 
     } catch (HttpStatusCodeException e) {
       logger.error("Error in processing request: ", e);
-      return ResponseEntity.status(e.getStatusCode()).headers(e.getResponseHeaders())
+      return ResponseEntity.status(e.getStatusCode()).headers(new HttpHeaders())
           .body(e.getResponseBodyAsString());
     }
   }
