@@ -29,8 +29,6 @@ public class EVSController {
   @Autowired
   ProxyService service;
 
-  @Value("${gov.nih.nci.evsexplore.web.pathSegment}")
-  private String path;
 
   /**
    * Send our request to the EVS REST API.
@@ -38,7 +36,6 @@ public class EVSController {
    * @param body The body of the request.
    * @param method The method of the request.
    * @param request The request.
-   * @param response The response.
    * @return The response entity.
    */
   @RequestMapping("api/v1/**")
@@ -47,7 +44,7 @@ public class EVSController {
     try {
       // Send the request to the proxy service
       final ResponseEntity<String> result =
-          service.processProxyRequest(body, method, request, path);
+          service.processProxyRequest(body, method, request);
       return result;
 
     } catch (Exception e) {
