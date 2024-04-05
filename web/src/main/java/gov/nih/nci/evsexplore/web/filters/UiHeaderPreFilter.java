@@ -36,6 +36,7 @@ public class UiHeaderPreFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(UiHeaderPreFilter.class);
 
   /** The web properties. */
+//  @Qualifier("webProperties")
   @Autowired
   WebProperties properties;
 
