@@ -28,70 +28,71 @@ import java.util.logging.Level;
  */
 @Service
 public class ProxyService {
-    /**
-     * The logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(ProxyService.class);
+  /**
+   * The logger.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(ProxyService.class);
 
-    /**
-     * The domain uri, pulled from our application.yml.
-     */
-    @Value("${gov.nih.nci.evsexplore.web.evsRestApiUrl}")
-    private String domain;
+  /**
+   * The domain uri, pulled from our application.yml.
+   */
+  @Value("${gov.nih.nci.evsexplore.web.evsRestApiUrl}")
+  private String domain;
 
-    /**
-     * Proocess the proxy request and handle the various components we
-     * need to send with the request to the EVS REST API.
-     * @param body The body of the request.
-     * @param method The method of the request.
-     * @param request The request.
-     * @param response  The response.
-     * @return  The response entity.
-     */
-    public ResponseEntity<String> processProxyRequest(
-            String body,
-            HttpMethod method,
-            HttpServletRequest request,
-            HttpServletResponse response,
-            String apiPath
-    ) {
-        // Get the request URL
-        String requestUrl = request.getServletPath();
-        logger.info("REQUEST PATH: " + requestUrl);
+  /**
+   * Proocess the proxy request and handle the various components we
+   * need to send with the request to the EVS REST API.
+   * 
+   * @param body     The body of the request.
+   * @param method   The method of the request.
+   * @param request  The request.
+   * @param response The response.
+   * @return The response entity.
+   */
+  public ResponseEntity<String> processProxyRequest(
+      String body,
+      HttpMethod method,
+      HttpServletRequest request,
+      HttpServletResponse response,
+      String apiPath) {
+    // Get the request URL
+    String requestUrl = request.getServletPath();
 
-        // replacing context path from URI to match actual gateway URI. Filter by replacing
-        // /api/v1 with empty string to append path url from controller to domain.
-        URI uri = UriComponentsBuilder.fromUriString(domain.replace(apiPath, ""))
-                .path(requestUrl)
-                .query(request.getQueryString())
-                .build(true).toUri();
+    // replacing context path from URI to match actual gateway URI. Filter by
+    // replacing
+    // /api/v1 with empty string to append path url from controller to domain.
+    URI uri = UriComponentsBuilder.fromUriString(domain.replace(apiPath, ""))
+        .path(requestUrl)
+        .query(request.getQueryString())
+        .build(true).toUri();
+    logger.info("  request uri = " + uri);
 
-        // Create the headers for the request
-        HttpHeaders headers = new HttpHeaders();
-        Enumeration<String> headerNames = request.getHeaderNames();
+    // Create the headers for the request
+    HttpHeaders headers = new HttpHeaders();
+    Enumeration<String> headerNames = request.getHeaderNames();
 
-        //  Add the headers to the request
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headers.set(headerName, request.getHeader(headerName));
-        }
-
-        // Create the request entity
-        HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
-        ClientHttpRequestFactory factory = new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
-        RestTemplate restTemplate = new RestTemplate(factory);
-
-        // Send the request to the EVS REST API
-        try {
-            ResponseEntity<String> serverResponse = restTemplate.exchange(uri, method, httpEntity,
-                   String.class);
-            logger.info("Server response = " + serverResponse);
-            return serverResponse;
-        } catch (HttpStatusCodeException e) {
-            logger.warn("Error in processing request: ", e);
-            return ResponseEntity.status(e.getStatusCode())
-                    .headers(e.getResponseHeaders())
-                    .body(e.getResponseBodyAsString());
-        }
+    // Add the headers to the request
+    while (headerNames.hasMoreElements()) {
+      String headerName = headerNames.nextElement();
+      headers.set(headerName, request.getHeader(headerName));
     }
+
+    // Create the request entity
+    HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
+    ClientHttpRequestFactory factory = new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
+    RestTemplate restTemplate = new RestTemplate(factory);
+
+    // Send the request to the EVS REST API
+    try {
+      ResponseEntity<String> serverResponse = restTemplate.exchange(uri, method, httpEntity,
+          String.class);
+      logger.info("Server response = " + serverResponse);
+      return serverResponse;
+    } catch (HttpStatusCodeException e) {
+      logger.error("Error in processing request: ", e);
+      return ResponseEntity.status(e.getStatusCode())
+          .headers(e.getResponseHeaders())
+          .body(e.getResponseBodyAsString());
+    }
+  }
 }
