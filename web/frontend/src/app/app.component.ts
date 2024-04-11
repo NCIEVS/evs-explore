@@ -62,9 +62,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    // Subscribe to terminology chagnes and check license text
+    // Subscribe to terminology changes and check license text
     this.subscription = this.configService.getSubject().subscribe((terminology) => {
-      this.checkLicenseText();
+      this.checkLicenseText().then((isLicenseAccepted) => {
+        if (!isLicenseAccepted) {
+          this.router.navigateByUrl('/welcome?terminology=ncit');
+        }
+      });
     });
 
     // BAC: this is all beign handled by individual controllers
@@ -82,10 +86,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // After initializing view, check license text
-  ngAfterViewInit(): void {
-    var terminology = this.configService.getTerminology();
+  async ngAfterViewInit(): Promise<void> {
+    const terminology = this.configService.getTerminology();
     if (terminology && terminology.metadata && terminology.metadata.licenseText) {
-      this.checkLicenseText();
+      const isLicenseAccepted = await this.checkLicenseText();
+      if (!isLicenseAccepted) {
+        this.router.navigateByUrl('/welcome?terminology=ncit');
+      }
     }
   }
 
@@ -95,25 +102,37 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Check license text and show banner
-  checkLicenseText(term = null) {
-    let terminology = null;
-    if (term != null) {
-      terminology = this.configService.getTerminologyByName(term);
-    } else {
-      terminology = this.configService.getTerminology();
-    }
-    if (terminology.metadata.licenseText && !this.cookieService.check(terminology.terminology + 'License')) {
-      this.licenseText = terminology.metadata.licenseText;
-      var modalref = this.modalService.open(this.licenseModal, { size: 'lg', ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
-      modalref.result.then((result) => {
-        this.cookieService.set(terminology.terminology + 'License', 'accepted', 365);
-        console.log('License Text');
-        modalref.close();
-      }, (result) => {
-        this.cookieService.set('hhsBanner', 'accepted', 90);
-        console.log('HHS Banner Accepted');
-        modalref.close();
-      });
-    }
+  checkLicenseText(term = null): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let terminology = null;
+      if (term != null) {
+        terminology = this.configService.getTerminologyByName(term);
+      } else {
+        terminology = this.configService.getTerminology();
+      }
+      const cookieName = terminology.terminology + 'License';
+      if (terminology.metadata.licenseText && !this.cookieService.check(cookieName)) {
+        this.licenseText = terminology.metadata.licenseText;
+        const modalref = this.modalService.open(this.licenseModal, {
+          size: 'lg',
+          ariaLabelledBy: 'modal-basic-title',
+          backdrop: 'static'
+        });
+        modalref.result.then((result) => {
+          this.cookieService.set(cookieName, 'accepted', 365);
+          console.log(cookieName + ' License Text Accepted');
+          modalref.close();
+          resolve(true);
+        }, (result) => {
+          this.cookieService.delete(cookieName);
+          console.log(cookieName + ' License Text Rejected');
+          modalref.close();
+          resolve(false);
+        });
+      } else {
+        // There should be no license text, therefore return true
+        resolve(true);
+      }
+    });
   }
 }
