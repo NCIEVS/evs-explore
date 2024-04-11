@@ -66,23 +66,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription = this.configService.getSubject().subscribe((terminology) => {
       this.checkLicenseText().then((isLicenseAccepted) => {
         if (!isLicenseAccepted) {
-          this.router.navigateByUrl('/welcome?terminology=ncit');
+          this.router.navigate(['/welcome']).then(() => {
+            location.reload();
+          });
         }
       });
     });
-
-    // BAC: this is all beign handled by individual controllers
-    // var pathLength = window.location.pathname.split('/').length;
-    // if (pathLength > 2) {
-    //   let terminology = window.location.pathname.split('/')[pathLength - 1];
-    //   this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
-    // }
-    // else if (window.location.search) {
-    //   let terminology = window.location.search.split('=')[1];
-    //   this.configService.setTerminology(this.configService.getTerminologyByName(terminology));
-    // }
-    // // default terminology in config
-    // else this.configService.setTerminology(this.configService.getTerminologyByName(this.configService.getDefaultTerminologyName()));
   }
 
   // After initializing view, check license text
@@ -91,7 +80,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (terminology && terminology.metadata && terminology.metadata.licenseText) {
       const isLicenseAccepted = await this.checkLicenseText();
       if (!isLicenseAccepted) {
-        this.router.navigateByUrl('/welcome?terminology=ncit');
+        this.router.navigate(['/welcome']).then(() => {
+          location.reload();
+        });
       }
     }
   }
