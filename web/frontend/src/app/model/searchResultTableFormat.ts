@@ -31,7 +31,7 @@ export class SearchResultTableFormat {
       const tableHeaderTerminology = new TableHeader('terminology', 'Terminology', '70px');
       this.header.push(tableHeaderTerminology);
 
-      if (configService.getTerminologyName() == 'ncim') {
+      if (configService.getTerminologyName() === 'ncim') {
         const tableHeaderCode = new TableHeader('column1', 'CUI', '70px');
         this.header.push(tableHeaderCode);
       }
@@ -68,11 +68,11 @@ export class SearchResultTableFormat {
 
       // Table Data
       for (let i = 0; i < searchResult.concepts.length; i++) {
-
         const data = new TableData();
         data.column1 = searchResult.concepts[i].code;
         data.termShorthand = searchResult.concepts[i]?.terminology;
-        data.terminology = data.termShorthand ? configService.getTerminologyByName(data.termShorthand).metadata.uiLabel.replace(/\:.*/, "") : "";
+        data.terminology = data.termShorthand ? configService.getTerminologyByName(data.termShorthand).metadata
+          .uiLabel.replace(/\:.*/, "") : "";
         data.retiredConcept = !searchResult.concepts[i].active ? 'yes' : 'no';
         data.highlight = searchResult.concepts[i].getHighlightText();
         data.expanded = false;
@@ -80,12 +80,12 @@ export class SearchResultTableFormat {
         data.semanticType = searchResult.concepts[i].semanticTypes ? searchResult.concepts[i].semanticTypes.join('<br />') : '';
         count = 2;
         for (let k = 0; k < returnFields.length; k++) {
-          let field = returnFields[k];
+          const field = returnFields[k];
 
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
             if (searchResult.concepts[i].definitions) {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
-                .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length == 0);
+                .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length === 0);
             }
             if (searchResult.concepts[i].getDefinitionsText().split('<br />').join('').length > 100
               || searchResult.concepts[i].getDefinitionsText().split('<br />').length > 3) {
@@ -99,7 +99,7 @@ export class SearchResultTableFormat {
           } else if (field === 'Synonyms') {
             if (searchResult.concepts[i].synonyms) {
               searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
-                .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length == 0);
+                .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length === 0);
             }
             if (searchResult.concepts[i].getFullSynText().split('<br />').join('').length > 100
               || searchResult.concepts[i].getFullSynText().split('<br />').length > 3) {

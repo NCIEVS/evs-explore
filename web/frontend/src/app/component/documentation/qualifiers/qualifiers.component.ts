@@ -20,14 +20,12 @@ export class QualifiersComponent implements OnInit {
 
   // On initialization
   ngOnInit() {
-
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
     this.titleService.setTitle('EVS Explore - Qualifiers');
   }
 
   ngAfterViewInit(): void {
-
     this.configService.getQualifiers(this.terminology)
       .subscribe(response => {
         this.qualifiers = response;
@@ -40,7 +38,7 @@ export class QualifiersComponent implements OnInit {
       return false;
     }
     else {
-      var remodeledProperty = qualifier.properties.filter(prop => prop.type == "remodeledDescription");
+      const remodeledProperty = qualifier.properties.filter(prop => prop.type === "remodeledDescription");
       if (remodeledProperty.length > 0) {
         this.remodeledDesc = remodeledProperty[0].value;
         this.remodeledDesc = this.remodeledDesc.replace("as a null", "as unknown");

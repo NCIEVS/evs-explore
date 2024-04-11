@@ -9,8 +9,8 @@ export class ConceptReference {
   constructor(input: any) {
     Object.assign(this, input);
     if (input.qualifiers) {
-      var relaqualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
-      if (relaqualifier && relaqualifier.type == 'RELA') {
+      var relaqualifier = input.qualifiers.find(function (item) { return item.type === 'RELA'; });
+      if (relaqualifier && relaqualifier.type === 'RELA') {
         this.rela = relaqualifier.value;
       } else {
         this.rela = '';

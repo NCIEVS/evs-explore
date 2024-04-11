@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     const navEndEvent$ = router.events.pipe(filter((e) => e instanceof NavigationEnd));
     navEndEvent$.subscribe((e: NavigationEnd) => {
       // Only report where google tags are present and hostname matches expectations
-      if (environment.code && environment.host == location.hostname) {
+      if (environment.code && environment.host === location.hostname) {
         if (!this.gtagConfig) {
           gtag('config', environment.code);
           this.gtagConfig = true;
@@ -57,16 +57,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
-      if (this.router.url.indexOf('#') == -1) {
+      if (this.router.url.indexOf('#') === -1) {
         window.scrollTo(0, 0);
       }
     });
 
     // Subscribe to terminology changes and check license text
-    this.subscription = this.configService.getSubject().subscribe((terminology) => {
+    this.subscription = this.configService.getSubject().subscribe((): void => {
       this.checkLicenseText().then((isLicenseAccepted) => {
         if (!isLicenseAccepted) {
-          this.router.navigate(['/welcome']).then(() => {
+          this.router.navigate(['/welcome']).then((): void => {
             location.reload();
           });
         }
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (terminology && terminology.metadata && terminology.metadata.licenseText) {
       const isLicenseAccepted = await this.checkLicenseText();
       if (!isLicenseAccepted) {
-        this.router.navigate(['/welcome']).then(() => {
+        this.router.navigate(['/welcome']).then((): void => {
           location.reload();
         });
       }
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.unsubscribe();
   }
 
-  // Check license text and show banner
+  // Check license text and show banner. If the license text is not accepted, return false. Otherwise, return true.
   checkLicenseText(term = null): Promise<boolean> {
     return new Promise((resolve, reject) => {
       let terminology = null;
@@ -109,12 +109,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           ariaLabelledBy: 'modal-basic-title',
           backdrop: 'static'
         });
-        modalref.result.then((result) => {
+        modalref.result.then((result): void => {
           this.cookieService.set(cookieName, 'accepted', 365);
           console.log(cookieName + ' License Text Accepted');
           modalref.close();
           resolve(true);
-        }, (result) => {
+        }, (result): void => {
           this.cookieService.delete(cookieName);
           console.log(cookieName + ' License Text Rejected');
           modalref.close();

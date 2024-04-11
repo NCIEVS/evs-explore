@@ -34,7 +34,7 @@ export class SubsetsComponent implements OnInit {
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
 
-  urlTarget = '_top'
+  urlTarget = '_top';
 
   constructor(
     private subsetDetailService: ConceptDetailService,
@@ -56,11 +56,11 @@ export class SubsetsComponent implements OnInit {
   getPathInHierarchy() {
     console.log('getPathInHierarchy', this.configService.subsets);
 
-    if (this.configService.subsets == null) {
+    if (this.configService.subsets === null) {
       this.searchDisabled = true;
       this.loaderService.showLoader();
       this.subsetDetailService.getSubsetTopLevel().then((nodes) => {
-        this.hierarchyData = <TreeNode[]>nodes;
+        this.hierarchyData = (nodes as TreeNode[]);
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, false);
         }
@@ -165,7 +165,7 @@ export class SubsetsComponent implements OnInit {
       }
     }
     // Only trigger this for the top-level call
-    if (level == 0) {
+    if (level === 0) {
       this.expand = !this.expand;
       if (!this.expand) {
         this.expandLabel = 'Collapse All';
@@ -185,7 +185,7 @@ export class SubsetsComponent implements OnInit {
         JSON.stringify(this.configService.subsets)
       );
       this.hierarchyData.forEach((element) => {
-        var newTn = this.performSubsetSearchHelper(
+        const newTn = this.performSubsetSearchHelper(
           element,
           this.subsetSearchText
         );
@@ -202,17 +202,17 @@ export class SubsetsComponent implements OnInit {
   }
 
   performSubsetSearchHelper(tn, string) {
-    var newChildren = new Array();
+    const newChildren = new Array();
     if (tn.children) {
       tn.children.forEach((element) => {
-        var newChild = this.performSubsetSearchHelper(element, string);
+        const newChild = this.performSubsetSearchHelper(element, string);
         if (newChild) {
           newChildren.push(newChild);
         }
       });
     }
     if (
-      newChildren.length != 0 ||
+      newChildren.length !== 0 ||
       !tn.name.toLowerCase().includes(string.toLowerCase()) ||
       !tn.code.toLowerCase().includes(string.toLowerCase())
     ) {
