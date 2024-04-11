@@ -112,11 +112,7 @@ export class GeneralSearchComponent
 
     // Determine if we are on the welcome page
     const path = "" + window.location.pathname;
-    if (path.includes("welcome")) {
-      this.welcomePage = true;
-    } else {
-      this.welcomePage = false;
-    }
+    this.welcomePage = path.includes("welcome");
 
     // Set up listener for back/forward browser events
     this.routeListener = this.router.events
@@ -281,7 +277,8 @@ export class GeneralSearchComponent
     console.log("set query url");
     this.router.navigate(["/search"], {
       queryParams: {
-        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(this.configService.getMultiSearchTerminologies()).join(","),
+        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(
+          this.configService.getMultiSearchTerminologies()).join(","),
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord
