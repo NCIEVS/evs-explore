@@ -56,7 +56,7 @@ export class SubsetsComponent implements OnInit {
   getPathInHierarchy() {
     console.log('getPathInHierarchy', this.configService.subsets);
 
-    if (this.configService.subsets === null) {
+    if (this.configService.subsets === undefined || this.configService.subsets === null) {
       this.searchDisabled = true;
       this.loaderService.showLoader();
       this.subsetDetailService.getSubsetTopLevel().then((nodes) => {
