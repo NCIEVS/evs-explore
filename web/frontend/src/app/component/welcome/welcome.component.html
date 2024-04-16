@@ -51,7 +51,7 @@
             </p>
             <div *ngFor="let term of allTerminologies" style="margin-left: 5px">
               <label style="white-space: nowrap">
-                <input class="multiTermSelect" type="checkbox"
+                <input class="multiTermSelect" type="checkbox" id="{{term.value.terminology}}"
                        [(ngModel)]="checkboxStates[term.value.terminology]"
                        (change)="onChangeMultiSelect({value: term})">
                 <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{

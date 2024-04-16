@@ -161,16 +161,21 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   selectAllTerms(ncimFlag = true): void {
     const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
+    // loop through all checkboxes and set the state based on the license
     for (let i = 0, n = checkboxes.length; i < n; i++) {
-      if (!ncimFlag && checkboxes[i].getAttribute('id') === 'ncim') {
-        checkboxes[i].toggleAttribute('checked', false);
-        continue;
-      }
-      checkboxes[i].toggleAttribute('checked', true);
-      this.selectedMultiTerminologies.add(checkboxes[i].getAttribute('id'));
+      // get the term from the checkboxes id attribute
+      const term = checkboxes[i].getAttribute('id');
+      // check if the license text is accepted, then perform the checkbox action
+      this.appComponent.checkLicenseText(term).then((isLicenseAccepted) => {
+        if (isLicenseAccepted) {
+          this.checkboxStates[term] = !(!ncimFlag && term === 'ncim');
+          this.selectedMultiTerminologies.add(term);
+        } else {
+          this.checkboxStates[term] = false;
+        }
+      });
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
-
   }
 
   // Clears all terms in the multi-select dropdown
@@ -178,7 +183,8 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
     for (let i = 0, n = checkboxes.length; i < n; i++) {
-      checkboxes[i].toggleAttribute('checked', false);
+      const term = checkboxes[i].getAttribute('id');
+      this.checkboxStates[term] = false;
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
   }
