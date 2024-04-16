@@ -157,23 +157,26 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // Selects all terms in the multi-select dropdown
-  selectAllTerms(ncimFlag = true): void {
+  // Selects all terms in the multi-select dropdown & checks the license
+  async selectAllTerms(ncimFlag = true): Promise<void> {
     const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
     // loop through all checkboxes and set the state based on the license
     for (let i = 0, n = checkboxes.length; i < n; i++) {
       // get the term from the checkboxes id attribute
       const term = checkboxes[i].getAttribute('id');
+      if (!ncimFlag && term === 'ncim') {
+        this.checkboxStates[term] = false;
+        continue;
+      }
       // check if the license text is accepted, then perform the checkbox action
-      this.appComponent.checkLicenseText(term).then((isLicenseAccepted) => {
-        if (isLicenseAccepted) {
-          this.checkboxStates[term] = !(!ncimFlag && term === 'ncim');
-          this.selectedMultiTerminologies.add(term);
-        } else {
-          this.checkboxStates[term] = false;
-        }
-      });
+      const isLicenseAccepted = await this.appComponent.checkLicenseText(term);
+      if (isLicenseAccepted) {
+        this.checkboxStates[term] = true;
+        this.selectedMultiTerminologies.add(term);
+      } else {
+        this.checkboxStates[term] = false;
+      }
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
   }
@@ -183,7 +186,9 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
     for (let i = 0, n = checkboxes.length; i < n; i++) {
+      // get the term from the checkboxes id attribute
       const term = checkboxes[i].getAttribute('id');
+      // set the checkbox state to false
       this.checkboxStates[term] = false;
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
