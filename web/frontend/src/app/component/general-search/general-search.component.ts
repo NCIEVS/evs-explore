@@ -112,11 +112,7 @@ export class GeneralSearchComponent
 
     // Determine if we are on the welcome page
     const path = "" + window.location.pathname;
-    if (path.includes("welcome")) {
-      this.welcomePage = true;
-    } else {
-      this.welcomePage = false;
-    }
+    this.welcomePage = path.includes("welcome");
 
     // Set up listener for back/forward browser events
     this.routeListener = this.router.events
@@ -266,10 +262,10 @@ export class GeneralSearchComponent
           .split(",");
       }
       if (
-        this.searchCriteria.type == "phrase" ||
-        this.searchCriteria.type == "fuzzy" ||
-        this.searchCriteria.type == "AND" ||
-        this.searchCriteria.type == "OR"
+        this.searchCriteria.type === "phrase" ||
+        this.searchCriteria.type === "fuzzy" ||
+        this.searchCriteria.type === "AND" ||
+        this.searchCriteria.type === "OR"
       ) {
         this.showMoreSearchOption = true;
       }
@@ -281,7 +277,8 @@ export class GeneralSearchComponent
     console.log("set query url");
     this.router.navigate(["/search"], {
       queryParams: {
-        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(this.configService.getMultiSearchTerminologies()).join(","),
+        terminology: !this.configService.getMultiSearch() ? this.selectedTerminology.terminology : Array.from(
+          this.configService.getMultiSearchTerminologies()).join(","),
         term: this.searchCriteria.term,
         type: this.searchCriteria.type,
         fromRecord: this.searchCriteria.fromRecord
@@ -308,7 +305,7 @@ export class GeneralSearchComponent
     if (
       value.value.tags &&
       "monthly" in value.value.tags &&
-      value.value.latest == true
+      value.value.latest === true
     ) {
       return true;
     }
@@ -513,7 +510,7 @@ export class GeneralSearchComponent
   // Perform the search
   performSearch() {
     if (
-      this.searchCriteria.term == null ||
+      this.searchCriteria.term === null ||
       this.searchCriteria.term.length < 3
     ) {
       if (!this.firstSearchFlag) {
@@ -547,7 +544,7 @@ export class GeneralSearchComponent
 
     if (
       this.searchCriteria.term !== undefined &&
-      this.searchCriteria.term != null &&
+      this.searchCriteria.term !== null &&
       this.searchCriteria.term !== ""
     ) {
       // Remove tabs and quotes from search term
@@ -710,7 +707,7 @@ export class GeneralSearchComponent
       var semString = "";
       if (concept.properties != undefined && concept.properties.length > 0) {
         for (let prop of concept.properties) {
-          if (prop.type == "Semantic_Type") {
+          if (prop.type === "Semantic_Type") {
             semString += prop.value;
             // only one semantic type
             break;
@@ -731,8 +728,8 @@ export class GeneralSearchComponent
         ...this.cols.filter(
           (a) =>
             cookieColumns.includes(a.header) ||
-            (a.header == "Code" && cookieColumns.includes("CUI")) ||
-            (a.header == "CUI" && cookieColumns.includes("Code"))
+            (a.header === "Code" && cookieColumns.includes("CUI")) ||
+            (a.header === "CUI" && cookieColumns.includes("Code"))
         ),
       ];
     } else {
@@ -740,7 +737,7 @@ export class GeneralSearchComponent
         "Highlights",
         "Preferred Name",
         "Definitions",
-        this.selectedTerminology.terminology == "ncim" ? "CUI" : "Code",
+        this.selectedTerminology.terminology === "ncim" ? "CUI" : "Code",
         "Synonyms",
       ];
       if (this.configService.getMultiSearch() && !this.selectedColumns.includes("Terminology")) {
@@ -750,8 +747,8 @@ export class GeneralSearchComponent
         ...this.cols.filter(
           (a) =>
             this.selectedColumns.includes(a.header) ||
-            (a.header == "Code" && this.selectedColumns.includes("CUI")) ||
-            (a.header == "CUI" && this.selectedColumns.includes("Code"))
+            (a.header === "Code" && this.selectedColumns.includes("CUI")) ||
+            (a.header === "CUI" && this.selectedColumns.includes("Code"))
         ),
       ];
     }
@@ -772,6 +769,7 @@ export class GeneralSearchComponent
   }
 
   disableEntry() {
-    return this.configService.getMultiSearch() && (this.configService.getMultiSearchTerminologies() == null || this.configService.getMultiSearchTerminologies().size == 0);
+    return this.configService.getMultiSearch() && (this.configService.getMultiSearchTerminologies() === null ||
+      this.configService.getMultiSearchTerminologies().size === 0);
   }
 }

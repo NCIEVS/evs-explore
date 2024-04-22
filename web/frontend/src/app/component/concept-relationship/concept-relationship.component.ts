@@ -15,7 +15,7 @@ import { Concept } from './../../model/concept';
 export class ConceptRelationshipComponent implements OnInit {
   @Input() concept: Concept;
   @Input() urlBase: string;
-  @Input() urlTarget: string
+  @Input() urlTarget: string;
 
   terminology: string = null;
   collapsed: boolean = false;
@@ -30,10 +30,10 @@ export class ConceptRelationshipComponent implements OnInit {
   ngOnInit() {
     this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
-    })
+    });
   }
 
-  checkFilter(item: any): Boolean {
+  checkFilter(item: any): boolean {
     return (
       // no source field -> show
       !item.hasOwnProperty('source')
@@ -45,18 +45,19 @@ export class ConceptRelationshipComponent implements OnInit {
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-      let value1 = data1[event.field];
-      let value2 = data2[event.field];
-      if (value1 == undefined)
+      const value1 = data1[event.field];
+      const value2 = data2[event.field];
+      if (value1 === undefined) {
         return 0;
+      }
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }
 
   // Prep data for the sources= query param
   getSelectedSourcesQueryParam() {
-    var result = {};
-    if (this.conceptDisplay.selectedSources.size == 1 && this.conceptDisplay.selectedSources.has('All')) {
+    let result = {};
+    if (this.conceptDisplay.selectedSources.size === 1 && this.conceptDisplay.selectedSources.has('All')) {
       result = {};
     }
     else if (this.conceptDisplay.selectedSources && this.conceptDisplay.selectedSources.size > 0) {

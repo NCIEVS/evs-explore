@@ -35,7 +35,7 @@ const routes: Routes = [
   { path: 'subset/:terminology/:code', component: SubsetDetailsComponent },
   { path: 'subset/:code', redirectTo: 'subset/ncit/:code' },
   { path: 'mappings', component: MappingsComponent },
-  { path: "mappings/:code", component: MappingDetailsComponent },
+  { path: 'mappings/:code', component: MappingDetailsComponent },
   { path: 'subsets/:terminology', component: SubsetsComponent },
   { path: 'subsets', redirectTo: 'subsets/ncit' },
   { path: 'associations', redirectTo: 'associations/ncit', pathMatch: 'full' },
@@ -68,7 +68,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

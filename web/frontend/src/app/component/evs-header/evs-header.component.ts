@@ -16,17 +16,17 @@ export class EvsHeaderComponent implements OnInit {
   firstRoot = '';
   private subscription = null;
   showTerminologyInfo = false;
-  currentUrl = "";
+  currentUrl = '';
   truncated: boolean = true;
 
   constructor(private http: HttpClient,
-    private configService: ConfigurationService,
-    private conceptService: ConceptDetailService,
-    public router: Router) {
+              private configService: ConfigurationService,
+              private conceptService: ConceptDetailService,
+              public router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
-        this.showTerminologyInfo = !["/mappings", "multisearch"].some(v => this.currentUrl.includes(v));
+        this.showTerminologyInfo = !['/mappings', 'multisearch'].some(v => this.currentUrl.includes(v));
       }
     });
   }
@@ -35,7 +35,7 @@ export class EvsHeaderComponent implements OnInit {
   ngOnInit() {
     this.firstRoot = null;
     // Determine if we are in multi mode
-    if (window.location.search.includes("=multi") || (window.location.search && new URLSearchParams(window.location.search).get("terminology")?.includes(","))) {
+    if (window.location.search.includes('=multi') || (window.location.search && new URLSearchParams(window.location.search).get('terminology')?.includes(","))) {
       this.configService.setMultiSearch(true);
     } else {
       this.configService.setMultiSearch(false);
@@ -46,7 +46,7 @@ export class EvsHeaderComponent implements OnInit {
     if (this.terminology) {
       this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
         + (this.terminology.date ? '; Release Date: ' + this.terminology.date : '');
-      console.log(this.versionInfo)
+      console.log(this.versionInfo);
       if (this.terminology.metadata.hierarchy) {
         // Look up the first root code
         this.conceptService.getRoots(this.terminology.terminology, true).subscribe(response => {
@@ -64,13 +64,14 @@ export class EvsHeaderComponent implements OnInit {
       if (this.terminology) {
         this.versionInfo = this.getTerminologyTitle() + ' - Version: ' + this.terminology.version
           + (this.terminology.date ? '; Release Date: ' + this.terminology.date : '');
-        console.log(this.versionInfo)
+        console.log(this.versionInfo);
 
         if (this.terminology.metadata.hierarchy) {
           // Look up the first root code
           this.conceptService.getRoots(this.terminology.terminology).subscribe(response => {
-            if (Object.values(response).length > 0)
+            if (Object.values(response).length > 0) {
               this.firstRoot = response[0].code;
+            }
           });
         }
       }
@@ -109,16 +110,18 @@ export class EvsHeaderComponent implements OnInit {
   }
 
   displayMultiSearchTerms() {
-    return !this.notMultiSearch() && this.configService.getMultiSearchTerminologies() != null && Array.from(this.configService.getMultiSearchTerminologies()).length > 0;
+    return (!this.notMultiSearch()
+      && this.configService.getMultiSearchTerminologies() != null
+      && Array.from(this.configService.getMultiSearchTerminologies()).length > 0);
   }
 
   getMultiSearchTerms() {
-    var multiSearchTerms = [];
+    const multiSearchTerms = [];
     this.configService.getMultiSearchTerminologies().forEach(term => {
-      var fullTerm = this.configService.getTerminologyByName(term);
-      multiSearchTerms.push(fullTerm.metadata.uiLabel.replace(/\:.*/, ""));
+      const fullTerm = this.configService.getTerminologyByName(term);
+      multiSearchTerms.push(fullTerm.metadata.uiLabel.replace(/\:.*/, ''));
     });
-    return multiSearchTerms.join(", ");
+    return multiSearchTerms.join(', ');
   }
 
   getMultiSearchTermsUrl() {

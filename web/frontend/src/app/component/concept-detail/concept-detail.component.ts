@@ -94,14 +94,14 @@ export class ConceptDetailComponent implements OnInit {
     let isSubset = false;
     if (concept.inverseAssociations) {
       for (let IA of concept.inverseAssociations) {
-        if (IA.type == 'Concept_In_Subset') {
+        if (IA.type === 'Concept_In_Subset') {
           isSubset = true;
           break;
         }
       }
     }
     // Currently only NCIT has subsets
-    return concept.terminology == 'ncit' && isSubset;
+    return concept.terminology ==='ncit' && isSubset;
   }
 
 
@@ -139,7 +139,7 @@ export class ConceptDetailComponent implements OnInit {
       return null;
     }
     // if no tags
-    else if (value.search('<') == -1 || value.search('>') == -1) {
+    else if (value.search('<') === -1 || value.search('>') === -1) {
       // if contains raw links, make then links
       if (value.match(this.httpRegex)) {
         console.log('xxx', value)
@@ -155,7 +155,7 @@ export class ConceptDetailComponent implements OnInit {
     event.data.sort((data1, data2) => {
       let value1 = data1[event.field];
       let value2 = data2[event.field];
-      if (value1 == undefined) {
+      if (value1 === undefined) {
         return 0;
       }
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
@@ -171,7 +171,7 @@ export class ConceptDetailComponent implements OnInit {
     if (!source) {
       return '';
     }
-    if (source == 'NCI') {
+    if (source === 'NCI') {
       return 'ncit';
     }
     return source.toLowerCase();

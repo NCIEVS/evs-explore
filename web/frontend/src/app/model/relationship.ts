@@ -6,7 +6,7 @@ export class Relationship {
   // rela: string;
   relatedCode: string;
   relatedName: string;
-  source: string
+  source: string;
   ct: number;
   qualifiers: any;
   highlight: string;
@@ -22,35 +22,35 @@ export class Relationship {
       return;
     }
 
-    var relaQualifier = null;
+    let relaQualifier = null;
     if (input.qualifiers) {
-      relaQualifier = input.qualifiers.find(function (item) { return item.type == 'RELA'; });
-      this.qualifiers = input.qualifiers.filter(function (item) { return item.type != 'RELA'; });
+      relaQualifier = input.qualifiers.find(function (item) { return item.type === 'RELA'; });
+      this.qualifiers = input.qualifiers.filter(function (item) { return item.type !== 'RELA'; });
     }
 
 
     // Handle UMLS relationships
     // This seems backwards but RB means 'broader than' which means the
     // related code is 'narrower' than the current concept.
-    if (input.type == 'RB') {
+    if (input.type === 'RB') {
       // If we're showing 'Narrower Concepts' table
       if (configService.isMultiSource && configService.isRrf()) {
-        this.type = relaQualifier ? relaQualifier.value : 'Narrower'
+        this.type = relaQualifier ? relaQualifier.value : 'Narrower';
       }
       // If we're showing 'Associations' table
       else if (configService.isRrf()) {
-        this.type = relaQualifier ? relaQualifier.value : 'Broader'
+        this.type = relaQualifier ? relaQualifier.value : 'Broader';
       }
-    } else if (input.type == 'RN') {
+    } else if (input.type === 'RN') {
       if (configService.isMultiSource && configService.isRrf()) {
-        this.type = relaQualifier ? relaQualifier.value : 'Broader'
+        this.type = relaQualifier ? relaQualifier.value : 'Broader';
       }
       // If we're showing 'Associations' table
       else if (configService.isRrf()) {
-        this.type = relaQualifier ? relaQualifier.value : 'Narrower'
+        this.type = relaQualifier ? relaQualifier.value : 'Narrower';
       }
     } else if (input.type.startsWith('R') && configService.isRrf()) {
-      this.type = relaQualifier ? relaQualifier.value : 'Other'
+      this.type = relaQualifier ? relaQualifier.value : 'Other';
     }
   }
 }

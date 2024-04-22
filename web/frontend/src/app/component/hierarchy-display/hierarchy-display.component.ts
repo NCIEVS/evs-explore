@@ -88,7 +88,7 @@ export class HierarchyDisplayComponent implements OnInit {
   treeTableNodeSelected(event) {
     console.info('treeTableNodeSelected', event);
     // Handle selecting for more data for top level
-    if (event.ct && event.data.parentCode == 'root') {
+    if (event.ct && event.data.parentCode === 'root') {
       if (
         confirm(
           'Loading all tree positions may take a while, are you sure you want to proceed?'
@@ -156,7 +156,7 @@ export class HierarchyDisplayComponent implements OnInit {
       .getHierarchyChildData(code, limit)
       .then((nodes) => {
         if (limit == null) {
-          let codes = new Set(node.children.map((n) => n.code));
+          const codes = new Set(node.children.map((n) => n.code));
           // Remove the 'ct' node and combine the list with the remaining elements
           // NOTE: this may require resorting
           node.children = [
@@ -272,13 +272,13 @@ export class HierarchyDisplayComponent implements OnInit {
     }
   }
 
-  keepSource(item: string): Boolean {
-    return item && item != 'NCIMTH' && item != 'MTH';
+  keepSource(item: string): boolean {
+    return item && item !== 'NCIMTH' && item !== 'MTH';
   }
 
   getSourceList(concept) {
     // console.log('get source list', concept);
-    var sourceList = new Set<string>();
+    const sourceList = new Set<string>();
     sourceList.add('All');
     for (const obj in concept.synonyms) {
       if (this.keepSource(concept.synonyms[obj].source)) {
@@ -305,7 +305,7 @@ export class HierarchyDisplayComponent implements OnInit {
     const intersection = [...sourceList].filter((x) =>
       this.selectedSources.has(x)
     );
-    if (intersection.length == 0) {
+    if (intersection.length === 0) {
       this.toggleSelectedSource('All');
     }
 
@@ -316,15 +316,15 @@ export class HierarchyDisplayComponent implements OnInit {
   toggleSelectedSource(source) {
     // clear if All is selected or was last selected
     if (
-      source == 'All' ||
-      (this.selectedSources.size == 1 && this.selectedSources.has('All'))
+      source === 'All' ||
+      (this.selectedSources.size === 1 && this.selectedSources.has('All'))
     ) {
       this.selectedSources.clear();
     }
     if (this.selectedSources.has(source)) {
       this.selectedSources.delete(source);
       // reset to All if removing last selected source
-      if (this.selectedSources.size == 0) {
+      if (this.selectedSources.size === 0) {
         this.selectedSources.add('All');
       }
     } else {

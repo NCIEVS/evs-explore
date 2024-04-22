@@ -19,6 +19,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
   allTerminologies: any = null;
   selectedMultiTerminologies = new Set();
+  checkboxStates: { [key: string]: boolean } = {}; // track the state of the checkbox based on terminology
   private subscription = null;
 
   // Constructor
@@ -33,16 +34,16 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // On init, set up a terminology change subscription
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.queryParams
       .subscribe(params => {
-        if (Object.keys(params).length > 0 && params.terminology != "multi" && !params.terminology.includes(",")) {
+        if (Object.keys(params).length > 0 && params.terminology !== 'multi' && !params.terminology.includes(',')) {
           this.setWelcomeText(params.terminology);
           this.configService.setMultiSearch(false);
         } else if (Object.keys(params).length > 0) {
-          if (params.terminology.includes(",")) {
+          if (params.terminology.includes(',')) {
             // populating saved terminologies in url
-            params.terminology.split(",").forEach(term => {
+            params.terminology.split(',').forEach(term => {
               this.selectedMultiTerminologies.add(term);
             });
 
@@ -50,10 +51,14 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.configService.setMultiSearch(true);
         }
         this.allTerminologies = this.configService.getTerminologies().map((terminology) => {
+          // initialize checkboxStates for each terminology
+          const normalizedTerm = terminology.metadata.uiLabel.replace(/\:.*/, '').toLowerCase();
+          this.checkboxStates[normalizedTerm] = false;
+          // set the checkbox state based on the selected terminologies
           return {
-            label: terminology.metadata.uiLabel.replace(/\:.*/, ""),
+            label: terminology.metadata.uiLabel.replace(/\:.*/, ''),
             value: terminology,
-            description: terminology.metadata.uiLabel.replace(/.*?\: /, ""),
+            description: terminology.metadata.uiLabel.replace(/.*?\: /, ''),
           };
         });
         // filter for list of terminologies presented
@@ -64,7 +69,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     // unsubscribe to ensure no memory leaks
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -72,7 +77,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Post initialization, check hhs banner and set welcome text
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (!this.cookieService.check('hhsBanner')) {
       this.open(this.content);
     }
@@ -80,16 +85,25 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setWelcomeText(this.configService.getTerminologyName());
   }
 
+  // Sorts the multi-search dropdown
   ncitNcimMultiSearchSort(a, b) {
-    if (a.value.terminology == "ncit") return -1;
-    if (b.value.terminology == "ncit") return 1;
-    if (a.value.terminology == "ncim") return -1;
-    if (b.value.terminology == "ncim") return 1;
+    if (a.value.terminology === 'ncit') {
+      return -1;
+    }
+    if (b.value.terminology === 'ncit') {
+      return 1;
+    }
+    if (a.value.terminology === 'ncim') {
+      return -1;
+    }
+    if (b.value.terminology === 'ncim') {
+      return 1;
+    }
     return 0;
   }
 
   // Sets the welcome text
-  setWelcomeText(terminology: String): any {
+  setWelcomeText(terminology: string): void {
     this.configService.getWelcomeText(terminology).subscribe(response => {
       this.welcomeText = response;
       if (document.getElementById('welcomeTextDiv')) {
@@ -99,8 +113,12 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Opens the HHS banner
-  open(content: TemplateRef<any>) {
-    var modalref = this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
+  open(content: TemplateRef<any>): void {
+    const modalref = this.modalService.open(content, {
+      size: 'lg',
+      ariaLabelledBy: 'modal-basic-title',
+      backdrop: 'static'
+    });
     modalref.result.then((result) => {
       this.cookieService.set('hhsBanner', 'accepted', 90);
       console.log('HHS Banner Accepted');
@@ -112,52 +130,68 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getMultiSearch() {
+  // Returns the multi-search flag
+  getMultiSearch(): boolean {
     return this.configService.getMultiSearch();
   }
 
-  onChangeMultiSelect(event) {
-    const normalizedTerm = event.value.terminology.toString().toLowerCase();
-    if (this.selectedMultiTerminologies.has(normalizedTerm)) {
-      this.selectedMultiTerminologies.delete(normalizedTerm);
-    } else {
-      this.appComponent.checkLicenseText(normalizedTerm);
-      this.selectedMultiTerminologies.add(normalizedTerm);
-    }
-    this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
-    console.log(this.selectedMultiTerminologies);
+  // Handles multi-select dropdown changes. Checks the license when applicable and (un)checks box
+  // based on the response from checkLicenseText
+  onChangeMultiSelect(event): void {
+    const normalizedTerm = event.value.value.terminology.toString().toLowerCase();
+    // check if the license text is accepted, the perform the checkbox action
+    this.appComponent.checkLicenseText(normalizedTerm).then((isLicenseAccepted) => {
+      // check if the license is accepted or not
+      if (isLicenseAccepted) {
+        // set our checkboxState to true and add the term to selectedMultiTerms
+        this.checkboxStates[normalizedTerm] = true;
+        this.selectedMultiTerminologies.add(normalizedTerm);
+      } else {
+        // set our checkbox state to false (uncheck the box) & remove the term from the selected set
+        this.checkboxStates[normalizedTerm] = false;
+        this.selectedMultiTerminologies.delete(normalizedTerm);
+      }
+      // set the selected terminologies
+      this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
+      console.log(this.selectedMultiTerminologies);
+    });
   }
 
-  selectAllTerms(ncimFlag = true) {
-    var checkboxes = document.getElementsByClassName("multiTermSelect");
+  // Selects all terms in the multi-select dropdown & checks the license
+  async selectAllTerms(ncimFlag = true): Promise<void> {
+    const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
-    for (var i = 0, n = checkboxes.length; i < n; i++) {
-      if (!ncimFlag && checkboxes[i].getAttribute("id") == 'ncim') {
-        checkboxes[i].toggleAttribute("checked", false);
+    // loop through all checkboxes and set the state based on the license
+    for (let i = 0, n = checkboxes.length; i < n; i++) {
+      // get the term from the checkboxes id attribute
+      const term = checkboxes[i].getAttribute('id');
+      if (!ncimFlag && term === 'ncim') {
+        this.checkboxStates[term] = false;
         continue;
       }
-      checkboxes[i].toggleAttribute("checked", true);
-      this.selectedMultiTerminologies.add(checkboxes[i].getAttribute("id"));
+      // check if the license text is accepted, then perform the checkbox action
+      const isLicenseAccepted = await this.appComponent.checkLicenseText(term);
+      if (isLicenseAccepted) {
+        this.checkboxStates[term] = true;
+        this.selectedMultiTerminologies.add(term);
+      } else {
+        this.checkboxStates[term] = false;
+      }
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
-
   }
 
-  clearAllTerms() {
-    var checkboxes = document.getElementsByClassName("multiTermSelect");
+  // Clears all terms in the multi-select dropdown
+  clearAllTerms(): void {
+    const checkboxes = document.getElementsByClassName('multiTermSelect');
     this.selectedMultiTerminologies.clear();
-    for (var i = 0, n = checkboxes.length; i < n; i++) {
-      checkboxes[i].toggleAttribute("checked", false);
+    for (let i = 0, n = checkboxes.length; i < n; i++) {
+      // get the term from the checkboxes id attribute
+      const term = checkboxes[i].getAttribute('id');
+      // set the checkbox state to false
+      this.checkboxStates[term] = false;
     }
     this.configService.setMultiSearchTerminologies(this.selectedMultiTerminologies);
-  }
-
-  inMultiSearchList(term) {
-    if (this.configService.getMultiSearchTerminologies() == null) {
-      return false;
-    }
-    const terms = Array.from(this.configService.getMultiSearchTerminologies());
-    return terms.includes(term.value.terminology);
   }
 
 }

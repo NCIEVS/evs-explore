@@ -1,12 +1,11 @@
-import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ConfigurationService } from 'src/app/service/configuration.service';
-import { LoaderService } from 'src/app/service/loader.service';
-import { saveAs } from 'file-saver';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MapsetService } from 'src/app/service/mapset.service';
-import { ConceptDetailComponent } from '../concept-detail/concept-detail.component';
-import { ConceptDetailService } from 'src/app/service/concept-detail.service';
+import {Component, OnInit, SecurityContext, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ConfigurationService} from 'src/app/service/configuration.service';
+import {LoaderService} from 'src/app/service/loader.service';
+import {saveAs} from 'file-saver';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MapsetService} from 'src/app/service/mapset.service';
+import {ConceptDetailService} from 'src/app/service/concept-detail.service';
 
 @Component({
   selector: 'app-mapping-details',
@@ -68,21 +67,21 @@ export class MappingDetailsComponent implements OnInit {
       this.mapsetService.getMapsetByCode(this.mapsetCode, 'properties').subscribe((response) => {
         this.version = response['version'];
         this.properties = response['properties'];
-        this.welcomeText = this.properties.find((prop) => prop.type == 'welcomeText')?.value;
-        this.targetTermLoaded = 'true' == this.properties.find((prop) => prop.type == 'targetLoaded')?.value;
-        this.targetTermVersion = this.properties.find((prop) => prop.type == 'targetTerminologyVersion')?.value;
-        this.sourceTermLoaded = 'true' == this.properties.find((prop) => prop.type == 'sourceLoaded')?.value;
-        this.sourceTermVersion = this.properties.find((prop) => prop.type == 'sourceTerminologyVersion')?.value;
+        this.welcomeText = this.properties.find((prop) => prop.type === 'welcomeText')?.value;
+        this.targetTermLoaded = 'true' === this.properties.find((prop) => prop.type === 'targetLoaded')?.value;
+        this.targetTermVersion = this.properties.find((prop) => prop.type === 'targetTerminologyVersion')?.value;
+        this.sourceTermLoaded = 'true' === this.properties.find((prop) => prop.type === 'sourceLoaded')?.value;
+        this.sourceTermVersion = this.properties.find((prop) => prop.type === 'sourceTerminologyVersion')?.value;
         this.setWelcomeText();
 
         this.mapsetService.getMapsetMappings(this.mapsetCode, 10, 0, '').subscribe((response) => {
           this.total = response['total'];
-          this.mapsetMappings = this.total == 0 ? [] : response['maps'];
+          this.mapsetMappings = this.total === 0 ? [] : response['maps'];
           this.fullTotal = this.total;
-          var sortCols = document.getElementsByClassName('sortable');
-          for (var i = 0; i < sortCols.length; i++) {
-            var str = sortCols[i].innerHTML;
-            var text = str.replace('↓', '').replace('↑', '');
+          const sortCols = document.getElementsByClassName('sortable');
+          for (let i = 0; i < sortCols.length; i++) {
+            const str = sortCols[i].innerHTML;
+            const text = str.replace('↓', '').replace('↑', '');
             sortCols[i].innerHTML = text;
           }
 
@@ -96,10 +95,10 @@ export class MappingDetailsComponent implements OnInit {
 
   // After loading map records compute source/target term codes to link
   computeLinkCodes() {
-    var validTerminologies = this.configService.getTerminologies().map((obj) => obj.terminology);
-    this.sourceTerm = this.properties.find((prop) => prop.type == 'sourceTerminology')?.value.toLowerCase();
+    const validTerminologies = this.configService.getTerminologies().map((obj) => obj.terminology);
+    this.sourceTerm = this.properties.find((prop) => prop.type === 'sourceTerminology')?.value.toLowerCase();
     this.sourceTermSaved = validTerminologies.includes(this.sourceTerm);
-    this.targetTerm = this.properties.find((prop) => prop.type == 'targetTerminology')?.value.toLowerCase();
+    this.targetTerm = this.properties.find((prop) => prop.type === 'targetTerminology')?.value.toLowerCase();
     this.targetTermSaved = validTerminologies.includes(this.targetTerm);
     if (this.sourceTermLoaded && this.total > 0) {
       this.conceptDetailService
@@ -129,7 +128,9 @@ export class MappingDetailsComponent implements OnInit {
   // Sets the welcome text
   setWelcomeText(): any {
     document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
-    if (this.mappings) this.mappings._first = 0;
+    if (this.mappings) {
+      this.mappings._first = 0;
+    }
   }
 
   // Handle lazy loading of table
@@ -143,7 +144,7 @@ export class MappingDetailsComponent implements OnInit {
         .getMapsetMappings(this.mapsetCode, pageSize, fromRecord, this.lastQuery, this.currentSortDirection, this.currentSortColumn)
         .subscribe((response) => {
           this.total = response['total'];
-          this.mapsetMappings = this.total == 0 ? [] : response['maps'];
+          this.mapsetMappings = this.total === 0 ? [] : response['maps'];
           this.computeLinkCodes();
         });
       this.fromRecord = fromRecord;
@@ -153,18 +154,17 @@ export class MappingDetailsComponent implements OnInit {
 
   search(event, columnName = null) {
     this.loaderService.showLoader();
-    var sort = null;
-    var sortDirection = null;
-    var sortCols = document.getElementsByClassName('sortable');
-    for (var i = 0; i < sortCols.length; i++) {
-      var str = sortCols[i].innerHTML;
-      var text = str.replace('↓', '').replace('↑', '');
-      sortCols[i].innerHTML = text;
+    let sort = null;
+    let sortDirection = null;
+    let sortCols = document.getElementsByClassName('sortable');
+    for (let i = 0; i < sortCols.length; i++) {
+      const str = sortCols[i].innerHTML;
+      sortCols[i].innerHTML = str.replace('↓', '').replace('↑', '');
     }
     if (columnName) {
       // setup for sorting
-      var sortCols = document.getElementsByClassName('sortable');
-      if (this.currentSortColumn == columnName) {
+      sortCols = document.getElementsByClassName('sortable');
+      if (this.currentSortColumn === columnName) {
         this.currentSortDirection = !this.currentSortDirection;
       } else {
         this.currentSortColumn = columnName;
@@ -173,20 +173,20 @@ export class MappingDetailsComponent implements OnInit {
       this.currentSortColumn = columnName;
       sort = this.currentSortColumn;
       sortDirection = this.currentSortDirection;
-      document.getElementById(columnName).innerText += this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓';
+      document.getElementById(columnName).innerText += this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓';
     }
-    if (this.lastQuery != event.query) {
+    if (this.lastQuery !== event.query) {
       this.fromRecord = 0;
     }
     this.mapsetService
       .getMapsetMappings(this.mapsetCode, this.pageSize, this.fromRecord, this.termAutoSearch, sortDirection, sort)
       .subscribe((response) => {
         this.total = response['total'];
-        this.mapsetMappings = this.total == 0 ? [] : response['maps'];
+        this.mapsetMappings = this.total === 0 ? [] : response['maps'];
         this.computeLinkCodes();
       });
     this.textSuggestions = [];
-    if (this.lastQuery != event.query && this.mappings) {
+    if (this.lastQuery !== event.query && this.mappings) {
       this.mappings._first = 0;
     }
     if (event.query) {
@@ -199,7 +199,7 @@ export class MappingDetailsComponent implements OnInit {
   async exportMapping() {
     this.loaderService.showLoader();
     const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
-    var mappingText = '';
+    let mappingText = '';
 
     for (let i = 0; i < pages; i++) {
       await this.configService
@@ -208,7 +208,7 @@ export class MappingDetailsComponent implements OnInit {
         .then((result) => {
           result['maps'].forEach((c) => {
             // get titles and pretty-fy them
-            if (mappingText == '') {
+            if (mappingText === '') {
               // first replace: split words by lowercase letter -> uppercase letter
               // second replace: capitalize new first word
               mappingText +=
@@ -220,7 +220,7 @@ export class MappingDetailsComponent implements OnInit {
           });
         });
     }
-    var fileName = this.mapsetCode + '_' + (this.version != null ? 'Version' + this.version + '_' : '');
+    const fileName = this.mapsetCode + '_' + (this.version != null ? 'Version' + this.version + '_' : '');
     saveAs(
       new Blob([mappingText], {
         type: 'text/plain',

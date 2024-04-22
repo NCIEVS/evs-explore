@@ -24,7 +24,7 @@ export class LoaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loaderService.getLoaderSubject().subscribe(show => {
       // force hide and unblock
-      if (show == null) {
+      if (show === null) {
         console.log('error, clear spinner tracking');
         this.tracking = [];
         this.spinner.hide();

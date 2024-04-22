@@ -30,10 +30,9 @@ export class ConfigurationService {
   private EXPORT_PAGE_SIZE = 1000;
 
   constructor(private injector: Injector, private http: HttpClient,
-    private notificationService: NotificationService,
-    private cookieService: CookieService) {
-
-    this.selectedSources = new Set<String>().add('All');
+              private notificationService: NotificationService,
+              private cookieService: CookieService) {
+    this.selectedSources = new Set<string>().add('All');
 
   }
 
@@ -47,7 +46,7 @@ export class ConfigurationService {
 
 
   getRestrictedTerms() {
-    var restrictedTerms = []
+    const restrictedTerms = [];
     const terms = this.getMultiSearchTerminologies();
     terms.forEach(term => {
       const terminology = this.getTerminologyByName(term);
@@ -55,7 +54,7 @@ export class ConfigurationService {
         restrictedTerms.push(this.getTerminologyByName(term).metadata.uiLabel.replace(/\:.*/, ""));
       }
     });
-    return restrictedTerms.join(", ")
+    return restrictedTerms.join(", ");
   }
 
   getTerminology() {
@@ -71,13 +70,13 @@ export class ConfigurationService {
   }
 
   getTerminologyMap(): Map<string, any> {
-    let terminologyMap = new Map();
+    const terminologyMap = new Map();
     this.terminologies.forEach(t => terminologyMap[t.terminology] = t);
     return terminologyMap;
   }
 
   getMetadataMap(): Map<string, any> {
-    let metadataMap = new Map();
+    const metadataMap = new Map();
     this.terminologies.forEach(t => { metadataMap[t.terminology] = t.metadata; });
     return metadataMap;
   }
@@ -89,20 +88,22 @@ export class ConfigurationService {
   // filter out terminologies that shouldn't be in the list on the search page
   // mostly just the weekly ncit that's loaded
   terminologySearchListFilter(term, defaultTerminologyName) {
-    if (term.terminology != defaultTerminologyName)
+    if (term.terminology != defaultTerminologyName) {
       return true;
-    if (term.tags && 'monthly' in term.tags && term.latest == true)
+    }
+    if (term.tags && 'monthly' in term.tags && term.latest === true) {
       return true;
+    }
     return false;
   }
 
   getTerminologyByName(name: string) { // reverse search terminology by short name
-    if (name == "multi") {
+    if (name === "multi") {
       return { terminology: "multi" };
     }
-    var terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
-    for (var term in terms) {
-      if (terms[term].terminology == name) {
+    const terms = this.terminologies.filter((term) => this.terminologySearchListFilter(term, this.defaultTerminologyName));
+    for (const term in terms) {
+      if (terms[term].terminology === name) {
         return terms[term];
       }
     }
@@ -141,17 +142,17 @@ export class ConfigurationService {
 
   // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
-    return this.getTerminology().metadata['loader'] == 'rdf';
+    return this.getTerminology().metadata['loader'] === 'rdf';
   }
 
   // Indicates whether current terminology is loaded from RRF (e.g. ncim, mdr)
   isRrf() {
-    return this.getTerminology().metadata['loader'] == 'rrf';
+    return this.getTerminology().metadata['loader'] === 'rrf';
   }
 
   // Indicates whether current terminology selection is a metathesaurus or a single source
   isSingleSource() {
-    return this.getTerminology().metadata['sourceCt'] == 1;
+    return this.getTerminology().metadata['sourceCt'] === 1;
   }
 
   // Indicates whether current terminology selection is a metathesaurus or a single source
@@ -169,11 +170,11 @@ export class ConfigurationService {
     // if code is set but NOT terminology, then assume 'ncit' for backwards compat
     // don't change terminology on multi-search
     if ((paramMap.get('terminology') != null && !this.getMultiSearch()) || (paramMap.get('code') != null && !paramMap.get('terminology'))) {
-      var term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
+      const term = (paramMap.get('code') && !paramMap.get('terminology')) ? this.getDefaultTerminologyName() : paramMap.get('terminology');
       // filter down to latest (and optionally monthly)
-      var terminology = this.terminologies.filter(t =>
-        t.latest && t.terminology == term
-        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
+      const terminology = this.terminologies.filter(t =>
+        t.latest && t.terminology === term
+        && (term != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] === 'true')))[0];
 
 
       // If we are changing it, set the terminology
@@ -182,15 +183,12 @@ export class ConfigurationService {
       }
       // If blank, set terminology to the first one matching 'term'
       else if (!terminology) {
-        let arr = this.terminologies.filter(a => a.terminology == term);
-        if (!arr || arr.length == 0) {
-          throw 'Unable to find terminology matching ' + term;
+        const arr = this.terminologies.filter(a => a.terminology === term);
+        if (!arr || arr.length === 0) {
+          throw new Error('Unable to find terminology matching ' + term);
         }
         this.terminology = arr[0];
       }
-
-
-
     }
 
 
@@ -210,7 +208,7 @@ export class ConfigurationService {
     console.log('set config from path', path);
     const splitPath = path.split('/').filter(part => part !== "evsexplore");
     splitPath
-    var pterminology;
+    let pterminology;
 
     // Handle /hierarchy/{terminology}/{code}
     // Handle concept//{terminology}/{code}
@@ -228,23 +226,24 @@ export class ConfigurationService {
       if (splitPath.length > 3) {
         pterminology = splitPath[splitPath.length - 2]
       }
-      else
+      else {
         // The terminology is last field
         pterminology = splitPath[splitPath.length - 1];
+      }
     }
-    var terminology = this.terminologies.filter(t =>
-      t.latest && t.terminology == pterminology
-      && (pterminology != this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] == 'true')))[0];
+    const terminology = this.terminologies.filter(t =>
+      t.latest && t.terminology === pterminology
+      && (pterminology !== this.getDefaultTerminologyName() || (t.tags && t.tags['monthly'] === 'true')))[0];
 
     // If we are changing it, set the terminology
-    if (terminology && terminology != this.terminology) {
+    if (terminology && terminology !== this.terminology) {
       this.setTerminology(terminology);
     }
     // If blank, set terminology to the first one matching 'term'
     else if (!terminology) {
-      let arr = this.terminologies.filter(a => a.terminology == pterminology);
-      if (!arr || arr.length == 0) {
-        throw 'Unable to find terminology matching ' + pterminology;
+      const arr = this.terminologies.filter(a => a.terminology === pterminology);
+      if (!arr || arr.length === 0) {
+        throw new Error('Unable to find terminology matching ' + pterminology);
       }
       this.terminology = arr[0];
     }
@@ -263,21 +262,21 @@ export class ConfigurationService {
     return this.code;
   }
 
-  getSelectedSources(): Set<String> {
+  getSelectedSources(): Set<string> {
     return this.selectedSources;
   }
 
   hasSourceStats() {
-    return this.getTerminologyName() == "ncim";
+    return this.getTerminologyName() === "ncim";
   }
 
   // Load configuration - see app.module.ts - this ALWAYS runs when a page is reloaded or opened
   loadConfig(): Promise<any> {
     // Extract the cookie value on instantiation if not passed in
-    var term = this.getTerminologyName();
+    const term = this.getTerminologyName();
 
     // defining subject object for subscription
-    if (this.getSubject() == undefined) {
+    if (this.getSubject() === undefined) {
       this.setSubject(new Subject<any>());
     }
     return new Promise((resolve, reject) => {
@@ -289,19 +288,19 @@ export class ConfigurationService {
         }).toPromise()
         .then(response => {
           // response is an array of terminologies, find the 'latest' one
-          var arr = response as any[];
+          let arr = response as any[];
           let foundDefault = false;
 
-          for (let returnedTerminology of arr) {
+          for (const returnedTerminology of arr) {
 
-            if (returnedTerminology.terminology == this.defaultTerminologyName) {
+            if (returnedTerminology.terminology === this.defaultTerminologyName) {
               foundDefault = true;
             }
           }
 
           // Fail if there are no entries or can't find the default
-          if (arr.length == 0 || !foundDefault) {
-            throw 'Unable to find any terminologies with /metadata/terminologies or can not find ' + this.defaultTerminologyName;
+          if (arr.length === 0 || !foundDefault) {
+            throw new Error('Unable to find any terminologies with /metadata/terminologies or can not find ' + this.defaultTerminologyName);
           }
 
           // Sort terminologies by 'latest' and 'tags=monthly' and
@@ -316,18 +315,18 @@ export class ConfigurationService {
               return a.latest ? -1 : 1;
             }
             // Then by 'monthly'
-            if (a.tags && a.tags.monthly == 'true' && b.tags && b.tags.monthly != 'true') {
+            if (a.tags && a.tags.monthly === 'true' && b.tags && b.tags.monthly != 'true') {
               return -1;
-            } else if (b.tags && b.tags.monthly == 'true' && a.tags && a.tags.monthly != 'true') {
+            } else if (b.tags && b.tags.monthly === 'true' && a.tags && a.tags.monthly != 'true') {
               return 1;
             }
             return a.version.localeCompare(b.version, undefined, { sensitivity: 'base' });;
           });
 
           // Set terminologies based on this list and pick the first one
-          var seen = {};
+          const seen = {};
           this.terminologies = arr.filter(t => {
-            var keep = false;
+            let keep = false;
             if (!seen[t.terminology]) {
               seen[t.terminology] = 1;
               keep = true;
@@ -336,9 +335,9 @@ export class ConfigurationService {
           });
 
           // Set terminology to the first one matching 'term'
-          arr = this.terminologies.filter(a => a.terminology == term);
-          if (!arr || arr.length == 0) {
-            throw 'Unable to find terminology matching ' + term;
+          arr = this.terminologies.filter(a => a.terminology === term);
+          if (!arr || arr.length === 0) {
+            throw new Error('Unable to find terminology matching ' + term);
           }
           this.terminology = arr[0];
 
@@ -474,7 +473,7 @@ export class ConfigurationService {
       );
   }
 
-  getWelcomeText(terminology: String) {
+  getWelcomeText(terminology: string) {
     var url = '/api/v1/metadata/' + terminology + '/welcomeText';
     return this.http.get(encodeURI(url),
       {
@@ -514,7 +513,7 @@ export class ConfigurationService {
   }
 
   getSourceStats(code: string, term: string) {
-    var url = '/api/v1/metadata/' + term + "/stats/" + code;
+    const url = '/api/v1/metadata/' + term + "/stats/" + code;
     return this.http.get(encodeURI(url),
       {
         responseType: 'json'

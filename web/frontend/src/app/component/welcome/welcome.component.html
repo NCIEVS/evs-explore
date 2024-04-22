@@ -41,19 +41,19 @@
               its browser home page</p>
             <p *ngIf="getMultiSearch()" style="margin-bottom: 0.5em">
               <a class="multiSearchButtons" (click)="selectAllTerms(false)"
-                pTooltip="Click to select all terminologies except NCIM" tooltipPosition="bottom">All But NCIM</a>
+                 pTooltip="Click to select all terminologies except NCIM" tooltipPosition="bottom">All But NCIM</a>
               <span class="separator"></span>
               <a class="multiSearchButtons" (click)="selectAllTerms()" pTooltip="Click to select all terminologies"
-                tooltipPosition="bottom">Select All</a>
+                 tooltipPosition="bottom">Select All</a>
               <span class="separator"></span>
               <a class="multiSearchButtons" (click)="clearAllTerms()" pTooltip="Click to de-select all terminologies"
-                tooltipPosition="bottom">Clear</a>
+                 tooltipPosition="bottom">Clear</a>
             </p>
             <div *ngFor="let term of allTerminologies" style="margin-left: 5px">
               <label style="white-space: nowrap">
-                <input id="{{term.value.terminology}}" class="multiTermSelect" type="checkbox"
-                  (change)="onChangeMultiSelect(term)" name="{{term.value.terminology}}"
-                  [checked]="inMultiSearchList(term)">
+                <input class="multiTermSelect" type="checkbox" id="{{term.value.terminology}}"
+                       [(ngModel)]="checkboxStates[term.value.terminology]"
+                       (change)="onChangeMultiSelect({value: term})">
                 <a [routerLink]="['/welcome']" [queryParams]="{terminology: term.value.terminology}" target="_top">{{
                   term.label
                   }}</a>: {{
@@ -69,139 +69,139 @@
         <div class="col-md-4">
           <table>
             <tbody>
-              <tr valign="top">
-                <td>
-                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">
-                    <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS" border="0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">NCI Enterprise
-                    Vocabulary Services</a>:
-                  Terminology resources and services for NCI and the biomedical
-                  community.
-                </td>
-              </tr>
-              <!--
-              <tr valign="top">
-                <td>
-                  <a href="https://ncim.nci.nih.gov/ncimbrowser" target="_blank" alt="NCIm">
-                    <img src="assets/images/NCImTile.png" width="77" height="38px" alt="NCIm" border="0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a href="https://ncim.nci.nih.gov/ncimbrowser" target="_blank" alt="NCIm">NCI Metathesaurus</a>:
-                  Comprehensive database of 6,700,000 terms from over 85 terminologies.
-                </td>
+            <tr valign="top">
+              <td>
+                <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">
+                  <img src="assets/images/EVSTile.png" width="77" height="38px" alt="EVS" border="0"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a href="https://evs.nci.nih.gov/" target="_blank" alt="EVS" class="regular-link">NCI Enterprise
+                  Vocabulary Services</a>:
+                Terminology resources and services for NCI and the biomedical
+                community.
+              </td>
+            </tr>
+            <!--
+            <tr valign="top">
+              <td>
+                <a href="https://ncim.nci.nih.gov/ncimbrowser" target="_blank" alt="NCIm">
+                  <img src="assets/images/NCImTile.png" width="77" height="38px" alt="NCIm" border="0" />
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a href="https://ncim.nci.nih.gov/ncimbrowser" target="_blank" alt="NCIm">NCI Metathesaurus</a>:
+                Comprehensive database of 6,700,000 terms from over 85 terminologies.
+              </td>
 
-              </tr>
-              <tr valign="top">
-                <td>
-                  <a href="https://ncit.nci.nih.gov/ncitbrowser/" alt="NCI Term Browser">
-                    <img src="assets/images/EVSTermsBrowserTile.png" width="77" height="38px" alt="NCI Term Browser"
-                      border="0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a href="https://ncit.nci.nih.gov/ncitbrowser/" alt="NCI Term Browser">NCI Term Browser</a>:
-                  NCI and other terminologies in an integrated environment.
-                </td>
-              </tr>
-              -->
-              <tr valign="top">
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
-                    alt="NCI Metathesaurus" class="regular-link">
-                    <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" style="border:0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
-                    alt="NCI Metathesaurus" class="regular-link">
+            </tr>
+            <tr valign="top">
+              <td>
+                <a href="https://ncit.nci.nih.gov/ncitbrowser/" alt="NCI Term Browser">
+                  <img src="assets/images/EVSTermsBrowserTile.png" width="77" height="38px" alt="NCI Term Browser"
+                    border="0" />
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a href="https://ncit.nci.nih.gov/ncitbrowser/" alt="NCI Term Browser">NCI Term Browser</a>:
+                NCI and other terminologies in an integrated environment.
+              </td>
+            </tr>
+            -->
+            <tr valign="top">
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
+                   alt="NCI Metathesaurus" class="regular-link">
+                  <img src="assets/images/NCImTile.png" alt="NCI Metathesaurus" style="border:0"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncim'}" target="_top"
+                   alt="NCI Metathesaurus" class="regular-link">
 
-                    NCI Metathesaurus</a>:
-                  Comprehensive database of 8,000,000 terms from over 100 terminologies.
-                </td>
-              </tr>
-              <tr valign="top">
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
-                    alt="NCI Thesaurus" class="regular-link">
-                    <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
-                    alt="NCI Thesaurus" class="regular-link">
+                  NCI Metathesaurus</a>:
+                Comprehensive database of 8,000,000 terms from over 100 terminologies.
+              </td>
+            </tr>
+            <tr valign="top">
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                   alt="NCI Thesaurus" class="regular-link">
+                  <img src="assets/images/NCItTile.png" alt="NCI Thesaurus" border="0"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'ncit'}" target="_blank"
+                   alt="NCI Thesaurus" class="regular-link">
 
-                    NCI Thesaurus</a>:
-                  Reference terminology for NCI, NCI Metathesaurus and NCI
-                  informatics
-                  infrastructure.
-                </td>
-              </tr>
-              <tr valign="top">
-                <td>
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top" alt="multi"
-                    class="regular-link">
-                    <img src="assets/images/multiSearch.png" width="77" alt="multi" style="border: 0;" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top"
-                    alt="NCI Thesaurus" class="regular-link">
+                  NCI Thesaurus</a>:
+                Reference terminology for NCI, NCI Metathesaurus and NCI
+                informatics
+                infrastructure.
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top" alt="multi"
+                   class="regular-link">
+                  <img src="assets/images/multiSearch.png" width="77" alt="multi" style="border: 0;"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/welcome']" [queryParams]="{terminology: 'multi'}" target="_top"
+                   alt="NCI Thesaurus" class="regular-link">
 
-                    Multiple Terminology Search</a>:
-                  Search through a combination of medical terminologies including NCI Thesaurus, NCI Metathesaurus,
-                  MedDRA, and more.
-                </td>
-              </tr>
-              <tr valign="top">
-                <td>
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
-                    alt="NCI Terminology Resources" class="regular-link">
-                    <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources" border="0" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
-                    alt="NCI Terminology Resources" class="regular-link">
+                  Multiple Terminology Search</a>:
+                Search through a combination of medical terminologies including NCI Thesaurus, NCI Metathesaurus,
+                MedDRA, and more.
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
+                   alt="NCI Terminology Resources" class="regular-link">
+                  <img src="assets/images/Cancer_govTile.png" alt="NCI Terminology Resources" border="0"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a href="https://datascience.cancer.gov/resources/cancer-vocabulary" target="_blank"
+                   alt="NCI Terminology Resources" class="regular-link">
 
-                    NCI Terminology Resources</a>:
-                  More information on NCI dictionaries and resources.
-                </td>
-              </tr>
-              <tr valign="top">
-                <td>
-                  <a [routerLink]="['/evsapi']" alt="Swagger API Documentation">
-                    <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0" width="38"
-                      height="38" />
-                  </a>
-                </td>
-                <td width="3px;"></td>
-                <td class="textbody" valign="top">
-                  <a [routerLink]="['/evsapi']" alt="Swagger API Documentation" class="regular-link">
-                    Swagger API Documentation</a>:
-                  View documentation for the EVS REST API providing data to this
-                  application.
+                  NCI Terminology Resources</a>:
+                More information on NCI dictionaries and resources.
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <a [routerLink]="['/evsapi']" alt="Swagger API Documentation">
+                  <img src="assets/images/swagger.png" alt="Swagger API Documentation" border="0" width="38"
+                       height="38"/>
+                </a>
+              </td>
+              <td width="3px;"></td>
+              <td class="textbody" valign="top">
+                <a [routerLink]="['/evsapi']" alt="Swagger API Documentation" class="regular-link">
+                  Swagger API Documentation</a>:
+                View documentation for the EVS REST API providing data to this
+                application.
 
-                  Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK" target="_blank"
-                    class="regular-link">
-                    evsrestapi-client-SDK</a> project for code examples for
-                  interacting with the
-                  API.
-                </td>
-              </tr>
+                Also, see the <a href="https://github.com/NCIEVS/evsrestapi-client-SDK" target="_blank"
+                                 class="regular-link">
+                evsrestapi-client-SDK</a> project for code examples for
+                interacting with the
+                API.
+              </td>
+            </tr>
             </tbody>
           </table>
-          <br />
+          <br/>
         </div>
       </div>
     </div>

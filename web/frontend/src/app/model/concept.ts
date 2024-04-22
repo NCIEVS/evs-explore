@@ -67,23 +67,23 @@ export class Concept {
     this.properties = new Array();
     this.active = true;
 
-    if (input.active == false) {
+    if (input.active === false) {
       this.active = false;
     }
 
     if (input.synonyms) {
       for (let i = 0; i < input.synonyms.length; i++) {
-        var synonym = new Synonym(input.synonyms[i]);
+        const synonym = new Synonym(input.synonyms[i]);
         this.synonyms.push(synonym);
         // Add synonyms with '_Name' to properties
         if (
           synonym.type &&
           synonym.type.endsWith('_Name') &&
-          synonym.type != 'Preferred Name' &&
-          synonym.type != 'Preferred_Name' &&
-          synonym.type != 'Display_Name'
+          synonym.type !== 'Preferred Name' &&
+          synonym.type !== 'Preferred_Name' &&
+          synonym.type !== 'Display_Name'
         ) {
-          var prop = new Property({});
+          const prop = new Property({});
           prop.type = synonym.type;
           prop.value = synonym.name;
           prop.highlight = synonym.highlight;
@@ -122,7 +122,7 @@ export class Concept {
       for (let i = 0; i < input.properties.length; i++) {
         this.properties.push(new Property(input.properties[i]));
 
-        if (this.properties[i].type == 'Semantic_Type') {
+        if (this.properties[i].type === 'Semantic_Type') {
           this.semanticTypes.push(this.properties[i].value);
         }
       }
@@ -194,11 +194,11 @@ export class Concept {
         // Handle the RB/RN/RO ncim case
         // This seems backwards but an RB means 'broader than' so the
         // related concept is actually narrower than the current one
-        // configService.isRrf() && configService.isMultiSource() == ncim
+        // configService.isRrf() && configService.isMultiSource() === ncim
         if (
           configService.isRrf() &&
           configService.isMultiSource() &&
-          input.associations[i].type == 'RN'
+          input.associations[i].type === 'RN'
         ) {
           this.broader.push(
             new Relationship(input.associations[i], configService)
@@ -206,7 +206,7 @@ export class Concept {
         } else if (
           configService.isRrf() &&
           configService.isMultiSource() &&
-          input.associations[i].type == 'RB'
+          input.associations[i].type === 'RB'
         ) {
           this.narrower.push(
             new Relationship(input.associations[i], configService)
@@ -305,7 +305,7 @@ export class Concept {
     if (!list) {
       return 0;
     }
-    if (list.length == 0) {
+    if (list.length === 0) {
       return 0;
     }
     if (list[list.length - 1].ct) {
@@ -318,7 +318,7 @@ export class Concept {
   isRetiredConcept(): boolean {
     return (
       this.properties.filter(
-        (p) => p.type == 'Concept_Status' && p.value == 'Retired_Concept'
+        (p) => p.type === 'Concept_Status' && p.value === 'Retired_Concept'
       ).length > 0
     );
   }
@@ -326,9 +326,9 @@ export class Concept {
   // Get text that shows 'more information' when expanding a search result.
   // This should be the elasticsearch highlights.
   getHighlightText(): string {
-    var text: string = '';
+    let text: string = '';
     if (this.highlight) {
-      if (this.highlight.indexOf(this.code) != -1) {
+      if (this.highlight.indexOf(this.code) !== -1) {
         text +=
           '<strong>Code</strong>:<br/>' +
           '<font color="#428bca">' +
@@ -344,7 +344,7 @@ export class Concept {
     }
     // synonyms - sort unique the display (based on the highlight)
     let headerFlag = false;
-    var uniqSynonyms = Array.from(
+    const uniqSynonyms = Array.from(
       new Set(this.synonyms.map((a) => a.highlight))
     ).map((highlight) => {
       return this.synonyms.find((a) => a.highlight === highlight);
@@ -385,7 +385,7 @@ export class Concept {
     // definitions
     headerFlag = false;
     this.uniqDefs =
-      this.definitions != undefined
+      this.definitions !== undefined
         ? this.filterSetByUniqueObjects(this.definitions, this.name)
         : null;
     if (this.uniqDefs) {
@@ -406,7 +406,7 @@ export class Concept {
     }
     // history
     headerFlag = false;
-    this.uniqHistory = (this.history != undefined ? this.filterSetByUniqueObjects(this.history, this.name) : null);
+    this.uniqHistory = (this.history !== undefined ? this.filterSetByUniqueObjects(this.history, this.name) : null);
     if (this.uniqHistory) {
       for (let i = 0; i < this.uniqHistory.length; i++) {
         if (this.uniqHistory[i].highlight) {
@@ -422,9 +422,9 @@ export class Concept {
   }
 
   filterSetByUniqueObjects = function (set, name) {
-    var seen = {};
+    const seen = {};
     return set.filter(function (x) {
-      var key = JSON.stringify(x);
+      const key = JSON.stringify(x);
       return (
         !(key in seen) &&
         (seen[key] = x) &&
@@ -438,7 +438,7 @@ export class Concept {
   getDisplayName(): string {
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (this.synonyms[i].type == 'Display_Name') {
+        if (this.synonyms[i].type === 'Display_Name') {
           return this.synonyms[i].name;
         }
       }
@@ -450,7 +450,7 @@ export class Concept {
   // TODO: maybe concept status should be a top-level field to generalize this
   getConceptStatus(): string {
     if (this.properties) {
-      let cs = this.properties.filter((item) => item.type == 'Concept_Status');
+      let cs = this.properties.filter((item) => item.type === 'Concept_Status');
       if (cs.length > 0) {
         return cs[0].value;
       }
@@ -459,8 +459,8 @@ export class Concept {
   }
   // Assemble text from all of the definitions together.
   getDefinitionsText(): string {
-    var text: string = '';
-    var definitionUniqueArray = [];
+    let text: string = '';
+    const definitionUniqueArray = [];
     if (this.definitions && this.definitions.length > 0) {
       for (let i = 0; i < this.definitions.length; i++) {
         text =
@@ -485,17 +485,17 @@ export class Concept {
   }
 
   getPartialDefText(): string {
-    let defs = this.definitionUniqueArray;
-    var defsPartial = [];
-    var defsPartialLength = 0;
+    const defs = this.definitionUniqueArray;
+    const defsPartial = [];
+    let defsPartialLength = 0;
     for (let i = 0; i < defs.length; i++) {
       if (defs[i].length < 100 - defsPartialLength) {
         defsPartial.push(defs[i]);
         defsPartialLength += defs[i].length;
-        if (i == 2) {
+        if (i === 2) {
           break;
         }
-      } else if (defs[i].length / 2 < 100 - defsPartialLength || i == 0) {
+      } else if (defs[i].length / 2 < 100 - defsPartialLength || i === 0) {
         let halfString = defs[i].substring(0, defs[i].length / 2);
         defsPartial.push(halfString);
         break;
@@ -506,8 +506,8 @@ export class Concept {
 
   // Assemble text from all Synonyms together
   getFullSynText(): string {
-    let syns = this.getAllSynonymNames();
-    let uniqSynonyms = [];
+    const syns = this.getAllSynonymNames();
+    const uniqSynonyms = [];
     for (let i = 0; i < syns.length; i++) {
       if (
         !uniqSynonyms
@@ -524,18 +524,18 @@ export class Concept {
   }
 
   getPartialSynText(): string {
-    let syns = this.synonymUniqueArray;
-    var synonymPartial = [];
-    var synonymPartialLength = 0;
+    const syns = this.synonymUniqueArray;
+    const synonymPartial = [];
+    let synonymPartialLength = 0;
     for (let i = 0; i < syns.length; i++) {
       if (syns[i].length < 100 - synonymPartialLength) {
         synonymPartial.push(syns[i]);
         synonymPartialLength += syns[i].length;
-        if (i == 2) {
+        if (i === 2) {
           break;
         }
-      } else if (syns[i].length / 2 < 100 - synonymPartialLength || i == 0) {
-        let halfString = syns[i].substring(0, syns[i].length / 2);
+      } else if (syns[i].length / 2 < 100 - synonymPartialLength || i === 0) {
+        const halfString = syns[i].substring(0, syns[i].length / 2);
         synonymPartial.push(halfString + '...');
         break;
       }
@@ -545,7 +545,7 @@ export class Concept {
 
   // Return Synonyms as an array
   getAllSynonymNames(): string[] {
-    let syns = [];
+    const syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
         syns.push(this.synonyms[i].name);
@@ -559,13 +559,13 @@ export class Concept {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (termType != null && this.synonyms[i].termType != termType) {
+        if (termType !== null && this.synonyms[i].termType !== termType) {
           continue;
         }
-        if (source != null && this.synonyms[i].source != source) {
+        if (source !== null && this.synonyms[i].source !== source) {
           continue;
         }
-        if (syns.indexOf(this.synonyms[i].name) != -1) {
+        if (syns.indexOf(this.synonyms[i].name) !== -1) {
           continue;
         }
         syns.push(this.synonyms[i].name);
@@ -587,7 +587,7 @@ export class Concept {
   getProperty(type) {
     for (let i = 0; i < this.properties.length; i++) {
       // ncit specific
-      if (this.properties[i].type == type) {
+      if (this.properties[i].type === type) {
         return this.properties[i].value;
       }
     }
@@ -673,7 +673,7 @@ export class Concept {
   }
 
   getMapsText(): string {
-    let maptos = this.maps;
+    const maptos = this.maps;
     let mapInfo = '';
     if (maptos !== undefined) {
       for (let l = 0; l < maptos.length; l++) {
