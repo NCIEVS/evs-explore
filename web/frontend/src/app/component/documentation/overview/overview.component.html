@@ -3,7 +3,8 @@
   <div class="page-header">
     <span class="p-coloring">Help</span>
     <span style="float:right"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
-        label="New Search" icon="fa fa-search" pButton type="button" class="p-button-coloring"></button></span>
+                                      label="New Search" icon="fa fa-search" pButton type="button"
+                                      class="p-button-coloring"></button></span>
   </div>
   Simple information on using this application. Use links below or scroll down for more
   information.
@@ -11,11 +12,13 @@
     <li><a href="overview#introduction">Introduction</a></li>
     <li><a href="overview#welcome">EVS Explore Welcome Page</a></li>
     <li><a href="overview#search">Using the Search Box</a></li>
+    <li><a href="overview#multiterm">Using the Multiple Terminology Search</a></li>
     <li><a href="overview#search-results">Search Results</a></li>
     <!-- Searching Other/Multiple Versions of a Terminology
   Advanced Search -->
     <li><a href="overview#concept-details">Concept Details</a></li>
     <li><a href="overview#subsets">Subsets</a></li>
+    <li><a href="overview#mappings">Mappings</a></li>
     <li><a href="overview#export">Export Feature</a></li>
     <li><a href="overview#hierarchy">Hierarchy</a></li>
     <li><a href="overview#documentation">Metadata Documentation</a></li>
@@ -33,18 +36,19 @@
   </p>
   <ul>
     <li>For browser support or suggestions, use the <a [routerLink]="['/contact']"> Contact Us
-        page.</a></li>
+      page.</a></li>
     <li>For all EVS resources, services and contacts, see the EVS Web site <a target="_blank"
-        href="https://evs.nci.nih.gov/">https://evs.nci.nih.gov</a>.</li>
+                                                                              href="https://evs.nci.nih.gov/">https://evs.nci.nih.gov</a>.
+    </li>
   </ul>
   <p>
     EVS Explore Browser provides a consistent, user-friendly tool to browse, search and retrieve
     content
     from NCI Thesaurus (NCIt) and other medical terminologies. For information on new features and
     known issues, see <a target="_blank"
-      href="https://github.com/NCIEVS/evs-explore/blob/master/web/frontend/CHANGELOG.md">EVS
-      Explore Browser
-      change log</a>.
+                         href="https://github.com/NCIEVS/evs-explore/blob/master/web/frontend/CHANGELOG.md">EVS
+    Explore Browser
+    change log</a>.
   </p>
   This help file provides basic information about how to use the EVS Explore Browser effectively,
   as well as links to
@@ -75,7 +79,7 @@
     <a href="overview#search" aria-label="Scroll to search"><b>Search Box</b></a> (and search
     controls),
     features available from the header toolbar, including: direct link to the <b>Hierarchy
-      view</b>, metadata
+    view</b>, metadata
     <b>Documentation</b> pages, and access to this <b>Help</b> page.
   </p>
 
@@ -107,13 +111,15 @@
           match <i>NAT2*5 Allele</i> but not <i>NAT2 Gene</i>).
         </li>
         <li>There is no need to surround search terms with quotes as they will be ignored
-          during the search.</li>
+          during the search.
+        </li>
         <li>Searching can be done using one word or multiple words.</li>
         <li>The search is generally performed against the code, all of the names and
           synonyms, all of the concept
           definitions, and all of the property values. The indexing is designed so that
           the most relevant data fields
-          are searchable and should produce results.</li>
+          are searchable and should produce results.
+        </li>
       </ul>
 
     </li>
@@ -124,26 +130,32 @@
       <ul>
         <li><b>Contains</b> is the default type. It performs a search that looks for any
           words typed, favoring results
-          with more words matched and with words matched in order.</li>
+          with more words matched and with words matched in order.
+        </li>
         <li><b>Exact Match</b> performs a search that looks for matches containing the exact
           strings in the order they
-          were entered.</li>
+          were entered.
+        </li>
         <li><b>Starts With</b> performs a search that looks for matches starting with all of
           the search words entered in
-          the specified order.</li>
+          the specified order.
+        </li>
         <li><b>Phrase</b> performs a search that looks for matches containing all search
           words entered in the specified
           order (but does not require the match to be at the beginning of the concept or
           an exact match). Searches in
           this mode will also find all results returned by the same search using <b>Exact
             Match</b> or <b>Starts
-            With</b>.</li>
+            With</b>.
+        </li>
         <li><b>Fuzzy</b> performs a search that looks for any words typed and for fuzzy
           variants of those words,
-          favoring results with more words matched, and with words matched in order.</li>
+          favoring results with more words matched, and with words matched in order.
+        </li>
         <li><b>AND</b> performs a search that looks for matches containing all of the words
           that were entered in any
-          order.</li>
+          order.
+        </li>
         <li><b>OR</b> performs a search that looks for matches containing any of the words
           entered. Searches in this
           mode will also find all results returned by the same search using <b>ALL</b>.
@@ -154,10 +166,13 @@
       synonym with "synonym
       source"
       matching one of the selected entries in the drop-down. For example, selecting <span class="tt">CDISC</span> will
-      only return concepts with a CDISC synonym</li>
+      only return concepts with a CDISC synonym
+    </li>
     <li><b>Search</b> button starts a search.</li>
     <li><b>New Search</b> button resets all search parameters and returns to the <a href="overview#welcome"
-        aria-label="Scroll to welcome page">Welcome Page</a>.</li>
+                                                                                    aria-label="Scroll to welcome page">Welcome
+      Page</a>.
+    </li>
     <li><b>Terminology</b> dropdown allows the user to choose which terminology to perform a search
       in. Currently supported terminologies include:
       <ul>
@@ -170,6 +185,41 @@
       </ul>
     </li>
   </ul>
+
+  <a name="multiterm"></a>
+  <span>
+    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h4>Using the Miltiple Terminology Search</h4>
+  </span>
+  <p>
+    The <b>Multiple Terminology Search</b> is located in the Terminology dropdown in the upper right of the EVS Explore
+    Browser welcome page.
+  </p>
+  <p>
+    Selecting <b>Multiple Terminology Search</b>, a new view in a new window is opened with a list of the all
+    terminologies. Each terminology has a checkbox next to it for selecting the terminology to search in. At the top
+    of the list, there are three preset selections to quickly select terminologies.
+  </p>
+  <ul>
+    <li>
+      <b>All But NCIm</b>: checks all terminologies except for NCIm
+    </li>
+    <li>
+      <b>Select All</b>: checks every terminology in the list.
+    </li>
+    <li>
+      <b>Clear</b>: unchecks all of the boxes for each terminology.
+    </li>
+  </ul>
+  <p>
+    Once the terminologies are selected, enter the keyword or code in the <a href="overview#search"
+                                                                             aria-label="Scroll to Using the Search Box"><b>Search
+    Box</b></a>. The results will be pulled from the list of terminologies selected.
+  </p>
+  <p>
+    If a terminology has a license requirement, a popup will appear before that terminology is selected. That
+    terminology will only be checked if the license is accepted.
+  </p>
 
   <a name="search-results"></a>
   <span>
@@ -193,7 +243,8 @@
     </li>
     <li>The total number of search results found along with the search time in milliseconds is
       shown at the top of the
-      search results table.</li>
+      search results table.
+    </li>
     <li>When a search is performed, it looks for matches among a variety of fields found in the
       concept, including the
       preferred name of concept, the code, synonyms of the concept, the definitions of the
@@ -220,7 +271,8 @@
       the
       corresponding search result that shows highlighted portions of the concept that were
       matched to the search text
-      provided.</li>
+      provided.
+    </li>
     <li>If a concept is retired, this will be indicated by the phrase "Retired Concept" next to
       the name of the concept
       in the Results listing.
@@ -228,7 +280,7 @@
     <li>A <b>New Search</b> button appears in the upper right when you leave the results page to
       view
       <a href="overview#concept-details" aria-label="Scroll to concept details"><b>Concept
-          Details</b>
+        Details</b>
       </a>. Clicking that button will return you to the standard search view.
     </li>
   </ul>
@@ -241,13 +293,13 @@
   <p>
     Detailed information on a selected concept is shown when that concept code is clicked in the
     <a href="overview#search-results" aria-label="Scroll to Search Results"><b>Search
-        Results</b></a>.
+      Results</b></a>.
     The concept detail view is loaded into a new tab for display.
   </p>
   <p>The top of this view shows the preferred name and concept code along with an <b>Open in
-      Hierarchy</b> button.
+    Hierarchy</b> button.
     Clicking on that button will open the <a href="overview#hierarchy" aria-label="Scroll to hierarchy"><b>hierarchy
-        view</b>
+      view</b>
     </a>.
   </p>
   <p>The <b>Concept Details</b> page has a number of different tables showing different pieces of
@@ -257,16 +309,19 @@
 
     <li>The first table shows top level information about the concept, including the
       preferred name, the display
-      name, the label, and the concept code.</li>
+      name, the label, and the concept code.
+    </li>
     <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
       includes columns for the
       definition text, the source of the definition, and any associated
-      attribution(s).</li>
+      attribution(s).
+    </li>
     <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
       concept in a sortable table.
       This table includes columns for the term, the sub-source, the term type, the
       sub-source code, and the
-      sub-source name.</li>
+      sub-source name.
+    </li>
     <li><b>Other Properties</b> shows other properties associated with the concept in a
       sortable table. This table
       includes columns for the property type and value. In some cases, property values
@@ -282,7 +337,8 @@
       a sortable table.
       This table includes columns for the target name, relationship to target, target term type,
       target code, and
-      the target terminology (and the target terminology version if available).</li>
+      the target terminology (and the target terminology version if available).
+    </li>
     <li><b>Parent Concepts</b> shows basic information about parent concepts in a sortable
       table. This table
       includes columns for code and preferred name.
@@ -330,7 +386,7 @@
   </p>
   <p>
     In this page, there is a hierarchical view of the available subsets. Clicking on the <i
-      class="pi pi-fw pi-chevron-right"></i> to the left of a subset entry expands the view
+    class="pi pi-fw pi-chevron-right"></i> to the left of a subset entry expands the view
     to show its children. The <b>Expand All</b> button near the page title will fully expand
     the tree to reveal all available subsets within the hierarchy.
   </p>
@@ -345,10 +401,39 @@
     of this table varies slightly across different subsets. It provides basic high-level
     information about each member including information like the code, various names and synonyms,
     and one or more definitions for that member. At the top of this table is a <a href="overview#search"
-      aria-label="Scroll to Search Box"><b>Search Box</b></a> that can be used to restrict to only those member concepts
+                                                                                  aria-label="Scroll to Search Box"><b>Search
+    Box</b></a> that can be used to restrict to only those member concepts
     whose contents are matches to the search text provided. Click the <b>Reset</b> button to clear any search text and
     retrieve the full list.
   </p>
+
+  <a name="mappings"></a>
+  <span>
+    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h4>Mappings</h4>
+  </span>
+  <p>The <b>Mappings Page</b> of EVS Explore supports the browsing of mappings, which are manual EVS maps concepts
+    with equivalent meaning in the source and target terminology versions.
+  </p>
+  <p>The <b>Mappings Page</b> is enabled by clicking on the <b>Mappings</b> link along the top banner. In this page,
+    there is a list of mappings to view or download. </p>
+  <p>
+    Clicking on the link for a given mapping will open a new search window for the terminology mapping selected. On
+    the search page, searching a keyword or code will return the mapped results. Clicking on any of the blue links
+    will redirect to the concept details.
+  </p>
+  <p>
+    Clicking on the download links for a given mapping will do one of two actions:
+  </p>
+  <ul>
+    <li>
+      Open a new tab with the data formatted to be copied into a spreadsheet.
+    </li>
+    <li>
+      Start a download for a csv file to be saved. This could be completed automatically or open a popup window
+      depending on the browser settings.
+    </li>
+  </ul>
 
   <a name="export"></a>
   <span>
@@ -356,24 +441,27 @@
     <h4>Export Feature</h4>
   </span>
   <p>Export functionality is available within <a href="overview#search-results"
-      aria-label="Scroll to Search Results"><b>Search Results</b></a>, <a href="overview#concept-details"
-      aria-label="Scroll to concept details"><b>Concept Details</b>
-    </a>, and <a href="overview#subsets" aria-label="Subsets"><b>Subsets</b></a>
+                                                 aria-label="Scroll to Search Results"><b>Search Results</b></a>, <a
+    href="overview#concept-details"
+    aria-label="Scroll to concept details"><b>Concept Details</b>
+  </a>, and <a href="overview#subsets" aria-label="Subsets"><b>Subsets</b></a>
     pages using the <b>Export</b> button located in upper right of the EVS Explore application.
   </p>
   <p>
     When the <b>Export</b> button is selected in the <a href="overview#search-results"
-      aria-label="Scroll to Search Results"><b>Search Results</b></a> page, the application will
+                                                        aria-label="Scroll to Search Results"><b>Search Results</b></a>
+    page, the application will
     return an Excel file that includes all the concepts from the search, along with any search results details selected
     by the user in the display (up to a maximum of 10000 results).
   </p>
   <p>
     When the <b>Export</b> button is selected in the <a href="overview#concept-details"
-      aria-label="Scroll to concept details"><b>Concept Details</b>
-    </a> page, the application will return an Excel file that includes all information for the selected concept. In the
+                                                        aria-label="Scroll to concept details"><b>Concept Details</b>
+  </a> page, the application will return an Excel file that includes all information for the selected concept. In the
     file, a worksheet is created for each section of the <a href="overview#concept-details"
-      aria-label="Scroll to concept details"><b>Concept Details</b>
-    </a> (<i>Definitions</i>, <i>Synonyms</i>, etc.).
+                                                            aria-label="Scroll to concept details"><b>Concept
+    Details</b>
+  </a> (<i>Definitions</i>, <i>Synonyms</i>, etc.).
   </p>
   <p>
     When the <b>Export</b> button is selected in the <a href="overview#subsets" aria-label="Subsets"><b>Subsets</b></a>
