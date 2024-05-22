@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TermSuggestionFormComponent } from './term-suggestion-form.component';
+import {TermSuggestionFormComponent} from './term-suggestion-form.component';
 
 describe('TermSuggestionFormComponent', () => {
   let component: TermSuggestionFormComponent;
@@ -8,9 +8,9 @@ describe('TermSuggestionFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TermSuggestionFormComponent ]
+      declarations: [TermSuggestionFormComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(TermSuggestionFormComponent);
     component = fixture.componentInstance;

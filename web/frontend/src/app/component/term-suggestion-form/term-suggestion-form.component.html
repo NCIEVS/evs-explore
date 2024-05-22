@@ -2,36 +2,37 @@
   <h1>Term Suggestion</h1>
 
   <div class="form-container">
-    <h3> {{termFormData.formName}}</h3>
+    <h3> {{ termFormData.formName }}</h3>
     <form [formGroup]="dynamicTermForm" (ngSubmit)="onSubmit()">
-    <div *ngFor="let section of termFormData.sections">
-      <h4>{{ section.label }}</h4>
-      <!-- If instructions are present, loop through those and populate the links -->
-      <p *ngIf="section.instructions" class="instructions wrap-text">
-        <ng-container *ngFor="let part of section.instructions.parts; let isLast=last"> 
+      <div *ngFor="let section of termFormData.sections" [formGroupName]="section.name">
+        <h4>{{ section.label }}</h4>
+        <!-- If instructions are present, loop through those and populate the links -->
+        <p *ngIf="section.instructions" class="instructions wrap-text">
+          <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
             <a *ngIf="part.link; else textOnly" [href]="part.link"> {{ part.text }}</a>
-            <ng-template #textOnly>{{ part.text}}</ng-template>
+            <ng-template #textOnly>{{ part.text }}</ng-template>
             <ng-container *ngIf="!isLast">&nbsp;</ng-container>
-        </ng-container>
-      </p>
-      <!-- Load the fields from the form and their input types -->
-      <div *ngFor="let field of section.fields" class="field-container">
-        <label class="field-label wrap-text"> {{ field.label }}
-        </label>
-        <!-- Text input -->
-        <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name" [value]="field.value" readonly="field.readonly" class="field-input"/>
-        <!-- Textarea -->
-        <textarea *ngIf="field.type === 'textarea'" [formControlName]="field.name" class="field-input">{{field.value}}</textarea>
-        <!-- Dropdown -->
-        <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
-            <option *ngFor="let option of field.options" [value]="option">{{option}}</option>
-        </select>
+          </ng-container>
+        </p>
+        <!-- Load the fields from the form and their input types -->
+        <div *ngFor="let field of section.fields" class="field-container">
+          <label class="field-label wrap-text"> {{ field.label }}
+          </label>
+          <!-- Text input -->
+          <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name" [value]="field.value" [readonly]="field.readonly" class="field-input"/>
+          <!-- Textarea -->
+          <textarea *ngIf="field.type === 'textarea'" [formControlName]="field.name"
+                    class="field-input">{{ field.value }}</textarea>
+          <!-- Dropdown -->
+          <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
+            <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-sm btn-primary btn-space ">Submit</button>
-        <button type="button" class="btn btn-sm btn-secondary" (click)="dynamicTermForm.reset()">Clear</button>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary btn-space" (click)="onSubmit()">Submit</button>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="onClear()">Clear</button>
       </div>
-  </form>
-</div>  
+    </form>
+  </div>
 </div>

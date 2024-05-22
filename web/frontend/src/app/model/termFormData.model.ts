@@ -1,6 +1,6 @@
-export interface FormData {
+export interface TermFormData {
     formName: string, 
-    reciepientEmail: string,
+    recipientEmail: string,
     businessEmail: string, 
     subject: string, 
     body: string
