@@ -1,0 +1,44 @@
+.form-container {
+    border: 1px solid #000; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 20px;
+}
+
+.field-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.field-label {
+    flex: 1;
+    font-size: 1.0em
+}
+
+.field-input {
+    flex: 2;
+}
+
+.description-label {
+    font-size: 0.8em;
+    /* Adjust this value to change the font size */
+    text-align: left;
+}
+
+.instructions {
+    font-size: 0.8em;
+    /* Adjust this value to change the font size */
+}
+
+.highlight {
+    color: red;
+}
+
+.wrap-text {
+    word-wrap: break-word;
+}
+
+
+h3 {
+    margin-bottom: 30px;
+}

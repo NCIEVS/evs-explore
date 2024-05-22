@@ -3,7 +3,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 // import { Injector, ModuleWithProviders } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularSplitModule } from 'angular-split';
 
 // Facebook modules
@@ -90,6 +90,7 @@ import { ButtonModule } from 'primeng/button';
 import { NotificationComponent } from './component/notifications/notifications.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 import { SourceStatsComponent } from './component/source-stats/source-stats.component';
+import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
 
 // Angular configuration for this application
 @NgModule({
@@ -129,7 +130,8 @@ import { SourceStatsComponent } from './component/source-stats/source-stats.comp
     EvsApiComponent,
     NotificationComponent,
     MappingDetailsComponent,
-    SourceStatsComponent
+    SourceStatsComponent,
+    TermSuggestionFormComponent
   ],
   imports: [
     NgbModule,
@@ -158,6 +160,7 @@ import { SourceStatsComponent } from './component/source-stats/source-stats.comp
     ToggleButtonModule,
     ButtonModule,
     AngularSplitModule.forRoot(),
+    ReactiveFormsModule,
   ],
   exports: [DisplayPipe],
   providers: [
