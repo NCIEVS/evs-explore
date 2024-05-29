@@ -2,11 +2,22 @@
   <h1>Term Suggestion</h1>
 
   <div class="form-container">
+    <!-- Error Messages from validation checks -->
+    <div *ngFor="let section of termFormData.sections">
+      <div *ngFor="let field of section.fields">
+        <div
+          *ngIf="dynamicTermForm.get(section.name).get(field.name).errors && dynamicTermForm.get(section.name).get(field.name).touched"
+          class="error-message">
+          {{ getErrorMessage(dynamicTermForm.get(section.name).get(field.name), field) }}
+        </div>
+      </div>
+    </div>
+    <!-- Form -->
     <h3> {{ termFormData.formName }}</h3>
     <form [formGroup]="dynamicTermForm" (ngSubmit)="onSubmit()">
       <div *ngFor="let section of termFormData.sections" [formGroupName]="section.name">
         <h4>{{ section.label }}</h4>
-        <!-- If instructions are present, loop through those and populate the links -->
+        <!-- If instructions are present, loop through the text, populate the links, and concantenated the parts together -->
         <p *ngIf="section.instructions" class="instructions wrap-text">
           <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
             <a *ngIf="part.link; else textOnly" [href]="part.link"> {{ part.text }}</a>
@@ -17,20 +28,31 @@
         <!-- Load the fields from the form and their input types -->
         <div *ngFor="let field of section.fields" class="field-container">
           <label class="field-label wrap-text"> {{ field.label }}
+            <!-- Add red start next to label if the field is required -->
+            <span *ngIf="isRequired(field)" class="highlight">*</span>
           </label>
           <!-- Text input -->
-          <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name" [value]="field.value" [readonly]="field.readonly" class="field-input"/>
-          <!-- Textarea -->
-          <textarea *ngIf="field.type === 'textarea'" [formControlName]="field.name"
-                    class="field-input">{{ field.value }}</textarea>
+          <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
+                 [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
+                 class="field-input"/>
+          <!-- Textarea: Shows how many characters when maxlength is set-->
+          <div *ngIf="field.type === 'textarea'" class="textarea-container">
+               <textarea [formControlName]="field.name" [placeholder]="field.placeholder"
+                         [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
+            <span>{{ dynamicTermForm.get(section.name).get(field.name).value.length }}
+              / {{ getMaxLength(field) }}</span>
+          </div>
           <!-- Dropdown -->
           <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
-            <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+            <option value="" disabled selected>{{ field.placeholder }}</option>
+            <option *ngFor="let option of field.options" [value]="option">{{ option }}
+            </option>
           </select>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-sm btn-primary btn-space" (click)="onSubmit()">Submit</button>
+        <button type="submit" class="btn btn-sm btn-primary btn-space" [disabled]="dynamicTermForm.invalid">Submit
+        </button>
         <button type="button" class="btn btn-sm btn-secondary" (click)="onClear()">Clear</button>
       </div>
     </form>

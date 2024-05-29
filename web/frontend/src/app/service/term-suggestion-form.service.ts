@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { TermFormData } from '../model/termFormData.model';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {TermFormData} from '../model/termFormData.model';
 
 // Service for Terminology Suggestion Form
 @Injectable({
@@ -14,9 +13,10 @@ export class TermSuggestionFormService {
   // Get the term form
   async getForm(formType: string): Promise<any> {
     try {
-      const response = await this.http.get<any>(encodeURI('/api/v1/suggest/' + formType)).toPromise();
-      return response;
+      return await this.http.get<any>(encodeURI('/api/v1/suggest/' + formType)).toPromise();
     } catch (error) {
+      console.log('An error occurred: ', error);
+      alert('An error occurred while fetching data');
       throw error;
     }
   }
@@ -24,9 +24,10 @@ export class TermSuggestionFormService {
   // Submit filled out form.
   async submitForm(formData: TermFormData): Promise<any> {
     try {
-      const response = await this.http.post<any>(encodeURI('/api/v1/suggest'), formData).toPromise();
-      return response;
+      return await this.http.post<any>(encodeURI('/api/v1/suggest'), formData).toPromise();
     } catch (error) {
+      console.log('An error occurred: ', error);
+      alert('An error occurred while submitting the form');
       return error;
     }
   }
