@@ -1,21 +1,16 @@
-<div class="container" *ngIf="termFormData">
+<div class="container">
   <h1>Term Suggestion</h1>
-
-  <div class="form-container">
-    <!-- Error Messages from validation checks -->
-    <div *ngFor="let section of termFormData.sections">
-      <div *ngFor="let field of section.fields">
-        <div
-          *ngIf="dynamicTermForm.get(section.name).get(field.name).errors && dynamicTermForm.get(section.name).get(field.name).touched"
-          class="error-message">
-          {{ getErrorMessage(dynamicTermForm.get(section.name).get(field.name), field) }}
-        </div>
-      </div>
+  <div class="form-container" *ngIf="uiState.isFormLoaded">
+    <!-- Selector for changing the form -->
+    <div class="form-selector-container">
+      <select [(ngModel)]="uiState.selectedTermForm" (change)="onFormChange($event.target.value)" class="form-selector">
+        <option *ngFor="let form of uiState.forms" [value]="form.id">{{ form.name }}</option>
+      </select>
     </div>
     <!-- Form -->
-    <h3> {{ termFormData.formName }}</h3>
-    <form [formGroup]="dynamicTermForm" (ngSubmit)="onSubmit()">
-      <div *ngFor="let section of termFormData.sections" [formGroupName]="section.name">
+    <h3> {{ uiState.termFormData.formName }}</h3>
+    <form [formGroup]="uiState.termFormGroup" (ngSubmit)="onSubmit()">
+      <div *ngFor="let section of uiState.termFormData.sections" [formGroupName]="section.name">
         <h4>{{ section.label }}</h4>
         <!-- If instructions are present, loop through the text, populate the links, and concantenated the parts together -->
         <p *ngIf="section.instructions" class="instructions wrap-text">
@@ -26,32 +21,39 @@
           </ng-container>
         </p>
         <!-- Load the fields from the form and their input types -->
-        <div *ngFor="let field of section.fields" class="field-container">
-          <label class="field-label wrap-text"> {{ field.label }}
-            <!-- Add red start next to label if the field is required -->
-            <span *ngIf="isRequired(field)" class="highlight">*</span>
-          </label>
-          <!-- Text input -->
-          <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
-                 [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
-                 class="field-input"/>
-          <!-- Textarea: Shows how many characters when maxlength is set-->
-          <div *ngIf="field.type === 'textarea'" class="textarea-container">
+        <div *ngFor="let field of section.fields" class="section-container">
+          <div class="field-container">
+            <label class="field-label wrap-text"> {{ field.label }}
+              <!-- Add red start next to label if the field is required -->
+              <span *ngIf="isRequired(field)" class="highlight">*</span>
+            </label>
+            <!-- Text input -->
+            <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
+                   [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
+                   class="field-input"/>
+            <!-- Textarea: Shows how many characters when maxlength is set TODO: UPDATE THIS SECTION TO CALL A METHOD-->
+            <div *ngIf="field.type === 'textarea'" class="textarea-container">
                <textarea [formControlName]="field.name" [placeholder]="field.placeholder"
                          [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
-            <span>{{ dynamicTermForm.get(section.name).get(field.name).value.length }}
-              / {{ getMaxLength(field) }}</span>
+              <span
+                *ngIf="getMaxLength(field)">{{ uiState.termFormGroup.get(section.name).get(field.name).value.length }}
+                / {{ getMaxLength(field) }}</span>
+            </div>
+            <!-- Dropdown -->
+            <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
+              <option value="" disabled selected>{{ field.placeholder }}</option>
+              <option *ngFor="let option of field.options" [value]="option">{{ option }}
+              </option>
+            </select>
+            <!-- Error Messages from validation checks -->
           </div>
-          <!-- Dropdown -->
-          <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
-            <option value="" disabled selected>{{ field.placeholder }}</option>
-            <option *ngFor="let option of field.options" [value]="option">{{ option }}
-            </option>
-          </select>
+          <div *ngIf="shouldDisplayValidationError(section, field)" class="error-message">
+            {{ getErrorMessage(uiState.termFormGroup.get(section.name).get(field.name), field) }}
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-sm btn-primary btn-space" [disabled]="dynamicTermForm.invalid">Submit
+        <button type="submit" class="btn btn-sm btn-primary btn-space" [disabled]="uiState.termFormGroup.invalid">Submit
         </button>
         <button type="button" class="btn btn-sm btn-secondary" (click)="onClear()">Clear</button>
       </div>

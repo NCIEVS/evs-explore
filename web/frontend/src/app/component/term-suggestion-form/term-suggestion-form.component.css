@@ -4,14 +4,13 @@
     padding: 20px;
 }
 
-.field-container div textarea {
-  margin-bottom: 10px;
+.section-container {
+  margin-bottom: 1em;
 }
 
 .field-container {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 1em;
 }
 
 .textarea-container {
@@ -40,6 +39,14 @@
     /* Adjust this value to change the font size */
 }
 
+.form-selector-container {
+  display: flex;
+}
+
+.form-selector {
+  margin-left: auto;
+}
+
 .highlight {
     color: red;
 }
@@ -55,8 +62,9 @@ h3 {
 
 .error-message {
   color: red;
-  font-size: 1em;
+  font-size: 0.8em;
 }
+
 
 .field-input.ng-touched.ng-invalid {
   border: 1px solid red;

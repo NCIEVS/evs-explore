@@ -2,9 +2,10 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {ChangeDetectionStrategy} from '@angular/compiler';
-import {TermFormData} from '../../model/termFormData.model'
+import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 // interface for core form structure
 interface FormData {
@@ -50,6 +51,39 @@ interface Validation {
   message: string;
 }
 
+// interface for toggling between forms
+interface FormSelection {
+  id: string;
+  name: string;
+}
+
+//  Helper class for setting the UIState of the term form to manage variables easier
+class UIState {
+  isFormLoaded: boolean;
+  termFormData: FormData;
+  termFormGroup: FormGroup;
+  forms: Array<FormSelection>;
+  selectedTermForm: string;
+
+  constructor(
+    private fb: FormBuilder,
+  ) {
+    this.isFormLoaded = false;
+    this.forms = [
+      {id: 'ncit-form', name: 'NCIT Form'},
+      {id: 'cdisc-form', name: 'CDISC Form'},
+    ];
+    this.termFormData = {
+      formName: '',
+      formType: '',
+      recipientEmail: '',
+      sections: []
+    };
+    this.termFormGroup = fb.group({});
+    this.selectedTermForm = undefined;
+  }
+}
+
 // Terminology Suggestion Form Component
 @Component({
   selector: 'app-term-suggestion-form',
@@ -58,63 +92,91 @@ interface Validation {
   styleUrls: ['./term-suggestion-form.component.css']
 })
 export class TermSuggestionFormComponent implements OnInit {
-  termFormData: FormData;
-  dynamicTermForm: FormGroup = this.fb.group({}); // initialize to an empty group
-  formFields: { [key: string]: Field } = {}; // Field reference for form controls
-  errorMessages: { [key: string]: string } = {};
+  // Field reference for form controls
+  private formFields: { [key: string]: Field } = {};
+  // Object to store error messages for easier retrieval
+  private errorMessages: { [key: string]: string } = {};
+  // Form Data model for storing the sections and fields of the forms
+  private formData: FormData;
+  // Form Group controls
+  private formGroup: FormGroup = this.fb.group({});
+
+  // Store list of forms we can toggle between
+  private forms = [
+    {id: 'ncit-form', name: 'NCIT Form'},
+    {id: 'cdisc-form', name: 'CDISC Form'},
+  ];
+
+  // set a default form
+  private selectedForm = this.forms[0].id;
+
+  // UI State
+  uiState: UIState;
 
   constructor(
     private fb: FormBuilder,
     private formService: TermSuggestionFormService,
     private cdr: ChangeDetectorRef,
     private configService: ConfigurationService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private router: Router, // inject the router service
+    private route: ActivatedRoute // inject the ActivatedRoute service
   ) {
+    this.uiState = new UIState(fb);
     // initialize the termFormData to an empty form.
-    this.termFormData = {
-      formName: '',
-      formType: '',
-      recipientEmail: '',
-      sections: []
-    };
+    this.clearTermFormData();
   }
 
-  // Load NCIT form by default
+  // Sets the uiState to the initial state
+  clearTermFormData() {
+    this.uiState = new UIState(this.fb);
+    this.formGroup = this.fb.group({}); // initialize to an empty group
+  }
+
+  // Load the form, if no formId is present, load default
   ngOnInit(): void {
-    console.log('Loading default form');
-    this.loadForm('cdisc-form');
+    this.route.queryParams.subscribe(params => {
+      const formId = params['formId'];
+      if (formId) {
+        // if the formId parameter is present, load that form
+        this.loadForm(formId).catch(e => {
+          console.error('Error loading form:', e);
+        });
+      } else {
+        // If the formId param is not present, load the default form
+        this.loadForm(this.selectedForm).catch(e => {
+          console.error('Error loading default form:', e);
+        });
+      }
+    });
+  }
+
+  // Change the form with the dropdown
+  async onFormChange(formId: string): Promise<void> {
+    this.loaderService.showLoader();
+    await this.router.navigate(['/termform'], {queryParams: {formId}});
+    this.loaderService.hideLoader();
   }
 
   // load the form based on the formType selected. Handle the validation checks.
   async loadForm(formType: string): Promise<void> {
     console.log('Loading form ', formType);
-    this.termFormData = await this.formService.getForm(formType);
+    this.clearTermFormData();
+    this.formData = await this.formService.getForm(formType);
 
-    for (const section of this.termFormData.sections) {
+    for (const section of this.formData.sections) {
       // create a section Form Group to control inputs
       const sectionGroup = this.fb.group({});
-
       for (const field of section.fields) {
         // create an array to hold the validators for the field
-        const validators = [];
+        let validators = [];
         // Add the validators based on the validations property
-        if (field.validations) {
-          for (const validation of field.validations) {
-            if (validation.validator === 'required') {
-              validators.push(Validators.required);
-            } else if (validation.validator === 'email') {
-              validators.push(Validators.email);
-            } else if (validation.validator === 'maxlength') {
-              validators.push(Validators.maxLength(validation.value));
-            }
-          }
-        }
+        validators = this.getValidators(validators, field);
         // add the field control to the section form group
         sectionGroup.addControl(
           field.name,
           this.fb.control(field.value, validators)
         );
-
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
         formControl.valueChanges.subscribe(() => {
@@ -128,25 +190,36 @@ export class TermSuggestionFormComponent implements OnInit {
         this.formFields[field.name] = field;
       }
       // add section form group controls to our dynamic term form group
-      this.dynamicTermForm.addControl(
+      this.formGroup.addControl(
         section.name,
         sectionGroup
       );
     }
+    this.selectedForm = formType;
+    this.displayLoadedForm();
     this.cdr.detectChanges();
+  }
+
+  // Set the UI state to hold our loaded data and display the loaded form
+  displayLoadedForm() {
+    this.uiState.termFormGroup = this.formGroup;
+    this.uiState.termFormData = this.formData;
+    this.uiState.forms = this.forms;
+    this.uiState.selectedTermForm = this.selectedForm;
+    this.uiState.isFormLoaded = true;
   }
 
   // When submit is clicked, build the terFormData to populate our model form submission and call submitForm api
   async onSubmit() {
-    if (this.dynamicTermForm.valid) {
-      console.log('Submitted Form Details: ', JSON.stringify(this.dynamicTermForm.value));
+    if (this.formGroup.valid) {
+      console.log('Submitted Form Details: ', JSON.stringify(this.formGroup.value));
       // create the termFormData that is filled out
       const submittedFormData: TermFormData = {
-        formName: this.termFormData.formType,
+        formName: this.formData.formType,
         recipientEmail: 'agarcia@westcoastinformatics.com', // TODO: update to pull from form
-        businessEmail: this.dynamicTermForm.get('contact.email').value,
+        businessEmail: this.formGroup.get('contact.email').value,
         subject: 'Placeholder text',
-        body: this.dynamicTermForm.value
+        body: this.formGroup.value
       };
       console.log('Form Data: ', JSON.stringify(submittedFormData));
       // show the spinner
@@ -164,9 +237,9 @@ export class TermSuggestionFormComponent implements OnInit {
 
   // clear the form when the clear button is clicked, except for read only fields
   onClear() {
-    Object.keys(this.dynamicTermForm.controls).forEach(key => {
+    Object.keys(this.formGroup.controls).forEach(key => {
       // get section controls
-      const sectionControl = this.dynamicTermForm.controls[key];
+      const sectionControl = this.formGroup.controls[key];
       Object.keys(sectionControl['controls']).forEach(sectionKey => {
         const fieldControl = sectionControl['controls'][sectionKey];
         const field = this.formFields[sectionKey];
@@ -176,6 +249,21 @@ export class TermSuggestionFormComponent implements OnInit {
         }
       });
     });
+  }
+
+  getValidators(validators: any[], field: Field): any[] {
+    if (field.validations) {
+      for (const validation of field.validations) {
+        if (validation.validator === 'required') {
+          validators.push(Validators.required);
+        } else if (validation.validator === 'email') {
+          validators.push(Validators.email);
+        } else if (validation.validator === 'maxlength') {
+          validators.push(Validators.maxLength(validation.value));
+        }
+      }
+    }
+    return validators;
   }
 
   // get the error message text from the form and display when validation isn't fulfilled
@@ -199,8 +287,16 @@ export class TermSuggestionFormComponent implements OnInit {
     return field.validations?.some(validation => validation.validator === 'required');
   }
 
+  // Get the maxLength field.validations validator value
   getMaxLength(field: Field): number {
     const validation = field.validations?.find(v => v.validator === 'maxlength');
     return validation ? validation.value : null;
+  }
+
+  // Determine if the validation errors should be displayed for a field
+  shouldDisplayValidationError(section: Section, field: Field): boolean {
+    const sectionControl = this.uiState.termFormGroup.get(section.name);
+    const fieldControl = sectionControl.get(field.name);
+    return fieldControl.errors && fieldControl.touched;
   }
 }
