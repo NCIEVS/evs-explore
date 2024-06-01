@@ -21,7 +21,6 @@
 
 .field-label {
     flex: 1;
-    font-size: 1.0em
 }
 
 .field-input {
@@ -55,16 +54,10 @@
     word-wrap: break-word;
 }
 
-
-h3 {
-    margin-bottom: 30px;
-}
-
 .error-message {
   color: red;
   font-size: 0.8em;
 }
-
 
 .field-input.ng-touched.ng-invalid {
   border: 1px solid red;

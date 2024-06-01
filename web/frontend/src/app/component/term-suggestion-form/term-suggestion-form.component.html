@@ -1,5 +1,6 @@
 <div class="container">
   <h1>Term Suggestion</h1>
+<!--  <div class="page-header">Term Suggestion</div>-->
   <div class="form-container" *ngIf="uiState.isFormLoaded">
     <!-- Selector for changing the form -->
     <div class="form-selector-container">
@@ -9,9 +10,11 @@
     </div>
     <!-- Form -->
     <h3> {{ uiState.termFormData.formName }}</h3>
+<!--    <div class="page-header">{{ uiState.termFormData.formName }}</div>-->
     <form [formGroup]="uiState.termFormGroup" (ngSubmit)="onSubmit()">
       <div *ngFor="let section of uiState.termFormData.sections" [formGroupName]="section.name">
         <h4>{{ section.label }}</h4>
+<!--        <div class="page-subheader">{{ section.label }}</div>-->
         <!-- If instructions are present, loop through the text, populate the links, and concantenated the parts together -->
         <p *ngIf="section.instructions" class="instructions wrap-text">
           <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
