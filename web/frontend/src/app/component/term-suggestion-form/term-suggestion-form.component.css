@@ -29,13 +29,11 @@
 
 .description-label {
     font-size: 0.8em;
-    /* Adjust this value to change the font size */
     text-align: left;
 }
 
 .instructions {
     font-size: 0.8em;
-    /* Adjust this value to change the font size */
 }
 
 .form-selector-container {
@@ -61,4 +59,9 @@
 
 .field-input.ng-touched.ng-invalid {
   border: 1px solid red;
+}
+
+re-captcha.is-invalid > div {
+  border: 1px solid #dc3545 !important;
+  border-radius: 0.2rem;
 }

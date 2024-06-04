@@ -6,6 +6,7 @@ import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import { ReCaptcha2Component } from 'ngx-captcha';
 
 // interface for core form structure
 interface FormData {
@@ -175,7 +176,7 @@ export class TermSuggestionFormComponent implements OnInit {
         // add the field control to the section form group
         sectionGroup.addControl(
           field.name,
-          this.fb.control(field.value, validators)
+          this.fb.control(field.value, validators),
         );
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
