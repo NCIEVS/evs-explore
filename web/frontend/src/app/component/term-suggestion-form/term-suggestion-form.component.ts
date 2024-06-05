@@ -109,6 +109,9 @@ export class TermSuggestionFormComponent implements OnInit {
   // Captcha success event
   private captchaSuccessEvent: any;
 
+  // Captcha expired status
+  protected isCaptchaExpired = false;
+
   // Store list of forms we can toggle between
   private forms = [
     {id: 'ncit-form', name: 'NCIT Form'},
@@ -150,12 +153,12 @@ export class TermSuggestionFormComponent implements OnInit {
       const formId = params['formId'];
       if (formId) {
         // if the formId parameter is present, load that form
-        this.loadForm(formId).catch(e => {
+        this.onloadForm(formId).catch(e => {
           console.error('Error loading form:', e);
         });
       } else {
         // If the formId param is not present, load the default form
-        this.loadForm(this.selectedForm).catch(e => {
+        this.onloadForm(this.selectedForm).catch(e => {
           console.error('Error loading default form:', e);
         });
       }
@@ -170,7 +173,7 @@ export class TermSuggestionFormComponent implements OnInit {
   }
 
   // load the form based on the formType selected. Handle the validation checks.
-  async loadForm(formType: string): Promise<void> {
+  async onloadForm(formType: string): Promise<void> {
     console.log('Loading form ', formType);
     this.clearTermFormData();
     this.formData = await this.formService.getForm(formType);
@@ -222,33 +225,33 @@ export class TermSuggestionFormComponent implements OnInit {
 
   // When submit is clicked, build the terFormData to populate our model form submission and call submitForm api
   async onSubmit() {
-    if (this.formGroup.valid) {
-      // Check our captcha was completed successfully
-      if (!this.captchaSuccessEvent) {
-        return; // TODO: update for log errors
-      }
-      console.log('Submitted Form Details: ', JSON.stringify(this.formGroup.value));
-      // create the termFormData that is filled out
-      let submittedFormData: TermFormData;
-      submittedFormData = {
-        formName: this.formData.formType,
-        recipientEmail: 'agarcia@westcoastinformatics.com', // TODO: update to pull from form
-        businessEmail: this.formGroup.get('contact.email').value,
-        subject: 'Placeholder text',
-        body: this.formGroup.value,
-      };
-      console.log('Form Data: ', JSON.stringify(submittedFormData));
-      // show the spinner
-      this.loaderService.showLoader();
-      // send our form with the captcha token
-      try {
-        await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
-      } catch (error) {
-        console.log('An error occurred:', error);
-      } finally {
-        // hide the spinner
-        this.loaderService.hideLoader();
-      }
+    // Check our captcha was completed successfully
+    if (!this.captchaSuccessEvent) {
+      console.log('ERROR: Captcha not completed successfully');
+      return;
+    }
+
+    // create the termFormData that is filled out
+    let submittedFormData: TermFormData;
+    submittedFormData = {
+      formName: this.formData.formType,
+      recipientEmail: 'agarcia@westcoastinformatics.com', // TODO: update to pull from form
+      businessEmail: this.formGroup.get('contact.email').value,
+      subject: 'Placeholder text',
+      body: this.formGroup.value,
+    };
+    console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
+    // show the spinner
+    this.loaderService.showLoader();
+    // send our form with the captcha token
+    try {
+      await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+    } catch (error) {
+      console.log('An error occurred:', error);
+    } finally {
+      // hide the spinner
+      this.loaderService.hideLoader();
+      // TODO: Add success popup when submitted successfully
     }
   }
 
@@ -271,7 +274,13 @@ export class TermSuggestionFormComponent implements OnInit {
   // set the captcha event
   onCaptchaSuccess(event) {
     this.captchaSuccessEvent = event;
+    this.isCaptchaExpired = false;
     console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
+  }
+
+  // Set the captcha status
+  onCaptchaExpired() {
+    this.isCaptchaExpired = true;
   }
 
   // get the validators from the form group
