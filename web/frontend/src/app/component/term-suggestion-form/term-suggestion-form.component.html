@@ -56,6 +56,12 @@
           </div>
         </div>
       </div>
+      <div class="captcha-container">
+        <!-- Recaptcha Validation -->
+        <ngx-recaptcha2 #captchaElem [siteKey]="'6LdSBfEpAAAAAFVVDfaINoqy5qi3IgGEL3b_nlhf'"
+                        (success)="onCaptchaSuccess($event)" formControlName="recaptcha"></ngx-recaptcha2>
+      </div>
+      <!-- Form Buttons -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-sm btn-primary btn-space" [disabled]="uiState.termFormGroup.invalid">Submit
         </button>

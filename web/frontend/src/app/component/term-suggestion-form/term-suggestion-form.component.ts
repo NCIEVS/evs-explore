@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {ChangeDetectionStrategy} from '@angular/compiler';
@@ -6,7 +6,7 @@ import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { ReCaptcha2Component } from 'ngx-captcha';
+import {ReCaptcha2Component} from 'ngx-captcha';
 
 // interface for core form structure
 interface FormData {
@@ -99,8 +99,15 @@ export class TermSuggestionFormComponent implements OnInit {
   private errorMessages: { [key: string]: string } = {};
   // Form Data model for storing the sections and fields of the forms
   private formData: FormData;
-  // Form Group controls
-  private formGroup: FormGroup = this.fb.group({});
+  // Form Group controls with recaptcha
+  private formGroup: FormGroup = this.fb.group({
+    recaptcha: ['', Validators.required]
+  });
+  // captcha view child
+  @ViewChild('captchaElem') captchaElem: ReCaptcha2Component;
+
+  // Captcha success event
+  private captchaSuccessEvent: any;
 
   // Store list of forms we can toggle between
   private forms = [
@@ -128,10 +135,13 @@ export class TermSuggestionFormComponent implements OnInit {
     this.clearTermFormData();
   }
 
-  // Sets the uiState to the initial state
+  // Sets the uiState to an initial state
   clearTermFormData() {
     this.uiState = new UIState(this.fb);
-    this.formGroup = this.fb.group({}); // initialize to an empty group
+    // initialize to an group only containing recaptcha
+    this.formGroup = this.fb.group({
+      recaptcha: ['', Validators.required]
+    });
   }
 
   // Load the form, if no formId is present, load default
@@ -213,20 +223,26 @@ export class TermSuggestionFormComponent implements OnInit {
   // When submit is clicked, build the terFormData to populate our model form submission and call submitForm api
   async onSubmit() {
     if (this.formGroup.valid) {
+      // Check our captcha was completed successfully
+      if (!this.captchaSuccessEvent) {
+        return; // TODO: update for log errors
+      }
       console.log('Submitted Form Details: ', JSON.stringify(this.formGroup.value));
       // create the termFormData that is filled out
-      const submittedFormData: TermFormData = {
+      let submittedFormData: TermFormData;
+      submittedFormData = {
         formName: this.formData.formType,
         recipientEmail: 'agarcia@westcoastinformatics.com', // TODO: update to pull from form
         businessEmail: this.formGroup.get('contact.email').value,
         subject: 'Placeholder text',
-        body: this.formGroup.value
+        body: this.formGroup.value,
       };
       console.log('Form Data: ', JSON.stringify(submittedFormData));
       // show the spinner
       this.loaderService.showLoader();
+      // send our form with the captcha token
       try {
-        this.formService.submitForm(submittedFormData);
+        await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
       } catch (error) {
         console.log('An error occurred:', error);
       } finally {
@@ -252,6 +268,13 @@ export class TermSuggestionFormComponent implements OnInit {
     });
   }
 
+  // set the captcha event
+  onCaptchaSuccess(event) {
+    this.captchaSuccessEvent = event;
+    console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
+  }
+
+  // get the validators from the form group
   getValidators(validators: any[], field: Field): any[] {
     if (field.validations) {
       for (const validation of field.validations) {

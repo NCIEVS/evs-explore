@@ -92,6 +92,9 @@ import { MappingDetailsComponent } from './component/mapping-details/mapping-det
 import { SourceStatsComponent } from './component/source-stats/source-stats.component';
 import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
 
+// Google ReCaptcha
+import {NgxCaptchaModule} from 'ngx-captcha';
+
 // Angular configuration for this application
 @NgModule({
   declarations: [
@@ -161,6 +164,7 @@ import { TermSuggestionFormComponent } from './component/term-suggestion-form/te
     ButtonModule,
     AngularSplitModule.forRoot(),
     ReactiveFormsModule,
+    NgxCaptchaModule,
   ],
   exports: [DisplayPipe],
   providers: [
