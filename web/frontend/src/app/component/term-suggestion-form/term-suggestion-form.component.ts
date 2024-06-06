@@ -249,7 +249,7 @@ export class TermSuggestionFormComponent implements OnInit {
     // populate the submittedFormData
     submittedFormData = {
       formName: this.formData.formType,
-      recipientEmail: this.formData.recipientEmail,
+      recipientEmail: 'agarcia@westcoastinformatics.com',
       businessEmail: this.formGroup.get('contact.email').value,
       subject: submittedSubject,
       body: this.formGroup.value,
