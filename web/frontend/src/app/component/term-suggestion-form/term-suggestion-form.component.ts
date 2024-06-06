@@ -243,7 +243,7 @@ export class TermSuggestionFormComponent implements OnInit {
     // set the subject based on the submitted form
     if (this.formData.formType === 'CDISC') {
       submittedSubject = 'Term Suggestion for CDISC Terminology';
-    } else if (this.formData.formName === 'NCIT') {
+    } else if (this.formData.formType === 'NCIT') {
       submittedSubject = 'Term Suggestion';
     }
     // populate the submittedFormData
