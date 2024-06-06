@@ -7,6 +7,8 @@ import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ReCaptcha2Component} from 'ngx-captcha';
+import {MessageService} from 'primeng/api';
+
 
 // interface for core form structure
 interface FormData {
@@ -130,8 +132,11 @@ export class TermSuggestionFormComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private configService: ConfigurationService,
     private loaderService: LoaderService,
-    private router: Router, // inject the router service
-    private route: ActivatedRoute // inject the ActivatedRoute service
+    // inject the router service
+    private router: Router,
+    // inject the ActivatedRoute service
+    private route: ActivatedRoute,
+    private messageService: MessageService,
   ) {
     this.uiState = new UIState(fb);
     // initialize the termFormData to an empty form.
@@ -247,32 +252,39 @@ export class TermSuggestionFormComponent implements OnInit {
     try {
       await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
     } catch (error) {
-      console.log('An error occurred:', error);
+      await this.router.navigate(['/error']);
     } finally {
       // hide the spinner
       this.loaderService.hideLoader();
-      // TODO: Add success popup when submitted successfully
+      // clear the form (except for readonly fields)
+      this.onClear();
     }
   }
 
-  // clear the form when the clear button is clicked, except for read only fields
+  // clear the form, except for read only fields
   onClear() {
-    Object.keys(this.formGroup.controls).forEach(key => {
-      // get section controls
-      const sectionControl = this.formGroup.controls[key];
-      Object.keys(sectionControl['controls']).forEach(sectionKey => {
-        const fieldControl = sectionControl['controls'][sectionKey];
-        const field = this.formFields[sectionKey];
-        if (fieldControl && !field.readonly) {
-          console.log();
-          fieldControl.reset();
+    if (this.uiState.termFormGroup && this.uiState.termFormGroup.controls) {
+      Object.keys(this.uiState.termFormGroup.controls).forEach(key => {
+        // get section controls
+        const sectionControl = this.uiState.termFormGroup.controls[key];
+        // Recaptcha doesn't have controls, so skip it
+        if (key === 'recaptcha') {
+          return;
         }
+        Object.keys(sectionControl['controls']).forEach(sectionKey => {
+          const fieldControl = sectionControl['controls'][sectionKey];
+          const field = this.formFields[sectionKey];
+          if (fieldControl && !field.readonly) {
+            fieldControl.reset();
+          }
+        });
       });
-    });
+    }
+    this.captchaElem.resetCaptcha();
   }
 
   // set the captcha event
-  onCaptchaSuccess(event) {
+  onCaptchaSuccess(event: string) {
     this.captchaSuccessEvent = event;
     this.isCaptchaExpired = false;
     console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
@@ -324,6 +336,18 @@ export class TermSuggestionFormComponent implements OnInit {
   getMaxLength(field: Field): number {
     const validation = field.validations?.find(v => v.validator === 'maxlength');
     return validation ? validation.value : null;
+  }
+
+  // Calculate the character count and show the maxlength for a field
+  displayMaxLengthCount(section: Section, field: Field): string {
+    if (!section || !field) {
+      return '';
+    }
+    if (this.uiState.termFormGroup.get(section.name).get(field.name).value === null) {
+      return '';
+    }
+    const count = this.uiState.termFormGroup.get(section.name).get(field.name).value.length;
+    return count.toString() + ' / ' + this.getMaxLength(field).toString();
   }
 
   // Determine if the validation errors should be displayed for a field

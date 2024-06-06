@@ -35,13 +35,12 @@
             <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
                    [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
                    class="field-input"/>
-            <!-- Textarea: Shows how many characters when maxlength is set TODO: UPDATE THIS SECTION TO CALL A METHOD-->
+            <!-- Textarea: Shows how many characters when maxlength is set -->
             <div *ngIf="field.type === 'textarea'" class="textarea-container">
                <textarea [formControlName]="field.name" [placeholder]="field.placeholder"
                          [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
               <span
-                *ngIf="getMaxLength(field)">{{ uiState.termFormGroup.get(section.name).get(field.name).value.length }}
-                / {{ getMaxLength(field) }}</span>
+                *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
             </div>
             <!-- Dropdown -->
             <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
