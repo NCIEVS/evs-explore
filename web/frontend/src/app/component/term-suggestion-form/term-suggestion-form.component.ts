@@ -236,13 +236,22 @@ export class TermSuggestionFormComponent implements OnInit {
       return;
     }
 
-    // create the termFormData that is filled out
+    // create the termFormData from the filled out form
     let submittedFormData: TermFormData;
+    let submittedSubject = '';
+
+    // set the subject based on the submitted form
+    if (this.formData.formType === 'CDISC') {
+      submittedSubject = 'Term Suggestion for CDISC Terminology';
+    } else if (this.formData.formName === 'NCIT') {
+      submittedSubject = 'Term Suggestion';
+    }
+    // populate the submittedFormData
     submittedFormData = {
       formName: this.formData.formType,
-      recipientEmail: 'agarcia@westcoastinformatics.com', // TODO: update to pull from form
+      recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
-      subject: 'Placeholder text',
+      subject: submittedSubject,
       body: this.formGroup.value,
     };
     console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
