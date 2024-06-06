@@ -34,14 +34,14 @@ export class ConceptDetailComponent implements OnInit {
       ['Swiss_Prot', 'https://www.uniprot.org/uniprot/'],
       ['ena', 'https://www.ebi.ac.uk/ena/browser/view/'],
     ]
-  )
+  );
 
   terminology: string = null;
-  metadataMap: Map<String, any> = null;
+  metadataMap: Map<string, any> = null;
   metadata: any = null;
   titleSet = false;
-  collapsed: boolean = false;
-  conceptIsSubset: boolean = false;
+  collapsed = false;
+  conceptIsSubset = false;
   httpRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/g;
 
   constructor(
@@ -62,7 +62,7 @@ export class ConceptDetailComponent implements OnInit {
     // implements OnInit
     this.conceptDisplay.expandCollapseChange.subscribe(change => {
       this.collapsed = change;
-    })
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,9 +72,9 @@ export class ConceptDetailComponent implements OnInit {
       // build metadata entries for each synonym source
       this.concept.synonyms.forEach(s => {
         if (s.source) {
-          let term = this.getTerminologyBySource(s.source);
+          const term = this.getTerminologyBySource(s.source);
           // don't do for the current terminology
-          if (this.terminology != term && !this.metadataMap[s.source] && this.metadataMap[term]) {
+          if (this.terminology !== term && !this.metadataMap[s.source] && this.metadataMap[term]) {
             this.metadataMap[s.source] = {
               'terminology': term,
               'hierarchy': this.metadataMap[term].hierarchy
@@ -90,10 +90,10 @@ export class ConceptDetailComponent implements OnInit {
     return this.externalLinks.get('caDSR') + code;
   }
 
-  conceptIsSubsetHelper(concept): boolean {
+  conceptIsSubsetHelper(concept: Concept): boolean {
     let isSubset = false;
     if (concept.inverseAssociations) {
-      for (let IA of concept.inverseAssociations) {
+      for (const IA of concept.inverseAssociations) {
         if (IA.type === 'Concept_In_Subset') {
           isSubset = true;
           break;
@@ -101,15 +101,15 @@ export class ConceptDetailComponent implements OnInit {
       }
     }
     // Currently only NCIT has subsets
-    return concept.terminology ==='ncit' && isSubset;
+    return concept.terminology === 'ncit' && isSubset;
   }
 
 
-  checkFilter(item: any): Boolean {
+  checkFilter(item: any): boolean {
     if (!this.titleSet && this.concept) {
       this.setTitle();
     }
-    var flag = (
+    const flag = (
       // no source field -> show
       (!item.hasOwnProperty('source') &&
         this.conceptDisplay.selectedSources.has('NCI'))
@@ -123,8 +123,8 @@ export class ConceptDetailComponent implements OnInit {
   // Render links appropriately if they are defined in 'external Links'
   checkExternalLink(property) {
     if (this.externalLinks.has(property.type)) {
-      let values = [];
-      let link = this.externalLinks.get(property.type);
+      const values = [];
+      const link = this.externalLinks.get(property.type);
       let value = '';
       value = '<a href="' + link + property.value + '" target="_blank">' + property.value + '</a>';
       return this.sanitizer.bypassSecurityTrustHtml(value);
@@ -142,7 +142,7 @@ export class ConceptDetailComponent implements OnInit {
     else if (value.search('<') === -1 || value.search('>') === -1) {
       // if contains raw links, make then links
       if (value.match(this.httpRegex)) {
-        console.log('xxx', value)
+        console.log('xxx', value);
         return this.sanitizer.bypassSecurityTrustHtml(value.replace(this.httpRegex, '<a href="$1">$1</a>'));
       }
       // normal value
@@ -153,8 +153,8 @@ export class ConceptDetailComponent implements OnInit {
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-      let value1 = data1[event.field];
-      let value2 = data2[event.field];
+      const value1 = data1[event.field];
+      const value2 = data2[event.field];
       if (value1 === undefined) {
         return 0;
       }
@@ -167,7 +167,7 @@ export class ConceptDetailComponent implements OnInit {
     this.titleSet = true;
   }
 
-  getTerminologyBySource(source) {
+  getTerminologyBySource(source: string) {
     if (!source) {
       return '';
     }
