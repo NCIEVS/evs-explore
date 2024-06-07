@@ -41,7 +41,7 @@
                          [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
               <span
                 *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
-            </div>
+            </div>x
             <!-- Dropdown -->
             <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
               <option value="" disabled selected>{{ field.placeholder }}</option>
@@ -57,7 +57,7 @@
       </div>
       <div class="captcha-container">
         <!-- Recaptcha Validation -->
-        <ngx-recaptcha2 #captchaElem [siteKey]="'6LdSBfEpAAAAAFVVDfaINoqy5qi3IgGEL3b_nlhf'"
+        <ngx-recaptcha2 #captchaElem [siteKey]="'6LdLhPMpAAAAAHEOJyRKewmCWZfNQdDh48lcw1D-'"
                         (success)="onCaptchaSuccess($event)" (expire)="onCaptchaExpired()"
                         formControlName="recaptcha"></ngx-recaptcha2>
       </div>
