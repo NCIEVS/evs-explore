@@ -41,7 +41,7 @@
                          [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
               <span
                 *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
-            </div>x
+            </div>
             <!-- Dropdown -->
             <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
               <option value="" disabled selected>{{ field.placeholder }}</option>
