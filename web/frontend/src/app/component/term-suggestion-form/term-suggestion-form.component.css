@@ -1,7 +1,13 @@
-.form-container{
-    border: 1px solid #000;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding: 20px;
+.page-header-container {
+  box-shadow: 0 1px 12px 0 #ecf2f8;
+  padding: 20px;
+}
+
+.form-container {
+  padding-top: 10px;
+  box-shadow: 0 1px 12px 0 #ecf2f8;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .section-container {
@@ -9,14 +15,22 @@
 }
 
 .field-container {
-    display: flex;
-    justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .textarea-container {
   display: flex;
   flex-direction: column;
   flex: 2;
+}
+
+.section-title {
+  font-weight: bold;
+  background-color: #fff !important;
+  color: black !important;
+  font-size: 14px !important;
+  padding-top: 10px;
 }
 
 .captcha-container {
@@ -28,20 +42,20 @@
 }
 
 .field-label {
-    flex: 1;
+  flex: 1;
 }
 
 .field-input {
-    flex: 2;
+  flex: 2;
 }
 
 .description-label {
-    font-size: 0.8em;
-    text-align: left;
+  font-size: 0.8em;
+  text-align: left;
 }
 
 .instructions {
-    font-size: 0.8em;
+  font-size: 0.8em;
 }
 
 .form-selector-container {
@@ -53,11 +67,11 @@
 }
 
 .highlight {
-    color: red;
+  color: red;
 }
 
 .wrap-text {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .error-message {

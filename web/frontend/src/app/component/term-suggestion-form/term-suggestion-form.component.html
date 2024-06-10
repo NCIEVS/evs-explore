@@ -1,6 +1,8 @@
-<div class="container">
-  <h1>Term Suggestion</h1>
-  <!--  <div class="page-header">Term Suggestion</div>-->
+<div class="container" style="padding-top: 4px;padding-bottom: 6px;">
+  <div class="page-header-container">
+    <div class="page-header">
+      Term Suggestion</div>
+  </div>
   <div class="form-container" *ngIf="uiState.isFormLoaded">
     <!-- Selector for changing the form -->
     <div class="form-selector-container">
@@ -9,14 +11,14 @@
       </select>
     </div>
     <!-- Form -->
-    <h3> {{ uiState.termFormData.formName }}</h3>
+    <div class="page-subheader"> {{ uiState.termFormData.formName }}</div>
     <!--    <div class="page-header">{{ uiState.termFormData.formName }}</div>-->
     <form [formGroup]="uiState.termFormGroup" (ngSubmit)="onSubmit()">
       <div *ngFor="let section of uiState.termFormData.sections" [formGroupName]="section.name">
-        <h4>{{ section.label }}</h4>
+        <div class="section-title">{{ section.label }}</div>
         <!--        <div class="page-subheader">{{ section.label }}</div>-->
-        <!-- If instructions are present, loop through the text, populate the links, and concantenated the parts together -->
-        <p *ngIf="section.instructions" class="instructions wrap-text">
+        <!-- If instructions are present, loop through the text, populate the links, and concatenated the parts together -->
+        <p *ngIf="section.instructions" class="instructions text-body wrap-text">
           <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
             <a *ngIf="part.link; else textOnly" [href]="part.link"> {{ part.text }}</a>
             <ng-template #textOnly><span
@@ -27,23 +29,23 @@
         <!-- Load the fields from the form and their input types -->
         <div *ngFor="let field of section.fields" class="section-container">
           <div class="field-container">
-            <label class="field-label wrap-text"> {{ field.label }}
+            <label class="field-label text-body wrap-text"> {{ field.label }}
               <!-- Add red start next to label if the field is required -->
               <span *ngIf="isRequired(field)" class="highlight">*</span>
             </label>
             <!-- Text input -->
             <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
                    [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
-                   class="field-input"/>
+                   class="text-body field-input"/>
             <!-- Textarea: Shows how many characters when maxlength is set -->
             <div *ngIf="field.type === 'textarea'" class="textarea-container">
                <textarea [formControlName]="field.name" [placeholder]="field.placeholder"
-                         [maxlength]="getMaxLength(field)" class="field-input">{{ field.value }}</textarea>
+                         [maxlength]="getMaxLength(field)" class="text-input field-input">{{ field.value }}</textarea>
               <span
                 *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
             </div>
             <!-- Dropdown -->
-            <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="field-input">
+            <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="text-body field-input">
               <option value="" disabled selected>{{ field.placeholder }}</option>
               <option *ngFor="let option of field.options" [value]="option">{{ option }}
               </option>
