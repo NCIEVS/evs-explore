@@ -18,7 +18,7 @@
         <div class="section-title">{{ section.label }}</div>
         <!--        <div class="page-subheader">{{ section.label }}</div>-->
         <!-- If instructions are present, loop through the text, populate the links, and concatenated the parts together -->
-        <p *ngIf="section.instructions" class="instructions text-body wrap-text">
+        <p *ngIf="section.instructions" class="instructions text-body">
           <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
             <a *ngIf="part.link; else textOnly" [href]="part.link"> {{ part.text }}</a>
             <ng-template #textOnly><span
@@ -29,7 +29,7 @@
         <!-- Load the fields from the form and their input types -->
         <div *ngFor="let field of section.fields" class="section-container">
           <div class="field-container">
-            <label class="field-label text-body wrap-text"> {{ field.label }}
+            <label class="field-label text-body"> {{ field.label }}
               <!-- Add red start next to label if the field is required -->
               <span *ngIf="isRequired(field)" class="highlight">*</span>
             </label>
