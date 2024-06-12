@@ -1,12 +1,12 @@
-import {Component, OnInit, SecurityContext, ViewChild} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {ConceptDetailService} from './../../service/concept-detail.service';
-import {Concept} from './../../model/concept';
-import {ConfigurationService} from '../../service/configuration.service';
-import {DomSanitizer, Title} from '@angular/platform-browser';
-import {saveAs} from 'file-saver';
-import {LoaderService} from '../../service/loader.service';
+import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { ConceptDetailService } from './../../service/concept-detail.service';
+import { Concept } from './../../model/concept';
+import { ConfigurationService } from '../../service/configuration.service';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
+import { LoaderService } from '../../service/loader.service';
 
 @Component({
   selector: 'app-subset-details',
@@ -47,11 +47,11 @@ export class SubsetDetailsComponent implements OnInit {
   urlBase = '/concept';
 
   constructor(private sanitizer: DomSanitizer,
-              private subsetDetailService: ConceptDetailService,
-              private route: ActivatedRoute,
-              private loaderService: LoaderService,
-              private configService: ConfigurationService,
-              private titleService: Title
+    private subsetDetailService: ConceptDetailService,
+    private route: ActivatedRoute,
+    private loaderService: LoaderService,
+    private configService: ConfigurationService,
+    private titleService: Title
   ) {
 
     this.configService.setConfigFromPathname(window.location.pathname);
@@ -140,9 +140,11 @@ export class SubsetDetailsComponent implements OnInit {
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          nodes['concepts'].forEach(c => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
+          if (nodes['concepts']) {
+            nodes['concepts'].forEach(c => {
+              this.subsets.push(new Concept(c, this.configService));
+            });
+          }
 
           const synonymMap = new Array<Map<string, string>>();
           this.subsets.forEach(c => {
