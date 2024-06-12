@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { throwError as observableThrowError, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { EvsError } from '../model/evsError';
-import { TreeNode } from 'primeng/api';
-import { Concept } from '../model/concept';
-import { ConfigurationService } from './configuration.service';
+import {Injectable} from '@angular/core';
+import {throwError as observableThrowError, Observable, of} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
+import {EvsError} from '../model/evsError';
+import {TreeNode} from 'primeng/api';
+import {Concept} from '../model/concept';
+import {ConfigurationService} from './configuration.service';
 
 // Service for loading concept information
 @Injectable()
@@ -16,7 +16,8 @@ export class ConceptDetailService {
   constructor(
     private http: HttpClient,
     private configService: ConfigurationService
-  ) { }
+  ) {
+  }
 
   // Get concept list
   getConcepts(terminology: string, codes: string, include: string): Observable<any> {

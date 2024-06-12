@@ -23,6 +23,7 @@ import { AlldocsComponent } from './component/documentation/alldocs/alldocs.comp
 import { SubsetNcitComponent } from './component/documentation/subset-ncit/subset-ncit.component';
 import { EvsApiComponent } from './component/evs-api/evs-api.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
+import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -63,6 +64,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactUsComponent },
   { path: 'error', component: ErrorComponent },
   { path: 'evsapi', component: EvsApiComponent },
+  { path: 'termform', component: TermSuggestionFormComponent},
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
