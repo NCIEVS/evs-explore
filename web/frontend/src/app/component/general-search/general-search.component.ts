@@ -447,6 +447,8 @@ export class GeneralSearchComponent
   // Handle a change of the term - save termName and re-set
   onChangeTerminology(terminology) {
     console.log("onChangeTerminology", terminology.value.terminology);
+    this.configService.setSources(null);
+    this.searchCriteria.synonymSource = null; // reset synonym sources on terminology change
     if (terminology.value.terminology != "multi") {
       this.configService.setMultiSearch(false);
       this.configService.setTerminology(terminology.value);
