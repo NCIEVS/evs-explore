@@ -4,9 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.10.0.RELEASE] - YYYY-MM-DD
+## [1.10.0.RELEASE] - 2024-06-DD
 ### Added
+- Support for CDISC subsets on subset details page
+- Allow user to decline terminology license agreement and redirect them back to welcome page
 ### Changed
+- Version 2.0 of Term Suggestion form
+- Updated Help page to include features up to 1.10
+- Updated system to Java 17
+- Updated Spring Boot to version 2.7.17
+### Fixed
+- Terminology sources not clearing when different terminology was selected
+- Subsets with 0 members not displaying correctly
 
 ## [1.9.0.RELEASE] - 2024-02-01
 ### Added
