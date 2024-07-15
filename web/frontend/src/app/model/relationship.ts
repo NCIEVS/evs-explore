@@ -25,7 +25,7 @@ export class Relationship {
     let relaQualifier = null;
     if (input.qualifiers) {
       relaQualifier = input.qualifiers.find(function (item) { return item.type === 'RELA'; });
-      this.qualifiers = input.qualifiers.filter(function (item) { return item.type !== 'RELA'; });
+      this.qualifiers = input.qualifiers?.filter(function (item) { return item.type !== 'RELA'; });
     }
 
 
