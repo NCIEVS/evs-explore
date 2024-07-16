@@ -57,7 +57,7 @@ export class PropertiesComponent implements OnInit {
       return false;
     }
     else {
-      const remodeledProperty = property.properties.filter(prop => prop.type === "remodeledDescription");
+      const remodeledProperty = property.properties?.filter(prop => prop.type === "remodeledDescription");
       if (remodeledProperty.length > 0) {
         this.remodeledDesc = remodeledProperty[0].value;
         this.remodeledDesc = this.remodeledDesc.replace("as a null", "as unknown");

@@ -89,7 +89,7 @@ export class SubsetDetailsComponent implements OnInit {
         .subscribe((response: any) => {
           const subsetDetail = new Concept(response, this.configService);
           this.titleDesc = subsetDetail.name;
-          const ContSource = subsetDetail.properties.filter(item => item.type === 'Contributing_Source');
+          const ContSource = subsetDetail.properties?.filter(item => item.type === 'Contributing_Source');
           if (ContSource.length === 1) {
             if (ContSource[0].value === 'CTRP') {
               this.subsetFormat = 'CTRP';
