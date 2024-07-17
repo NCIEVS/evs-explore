@@ -59,7 +59,7 @@
       </div>
       <div class="captcha-container">
         <!-- Recaptcha Validation -->
-        <ngx-recaptcha2 #captchaElem [siteKey]="'6LdLhPMpAAAAAHEOJyRKewmCWZfNQdDh48lcw1D-'"
+        <ngx-recaptcha2 #captchaElem [siteKey]="recaptchaSiteKey"
                         (success)="onCaptchaSuccess($event)" (expire)="onCaptchaExpired()"
                         formControlName="recaptcha"></ngx-recaptcha2>
       </div>
