@@ -106,6 +106,7 @@ export class TermSuggestionFormComponent implements OnInit {
   });
   // captcha view child
   @ViewChild('captchaElem') captchaElem: ReCaptcha2Component;
+  recaptchaSiteKey: string;
 
   // Captcha success event
   private captchaSuccessEvent: any;
@@ -180,7 +181,13 @@ export class TermSuggestionFormComponent implements OnInit {
   async onloadForm(formType: string): Promise<void> {
     console.log('Loading form ', formType);
     this.clearTermFormData();
-    this.formData = await this.formService.getForm(formType);
+    const response = await this.formService.getForm(formType);
+
+    // get the recaptcha site key from the response
+    this.recaptchaSiteKey = response.recaptchaSiteKey;
+
+    // create a formData instance of the response
+    this.formData = response;
 
     for (const section of this.formData.sections) {
       // create a section Form Group to control inputs
@@ -363,5 +370,10 @@ export class TermSuggestionFormComponent implements OnInit {
     const sectionControl = this.uiState.termFormGroup.get(section.name);
     const fieldControl = sectionControl.get(field.name);
     return fieldControl.errors && fieldControl.touched;
+  }
+
+  // Get the formGroup
+  public getFormGroup(): FormGroup<any> {
+    return this.formGroup;
   }
 }
