@@ -1,41 +1,128 @@
 package gov.nih.nci.evsexplore.web.filters;
 
+//import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
 
 import gov.nih.nci.evsexplore.web.properties.WebProperties;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Class to add a header prefilter to the UI.
+ */
 @Component
-public class UiHeaderPreFilter extends ZuulFilter {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class UiHeaderPreFilter implements Filter {
+  /** The logger. */
+  private static final Logger logger = LoggerFactory.getLogger(UiHeaderPreFilter.class);
 
   /** The web properties. */
   @Autowired
   WebProperties properties;
 
+  /** The header name. */
+  private String headerName = "X-EVSRESTAPI-License-Key";
+
+  /**
+   * Filter the request to add a prefilter for our license.
+   *
+   * @param request the request
+   * @param response the response
+   * @param chain the chain
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws ServletException the servlet exception
+   */
   @Override
-  public int filterOrder() {
-    return FilterConstants.PRE_DECORATION_FILTER_ORDER - 1;
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+          throws IOException, ServletException {
+    HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+    MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpServletRequest);
+    mutableRequest.putHeader(headerName, properties.getUiLicense());
+
+    chain.doFilter(mutableRequest, response);
   }
 
-  @Override
-  public String filterType() {
-    return FilterConstants.PRE_TYPE;
-  }
+  /**
+   * MutableHttpServletRequest class that allows the addition and modification of headers
+   * for a request. This is useful when you want to add custom headers to a request.
+   */
+  static class MutableHttpServletRequest extends HttpServletRequestWrapper {
+    /** The custom headers. */
+    private final Map<String, String> customHeaders;
 
-  @Override
-  public boolean shouldFilter() {
-    return true;
-  }
+    /**
+     * Instantiates a new mutable http servlet request.
+     * @param request
+     */
+    public MutableHttpServletRequest(HttpServletRequest request) {
+      super(request);
+      this.customHeaders = new HashMap<String, String>();
+    }
 
-  @Override
-  public Object run() {
-    final RequestContext ctx = RequestContext.getCurrentContext();
-    ctx.addZuulRequestHeader("X-EVSRESTAPI-License-Key", properties.getUiLicense());
+    /**
+     * Put header in the servlet request.
+     * @param name header name
+     * @param value header value
+     */
+    public void putHeader(String name, String value) {
+      this.customHeaders.put(name, value);
+    }
 
-    return null;
+    /**
+     * Get header names.
+     * @return Enumeration of header names
+     */
+    public Enumeration<String> getHeaderNames() {
+      // create a set of the custom header names
+      Set<String> set = new HashSet<String>(customHeaders.keySet());
+
+      // now add the headers from the wrapped request object
+      Enumeration<String> e = ((HttpServletRequest) getRequest()).getHeaderNames();
+      while (e.hasMoreElements()) {
+        // add the names of the request headers into the list
+        String n = e.nextElement();
+        set.add(n);
+      }
+
+      // create an enumeration from the set and return
+      return Collections.enumeration(set);
+    }
+
+    /**
+     * Get header value
+     * @param name a <code>String</code> specifying the header name
+     *
+     * @return a <code>String</code> containing the value of the requested
+     */
+    public String getHeader(String name) {
+      // check the custom headers first
+      String value = this.customHeaders.get(name);
+
+      if (value != null) {
+        // if we found a custom header return it
+        return value;
+      }
+      // else return the value from the wrapped request object
+      return ((HttpServletRequest) getRequest()).getHeader(name);
+    }
   }
 }

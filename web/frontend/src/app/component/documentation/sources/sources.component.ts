@@ -45,7 +45,7 @@ export class SourcesComponent implements OnInit {
   }
 
   hasSourceLinks() {
-    return this.terminology == 'ncim';
+    return this.terminology === 'ncim';
   }
 
 }

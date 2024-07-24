@@ -27,7 +27,6 @@ export class SynonymTypesComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-
     this.configService.getSynonymTypes(this.terminology)
       .subscribe(response => {
         this.synonymTypes = response;
@@ -37,10 +36,11 @@ export class SynonymTypesComponent implements OnInit {
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-      let value1 = data1[event.field];
-      let value2 = data2[event.field];
-      if (value1 == undefined)
+      const value1 = data1[event.field];
+      const value2 = data2[event.field];
+      if (value1 === undefined) {
         return 0;
+      }
       return event.order * value1.localeCompare(value2, 'en', { numeric: true });
     });
   }

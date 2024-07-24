@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { throwError as observableThrowError, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { EvsError } from '../model/evsError';
-import { TreeNode } from 'primeng/api';
-import { Concept } from '../model/concept';
-import { ConfigurationService } from './configuration.service';
+import {Injectable} from '@angular/core';
+import {throwError as observableThrowError, Observable, of} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
+import {EvsError} from '../model/evsError';
+import {TreeNode} from 'primeng/api';
+import {Concept} from '../model/concept';
+import {ConfigurationService} from './configuration.service';
 
 // Service for loading concept information
 @Injectable()
@@ -16,7 +16,18 @@ export class ConceptDetailService {
   constructor(
     private http: HttpClient,
     private configService: ConfigurationService
-  ) { }
+  ) {
+  }
+
+  // Get concept list
+  getConcepts(terminology: string, codes: string, include: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/concept/' + terminology.toLowerCase() + '?include=' + include + "&list=" + codes)
+    ).pipe(
+      catchError((error) => {
+        return observableThrowError(new EvsError(error, 'Could not fetch concepts = ' + codes));
+      })
+    );
+  }
 
   // Get concept list
   getConcepts(terminology: string, codes: string, include: string): Observable<any> {

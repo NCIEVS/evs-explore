@@ -14,3 +14,11 @@ setenv.sh
 __pycache__
 /build/
 WEB-INF/*
+node_modules
+log
+
+# IDE - IntelliJ
+.idea/
+
+# System Files
+.DS_Store

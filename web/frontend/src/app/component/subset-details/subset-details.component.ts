@@ -40,9 +40,9 @@ export class SubsetDetailsComponent implements OnInit {
   currentSortColumn = 'code';
   currentSortDirection = false;
   sortDirection = {
-    'ASC': true,
-    'DESC': false
-  }
+    ASC: true,
+    DESC: false
+  };
 
   urlBase = '/concept';
 
@@ -59,19 +59,21 @@ export class SubsetDetailsComponent implements OnInit {
 
   }
 
+  // initialize the component
   ngOnInit(): void {
-
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
       this.subsetDetailService.getSubsetMembers(this.titleCode)
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          nodes['concepts'].forEach(c => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
+          if (nodes['concepts']) {
+            nodes['concepts'].forEach(c => {
+              this.subsets.push(new Concept(c, this.configService));
+            });
+          }
 
-          var synonymMap = new Array<Map<string, string>>();
+          const synonymMap = new Array<Map<string, string>>();
           this.subsets.forEach(c => {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
@@ -85,14 +87,20 @@ export class SubsetDetailsComponent implements OnInit {
         )
       )
         .subscribe((response: any) => {
-          var subsetDetail = new Concept(response, this.configService);
+          const subsetDetail = new Concept(response, this.configService);
           this.titleDesc = subsetDetail.name;
-          let ContSource = subsetDetail.properties.filter(item => item.type == 'Contributing_Source');
-          if (ContSource.length == 1) {
-            if (ContSource[0].value == 'CTRP')
+          const ContSource = subsetDetail.properties?.filter(item => item.type === 'Contributing_Source');
+          if (ContSource.length === 1) {
+            if (ContSource[0].value === 'CTRP') {
               this.subsetFormat = 'CTRP';
-            else
+            }
+            // CHECK FOR CDISC
+            else if (ContSource[0].value === 'CDISC') {
+              this.subsetFormat = 'CDISC';
+            }
+            else {
               this.subsetFormat = ContSource[0].value;
+            }
           }
           else {
             this.subsetFormat = 'NCIt';
@@ -103,16 +111,16 @@ export class SubsetDetailsComponent implements OnInit {
           this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, subsetDetail.getSubsetDescription());
           if (!this.subsetDescription) {
             for (let definition of subsetDetail.definitions) {
-              if (definition.source == 'NCI') {
+              if (definition.source === 'NCI') {
                 this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, definition.definition);
                 break;
               }
             }
           }
-          var sortCols = document.getElementsByClassName('sortable');
-          for (var i = 0; i < sortCols.length; i++) {
-            var str = sortCols[i].innerHTML;
-            var text = str.replace('↓', '').replace('↑', '');
+          const sortCols = document.getElementsByClassName('sortable');
+          for (let i = 0; i < sortCols.length; i++) {
+            const str = sortCols[i].innerHTML;
+            const text = str.replace('↓', '').replace('↑', '');
             sortCols[i].innerHTML = text;
           }
           this.setTitle();
@@ -127,15 +135,18 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch, this.currentSortDirection, this.currentSortColumn)
+      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch,
+        this.currentSortDirection, this.currentSortColumn)
         .then(nodes => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          nodes['concepts'].forEach(c => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
+          if (nodes['concepts']) {
+            nodes['concepts'].forEach(c => {
+              this.subsets.push(new Concept(c, this.configService));
+            });
+          }
 
-          var synonymMap = new Array<Map<string, string>>();
+          const synonymMap = new Array<Map<string, string>>();
           this.subsets.forEach(c => {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
@@ -146,15 +157,16 @@ export class SubsetDetailsComponent implements OnInit {
     }
   }
 
+  // get synonym sources for a concept
   getSynonymSources(synonyms) {
-    var synonymSourceMap = new Map<string, string>();
+    const synonymSourceMap = new Map<string, string>();
     synonyms.forEach(synonym => {
-      if (synonym['source'] == undefined) {
+      if (synonym['source'] === undefined) {
         if (!(synonymSourceMap.has('No Source'))) {
           synonymSourceMap.set('No Source', synonym['name']);
         }
         else {
-          var key = synonymSourceMap.get('No Source') + ', ' + synonym['name'];
+          const key = synonymSourceMap.get('No Source') + ', ' + synonym['name'];
           synonymSourceMap.set('No Source', key);
         }
       }
@@ -163,7 +175,7 @@ export class SubsetDetailsComponent implements OnInit {
           synonymSourceMap.set(synonym['source'], synonym['name']);
         }
         else {
-          var key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
+          const key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
           synonymSourceMap.set(synonym['source'], key);
         }
       }
@@ -172,22 +184,22 @@ export class SubsetDetailsComponent implements OnInit {
     return synonymSourceMap;
   }
 
+  // search for a concept
   search(event, columnName = null) {
-    if (this.lastSearch != event.query) {
-      this.subsetList._first = 0
-      this.fromRecord = 0
+    if (this.lastSearch !== event.query) {
+      this.subsetList._first = 0;
+      this.fromRecord = 0;
     }
-    var sort = null;
-    var sortDirection = null;
-    var sortCols = document.getElementsByClassName('sortable');
-    for (var i = 0; i < sortCols.length; i++) {
-      var str = sortCols[i].innerHTML;
-      var text = str.replace('↓', '').replace('↑', '');
-      sortCols[i].innerHTML = text;
+    let sort = null;
+    let sortDirection = null;
+    let sortCols = document.getElementsByClassName('sortable');
+    for (let i = 0; i < sortCols.length; i++) {
+      const str = sortCols[i].innerHTML;
+      sortCols[i].innerHTML = str.replace('↓', '').replace('↑', '');
     }
     if (columnName) { // setup for sorting
-      var sortCols = document.getElementsByClassName('sortable');
-      if (this.currentSortColumn == columnName) {
+      sortCols = document.getElementsByClassName('sortable');
+      if (this.currentSortColumn === columnName) {
         this.currentSortDirection = !this.currentSortDirection;
       }
       else {
@@ -197,7 +209,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.currentSortColumn = columnName;
       sort = this.currentSortColumn;
       sortDirection = this.currentSortDirection
-      document.getElementById(columnName).innerText += (this.currentSortDirection == this.sortDirection.ASC ? '↑' : '↓');
+      document.getElementById(columnName).innerText += (this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓');
     }
     this.subsetDetailService.getSubsetMembers(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort)
       .then(nodes => {
@@ -208,7 +220,7 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsets.push(new Concept(c, this.configService));
           });
 
-          var synonymMap = new Array<Map<string, string>>();
+          const synonymMap = new Array<Map<string, string>>();
           this.subsets.forEach(c => {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
           });
@@ -224,16 +236,16 @@ export class SubsetDetailsComponent implements OnInit {
   // export search results
   async exportSubset() {
     this.loaderService.showLoader();
-    var titles = [];
-    var exportMax = this.configService.getMaxExportSize();
-    var exportPageSize = this.configService.getExportPageSize();
+    const titles = [];
+    const exportMax = this.configService.getMaxExportSize();
+    const exportPageSize = this.configService.getExportPageSize();
     Array.from(document.getElementsByClassName('subsetTitle')).forEach(function (element) { titles.push(element.innerHTML) });
 
-    var term = document.getElementById('termauto').getAttribute('ng-reflect-model');
+    let term = document.getElementById('termauto').getAttribute('ng-reflect-model');
     term = term && term.length > 2 ? term : '';
-    var subsetText = titles.join('\t') + '\n';
-    var pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
-    var pageList = Array.from(Array(pages).keys());
+    let subsetText = titles.join('\t') + '\n';
+    const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
+    const pageList = Array.from(Array(pages).keys());
 
     for (const page of pageList) {
       await this.subsetDetailService.getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term).toPromise().then(
@@ -244,35 +256,37 @@ export class SubsetDetailsComponent implements OnInit {
         }
       );
     }
-    var fileName = this.titleCode + '.' + this.titleDesc + '.' + (term.length > 2 ? (term + '.') : '');
+    const fileName = this.titleCode + '.' + this.titleDesc + '.' + (term.length > 2 ? (term + '.') : '');
     saveAs(new Blob([subsetText], {
       type: 'text/plain'
     }), fileName + new Date().toISOString() + '.xls');
     this.loaderService.hideLoader();
   }
 
+  // format the export file
   exportCodeFormatter(concept: Concept) {
-    var rowText = '';
-    if (this.subsetFormat == 'NCIt') {
+    let rowText = '';
+    if (this.subsetFormat === 'NCIt') {
       rowText += concept.code + '\t';
       rowText += concept.name + '\t';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
       rowText += '\t';
       if (concept.definitions) {
         concept.definitions.forEach(def => {
-          if (def.source == 'NCI')
+          if (def.source === 'NCI') {
             rowText += def.definition.replace(/"/g, '""');
+          }
         });
       }
 
     }
-    else if (this.subsetFormat == 'CTRP') {
+    else if (this.subsetFormat === 'CTRP') {
       rowText += this.titleCode + '\t';
-      rowText += this.titleDesc + '\t'
+      rowText += this.titleDesc + '\t';
       rowText += concept.code + '\t';
       rowText += concept.name + '\t';
       concept.synonyms.forEach(syn => {
-        if (syn.type == 'Display_Name')
+        if (syn.type === 'Display_Name')
           rowText += syn.name;
       });
       rowText += '\t';
@@ -290,16 +304,18 @@ export class SubsetDetailsComponent implements OnInit {
 
       if (concept.definitions) {
         concept.definitions.forEach(def => {
-          if (def.source == this.subsetFormat)
+          if (def.source === this.subsetFormat) {
             rowText += def.definition.replace(/"/g, '""');
+          }
         });
       }
       rowText += '\t';
 
       if (concept.definitions) {
         concept.definitions.forEach(def => {
-          if (def.source == 'NCI')
+          if (def.source === 'NCI') {
             rowText += def.definition.replace(/"/g, '""');
+          }
         });
       }
     }
@@ -307,17 +323,18 @@ export class SubsetDetailsComponent implements OnInit {
     return rowText;
   }
 
+  // get synonym names for a concept
   getSynonymNames(concept: Concept, source, termType): string[] {
-    var syns: string[] = [];
+    let syns: string[] = [];
     if (concept.synonyms && concept.synonyms.length > 0) {
       for (let i = 0; i < concept.synonyms.length; i++) {
-        if (termType != null && concept.synonyms[i].termType != termType) {
+        if (termType !== null && concept.synonyms[i].termType !== termType) {
           continue;
         }
-        if (source != null && concept.synonyms[i].source != source) {
+        if (source !== null && concept.synonyms[i].source !== source) {
           continue
         }
-        if (syns.indexOf(concept.synonyms[i].name) != -1) {
+        if (syns.indexOf(concept.synonyms[i].name) !== -1) {
           continue;
         }
         syns.push(concept.synonyms[i].name);
@@ -328,8 +345,22 @@ export class SubsetDetailsComponent implements OnInit {
     return syns;
   }
 
+  // set the title
   setTitle() {
-    this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc)
+    this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc);
   }
 
+  // get properties for a concept
+  getProperties(concept: Concept, propType): string[] {
+    const propList: string[] = [];
+    if (concept.properties && concept.properties.length > 0) {
+      for (let i = 0; i < concept.properties.length; i++) {
+        if (propType !== null && concept.properties[i].type !== propType) {
+          continue;
+        }
+        propList.push(concept.properties[i].type);
+      }
+    }
+    return propList;
+  }
 }
