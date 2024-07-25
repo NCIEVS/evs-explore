@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
@@ -244,7 +244,7 @@ export class TermSuggestionFormComponent implements OnInit {
 
     // create the termFormData from the filled out form
     let submittedFormData: TermFormData;
-    let submittedSubject = '';
+    let submittedSubject: string = '';
 
     // set the subject based on the submitted form
     if (this.formData.formType === 'CDISC') {
@@ -252,13 +252,16 @@ export class TermSuggestionFormComponent implements OnInit {
     } else if (this.formData.formType === 'NCIT') {
       submittedSubject = 'Term Suggestion: ';
     }
+    // Build the submitted form data using the form labels instead of name
+    const formDataLabeled = this.buildFormDataWithLabels(this.formGroup, this.formFields);
+
     // populate the submittedFormData
     submittedFormData = {
       formName: this.formData.formType,
       recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
       subject: submittedSubject + this.formGroup.get('termInfo.term').value,
-      body: this.formGroup.value,
+      body: formDataLabeled,
     };
     console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
     // show the spinner
@@ -375,5 +378,30 @@ export class TermSuggestionFormComponent implements OnInit {
   // Get the formGroup
   public getFormGroup(): FormGroup<any> {
     return this.formGroup;
+  }
+
+  // Helper function to build the submitted form so that it uses the label values instead of the name values
+  private buildFormDataWithLabels(formGroup: FormGroup, formFields: {[key: string]: Field}): {} {
+    // create a new object to hold the form data with labels
+    const formData: {} = {};
+    // iterate over the form controls
+    for (const sectionName in this.formGroup.controls) {
+      // skip the recaptcha control
+      if (sectionName === 'recaptcha') continue;
+      // get the section control
+      const sectionControl = formGroup.controls[sectionName];
+      // find the corresponding section in the formData.sections array
+      const section: Section = this.formData.sections.find(s => s.name === sectionName);
+      // use the section label instead of name
+      formData[section.label] = {};
+
+      for (const fieldName in sectionControl['controls']) {
+        const fieldControl = sectionControl['controls'][fieldName];
+        const field: Field = formFields[fieldName];
+        // add the field label and the control value to the new object
+        formData[section.label][field.label] = fieldControl.value;
+      }
+    }
+    return formData;
   }
 }
