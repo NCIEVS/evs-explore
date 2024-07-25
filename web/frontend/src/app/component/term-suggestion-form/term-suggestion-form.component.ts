@@ -252,7 +252,7 @@ export class TermSuggestionFormComponent implements OnInit {
     } else if (this.formData.formType === 'NCIT') {
       submittedSubject = 'Term Suggestion: ';
     }
-
+    // Build the submitted form data using the form labels instead of name
     const formDataLabeled = this.buildFormDataWithLabels(this.formGroup, this.formFields);
 
     // populate the submittedFormData
@@ -389,7 +389,7 @@ export class TermSuggestionFormComponent implements OnInit {
       // skip the recaptcha control
       if (sectionName === 'recaptcha') continue;
       // get the section control
-      const sectionControl = this.formGroup.controls[sectionName];
+      const sectionControl = formGroup.controls[sectionName];
       // find the corresponding section in the formData.sections array
       const section: Section = this.formData.sections.find(s => s.name === sectionName);
       // use the section label instead of name
@@ -397,10 +397,9 @@ export class TermSuggestionFormComponent implements OnInit {
 
       for (const fieldName in sectionControl['controls']) {
         const fieldControl = sectionControl['controls'][fieldName];
-        const field: Field = this.formFields[fieldName];
-
+        const field: Field = formFields[fieldName];
         // add the field label and the control value to the new object
-        formData[sectionName][field.label] = fieldControl.value;
+        formData[section.label][field.label] = fieldControl.value;
       }
     }
     return formData;
