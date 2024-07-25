@@ -1,11 +1,11 @@
-import {Component, OnInit, SecurityContext, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {ConfigurationService} from 'src/app/service/configuration.service';
-import {LoaderService} from 'src/app/service/loader.service';
-import {saveAs} from 'file-saver';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MapsetService} from 'src/app/service/mapset.service';
-import {ConceptDetailService} from 'src/app/service/concept-detail.service';
+import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ConfigurationService } from 'src/app/service/configuration.service';
+import { LoaderService } from 'src/app/service/loader.service';
+import { saveAs } from 'file-saver';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MapsetService } from 'src/app/service/mapset.service';
+import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 
 @Component({
   selector: 'app-mapping-details',
@@ -196,14 +196,14 @@ export class MappingDetailsComponent implements OnInit {
     this.loaderService.hideLoader();
   }
 
-  async exportMapping() {
+  async exportMapping(self = this) {
     this.loaderService.showLoader();
     const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
     let mappingText = '';
 
     for (let i = 0; i < pages; i++) {
       await this.configService
-        .getMapsetMappings(this.mapsetCode, Math.min(this.MAX_PAGE, this.fullTotal - i * this.MAX_PAGE), i * this.MAX_PAGE)
+        .getMapsetMappings(self.mapsetCode, Math.min(self.MAX_PAGE, self.fullTotal - i * self.MAX_PAGE), i * self.MAX_PAGE)
         .toPromise()
         .then((result) => {
           result['maps'].forEach((c) => {
@@ -220,7 +220,7 @@ export class MappingDetailsComponent implements OnInit {
           });
         });
     }
-    const fileName = this.mapsetCode + '_' + (this.version != null ? 'Version' + this.version + '_' : '');
+    const fileName = self.mapsetCode + '_' + (self.version != null ? 'Version' + self.version + '_' : '');
     saveAs(
       new Blob([mappingText], {
         type: 'text/plain',
