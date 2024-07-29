@@ -198,7 +198,7 @@ export class MappingDetailsComponent implements OnInit {
 
   async exportMapping(self = this) {
     this.loaderService.showLoader();
-    const pages = Math.ceil(this.fullTotal / this.MAX_PAGE);
+    const pages = Math.ceil(self.fullTotal / self.MAX_PAGE);
     let mappingText = '';
 
     for (let i = 0; i < pages; i++) {
