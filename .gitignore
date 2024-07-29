@@ -16,9 +16,11 @@ __pycache__
 WEB-INF/*
 node_modules
 log
+web/bin/main/*
 
 # IDE - IntelliJ
 .idea/
 
 # System Files
 .DS_Store
+

@@ -198,12 +198,12 @@ export class MappingDetailsComponent implements OnInit {
 
   async exportMapping(self = this) {
     this.loaderService.showLoader();
-    const pages = Math.ceil(self.fullTotal / self.MAX_PAGE);
+    const pages = Math.ceil(self.total / self.MAX_PAGE);
     let mappingText = '';
 
     for (let i = 0; i < pages; i++) {
       await this.configService
-        .getMapsetMappings(self.mapsetCode, Math.min(self.MAX_PAGE, self.fullTotal - i * self.MAX_PAGE), i * self.MAX_PAGE, self.termAutoSearch)
+        .getMapsetMappings(self.mapsetCode, Math.min(self.MAX_PAGE, self.total - i * self.MAX_PAGE), i * self.MAX_PAGE, self.termAutoSearch)
         .toPromise()
         .then((result) => {
           result['maps'].forEach((c) => {
