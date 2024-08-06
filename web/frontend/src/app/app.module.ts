@@ -134,7 +134,7 @@ import {NgxCaptchaModule} from 'ngx-captcha';
     NotificationComponent,
     MappingDetailsComponent,
     SourceStatsComponent,
-    TermSuggestionFormComponent
+    TermSuggestionFormComponent,
   ],
   imports: [
     NgbModule,
