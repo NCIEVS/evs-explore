@@ -33,6 +33,7 @@ interface Field {
   type?: string;
   value: string;
   options?: string[];
+  mappedOptions?: {label: string, value: string}[];
   placeholder?: string;
   multiple?: boolean;
   readonly?: boolean;
@@ -202,6 +203,12 @@ export class TermSuggestionFormComponent implements OnInit {
           field.name,
           this.fb.control(field.value, validators),
         );
+        // Check if the field is a multiple select dropdown and map options to required format
+        if (field.type === 'dropdown' && field.multiple) {
+          field.mappedOptions = field.options.map(option => ({
+            label: option, value: option
+          }));
+        }
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
         formControl.valueChanges.subscribe(() => {
@@ -381,7 +388,7 @@ export class TermSuggestionFormComponent implements OnInit {
   }
 
   // Helper function to build the submitted form so that it uses the label values instead of the name values
-  private buildFormDataWithLabels(formGroup: FormGroup, formFields: {[key: string]: Field}): {} {
+  private buildFormDataWithLabels(formGroup: FormGroup, formFields: { [key: string]: Field }): {} {
     // create a new object to hold the form data with labels
     const formData: {} = {};
     // iterate over the form controls
