@@ -246,7 +246,7 @@ export class TermSuggestionFormComponent implements OnInit {
     this.uiState.isFormLoaded = true;
   }
 
-  // When submit is clicked, build the terFormData to populate our model form submission and call submitForm api
+  // When submit is clicked, build the terFormData to populate our model and call submitForm api
   async onSubmit() {
     // Check our captcha was completed successfully
     if (!this.captchaSuccessEvent) {
@@ -381,6 +381,13 @@ export class TermSuggestionFormComponent implements OnInit {
     return fieldControl.errors && fieldControl.touched;
   }
 
+
+  // Get the formGroup
+  public getFormGroup(): FormGroup<any> {
+    return this.formGroup;
+  }
+
+  // Private help method to populate the TermFormData from submitted form data
   private populateSubmittedFormData(): TermFormData {
     // set the subject based on the submitted form
     const submittedSubject: string = this.setFormSubject(this.formData.formType);
@@ -397,7 +404,7 @@ export class TermSuggestionFormComponent implements OnInit {
     };
   }
 
-  // Set the subject of the email based on the formtype submitted
+  // Private helper method to set the subject of the email based on the formtype submitted
   private setFormSubject(formType: string): string {
     // set the subject based on the submitted form
     if (formType === 'CDISC') {
@@ -405,11 +412,6 @@ export class TermSuggestionFormComponent implements OnInit {
     } else if (this.formData.formType === 'NCIT') {
       return 'Term Suggestion: ';
     }
-  }
-
-  // Get the formGroup
-  public getFormGroup(): FormGroup<any> {
-    return this.formGroup;
   }
 
   // Helper function to build the submitted form so that it uses the label values instead of the name values
