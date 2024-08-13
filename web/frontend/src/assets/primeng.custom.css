@@ -393,7 +393,6 @@
   position: absolute;
   right: 0;
   top: 0;
-
 }
 
 
@@ -1330,7 +1329,6 @@ body .p-multiselect-panel .p-multiselect-item label {
 
 .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon {
   position: absolute;
-  left: .25em;
 }
 
 .p-fieldset-toggleable .p-fieldset-legend a {

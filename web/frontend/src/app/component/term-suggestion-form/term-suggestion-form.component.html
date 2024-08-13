@@ -4,6 +4,20 @@
       Term Suggestion
     </div>
   </div>
+  <!-- Display the message banner when form is submitted successfully-->
+  <ng-template #success let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{ severity }}</h4>
+    </div>
+    <div class="modal-body">
+      <p>{{ submitFormMsg }}</p>
+    </div>
+    <div class="modal-footer">
+      <form action="" (submit)="modal.close()" method="POST">
+        <button type="submit" class="btn btn-sm btn-secondary">Close</button>
+      </form>
+    </div>
+  </ng-template>
   <div class="form-container" *ngIf="uiState.isFormLoaded">
     <!-- Selector for changing the form -->
     <div class="form-selector-container">

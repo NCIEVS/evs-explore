@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {TermFormData} from '../../model/termFormData.model';
@@ -6,7 +6,7 @@ import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ReCaptcha2Component} from 'ngx-captcha';
-import {MessageService} from 'primeng/api';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 // interface for core form structure
@@ -33,7 +33,7 @@ interface Field {
   type?: string;
   value: string;
   options?: string[];
-  mappedOptions?: {label: string, value: string}[];
+  mappedOptions?: { label: string, value: string }[];
   placeholder?: string;
   multiple?: boolean;
   readonly?: boolean;
@@ -121,6 +121,11 @@ export class TermSuggestionFormComponent implements OnInit {
     {id: 'cdisc-form', name: 'CDISC Form'},
   ];
 
+  // Popup information for a form submitted successfully
+  @ViewChild('success', {static: true}) success: TemplateRef<any>;
+  protected submitFormMsg: string = '';
+  protected severity: string = '';
+
   // set a default form
   private selectedForm = this.forms[0].id;
 
@@ -133,11 +138,11 @@ export class TermSuggestionFormComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private configService: ConfigurationService,
     private loaderService: LoaderService,
+    private modalService: NgbModal,
     // inject the router service
     private router: Router,
     // inject the ActivatedRoute service
     private route: ActivatedRoute,
-    private messageService: MessageService,
   ) {
     this.uiState = new UIState(fb);
     // initialize the termFormData to an empty form.
@@ -153,7 +158,7 @@ export class TermSuggestionFormComponent implements OnInit {
     });
   }
 
-  // Load the form, if no formId is present, load default
+  // Load the form, if no formId is present, load default. Populate submitFormMsgs array
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const formId = params['formId'];
@@ -246,44 +251,38 @@ export class TermSuggestionFormComponent implements OnInit {
     // Check our captcha was completed successfully
     if (!this.captchaSuccessEvent) {
       console.log('ERROR: Captcha not completed successfully');
-      return;
+      this.submitFormMsg = 'Error found with captcha';
+      this.severity = 'Error';
+      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
     }
 
     // create the termFormData from the filled out form
-    let submittedFormData: TermFormData;
-    let submittedSubject: string = '';
-
-    // set the subject based on the submitted form
-    if (this.formData.formType === 'CDISC') {
-      submittedSubject = 'Term Suggestion for CDISC Terminology: ';
-    } else if (this.formData.formType === 'NCIT') {
-      submittedSubject = 'Term Suggestion: ';
-    }
-    // Build the submitted form data using the form labels instead of name
-    const formDataLabeled = this.buildFormDataWithLabels(this.formGroup, this.formFields);
-
-    // populate the submittedFormData
-    submittedFormData = {
-      formName: this.formData.formType,
-      recipientEmail: this.formData.recipientEmail,
-      businessEmail: this.formGroup.get('contact.email').value,
-      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
-      body: formDataLabeled,
-    };
+    const submittedFormData: TermFormData = this.populateSubmittedFormData();
     console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
+
     // show the spinner
     this.loaderService.showLoader();
     // send our form with the captcha token
     try {
       await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+      this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
+      this.severity = 'Success';
+      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
+      this.onClear();
     } catch (error) {
-      await this.router.navigate(['/error']);
+      console.log('Error occurred while submitting form: ', error);
+      this.submitFormMsg = 'Error Submitting form.';
+      this.severity = 'Failure';
+      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
     } finally {
       // hide the spinner
       this.loaderService.hideLoader();
-      // clear the form (except for readonly fields)
-      this.onClear();
     }
+  }
+
+  // Show a banner when the form is submitted. Message is based on success/fail
+  onSubmitStatusCheck(msg: string, severity: string): void {
+    this.modalService.open(this.success);
   }
 
   // clear the form, except for read only fields
@@ -380,6 +379,32 @@ export class TermSuggestionFormComponent implements OnInit {
     const sectionControl = this.uiState.termFormGroup.get(section.name);
     const fieldControl = sectionControl.get(field.name);
     return fieldControl.errors && fieldControl.touched;
+  }
+
+  private populateSubmittedFormData(): TermFormData {
+    // set the subject based on the submitted form
+    const submittedSubject: string = this.setFormSubject(this.formData.formType);
+    // Build the submitted form data using the form labels
+    const formDataLabeled: {} = this.buildFormDataWithLabels(this.formGroup, this.formFields);
+
+    // populate the submittedFormData
+    return {
+      formName: this.formData.formType,
+      recipientEmail: this.formData.recipientEmail,
+      businessEmail: this.formGroup.get('contact.email').value,
+      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
+      body: formDataLabeled,
+    };
+  }
+
+  // Set the subject of the email based on the formtype submitted
+  private setFormSubject(formType: string): string {
+    // set the subject based on the submitted form
+    if (formType === 'CDISC') {
+      return 'Term Suggestion for CDISC Terminology: ';
+    } else if (this.formData.formType === 'NCIT') {
+      return 'Term Suggestion: ';
+    }
   }
 
   // Get the formGroup
