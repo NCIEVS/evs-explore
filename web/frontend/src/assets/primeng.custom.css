@@ -276,8 +276,6 @@
 
 .p-multiselect-panel {
   padding: .2em;
-  position: absolute;
-  min-width: 12em;
   border: 1px solid #d5d5d5;
   background-color: #fff;
   color: #222
@@ -299,19 +297,9 @@
   color: #212121;
 }
 
-.p-multiselect-panel .p-multiselect-item:hover a {
-  color: #212121;
-}
-
 .p-multiselect-panel .p-multiselect-item:hover .p-checkbox-box {
   background-color: #ffffff;
   border-color: #d6d6d6;
-}
-
-.p-multiselect-panel .p-multiselect-close {
-  color: #1b1d1f;
-  position: absolute;
-  right: 5px;
 }
 
 .p-multiselect-panel .p-multiselect-filter-container .fa {
@@ -327,26 +315,12 @@
 /*begin custom ui-multiselect */
 
 .p-multiselect {
-  display: -webkit-box;
   position: relative;
   width: auto;
   cursor: pointer;
   border: 1px solid #d6d6d6;
   background-color: #fff;
   color: #555;
-}
-
-.p-multiselect-header {
-  border: 1px solid #d9d9d9;
-  background: repeat-x #f6f7f9;
-  background: linear-gradient(to bottom, #f6f7f9 0, #ebedf0 100%);
-  color: #1b1d1f;
-  font-weight: 400;
-  margin-bottom: 0.3em;
-  padding: 0.25em;
-  position: relative;
-  text-align: left;
-  min-height: 2em;
 }
 
 .p-multiselect-trigger {
@@ -361,14 +335,12 @@
   margin-top: -.5em;
   margin-left: -.5em;
   position: absolute;
-  background-color: blue;
 }
 
 .p-multiselect .p-multiselect-label {
-  display: block;
   padding: .25em 2em .25em .25em;
   width: auto;
-  border: 0;
+  border: 1px;
   cursor: pointer;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -393,11 +365,9 @@
   position: absolute;
   right: 0;
   top: 0;
-
 }
 
-
-.p-multiselect-panel .p-multiselect-item {
+.p-multiselect-item {
   border: 0;
   cursor: pointer;
   font-weight: 400;
@@ -406,13 +376,10 @@
   text-align: left;
   white-space: nowrap;
   display: block;
-  position: relative;
 }
 
-.p-multiselect .p-multiselect-label-container {
+.p-multiselect-label-container {
   overflow: hidden;
-  padding-left: .25em;
-  padding-right: .25em;
 }
 
 /*end custom ui-multiselect */
@@ -1328,11 +1295,6 @@ body .p-multiselect-panel .p-multiselect-item label {
   margin-bottom: 0px;
 }
 
-.p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon {
-  position: absolute;
-  left: .25em;
-}
-
 .p-fieldset-toggleable .p-fieldset-legend a {
   padding: .1em .5em !important;
   cursor: pointer;
@@ -1360,6 +1322,9 @@ body .p-fieldset .p-fieldset-legend a .p-fieldset-toggler {
 .p-accordion .p-accordion-header-text {
   vertical-align: middle;
   color: #0173ae;
+}
+.p-multiselect-filter-icon {
+  visibility: hidden;
 }
 
 .p-accordion .p-accordion-header:hover a {
