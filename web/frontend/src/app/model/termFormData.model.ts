@@ -3,5 +3,5 @@ export interface TermFormData {
   recipientEmail: string;
   businessEmail: string;
   subject: string;
-  body: string;
+  body: {};
 }
