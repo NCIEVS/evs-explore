@@ -22,3 +22,4 @@ log
 
 # System Files
 .DS_Store
+web/bin/*
