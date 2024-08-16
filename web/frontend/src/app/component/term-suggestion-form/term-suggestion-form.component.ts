@@ -179,10 +179,13 @@ export class TermSuggestionFormComponent implements OnInit {
   // Change the form with the dropdown
   async onFormChange(formId: string): Promise<void> {
     this.loaderService.showLoader();
+    // show the loader for slightly longer before navigating to the new form
+    await new Promise(resolve => setTimeout(resolve, 100));
     await this.router.navigate(['/termform'], {queryParams: {formId}});
+    // wait to hide loader just a little bit for smoother transition
     setTimeout(() => {
       this.loaderService.hideLoader();
-    }, 500);
+    }, 350);
   }
 
   // load the form based on the formType selected. Handle the validation checks.
