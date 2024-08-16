@@ -31,5 +31,4 @@ export class TermSuggestionFormService {
       throw new EvsError(error, 'An error occurred submitting the form');
     }
   }
-
 }
