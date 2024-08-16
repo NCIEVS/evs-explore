@@ -121,8 +121,8 @@ export class TermSuggestionFormComponent implements OnInit {
     {id: 'cdisc-form', name: 'CDISC Form'},
   ];
 
-  // Popup information for a form submitted successfully
-  @ViewChild('success', {static: true}) success: TemplateRef<any>;
+  // Popup information for a form submitted.
+  @ViewChild('isSuccess', {static: true}) isSuccess: TemplateRef<any>;
   protected submitFormMsg: string = '';
   protected severity: string = '';
 
@@ -179,8 +179,13 @@ export class TermSuggestionFormComponent implements OnInit {
   // Change the form with the dropdown
   async onFormChange(formId: string): Promise<void> {
     this.loaderService.showLoader();
+    // show the loader for slightly longer before navigating to the new form
+    await new Promise(resolve => setTimeout(resolve, 100));
     await this.router.navigate(['/termform'], {queryParams: {formId}});
-    this.loaderService.hideLoader();
+    // wait to hide loader just a little bit for smoother transition
+    setTimeout(() => {
+      this.loaderService.hideLoader();
+    }, 350);
   }
 
   // load the form based on the formType selected. Handle the validation checks.
@@ -253,7 +258,7 @@ export class TermSuggestionFormComponent implements OnInit {
       console.log('ERROR: Captcha not completed successfully');
       this.submitFormMsg = 'Error found with captcha';
       this.severity = 'Error';
-      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
+      this.modalService.open(this.isSuccess);
     }
 
     // create the termFormData from the filled out form
@@ -267,22 +272,18 @@ export class TermSuggestionFormComponent implements OnInit {
       await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
       this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
       this.severity = 'Success';
-      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
+      this.modalService.open(this.isSuccess);
       this.onClear();
     } catch (error) {
       console.log('Error occurred while submitting form: ', error);
       this.submitFormMsg = 'Error Submitting form.';
       this.severity = 'Failure';
-      this.onSubmitStatusCheck(this.submitFormMsg, this.severity);
+      // Show a banner when the form is submitted. Message is based on success/fail
+      this.modalService.open(this.isSuccess);
     } finally {
       // hide the spinner
       this.loaderService.hideLoader();
     }
-  }
-
-  // Show a banner when the form is submitted. Message is based on success/fail
-  onSubmitStatusCheck(msg: string, severity: string): void {
-    this.modalService.open(this.success);
   }
 
   // clear the form, except for read only fields
@@ -387,7 +388,7 @@ export class TermSuggestionFormComponent implements OnInit {
     return this.formGroup;
   }
 
-  // Private help method to populate the TermFormData from submitted form data
+  // Private helper method to populate the TermFormData from submitted form data
   private populateSubmittedFormData(): TermFormData {
     // set the subject based on the submitted form
     const submittedSubject: string = this.setFormSubject(this.formData.formType);
@@ -414,7 +415,7 @@ export class TermSuggestionFormComponent implements OnInit {
     }
   }
 
-  // Helper function to build the submitted form so that it uses the label values instead of the name values
+  // Helper method to build the submitted form so that it uses the label values instead of the name values
   private buildFormDataWithLabels(formGroup: FormGroup, formFields: { [key: string]: Field }): {} {
     // create a new object to hold the form data with labels
     const formData: {} = {};
