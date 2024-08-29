@@ -30,6 +30,7 @@ export class MappingDetailsComponent implements OnInit {
   MAX_PAGE = 10000;
   termAutoSearch: string;
   textSuggestions: any;
+  showRules: boolean = false;
 
   conceptUrlBase = '/concept';
   sourceTermSaved: boolean = false;
@@ -131,6 +132,15 @@ export class MappingDetailsComponent implements OnInit {
     if (this.mappings) {
       this.mappings._first = 0;
     }
+  }
+
+  // toggle rule showing
+  showOrHideRules(): any {
+    this.showRules = !this.showRules;
+  }
+
+  get getRulesToggleString(): string {
+    return this.showRules ? 'Hide Rules' : 'Show Rules';
   }
 
   // Handle lazy loading of table
