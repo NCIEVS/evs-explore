@@ -143,6 +143,10 @@ export class MappingDetailsComponent implements OnInit {
     return this.showRules ? 'Hide Rules' : 'Show Rules';
   }
 
+  rulesExist() {
+    return this.mapsetCode.startsWith('SNOMED');
+  }
+
   // Handle lazy loading of table
   onLazyLoadData(event) {
     if (this.avoidLazyLoading) {

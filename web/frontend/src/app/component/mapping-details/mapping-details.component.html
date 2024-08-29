@@ -51,6 +51,7 @@
             >&nbsp;
             <button type="button" pButton label="Reset" icon="fa fa-undo" [disabled]="!termAutoSearch" (click)="ngOnInit()"></button>
             <button
+              *ngIf="rulesExist()"
               type="button"
               pButton
               [label]="getRulesToggleString"
@@ -85,7 +86,7 @@
               <th class="mappingTitle sortable" style="cursor: pointer" id="sourceName" (click)="search($event, 'sourceName')">Source Name</th>
               <th class="mappingTitle">Relationship</th>
               <th class="mappingTitle">Group / Rank</th>
-              <th *ngIf="showRules" class="mappingTitle">Rule</th>
+              <th *ngIf="showRules && rulesExist()" class="mappingTitle">Rule</th>
               <th class="mappingTitle">Target</th>
               <th class="mappingTitle sortable" style="cursor: pointer" id="targetCode" (click)="search($event, 'targetCode')">Target Code</th>
               <th class="mappingTitle sortable" style="cursor: pointer" id="targetName" (click)="search($event, 'targetName')">Target Name</th>
@@ -105,7 +106,7 @@
               <td>
                 <span *ngIf="mapping.group != null">{{ mapping.group }} / </span>{{ mapping.rank }}
               </td>
-              <td *ngIf="showRules">
+              <td *ngIf="showRules && rulesExist()">
                 <span>{{ mapping.rule }}</span>
               </td>
               <td>{{ mapping.targetTerminology }}</td>
