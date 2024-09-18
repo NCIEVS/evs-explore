@@ -38,3 +38,12 @@ rmtag:
 
 version:
 	@echo $(APP_VERSION)
+
+scan:
+	trivy fs web/frontend/package-lock.json --format template -o report.html --template "@config/trivy/html.tpl"
+	grep CRITICAL report.html
+	cd web; ./gradlew dependencies --write-locks
+	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
+	grep CRITICAL reportJava.html
+	/bin/rm -rf web/gradle.lockfile
+	

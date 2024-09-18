@@ -25,3 +25,6 @@ web/bin/*
 .DS_Store
 
 
+report.html
+web/gradle.lockfile
+reportJava.html

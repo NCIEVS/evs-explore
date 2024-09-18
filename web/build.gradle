@@ -130,3 +130,7 @@ tasks.register('zipFile', Zip) {
 zipFile.dependsOn = [bootWar]
 build.dependsOn = [test, bootWar, zipFile]
 publishToMavenLocal.dependsOn = [bootWar, zipFile]
+
+dependencyLocking {
+  lockAllConfigurations()
+}
