@@ -222,8 +222,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       // safety check against there being no sources selected
       if (this.queryParams.get('source') != '' && this.queryParams.get('source') != null) {
-        console.debug('xxx', this.queryParams.get('source').split(','), this.searchCriteria.synonymSource);
-        console.debug('xxx', this.sourcesAll);
         this.searchCriteria.synonymSource = this.queryParams.get('source').split(',');
       }
       if (

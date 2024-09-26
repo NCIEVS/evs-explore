@@ -11,10 +11,9 @@ import { LoaderService } from '../../service/loader.service';
 @Component({
   selector: 'app-subset-details',
   templateUrl: './subset-details.component.html',
-  styleUrls: ['./subset-details.component.css']
+  styleUrls: ['./subset-details.component.css'],
 })
 export class SubsetDetailsComponent implements OnInit {
-
   @ViewChild('subsetList', { static: false }) subsetList: any;
 
   first = 0;
@@ -24,6 +23,8 @@ export class SubsetDetailsComponent implements OnInit {
   hitsFound = 0;
   conceptCode: string;
   hierarchyDisplay = '';
+  selectedSubset: Concept;
+  subsetCodes: any;
   titleCode: string;
   titleDesc: string;
   subsets: Array<Concept>;
@@ -41,55 +42,57 @@ export class SubsetDetailsComponent implements OnInit {
   currentSortDirection = false;
   sortDirection = {
     ASC: true,
-    DESC: false
+    DESC: false,
   };
 
   urlBase = '/concept';
 
-  constructor(private sanitizer: DomSanitizer,
+  constructor(
+    private sanitizer: DomSanitizer,
     private subsetDetailService: ConceptDetailService,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
     private configService: ConfigurationService,
-    private titleService: Title
+    private titleService: Title,
   ) {
-
     this.configService.setConfigFromPathname(window.location.pathname);
     this.terminology = this.configService.getTerminologyName();
-
   }
 
   // initialize the component
   ngOnInit(): void {
+    if (this.subsetList !== undefined) {
+      this.subsetList._first = 0;
+    }
+
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.subsetDetailService.getSubsetMembers(this.titleCode)
-        .then(nodes => {
-          this.hitsFound = nodes['total'];
-          this.subsets = new Array<Concept>();
-          if (nodes['concepts']) {
-            nodes['concepts'].forEach(c => {
-              this.subsets.push(new Concept(c, this.configService));
-            });
-          }
-
-          const synonymMap = new Array<Map<string, string>>();
-          this.subsets.forEach(c => {
-            synonymMap.push(this.getSynonymSources(c['synonyms']));
+      this.subsetDetailService.getSubsetMembers(this.titleCode).then((nodes) => {
+        this.hitsFound = nodes['total'];
+        this.subsets = new Array<Concept>();
+        if (nodes['concepts']) {
+          nodes['concepts'].forEach((c) => {
+            this.subsets.push(new Concept(c, this.configService));
           });
-          this.synonymSources = synonymMap;
-          this.termAutoSearch = '';
+        }
+
+        const synonymMap = new Array<Map<string, string>>();
+        this.subsetCodes = {};
+        this.subsets.forEach((c) => {
+          synonymMap.push(this.getSynonymSources(c['synonyms']));
+          if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+            this.subsetCodes[c.code] = 1;
+          }
         });
-      this.route.paramMap.pipe(
-        switchMap((params: ParamMap) =>
-          this.subsetDetailService
-            .getSubsetInfo(this.titleCode, 'summary,definitions,properties,subsetLink')
-        )
-      )
+        this.synonymSources = synonymMap;
+        this.termAutoSearch = '';
+      });
+      this.route.paramMap
+        .pipe(switchMap((params: ParamMap) => this.subsetDetailService.getSubsetInfo(this.titleCode, 'summary,definitions,properties,subsetLink')))
         .subscribe((response: any) => {
-          const subsetDetail = new Concept(response, this.configService);
-          this.titleDesc = subsetDetail.name;
-          const ContSource = subsetDetail.properties?.filter(item => item.type === 'Contributing_Source');
+          this.selectedSubset = new Concept(response, this.configService);
+          this.titleDesc = this.selectedSubset.name;
+          const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
           if (ContSource.length === 1) {
             if (ContSource[0].value === 'CTRP') {
               this.subsetFormat = 'CTRP';
@@ -97,20 +100,22 @@ export class SubsetDetailsComponent implements OnInit {
             // CHECK FOR CDISC
             else if (ContSource[0].value === 'CDISC') {
               this.subsetFormat = 'CDISC';
-            }
-            else {
+              this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'SY')[0];
+              if (!this.titleDesc) {
+                this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
+              }
+            } else {
               this.subsetFormat = ContSource[0].value;
             }
-          }
-          else {
+          } else {
             this.subsetFormat = 'NCIt';
           }
-          this.subsetLink = subsetDetail.getSubsetLink();
+          this.subsetLink = this.selectedSubset.getSubsetLink();
 
           // Lookup the subset description.
-          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, subsetDetail.getSubsetDescription());
+          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, this.selectedSubset.getSubsetDescription());
           if (!this.subsetDescription) {
-            for (let definition of subsetDetail.definitions) {
+            for (let definition of this.selectedSubset.definitions) {
               if (definition.source === 'NCI') {
                 this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, definition.definition);
                 break;
@@ -124,7 +129,7 @@ export class SubsetDetailsComponent implements OnInit {
             sortCols[i].innerHTML = text;
           }
           this.setTitle();
-          this.lastSearch = "";
+          this.lastSearch = '';
         });
     });
   }
@@ -135,20 +140,24 @@ export class SubsetDetailsComponent implements OnInit {
       this.avoidLazyLoading = false;
     } else {
       const fromRecord = event.first;
-      this.subsetDetailService.getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch,
-        this.currentSortDirection, this.currentSortColumn)
-        .then(nodes => {
+      this.subsetDetailService
+        .getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch, this.currentSortDirection, this.currentSortColumn)
+        .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
           if (nodes['concepts']) {
-            nodes['concepts'].forEach(c => {
+            nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
             });
           }
 
           const synonymMap = new Array<Map<string, string>>();
-          this.subsets.forEach(c => {
+          this.subsetCodes = {};
+          this.subsets.forEach((c) => {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
+            if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+              this.subsetCodes[c.code] = 1;
+            }
           });
           this.synonymSources = synonymMap;
         });
@@ -160,26 +169,22 @@ export class SubsetDetailsComponent implements OnInit {
   // get synonym sources for a concept
   getSynonymSources(synonyms) {
     const synonymSourceMap = new Map<string, string>();
-    synonyms.forEach(synonym => {
+    synonyms.forEach((synonym) => {
       if (synonym['source'] === undefined) {
-        if (!(synonymSourceMap.has('No Source'))) {
+        if (!synonymSourceMap.has('No Source')) {
           synonymSourceMap.set('No Source', synonym['name']);
-        }
-        else {
+        } else {
           const key = synonymSourceMap.get('No Source') + ', ' + synonym['name'];
           synonymSourceMap.set('No Source', key);
         }
-      }
-      else {
-        if (!(synonymSourceMap.has(synonym['source']))) {
+      } else {
+        if (!synonymSourceMap.has(synonym['source'])) {
           synonymSourceMap.set(synonym['source'], synonym['name']);
-        }
-        else {
+        } else {
           const key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
           synonymSourceMap.set(synonym['source'], key);
         }
       }
-
     });
     return synonymSourceMap;
   }
@@ -187,7 +192,9 @@ export class SubsetDetailsComponent implements OnInit {
   // search for a concept
   search(event, columnName = null) {
     if (this.lastSearch !== event.query) {
-      this.subsetList._first = 0;
+      if (this.subsetList !== undefined) {
+        this.subsetList._first = 0;
+      }
       this.fromRecord = 0;
     }
     let sort = null;
@@ -197,39 +204,41 @@ export class SubsetDetailsComponent implements OnInit {
       const str = sortCols[i].innerHTML;
       sortCols[i].innerHTML = str.replace('↓', '').replace('↑', '');
     }
-    if (columnName) { // setup for sorting
+    if (columnName) {
+      // setup for sorting
       sortCols = document.getElementsByClassName('sortable');
       if (this.currentSortColumn === columnName) {
         this.currentSortDirection = !this.currentSortDirection;
-      }
-      else {
+      } else {
         this.currentSortColumn = columnName;
         this.currentSortDirection = this.sortDirection.ASC;
       }
       this.currentSortColumn = columnName;
       sort = this.currentSortColumn;
-      sortDirection = this.currentSortDirection
-      document.getElementById(columnName).innerText += (this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓');
+      sortDirection = this.currentSortDirection;
+      document.getElementById(columnName).innerText += this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓';
     }
-    this.subsetDetailService.getSubsetMembers(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort)
-      .then(nodes => {
-        this.hitsFound = nodes['total'];
-        if (this.hitsFound > 0) {
-          this.subsets = new Array<Concept>();
-          nodes['concepts'].forEach(c => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
+    this.subsetDetailService.getSubsetMembers(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort).then((nodes) => {
+      this.hitsFound = nodes['total'];
+      if (this.hitsFound > 0) {
+        this.subsets = new Array<Concept>();
+        nodes['concepts'].forEach((c) => {
+          this.subsets.push(new Concept(c, this.configService));
+        });
 
-          const synonymMap = new Array<Map<string, string>>();
-          this.subsets.forEach(c => {
-            synonymMap.push(this.getSynonymSources(c['synonyms']));
-          });
-          this.synonymSources = synonymMap;
-        }
-        else {
-          this.subsets = null;
-        }
-      });
+        const synonymMap = new Array<Map<string, string>>();
+        this.subsetCodes = {};
+        this.subsets.forEach((c) => {
+          synonymMap.push(this.getSynonymSources(c['synonyms']));
+          if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+            this.subsetCodes[c.code] = 1;
+          }
+        });
+        this.synonymSources = synonymMap;
+      } else {
+        this.subsets = null;
+      }
+    });
     this.textSuggestions = [];
   }
 
@@ -239,7 +248,9 @@ export class SubsetDetailsComponent implements OnInit {
     const titles = [];
     const exportMax = this.configService.getMaxExportSize();
     const exportPageSize = this.configService.getExportPageSize();
-    Array.from(document.getElementsByClassName('subsetTitle')).forEach(function (element) { titles.push(element.innerHTML) });
+    Array.from(document.getElementsByClassName('subsetTitle')).forEach(function (element) {
+      titles.push(element.innerHTML);
+    });
 
     let term = document.getElementById('termauto').getAttribute('ng-reflect-model');
     term = term && term.length > 2 ? term : '';
@@ -248,18 +259,22 @@ export class SubsetDetailsComponent implements OnInit {
     const pageList = Array.from(Array(pages).keys());
 
     for (const page of pageList) {
-      await this.subsetDetailService.getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term).toPromise().then(
-        result => {
-          result.concepts.forEach(c => {
+      await this.subsetDetailService
+        .getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term)
+        .toPromise()
+        .then((result) => {
+          result.concepts.forEach((c) => {
             subsetText += this.exportCodeFormatter(c);
           });
-        }
-      );
+        });
     }
-    const fileName = this.titleCode + '.' + this.titleDesc + '.' + (term.length > 2 ? (term + '.') : '');
-    saveAs(new Blob([subsetText], {
-      type: 'text/plain'
-    }), fileName + new Date().toISOString() + '.xls');
+    const fileName = this.titleCode + '.' + this.titleDesc + '.' + (term.length > 2 ? term + '.' : '');
+    saveAs(
+      new Blob([subsetText], {
+        type: 'text/plain',
+      }),
+      fileName + new Date().toISOString() + '.xls',
+    );
     this.loaderService.hideLoader();
   }
 
@@ -272,28 +287,42 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
       rowText += '\t';
       if (concept.definitions) {
-        concept.definitions.forEach(def => {
+        concept.definitions.forEach((def) => {
           if (def.source === 'NCI') {
             rowText += def.definition.replace(/"/g, '""');
           }
         });
       }
-
-    }
-    else if (this.subsetFormat === 'CTRP') {
+    } else if (this.subsetFormat === 'CTRP') {
       rowText += this.titleCode + '\t';
       rowText += this.titleDesc + '\t';
       rowText += concept.code + '\t';
       rowText += concept.name + '\t';
-      concept.synonyms.forEach(syn => {
-        if (syn.type === 'Display_Name')
-          rowText += syn.name;
+      concept.synonyms.forEach((syn) => {
+        if (syn.type === 'Display_Name') rowText += syn.name;
       });
       rowText += '\t';
       rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
+    } else if (this.subsetFormat === 'CDISC') {
+      // cdisc code
+      rowText += concept.code + '\t';
+      // codelist code
+      rowText += this.titleCode + '\t';
+      // codelist extensible
+      const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
+      rowText += (extensible ? extensible : '') + '\t';
+      // codelist name
+      rowText += this.titleDesc + '\t';
 
-    }
-    else {
+      // cdisc submission value
+      rowText += concept.synonyms.filter((sy) => sy.source == 'CDISC' && sy.termType == 'PT')[0]?.name + '\t';
+      // cdisc synonyms
+      rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
+      // cdisc definition
+      rowText += concept.definitions.filter((def) => def.source == 'CDISC')[0]?.definition + '\t';
+      // NCIt pref term
+      rowText += concept.name;
+    } else {
       rowText += concept.code + '\t';
       rowText += '"' + this.getSynonymNames(concept, this.subsetFormat, null).join('\n') + '"';
       rowText += '\t';
@@ -303,7 +332,7 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += '\t';
 
       if (concept.definitions) {
-        concept.definitions.forEach(def => {
+        concept.definitions.forEach((def) => {
           if (def.source === this.subsetFormat) {
             rowText += def.definition.replace(/"/g, '""');
           }
@@ -312,7 +341,7 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += '\t';
 
       if (concept.definitions) {
-        concept.definitions.forEach(def => {
+        concept.definitions.forEach((def) => {
           if (def.source === 'NCI') {
             rowText += def.definition.replace(/"/g, '""');
           }
@@ -332,7 +361,7 @@ export class SubsetDetailsComponent implements OnInit {
           continue;
         }
         if (source !== null && concept.synonyms[i].source !== source) {
-          continue
+          continue;
         }
         if (syns.indexOf(concept.synonyms[i].name) !== -1) {
           continue;

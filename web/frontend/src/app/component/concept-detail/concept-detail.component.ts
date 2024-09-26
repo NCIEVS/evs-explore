@@ -142,7 +142,6 @@ export class ConceptDetailComponent implements OnInit {
     else if (value.search('<') === -1 || value.search('>') === -1) {
       // if contains raw links, make then links
       if (value.match(this.httpRegex)) {
-        console.log('xxx', value);
         return this.sanitizer.bypassSecurityTrustHtml(value.replace(this.httpRegex, '<a href="$1">$1</a>'));
       }
       // normal value

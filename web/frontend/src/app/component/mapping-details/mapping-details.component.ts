@@ -62,6 +62,9 @@ export class MappingDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.mappings) {
+      this.mappings._first = 0;
+    }
     this.route.params.subscribe((params: any) => {
       this.lastQuery = '';
       this.mapsetCode = params.code;
