@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "xlsx-republish": "^0.20.3"
+  }
+}

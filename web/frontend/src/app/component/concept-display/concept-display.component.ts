@@ -5,7 +5,7 @@ import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
-import { writeXLSX, utils, WorkSheet } from 'xlsx';
+import { writeXLSX, utils, WorkSheet } from 'xlsx-republish';
 import { saveAs } from 'file-saver';
 import { ViewportScroller } from '@angular/common';
 import { LoaderService } from '../../service/loader.service';
