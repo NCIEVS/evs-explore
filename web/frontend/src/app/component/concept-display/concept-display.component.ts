@@ -740,7 +740,7 @@ export class ConceptDisplayComponent implements OnInit {
           'Incoming Role Relationships': incomingRoleRelationshipsWorksheet,
           'Incoming Associations': incomingAssociationsWorksheet,
           'Disjoint With': disjointWithWorksheet,
-          History: historyWorksheet,
+          'Concept History': historyWorksheet,
         },
         SheetNames: [
           'Name',
