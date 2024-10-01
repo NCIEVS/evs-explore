@@ -1,18 +1,18 @@
-name: Trivy Vulnerability Scan
+name: Trivy Frontend Vulnerability Scan
 
 on:
   push:
     branches:
       - pva/RDFBROWSER-494-trivy-github-action
   # pull_request:
-  #   branches:
-  #     - develop
-  #     - master
+  #  branches:
+  #    - develop
+  #    - master
 
   workflow_dispatch:  # Allows manual runs from the GitHub UI
 
 jobs:
-  trivy-scan:
+  frontend-trivy-scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
         TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
         wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
         sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
-    
+
     # Scan the frontend package-lock.json
     - name: Run Trivy scan for package-lock.json
       id: trivy-scan-frontend
@@ -48,24 +48,7 @@ jobs:
         echo "Frontend scan report content:"
         cat reportFrontend.json
 
-    # Run Gradle lockfile updates
-    - name: Run Gradle dependencies
-      run: |
-        cd web; ./gradlew dependencies --write-locks
-
-    # Scan the backend gradle.lockfile
-    - name: Run Trivy scan for gradle.lockfile
-      id: trivy-scan-java
-      run: |
-        trivy fs web/gradle.lockfile --format json --output reportJava.json
-
-    # Output Java scan report for debugging
-    - name: Output Java scan report
-      run: |
-        echo "Java scan report content:"
-        cat reportJava.json
-
-    # Check for CRITICAL vulnerabilities in both reports
+    # Check for CRITICAL vulnerabilities in the frontend scan
     - name: Check vulnerabilities in frontend
       id: check-vulns-frontend
       run: |
@@ -77,20 +60,3 @@ jobs:
         else
           echo "No CRITICAL vulnerabilities found in package-lock.json."
         fi
-    
-    - name: Check vulnerabilities in Java
-      id: check-vulns-java
-      run: |
-        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' reportJava.json)
-        echo "Java CRITICAL vulnerability count: $vuln_count"
-        if [ "$vuln_count" -gt 0 ]; then
-          echo "CRITICAL vulnerabilities found in gradle.lockfile!"
-          exit 1
-        else
-          echo "No CRITICAL vulnerabilities found in gradle.lockfile."
-        fi
-
-    # Clean up lockfile after scan
-    - name: Clean up
-      run: |
-        /bin/rm -rf web/gradle.lockfile
