@@ -20,17 +20,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Cache Trivy binary
-    - name: Cache Trivy binary
-      id: cache-trivy
-      uses: actions/cache@v3
-      with:
-        path: /usr/local/bin/trivy
-        key: trivy-$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
-
     # Install Trivy if not cached
     - name: Install Trivy
-      if: steps.cache-trivy.outputs.cache-hit != 'true'
       run: |
         TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
         wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
@@ -41,12 +32,6 @@ jobs:
       id: trivy-scan-frontend
       run: |
         trivy fs web/frontend/package-lock.json --format json --output reportFrontend.json
-
-    # Output frontend scan report for debugging
-    - name: Output frontend scan report
-      run: |
-        echo "Frontend scan report content:"
-        cat reportFrontend.json
 
     # Check for CRITICAL vulnerabilities in the frontend scan
     - name: Check vulnerabilities in frontend
