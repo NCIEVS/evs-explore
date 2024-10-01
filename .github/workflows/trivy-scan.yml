@@ -1,0 +1,96 @@
+name: Trivy Vulnerability Scan
+
+on:
+  push:
+    branches:
+      - pva/EVSRESTAPI-520-github-trivy-action-backend
+  # pull_request:
+  #   branches:
+  #     - develop
+  #     - master
+
+  workflow_dispatch:  # Allows manual runs from the GitHub UI
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the pull request code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Cache Trivy binary
+    - name: Cache Trivy binary
+      id: cache-trivy
+      uses: actions/cache@v3
+      with:
+        path: /usr/local/bin/trivy
+        key: trivy-$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
+
+    # Install Trivy if not cached
+    - name: Install Trivy
+      if: steps.cache-trivy.outputs.cache-hit != 'true'
+      run: |
+        TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
+        wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+        sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+    
+    # Scan the frontend package-lock.json
+    - name: Run Trivy scan for package-lock.json
+      id: trivy-scan-frontend
+      run: |
+        trivy fs web/frontend/package-lock.json --format json --output reportFrontend.json
+
+    # Output frontend scan report for debugging
+    - name: Output frontend scan report
+      run: |
+        echo "Frontend scan report content:"
+        cat reportFrontend.json
+
+    # Run Gradle lockfile updates
+    - name: Run Gradle dependencies
+      run: |
+        cd web; ./gradlew dependencies --write-locks
+
+    # Scan the backend gradle.lockfile
+    - name: Run Trivy scan for gradle.lockfile
+      id: trivy-scan-java
+      run: |
+        trivy fs web/gradle.lockfile --format json --output reportJava.json
+
+    # Output Java scan report for debugging
+    - name: Output Java scan report
+      run: |
+        echo "Java scan report content:"
+        cat reportJava.json
+
+    # Check for CRITICAL vulnerabilities in both reports
+    - name: Check vulnerabilities in frontend
+      id: check-vulns-frontend
+      run: |
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' reportFrontend.json)
+        echo "Frontend CRITICAL vulnerability count: $vuln_count"
+        if [ "$vuln_count" -gt 0 ]; then
+          echo "CRITICAL vulnerabilities found in package-lock.json!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found in package-lock.json."
+        fi
+    
+    - name: Check vulnerabilities in Java
+      id: check-vulns-java
+      run: |
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' reportJava.json)
+        echo "Java CRITICAL vulnerability count: $vuln_count"
+        if [ "$vuln_count" -gt 0 ]; then
+          echo "CRITICAL vulnerabilities found in gradle.lockfile!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found in gradle.lockfile."
+        fi
+
+    # Clean up lockfile after scan
+    - name: Clean up
+      run: |
+        /bin/rm -rf web/gradle.lockfile
