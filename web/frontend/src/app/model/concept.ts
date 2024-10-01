@@ -463,7 +463,7 @@ export class Concept {
   }
 
   // Return unique ynonym names for a specified source
-  getSynonymNames(source: string, termType: string): string[] {
+  getSynonymNames(source: string, termType: string, sourceCode: string): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {

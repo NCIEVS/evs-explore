@@ -12,8 +12,7 @@ import { CommonDataService } from './common-data.service';
 export class GlobalErrorHandler extends ErrorHandler {
   appRef: any;
 
-  constructor(
-    private injector: Injector) {
+  constructor(private injector: Injector) {
     super();
   }
 
@@ -53,19 +52,16 @@ export class GlobalErrorHandler extends ErrorHandler {
     const appRef = this.injector.get(ApplicationRef);
     const zone = this.injector.get(NgZone);
     zone.run(() => {
-      notificationService.notify(
-        {
-          severity: 'error',
-          summary: 'Sorry, something went wrong.',
-          detail: displayMessage,
-          sticky: true,
-          closable: true
-        }
-      );
+      notificationService.notify({
+        severity: 'error',
+        summary: 'Sorry, something went wrong.',
+        detail: displayMessage,
+        sticky: true,
+        closable: true,
+      });
       setTimeout(function () {
         appRef.tick();
       });
     });
   }
-
 }
