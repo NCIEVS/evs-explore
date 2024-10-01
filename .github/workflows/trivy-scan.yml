@@ -3,7 +3,7 @@ name: Trivy Vulnerability Scan
 on:
   push:
     branches:
-      - pva/EVSRESTAPI-520-github-trivy-action-backend
+      - pva/RDFBROWSER-494-trivy-github-action
   # pull_request:
   #   branches:
   #     - develop
