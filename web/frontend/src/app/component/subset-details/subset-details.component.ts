@@ -25,6 +25,7 @@ export class SubsetDetailsComponent implements OnInit {
   hierarchyDisplay = '';
   selectedSubset: Concept;
   subsetCodes: any;
+  submissionValueCode: string;
   titleCode: string;
   titleDesc: string;
   subsets: Array<Concept>;
@@ -92,6 +93,7 @@ export class SubsetDetailsComponent implements OnInit {
         .subscribe((response: any) => {
           this.selectedSubset = new Concept(response, this.configService);
           this.titleDesc = this.selectedSubset.name;
+          this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
           const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
           if (ContSource.length === 1) {
             if (ContSource[0].value === 'CTRP') {
@@ -391,5 +393,22 @@ export class SubsetDetailsComponent implements OnInit {
       }
     }
     return propList;
+  }
+
+  // Uses this.submissionValueCode to determine the submission value column for CDISC display
+  getCdiscSubmissionValue(concept: Concept): string {
+    // If a single CDISC/PT, return it
+    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
+    if (matchingSynonyms.length==1) {
+      return matchingSynonyms[0].name;
+    }
+    // Otherwise, find the one matching the sumissionValueCode
+    const matchingSynonym = matchingSynonyms.find((sy) => sy.code === this.submissionValueCode);
+    if (matchingSynonym) {
+      return matchingSynonym.name;
+    }
+    // can't figure it out, just return the first again
+    return matchingSynonyms[0].name;
+
   }
 }

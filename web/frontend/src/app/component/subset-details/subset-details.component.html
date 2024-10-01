@@ -237,13 +237,7 @@
               </span>
             </td>
             <td class="w-20">{{ titleDesc }}</td>
-            <td class="w-10">
-              <span *ngFor="let syn of value.getSynonymNames('CDISC', 'PT'); last as isLast">
-                <span
-                  >{{ syn }} <span *ngIf="!isLast"><br /></span>
-                </span>
-              </span>
-            </td>
+            <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
             <td class="w-20">
               <span *ngFor="let syn of value.getSynonymNames('CDISC', 'SY'); last as isLast">
                 <span
