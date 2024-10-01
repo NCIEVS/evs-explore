@@ -26,7 +26,7 @@
     "@ng-bootstrap/ng-bootstrap": "^14.1.1",
     "@schematics/angular": "^15.2.8",
     "angular-split": "^3.0.1",
-    "bootstrap": "4.3.1",
+    "bootstrap": "5.0.0",
     "braces": "^3.0.3",
     "chart.js": "^2.9.4",
     "cookie": "^0.4.1",
