@@ -27,6 +27,17 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    # Cache Gradle wrapper distribution and dependencies
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper/dists
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
     # Install Trivy if not cached
     - name: Install Trivy
       run: |
