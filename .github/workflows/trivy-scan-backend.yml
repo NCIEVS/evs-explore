@@ -1,13 +1,10 @@
 name: Trivy Backend Vulnerability Scan
 
 on:
-  push:
+  pull_request:
     branches:
-      - pva/RDFBROWSER-494-trivy-github-action
-  # pull_request:
-  #  branches:
-  #    - develop
-  #    - master
+      - develop
+      - master
 
   workflow_dispatch:  # Allows manual runs from the GitHub UI
 
