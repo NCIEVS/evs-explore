@@ -45,17 +45,21 @@ jobs:
       run: |
         trivy fs web/gradle.lockfile --format json --output reportJava.json
 
-    # Check for CRITICAL vulnerabilities in the Java scan
+    # Check for HIGH and CRITICAL vulnerabilities in the Java scan
     - name: Check vulnerabilities in Java
       id: check-vulns-java
       run: |
-        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' reportJava.json)
-        echo "Java CRITICAL vulnerability count: $vuln_count"
+        # Get the count of HIGH and CRITICAL vulnerabilities
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | length' reportJava.json)
+        echo "Java HIGH and CRITICAL vulnerability count: $vuln_count"
+        
+        # List the HIGH and CRITICAL vulnerabilities, if any
         if [ "$vuln_count" -gt 0 ]; then
-          echo "CRITICAL vulnerabilities found in gradle.lockfile!"
+          echo "Listing HIGH and CRITICAL vulnerabilities found in gradle.lockfile:"
+          jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {ID, Severity, Description, PackageName, InstalledVersion, FixedVersion}' reportJava.json
           exit 1
         else
-          echo "No CRITICAL vulnerabilities found in gradle.lockfile."
+          echo "No HIGH or CRITICAL vulnerabilities found in gradle.lockfile."
         fi
 
     # Clean up lockfile after scan

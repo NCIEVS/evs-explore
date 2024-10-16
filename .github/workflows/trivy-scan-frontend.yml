@@ -37,11 +37,15 @@ jobs:
     - name: Check vulnerabilities in frontend
       id: check-vulns-frontend
       run: |
-        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL")] | length' reportFrontend.json)
-        echo "Frontend CRITICAL vulnerability count: $vuln_count"
+        # Get the count of HIGH and CRITICAL vulnerabilities
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | length' reportFrontend.json)
+        echo "Frontend HIGH and CRITICAL vulnerability count: $vuln_count"
+        
+        # List the HIGH and CRITICAL vulnerabilities, if any
         if [ "$vuln_count" -gt 0 ]; then
-          echo "CRITICAL vulnerabilities found in package-lock.json!"
+          echo "Listing HIGH and CRITICAL vulnerabilities found in package-lock.json:"
+          jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {ID, Severity, Description, PackageName, InstalledVersion, FixedVersion}' reportFrontend.json
           exit 1
         else
-          echo "No CRITICAL vulnerabilities found in package-lock.json."
+          echo "No HIGH or CRITICAL vulnerabilities found in package-lock.json."
         fi
