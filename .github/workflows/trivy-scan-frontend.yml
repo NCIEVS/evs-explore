@@ -1,0 +1,48 @@
+name: Trivy Frontend Vulnerability Scan
+
+on:
+  pull_request:
+   branches:
+     - develop
+     - master
+
+  workflow_dispatch:  # Allows manual runs from the GitHub UI
+
+jobs:
+  frontend-trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the pull request code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Install Trivy if not cached
+    - name: Install Trivy
+      run: |
+        TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
+        wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+        sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+
+    # Scan the frontend package-lock.json
+    - name: Run Trivy scan for package-lock.json
+      id: trivy-scan-frontend
+      run: |
+        trivy fs web/frontend/package-lock.json --format json --output reportFrontend.json
+
+    # Check for CRITICAL vulnerabilities in the frontend scan
+    - name: Check vulnerabilities in frontend
+      id: check-vulns-frontend
+      run: |
+        # Get the count of HIGH and CRITICAL vulnerabilities
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | length' reportFrontend.json)
+        echo "Frontend HIGH and CRITICAL vulnerability count: $vuln_count"
+        
+        # List the HIGH and CRITICAL vulnerabilities, if any
+        if [ "$vuln_count" -gt 0 ]; then
+          echo "Listing HIGH and CRITICAL vulnerabilities found in package-lock.json:"
+          jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {ID, Severity, Description, PackageName, InstalledVersion, FixedVersion}' reportFrontend.json
+          exit 1
+        else
+          echo "No HIGH or CRITICAL vulnerabilities found in package-lock.json."
+        fi
