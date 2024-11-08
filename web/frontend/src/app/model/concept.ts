@@ -467,10 +467,10 @@ export class Concept {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (termType !== null && this.synonyms[i].termType !== termType) {
+        if (termType !== null && termType != undefined && this.synonyms[i].termType !== termType) {
           continue;
         }
-        if (source !== null && this.synonyms[i].source !== source) {
+        if (source !== null && source != undefined && this.synonyms[i].source !== source) {
           continue;
         }
         if (syns.indexOf(this.synonyms[i].name) !== -1) {
