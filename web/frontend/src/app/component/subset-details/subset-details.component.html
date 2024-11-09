@@ -1,8 +1,8 @@
 <div class="container">
   <p-panel [showHeader]="false">
     <div class="page-header" style="margin-bottom: 0.2em">
-      Subset {{ titleCode }} - {{ titleDesc
-      }}<span style="float: right">
+      Subset {{ titleCode }} - {{ titleDesc }}
+      <span style="float: right">
         <button
           type="button"
           pButton
@@ -215,7 +215,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
-          <tr>
+          <tr [ngStyle]="{ 'background-color': i === 0 ? 'lightblue' : 'transparent' }">
             <td class="w-10">
               <a [routerLink]="[urlBase, terminology, value.code]" target="_top">
                 <!-- <i class="fa fa-external-link"
