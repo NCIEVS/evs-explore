@@ -41,6 +41,9 @@ jobs:
       id: trivy-scan-java
       run: |
         trivy fs web/gradle.lockfile --format json --output reportJava.json
+      env:
+        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+        TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
 
     # Check for HIGH and CRITICAL vulnerabilities in the Java scan
     - name: Check vulnerabilities in Java

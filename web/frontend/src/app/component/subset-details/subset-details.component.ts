@@ -79,6 +79,7 @@ export class SubsetDetailsComponent implements OnInit {
 
         const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
+        this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
           synonymMap.push(this.getSynonymSources(c['synonyms']));
           if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
@@ -102,7 +103,6 @@ export class SubsetDetailsComponent implements OnInit {
             // CHECK FOR CDISC
             else if (ContSource[0].value === 'CDISC') {
               this.subsetFormat = 'CDISC';
-              this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'SY')[0];
               if (!this.titleDesc) {
                 this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
               }
@@ -147,6 +147,7 @@ export class SubsetDetailsComponent implements OnInit {
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
+          this.subsets.unshift(this.selectedSubset);
           if (nodes['concepts']) {
             nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
@@ -224,6 +225,7 @@ export class SubsetDetailsComponent implements OnInit {
       this.hitsFound = nodes['total'];
       if (this.hitsFound > 0) {
         this.subsets = new Array<Concept>();
+        this.subsets.unshift(this.selectedSubset);
         nodes['concepts'].forEach((c) => {
           this.subsets.push(new Concept(c, this.configService));
         });
