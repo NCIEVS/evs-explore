@@ -404,13 +404,17 @@ export class SubsetDetailsComponent implements OnInit {
     if (matchingSynonyms.length==1) {
       return matchingSynonyms[0].name;
     }
-    // Otherwise, find the one matching the sumissionValueCode
+    // Otherwise, find the one matching the submissionValueCode
     const matchingSynonym = matchingSynonyms.find((sy) => sy.code === this.submissionValueCode);
     if (matchingSynonym) {
       return matchingSynonym.name;
     }
     // can't figure it out, just return the first again
-    return matchingSynonyms[0].name;
+    if(matchingSynonyms.length > 0)
+      return matchingSynonyms[0].name;
+
+    // if we get all the way here there isn't one
+    return null;
 
   }
 }
