@@ -81,7 +81,9 @@ export class SubsetDetailsComponent implements OnInit {
         this.subsetCodes = {};
         this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
-          synonymMap.push(this.getSynonymSources(c['synonyms']));
+          if (c && Array.isArray(c['synonyms']) && c['synonyms'].length > 0) {
+            synonymMap.push(this.getSynonymSources(c['synonyms']));
+          }
           if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
             this.subsetCodes[c.code] = 1;
           }
