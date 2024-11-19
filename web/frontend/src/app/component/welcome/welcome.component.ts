@@ -18,7 +18,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   welcomeText: any = null;
   boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
   allTerminologies: any = null;
-  selectedMultiTerminologies = new Set();
+  selectedMultiTerminologies = new Set<String>();
   checkboxStates: { [key: string]: boolean } = {}; // track the state of the checkbox based on terminology
   private subscription = null;
 
@@ -37,23 +37,27 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.route.queryParams
       .subscribe(params => {
-        if (Object.keys(params).length > 0 && params.terminology !== 'multi' && !params.terminology.includes(',')) {
-          this.setWelcomeText(params.terminology != undefined ? params.terminology : 'ncit');
+        if (Object.keys(params).length > 0 && params.terminology !== 'multi' && params.terminology !== undefined && !params.terminology.includes(',')) {
+          this.setWelcomeText(params.terminology !== undefined ? params.terminology : 'ncit');
           this.configService.setMultiSearch(false);
         } else if (Object.keys(params).length > 0) {
-          if (params.terminology.includes(',')) {
+          if (params.terminology !== undefined && params.terminology.includes(',')) {
             // populating saved terminologies in url
             params.terminology.split(',').forEach(term => {
               this.selectedMultiTerminologies.add(term);
             });
-
+            this.configService.setMultiSearch(true);
+          } else if (params.terminology === "multi") {
+            this.configService.setMultiSearch(true);
           }
-          this.configService.setMultiSearch(true);
+          else {
+            this.setWelcomeText(params.terminology !== undefined ? params.terminology : 'ncit');
+            this.configService.setMultiSearch(false);
+          }
         }
         this.allTerminologies = this.configService.getTerminologies().map((terminology) => {
           // initialize checkboxStates for each terminology
-          const normalizedTerm = terminology.metadata.uiLabel.replace(/\:.*/, '').toLowerCase();
-          this.checkboxStates[normalizedTerm] = false;
+          this.checkboxStates[terminology.terminology] = this.selectedMultiTerminologies.has(terminology.terminology);
           // set the checkbox state based on the selected terminologies
           return {
             label: terminology.metadata.uiLabel.replace(/\:.*/, ''),

@@ -77,6 +77,7 @@ dependencies {
     implementation 'org.springframework:spring-web:6.1.13' // Updated version
     implementation 'org.springframework:spring-webmvc:6.1.13' // Updated version
     // fixes netty resolver error for macos
+    implementation 'io.netty:netty-common:4.1.115.Final'
     implementation 'io.netty:netty-resolver-dns-native-macos'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

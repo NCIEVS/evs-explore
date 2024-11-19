@@ -81,8 +81,10 @@ export class SubsetDetailsComponent implements OnInit {
         this.subsetCodes = {};
         this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
-          synonymMap.push(this.getSynonymSources(c['synonyms']));
-          if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+          if (c && c['synonyms'].length > 0) {
+            synonymMap.push(this.getSynonymSources(c['synonyms']));
+          }
+          if (c && c['inverseAssociations'].length > 0 && c['inverseAssociations'].find((assoc) => assoc.type == 'Concept_In_Subset')) {
             this.subsetCodes[c.code] = 1;
           }
         });
@@ -401,16 +403,25 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscSubmissionValue(concept: Concept): string {
     // If a single CDISC/PT, return it
     const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
-    if (matchingSynonyms.length==1) {
+    if (matchingSynonyms.length===1) {
       return matchingSynonyms[0].name;
     }
-    // Otherwise, find the one matching the sumissionValueCode
+    // Otherwise, find the one matching the submissionValueCode
     const matchingSynonym = matchingSynonyms.find((sy) => sy.code === this.submissionValueCode);
     if (matchingSynonym) {
       return matchingSynonym.name;
     }
     // can't figure it out, just return the first again
-    return matchingSynonyms[0].name;
+    if(matchingSynonyms.length > 0)
+      return matchingSynonyms[0].name;
 
+    // if we get all the way here there isn't one
+    return null;
+
+  }
+
+  linkNotInDescription() {
+    const desc = this.selectedSubset.properties.find((item) => item.type === "Term_Browser_Value_Set_Description");
+    return (this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink));
   }
 }
