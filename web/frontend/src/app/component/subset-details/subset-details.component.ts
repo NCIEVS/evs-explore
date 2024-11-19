@@ -403,7 +403,7 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscSubmissionValue(concept: Concept): string {
     // If a single CDISC/PT, return it
     const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
-    if (matchingSynonyms.length==1) {
+    if (matchingSynonyms.length===1) {
       return matchingSynonyms[0].name;
     }
     // Otherwise, find the one matching the submissionValueCode
