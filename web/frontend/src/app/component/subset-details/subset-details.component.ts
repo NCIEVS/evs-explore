@@ -269,6 +269,9 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
+    if(this.subsetFormat === "CDISC") {
+      subsetText += this.exportCodeFormatter(this.selectedSubset, true);
+    }
     for (const page of pageList) {
       await this.subsetDetailService
         .getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term)
@@ -290,7 +293,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   // format the export file
-  exportCodeFormatter(concept: Concept) {
+  exportCodeFormatter(concept: Concept, firstCDISC = false) {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
       rowText += concept.code + '\t';
@@ -323,8 +326,11 @@ export class SubsetDetailsComponent implements OnInit {
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.titleDesc + '\t';
-
+      if(firstCDISC) {
+        rowText += this.getCdiscSynonym() + '\t';
+      } else {
+        rowText += this.titleDesc + '\t';
+      }
       // cdisc submission value
       rowText += concept.synonyms.filter((sy) => sy.source == 'CDISC' && sy.termType == 'PT')[0]?.name + '\t';
       // cdisc synonyms
@@ -431,11 +437,11 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscSynonym() {
-  if (this.selectedSubset?.synonyms) {
-    const synonym = this.selectedSubset.synonyms.find(syn => syn.source === 'CDISC');
-    return synonym?.name;
+    if (this.selectedSubset?.synonyms) {
+      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === 'CDISC');
+      return synonym?.name;
+    }
+    return undefined;
   }
-  return undefined;
-}
 
 }
