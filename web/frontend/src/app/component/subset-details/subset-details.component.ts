@@ -321,7 +321,11 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
-      rowText += this.titleCode + '\t';
+      if(firstCDISC) {
+        rowText += '\t';
+      } else {
+        rowText += this.titleCode + '\t';
+      }
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
