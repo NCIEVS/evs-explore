@@ -103,7 +103,7 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = 'CTRP';
             }
             // CHECK FOR CDISC
-            else if (ContSource[0].value.startsWith('CDISC')) {
+            else if (ContSource[0].value.startsWith('CDISC') || ContSource[0].value.startsWith('MRCT-Ctr')) {
               this.subsetFormat = 'CDISC';
               if (!this.titleDesc) {
                 this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
@@ -113,7 +113,7 @@ export class SubsetDetailsComponent implements OnInit {
             }
           } else {
             
-            if (ContSource.some(entry => entry.value.startsWith('CDISC'))) {
+            if (ContSource.some(entry => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
               this.subsetFormat = 'CDISC';
             } else {
               this.subsetFormat = 'NCIt';
@@ -429,4 +429,13 @@ export class SubsetDetailsComponent implements OnInit {
     const desc = this.selectedSubset.properties.find((item) => item.type === "Term_Browser_Value_Set_Description");
     return (this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink));
   }
+
+  getCdiscSynonym() {
+  if (this.selectedSubset?.synonyms) {
+    const synonym = this.selectedSubset.synonyms.find(syn => syn.source === 'CDISC');
+    return synonym?.name;
+  }
+  return undefined;
+}
+
 }
