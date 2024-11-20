@@ -103,7 +103,7 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = 'CTRP';
             }
             // CHECK FOR CDISC
-            else if (ContSource[0].value === 'CDISC') {
+            else if (ContSource[0].value.startsWith('CDISC')) {
               this.subsetFormat = 'CDISC';
               if (!this.titleDesc) {
                 this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
@@ -112,7 +112,12 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = ContSource[0].value;
             }
           } else {
-            this.subsetFormat = 'NCIt';
+            
+            if (ContSource.some(entry => entry.value.startsWith('CDISC'))) {
+              this.subsetFormat = 'CDISC';
+            } else {
+              this.subsetFormat = 'NCIt';
+            }
           }
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
