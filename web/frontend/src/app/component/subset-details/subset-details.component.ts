@@ -38,6 +38,7 @@ export class SubsetDetailsComponent implements OnInit {
   subsetLink: string;
   subsetDescription: any;
   terminology: string;
+  cdiscSubsetSource: string;
 
   currentSortColumn = 'code';
   currentSortDirection = false;
@@ -105,6 +106,7 @@ export class SubsetDetailsComponent implements OnInit {
             // CHECK FOR CDISC
             else if (ContSource[0].value.startsWith('CDISC') || ContSource[0].value.startsWith('MRCT-Ctr')) {
               this.subsetFormat = 'CDISC';
+              this.cdiscSubsetSource = ContSource[0].value;
               if (!this.titleDesc) {
                 this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
               }
@@ -115,6 +117,7 @@ export class SubsetDetailsComponent implements OnInit {
             
             if (ContSource.some(entry => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
               this.subsetFormat = 'CDISC';
+              this.cdiscSubsetSource = ContSource[0].value;
             } else {
               this.subsetFormat = 'NCIt';
             }
@@ -417,7 +420,7 @@ export class SubsetDetailsComponent implements OnInit {
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
     // If a single CDISC/PT, return it
-    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
+    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === this.cdiscSubsetSource && sy.termType === 'PT');
     if (matchingSynonyms.length===1) {
       return matchingSynonyms[0].name;
     }
@@ -441,8 +444,8 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscSynonym() {
-    if (this.selectedSubset?.synonyms) {
-      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === 'CDISC');
+    if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
+      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource);
       return synonym?.name;
     }
     return undefined;
