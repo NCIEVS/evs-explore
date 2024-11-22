@@ -333,17 +333,13 @@ export class SubsetDetailsComponent implements OnInit {
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      if(this.subsetFormat === "CDISC") {
-        rowText += this.getCdiscSynonym() + '\t';
-      } else {
-        rowText += this.titleDesc + '\t';
-      }
+      rowText += this.getCdiscSynonym() + '\t';
       // cdisc submission value
-      rowText += concept.synonyms.filter((sy) => sy.source == 'CDISC' && sy.termType == 'PT')[0]?.name + '\t';
+      rowText += this.getCdiscSubmissionValue(concept) + '\t';
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source == 'CDISC')[0]?.definition + '\t';
+      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith("MRCT-Ctr"))[0]?.definition + '\t';
       // NCIt pref term
       rowText += concept.name;
     } else {
@@ -445,7 +441,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   getCdiscSynonym() {
     if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
-      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource);
+      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource && syn.termType === "SY");
       return synonym?.name;
     }
     return undefined;
