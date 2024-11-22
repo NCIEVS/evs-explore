@@ -333,7 +333,7 @@ export class SubsetDetailsComponent implements OnInit {
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      if(firstCDISC) {
+      if(this.subsetFormat === "CDISC") {
         rowText += this.getCdiscSynonym() + '\t';
       } else {
         rowText += this.titleDesc + '\t';
