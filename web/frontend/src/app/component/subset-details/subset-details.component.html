@@ -236,7 +236,7 @@
                 <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
               </span>
             </td>
-            <td class="w-20">{{ i === 0 && subsetFormat === 'CDISC' ? getCdiscSynonym() : titleDesc }}</td>
+            <td class="w-20">{{ subsetFormat === 'CDISC' ? getCdiscSynonym() : titleDesc }}</td>
             <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
             <td class="w-20">
               <span *ngFor="let syn of value.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">
