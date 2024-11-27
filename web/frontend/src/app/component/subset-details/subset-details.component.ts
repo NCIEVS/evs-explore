@@ -442,9 +442,11 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscSynonym() {
     if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
       const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource && syn.termType === "SY");
-      return synonym?.name;
+      if(synonym?.name)
+        return synonym?.name;
     }
-    return undefined;
+    // use NCI PT if CDISC SY isn't there
+    return this.selectedSubset.synonyms.find(syn => syn.source === "NCI" && syn.termType === "PT").name;
   }
 
 }
