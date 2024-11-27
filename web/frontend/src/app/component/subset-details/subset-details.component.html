@@ -236,10 +236,10 @@
                 <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
               </span>
             </td>
-            <td class="w-20">{{ titleDesc }}</td>
+            <td class="w-20">{{ subsetFormat === 'CDISC' ? getCdiscSynonym() : titleDesc }}</td>
             <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
             <td class="w-20">
-              <span *ngFor="let syn of value.getSynonymNames('CDISC', 'SY'); last as isLast">
+              <span *ngFor="let syn of value.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">
                 <span
                   >{{ syn }} <span *ngIf="!isLast"><br /></span>
                 </span>
@@ -248,7 +248,7 @@
 
             <td class="w-20">
               <span *ngFor="let def of value.definitions; last as isLast">
-                <span *ngIf="def.source == subsetFormat"> {{ def.definition }} </span>
+                <span *ngIf="def.source == cdiscSubsetSource"> {{ def.definition }} </span>
               </span>
             </td>
             <td class="w-20">{{ value.name }}</td>
