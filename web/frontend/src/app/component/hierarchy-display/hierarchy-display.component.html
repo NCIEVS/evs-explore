@@ -6,6 +6,8 @@
           Concept Hierarchy
           <span style="float:right" class="fa fa-close pointer" title="Close hierarchy view"
             (click)="closeHierarchy()"></span>
+          <span style="float:right; margin-right: 10px" class="fa fa-expand pointer" title="Popout hierarchy view"
+                (click)="popoutHierarchy()"></span>
         </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
           [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"

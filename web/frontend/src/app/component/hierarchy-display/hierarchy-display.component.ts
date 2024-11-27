@@ -62,6 +62,12 @@ export class HierarchyDisplayComponent implements OnInit {
     this.terminology = this.configService.getTerminologyName();
   }
 
+  popoutHierarchy() {
+    const hierarchyWindow = window.open('', '_blank', 'width=800,height=600');
+    hierarchyWindow.document.write(document.getElementById('hierarchyTableDisplay').outerHTML);
+    this.closeHierarchy();
+  }
+
   closeHierarchy() {
     this.router.navigate([
       '/concept/' + this.terminology + '/' + this.conceptCode,
