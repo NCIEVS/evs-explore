@@ -114,13 +114,12 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = ContSource[0].value;
             }
           } else {
-            
-            if (ContSource.some(entry => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
+            if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
               this.subsetFormat = 'CDISC';
               this.cdiscSubsetSource = ContSource[0].value;
             } else {
-            this.subsetFormat = 'NCIt';
-          }
+              this.subsetFormat = 'NCIt';
+            }
           }
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
@@ -272,7 +271,7 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
-    if(this.subsetFormat === "CDISC") {
+    if (this.subsetFormat === 'CDISC') {
       subsetText += this.exportCodeFormatter(this.selectedSubset, true);
     }
     for (const page of pageList) {
@@ -324,10 +323,10 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
-      if(firstCDISC) {
+      if (firstCDISC) {
         rowText += '\t';
       } else {
-      rowText += this.titleCode + '\t';
+        rowText += this.titleCode + '\t';
       }
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
@@ -339,7 +338,7 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith("MRCT-Ctr"))[0]?.definition + '\t';
+      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition + '\t';
       // NCIt pref term
       rowText += concept.name;
     } else {
@@ -436,15 +435,16 @@ export class SubsetDetailsComponent implements OnInit {
     if (!this.selectedSubset) {
       return false;
     }
+    const desc = this.selectedSubset.properties.find((item) => item.type === 'Term_Browser_Value_Set_Description');
+    return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
+  }
 
   getCdiscSynonym() {
     if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
-      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource && syn.termType === "SY");
-      if(synonym?.name)
-        return synonym?.name;
+      const synonym = this.selectedSubset.synonyms.find((syn) => syn.source === this.cdiscSubsetSource && syn.termType === 'SY');
+      if (synonym?.name) return synonym?.name;
     }
     // use NCI PT if CDISC SY isn't there
-    return this.selectedSubset.synonyms.find(syn => syn.source === "NCI" && syn.termType === "PT").name;
+    return this.selectedSubset.synonyms.find((syn) => syn.source === 'NCI' && syn.termType === 'PT').name;
   }
-
 }
