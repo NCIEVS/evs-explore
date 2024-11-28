@@ -38,6 +38,7 @@ export class SubsetDetailsComponent implements OnInit {
   subsetLink: string;
   subsetDescription: any;
   terminology: string;
+  cdiscSubsetSource: string;
 
   currentSortColumn = 'code';
   currentSortDirection = false;
@@ -103,8 +104,9 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = 'CTRP';
             }
             // CHECK FOR CDISC
-            else if (ContSource[0].value === 'CDISC') {
+            else if (ContSource[0].value.startsWith('CDISC') || ContSource[0].value.startsWith('MRCT-Ctr')) {
               this.subsetFormat = 'CDISC';
+              this.cdiscSubsetSource = ContSource[0].value;
               if (!this.titleDesc) {
                 this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
               }
@@ -112,7 +114,13 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = ContSource[0].value;
             }
           } else {
+            
+            if (ContSource.some(entry => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
+              this.subsetFormat = 'CDISC';
+              this.cdiscSubsetSource = ContSource[0].value;
+            } else {
             this.subsetFormat = 'NCIt';
+          }
           }
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
@@ -264,6 +272,9 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
+    if(this.subsetFormat === "CDISC") {
+      subsetText += this.exportCodeFormatter(this.selectedSubset, true);
+    }
     for (const page of pageList) {
       await this.subsetDetailService
         .getSubsetExport(this.titleCode, page * exportPageSize, exportPageSize, term)
@@ -285,7 +296,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   // format the export file
-  exportCodeFormatter(concept: Concept) {
+  exportCodeFormatter(concept: Concept, firstCDISC = false) {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
       rowText += concept.code + '\t';
@@ -313,19 +324,22 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
+      if(firstCDISC) {
+        rowText += '\t';
+      } else {
       rowText += this.titleCode + '\t';
+      }
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.titleDesc + '\t';
-
+      rowText += this.getCdiscSynonym() + '\t';
       // cdisc submission value
-      rowText += concept.synonyms.filter((sy) => sy.source == 'CDISC' && sy.termType == 'PT')[0]?.name + '\t';
+      rowText += this.getCdiscSubmissionValue(concept) + '\t';
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source == 'CDISC')[0]?.definition + '\t';
+      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith("MRCT-Ctr"))[0]?.definition + '\t';
       // NCIt pref term
       rowText += concept.name;
     } else {
@@ -402,7 +416,7 @@ export class SubsetDetailsComponent implements OnInit {
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
     // If a single CDISC/PT, return it
-    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
+    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === this.cdiscSubsetSource && sy.termType === 'PT');
     if (matchingSynonyms.length === 1) {
       return matchingSynonyms[0].name;
     }
@@ -422,7 +436,15 @@ export class SubsetDetailsComponent implements OnInit {
     if (!this.selectedSubset) {
       return false;
     }
-    const desc = this.selectedSubset.properties.find((item) => item.type === 'Term_Browser_Value_Set_Description');
-    return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
+
+  getCdiscSynonym() {
+    if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
+      const synonym = this.selectedSubset.synonyms.find(syn => syn.source === this.cdiscSubsetSource && syn.termType === "SY");
+      if(synonym?.name)
+        return synonym?.name;
+    }
+    // use NCI PT if CDISC SY isn't there
+    return this.selectedSubset.synonyms.find(syn => syn.source === "NCI" && syn.termType === "PT").name;
   }
+
 }
