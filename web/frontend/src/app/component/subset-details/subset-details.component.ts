@@ -403,7 +403,7 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscSubmissionValue(concept: Concept): string {
     // If a single CDISC/PT, return it
     const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === 'CDISC' && sy.termType === 'PT');
-    if (matchingSynonyms.length===1) {
+    if (matchingSynonyms.length === 1) {
       return matchingSynonyms[0].name;
     }
     // Otherwise, find the one matching the submissionValueCode
@@ -412,16 +412,17 @@ export class SubsetDetailsComponent implements OnInit {
       return matchingSynonym.name;
     }
     // can't figure it out, just return the first again
-    if(matchingSynonyms.length > 0)
-      return matchingSynonyms[0].name;
+    if (matchingSynonyms.length > 0) return matchingSynonyms[0].name;
 
     // if we get all the way here there isn't one
     return null;
-
   }
 
   linkNotInDescription() {
-    const desc = this.selectedSubset.properties.find((item) => item.type === "Term_Browser_Value_Set_Description");
-    return (this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink));
+    if (!this.selectedSubset) {
+      return false;
+    }
+    const desc = this.selectedSubset.properties.find((item) => item.type === 'Term_Browser_Value_Set_Description');
+    return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
   }
 }
