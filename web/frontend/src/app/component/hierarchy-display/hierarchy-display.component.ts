@@ -37,6 +37,10 @@ export class HierarchyDisplayComponent implements OnInit {
   sources: string[] = [];
   selectedSources = null;
 
+  // display tree position tracking
+  displayedPositions: number = 0;
+  totalPositions: number = 0;
+
   constructor(
     private conceptDetailService: ConceptDetailService,
     private router: Router,
@@ -64,7 +68,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   popoutHierarchy() {
     const hierarchyWindow = window.open('', '_blank', 'width=800,height=600');
-    hierarchyWindow.document.write(document.getElementById('hierarchyTableDisplay').outerHTML);
+    hierarchyWindow.document.write('<app-hierarchy-popout></app-hierarchy-popout>');
     this.closeHierarchy();
   }
 
@@ -88,7 +92,7 @@ export class HierarchyDisplayComponent implements OnInit {
       tableHeight = bodyHeight;
     }
     this.hierarchyTable.scrollHeight = tableHeight - 200 + 'px';
-  };
+  }
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
@@ -134,7 +138,12 @@ export class HierarchyDisplayComponent implements OnInit {
     this.conceptDetailService
       .getHierarchyData(this.conceptCode, limit)
       .then((nodes) => {
-        this.hierarchyData = <TreeNode[]>nodes;
+        this.hierarchyData = (nodes as TreeNode[]);
+        this.displayedPositions = this.hierarchyData.length;
+        this.totalPositions = this.hierarchyData.reduce((
+          acc, node) =>
+          acc + (node['ct'] || 0), this.hierarchyData.length
+        );
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, null);
         }
@@ -153,6 +162,11 @@ export class HierarchyDisplayComponent implements OnInit {
 
   getAllPathsInHierarchy() {
     this.getPathInHierarchy(null);
+  }
+
+  // Load all tree positions for the selected node
+  loadAllPositions() {
+    this.getAllPathsInHierarchy();
   }
 
   // Get child tree nodes (for an expanded node)
