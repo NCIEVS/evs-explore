@@ -28,6 +28,10 @@
     <div *ngIf="subsetLink != null && linkNotInDescription()">
       Subset Download Link: <a href="{{ subsetLink }}" target="_blank">{{ subsetLink }}</a>
     </div>
+    <!-- NCIt and default formats may differ -->
+    <div *ngIf="subsetFormat != 'CTRP' && subsetFormat != 'CDISC'">
+      NOTE: the table below shows standard columns for this tool and may not exactly match the file available from the download link.
+    </div>
     <div><br /></div>
     <div class="table-responsive subset-table">
       <div class="row search-row">
@@ -142,7 +146,7 @@
           <tr>
             <th class="w-10 subsetTitle sortable" style="cursor: pointer" id="code" (click)="search($event, 'code')">NCIt Subset Code</th>
             <th class="w-20 subsetTitle">NCIt Subset Name</th>
-            <th class="w-10 subsetTitle">NCIt Concept Code</th>
+            <th class="w-10 subsetTitle">NCIt Code</th>
             <th class="w-20 subsetTitle sortable" style="cursor: pointer" id="normName" (click)="search($event, 'normName')">NCIt Preferred Name</th>
             <th class="w-20 subsetTitle">NCIt Display Name</th>
             <th class="w-20 subsetTitle">CTRP Display Name</th>
