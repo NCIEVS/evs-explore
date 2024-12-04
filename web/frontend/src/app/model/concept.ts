@@ -605,6 +605,14 @@ export class Concept {
     return mapInfo;
   }
 
+  isCdiscGrouper(): boolean {
+    return (this.code !== "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => syn.source === 'CDISC' && syn.termType === 'SY')));
+  }
+
+  isCdiscCodeList(): boolean {
+    return this.properties.some(prop => prop.type === "Publish_Value_Set" && prop.value === "true") && this.synonyms.some(syn => syn.source === 'CDISC' && syn.termType === 'SY');
+  }
+
   // Default string representation is the name
   toString(): string {
     return this.name.toString();
