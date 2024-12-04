@@ -80,7 +80,8 @@ export class SubsetDetailsComponent implements OnInit {
 
         const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
-        this.subsets.unshift(this.selectedSubset);
+        if(!this.selectedSubset?.isCdiscGrouper())
+          this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
           if (c && c['synonyms'].length > 0) {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
@@ -156,7 +157,8 @@ export class SubsetDetailsComponent implements OnInit {
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          this.subsets.unshift(this.selectedSubset);
+          if(!this.selectedSubset?.isCdiscGrouper())
+            this.subsets.unshift(this.selectedSubset);
           if (nodes['concepts']) {
             nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
@@ -234,7 +236,8 @@ export class SubsetDetailsComponent implements OnInit {
       this.hitsFound = nodes['total'];
       if (this.hitsFound > 0) {
         this.subsets = new Array<Concept>();
-        this.subsets.unshift(this.selectedSubset);
+        if(!this.selectedSubset?.isCdiscGrouper())
+          this.subsets.unshift(this.selectedSubset);
         nodes['concepts'].forEach((c) => {
           this.subsets.push(new Concept(c, this.configService));
         });
@@ -414,21 +417,41 @@ export class SubsetDetailsComponent implements OnInit {
 
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
-    // If a single CDISC/PT, return it
-    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === this.cdiscSubsetSource && sy.termType === 'PT');
-    if (matchingSynonyms.length === 1) {
-      return matchingSynonyms[0].name;
-    }
-    // Otherwise, find the one matching the submissionValueCode
-    const matchingSynonym = matchingSynonyms.find((sy) => sy.code === this.submissionValueCode);
-    if (matchingSynonym) {
-      return matchingSynonym.name;
-    }
-    // can't figure it out, just return the first again
-    if (matchingSynonyms.length > 0) return matchingSynonyms[0].name;
+    if(concept.isCdiscGrouper()) {
+      // Kim's algorithm
+      const cdiscSynonyms = concept.synonyms.filter(
+        (syn) =>
+          syn.source === "CDISC" &&
+          syn.type === "FULL_SYN" &&
+          syn.termType === "PT"
+      );
 
-    // if we get all the way here there isn't one
-    return null;
+      // Check if there's exactly one unique synonym
+      var nci_ab = "";
+      if (cdiscSynonyms.length === 1) {
+        return cdiscSynonyms[0].name;
+      } else {
+        nci_ab = concept.synonyms.find(
+          (syn) =>
+            syn.source === "CDISC" &&
+            syn.type === "FULL_SYN" &&
+            syn.termType === "AB"
+        )?.name;
+      }
+      if(nci_ab) {
+        const finalSynonym = concept.synonyms.find(
+          (syn) =>
+            syn.source === "CDISC" &&
+            syn.type === "FULL_SYN" &&
+            syn.termType === "PT" &&
+            syn.name === nci_ab
+        );
+        return finalSynonym.name;
+      }
+      return null;
+    } else {
+      return concept.synonyms.find(syn => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
+    }
   }
 
   linkNotInDescription() {
