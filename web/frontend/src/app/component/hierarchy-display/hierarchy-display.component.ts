@@ -27,7 +27,8 @@ export class HierarchyDisplayComponent implements OnInit {
   terminology: any;
   title: string;
 
-  urlBase = '/hierarchy';
+  urlBase = '/hierarchy/';
+  popoutUrl = '/hierarchy-popout/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -38,8 +39,8 @@ export class HierarchyDisplayComponent implements OnInit {
   selectedSources = null;
 
   // display tree position tracking
-  displayedPositions: number = 0;
-  totalPositions: number = 0;
+  displayedPositions = 0;
+  totalPositions = 0;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -67,8 +68,9 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   popoutHierarchy() {
-    const hierarchyWindow = window.open('', '_blank', 'width=800,height=600');
-    hierarchyWindow.document.write('<app-hierarchy-popout></app-hierarchy-popout>');
+    const url = this.router.createUrlTree([this.popoutUrl + this.terminology + '/' + this.conceptCode]).toString();
+    console.log('URL = ', url);
+    window.open(url, '_blank', 'width=800,height=600');
     this.closeHierarchy();
   }
 
@@ -79,7 +81,7 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   updateDisplaySize = () => {
-    let bodyHeight = document.documentElement.scrollHeight;
+    const bodyHeight = document.documentElement.scrollHeight;
     document.getElementById('hierarchyTableDisplay').style.height =
       bodyHeight + 'px';
     /*
@@ -96,7 +98,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
-    console.info('treeTableNodeSelected', event);
+    console.log('treeTableNodeSelected', event);
     // Handle selecting for more data for top level
     if (event.ct && event.data.parentCode === 'root') {
       if (
@@ -127,7 +129,7 @@ export class HierarchyDisplayComponent implements OnInit {
     // Handle selecting a code to navigate away
     else {
       this.router.navigate([
-        '/hierarchy/' + this.terminology + '/' + event.code,
+        this.urlBase + this.terminology + '/' + event.code,
       ]);
     }
   }
