@@ -72,6 +72,7 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromPathname(window.location.pathname);
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
+    this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -81,6 +82,9 @@ export class ConceptDisplayComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         // Trick the Router into believing it's last link wasn't previously loaded
         this.router.navigated = false;
+        if (event.url.indexOf('/hierarchy') === -1) {
+          this.getHierarchyPopoutConcept();
+        }
       }
     });
   }
@@ -101,6 +105,28 @@ export class ConceptDisplayComponent implements OnInit {
       // Then look up the concept
       this.lookupConcept(true);
     });
+  }
+
+  getHierarchyPopoutConcept() {
+    setTimeout(() => {
+      // check if the concept has changed and redirect if necessary
+      const term: any = localStorage.getItem('concept_terminology');
+      const code: any = localStorage.getItem('concept_code');
+      if (term !== null  && code !== null && !term.isEmpty && !code.isEmpty) {
+        // update the page
+        if (term !== this.terminology || code !== this.conceptCode) {
+          this.router.navigate([
+            this.urlBase + '/' + term + '/' + code
+          ]);
+        } else {
+          // keep checking
+          this.getHierarchyPopoutConcept();
+        }
+      } else {
+        // keep checking again
+        this.getHierarchyPopoutConcept();
+      }
+    }, 100);
   }
 
   ngOnDestroy() {

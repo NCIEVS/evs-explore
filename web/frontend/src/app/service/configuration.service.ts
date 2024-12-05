@@ -213,6 +213,7 @@ export class ConfigurationService {
     // Handle /hierarchy/{terminology}/{code}
     // Handle concept//{terminology}/{code}
     if (splitPath[splitPath.length - 3] === 'hierarchy' ||
+      splitPath[splitPath.length - 3] === 'hierarchy-popout' ||
       splitPath[splitPath.length - 3] === 'concept' ||
       splitPath[splitPath.length - 3] === 'subset'
     ) {

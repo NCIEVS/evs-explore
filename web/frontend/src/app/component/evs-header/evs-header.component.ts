@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 import { NavigationEnd, Router } from '@angular/router';
+import {str} from "ajv";
 
 // Header component
 @Component({
@@ -132,4 +133,5 @@ export class EvsHeaderComponent implements OnInit {
     this.truncated = !this.truncated;
   }
 
+  protected readonly str = str;
 }

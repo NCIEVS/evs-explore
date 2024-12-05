@@ -24,7 +24,7 @@ export class HierarchyPopoutComponent implements OnInit {
   terminology: any;
   title: string;
 
-  urlBase = '/hierarchy';
+  urlBase = '/hierarchy-popout/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -50,11 +50,7 @@ export class HierarchyPopoutComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit');
-  if (this.conceptCode) {
     this.getPathInHierarchy();
-  } else {
-    console.error('Concept code is null');
-  }
     // this.updateDisplaySize();
   }
 
@@ -64,6 +60,7 @@ export class HierarchyPopoutComponent implements OnInit {
     this.selectedSources = this.configService.getSelectedSources();
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
+
   }
 
   updateDisplaySize = () => {
@@ -108,14 +105,14 @@ export class HierarchyPopoutComponent implements OnInit {
         );
       }
       setTimeout(() => (this.selectedNode = null), 100);
+    }  else {
+    // Handle selecting a code to navigate away
+      this.router.navigate([
+        this.urlBase + this.terminology + '/' + event.code,
+      ]);
+      localStorage.setItem('concept_terminology', this.terminology);
+      localStorage.setItem('concept_code', event.code);
     }
-
-    // // Handle selecting a code to navigate away
-    // else {
-    //   this.router.navigate([
-    //     '/hierarchy/' + this.terminology + '/' + event.code,
-    //   ]);
-    // }
   }
 
   // Gets path in the hierarchy and scrolls to the active node

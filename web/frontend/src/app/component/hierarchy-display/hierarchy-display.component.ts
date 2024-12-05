@@ -109,10 +109,8 @@ export class HierarchyDisplayComponent implements OnInit {
         this.getAllPathsInHierarchy();
       }
       setTimeout(() => (this.selectedNode = null), 100);
-    }
-
+    } else if (event.ct) {
     // Handle selecting for more data for sibling level
-    else if (event.ct) {
       if (
         confirm(
           'Loading more data may take a while, are you sure you want to proceed?'
@@ -124,10 +122,8 @@ export class HierarchyDisplayComponent implements OnInit {
         );
       }
       setTimeout(() => (this.selectedNode = null), 100);
-    }
-
+    } else {
     // Handle selecting a code to navigate away
-    else {
       this.router.navigate([
         this.urlBase + this.terminology + '/' + event.code,
       ]);
