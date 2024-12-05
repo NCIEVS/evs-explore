@@ -326,16 +326,12 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
-      if (firstCDISC) {
-        rowText += '\t';
-      } else {
-        rowText += this.titleCode + '\t';
-      }
+      rowText += this.getCdiscCodelistCode(concept) + '\t';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.getCdiscSynonym() + '\t';
+      rowText += this.getCdiscName(concept) + '\t';
       // cdisc submission value
       rowText += this.getCdiscSubmissionValue(concept) + '\t';
       // cdisc synonyms
@@ -415,10 +411,25 @@ export class SubsetDetailsComponent implements OnInit {
     return propList;
   }
 
+  getCdiscCodelistCode(value) {
+    if(value.isCdiscGrouper()) {
+      return null;
+    } else {
+      return this.selectedSubset.code;
+    }
+  }
+
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
-    if(concept.isCdiscGrouper()) {
-      // Kim's algorithm
+    if(this.selectedSubset.isCdiscGrouper()) {
+      return concept.isCdiscGrouper() ? null : this.kimsAlgorithm(concept);
+    } else {
+      return this.kimsAlgorithm(concept);
+    }
+  }
+
+  kimsAlgorithm(concept) {
+    // Kim's algorithm
       const cdiscSynonyms = concept.synonyms.filter(
         (syn) =>
           syn.source === "CDISC" &&
@@ -448,9 +459,18 @@ export class SubsetDetailsComponent implements OnInit {
         );
         return finalSynonym.name;
       }
-      return null;
+  }
+
+  getCdiscName(value) {
+    if (this.selectedSubset?.synonyms && this.selectedSubset.isCdiscGrouper()) {
+      if(value.isCdiscGrouper()) {
+        return null;
+      } else {
+        const synonym = this.selectedSubset.synonyms.find((syn) => syn.source === this.cdiscSubsetSource && syn.termType === 'SY');
+        return synonym?.name;
+      }
     } else {
-      return concept.synonyms.find(syn => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
+        return this.selectedSubset.name;
     }
   }
 
@@ -462,12 +482,4 @@ export class SubsetDetailsComponent implements OnInit {
     return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
   }
 
-  getCdiscSynonym() {
-    if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
-      const synonym = this.selectedSubset.synonyms.find((syn) => syn.source === this.cdiscSubsetSource && syn.termType === 'SY');
-      if (synonym?.name) return synonym?.name;
-    }
-    // use NCI PT if CDISC SY isn't there
-    return this.selectedSubset.synonyms.find((syn) => syn.source === 'NCI' && syn.termType === 'PT').name;
-  }
 }

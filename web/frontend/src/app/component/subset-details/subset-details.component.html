@@ -231,16 +231,14 @@
               </span>
             </td>
             <td class="w-10">
-              <span *ngFor="let assoc of value.associations">
-                <span *ngIf="assoc.type == 'Concept_In_Subset' && assoc.relatedCode == titleCode"> {{ assoc.relatedCode }}</span>
-              </span>
+                <span> {{ getCdiscCodelistCode(value) }}</span>
             </td>
             <td class="w-10">
               <span *ngFor="let prop of value.properties">
                 <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
               </span>
             </td>
-            <td class="w-20">{{ subsetFormat === 'CDISC' ? getCdiscSynonym() : titleDesc }}</td>
+            <td class="w-20">{{ getCdiscName(value) }}</td>
             <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
             <td class="w-20">
               <span *ngFor="let syn of value.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">
