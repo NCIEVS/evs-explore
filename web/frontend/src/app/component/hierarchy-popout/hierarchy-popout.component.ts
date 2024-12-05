@@ -25,6 +25,7 @@ export class HierarchyPopoutComponent implements OnInit {
   title: string;
 
   urlBase = '/hierarchy-popout/';
+  hierarchyUrl = '/hierarchy/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -61,6 +62,14 @@ export class HierarchyPopoutComponent implements OnInit {
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
 
+  }
+
+  popinHierarchy() {
+    // Set the concept terminology and code in local storage and navigate to the hierarchy page
+    localStorage.setItem('concept_terminology', this.terminology);
+    localStorage.setItem('concept_code', this.conceptCode);
+    this.router.navigate([this.hierarchyUrl + this.terminology + '/' + this.conceptCode]);
+    window.close();
   }
 
   updateDisplaySize = () => {
@@ -233,11 +242,6 @@ export class HierarchyPopoutComponent implements OnInit {
         node.data.label = '... More data (' + node['ct'] + ')';
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
-      }
-      // Handle a 'more data' tree positions
-      else {
-        node.data.label = '... Get all tree positions (' + node['ct'] + ')';
-        node.data.parentCode = 'root';
       }
     }
 

@@ -69,7 +69,6 @@ export class HierarchyDisplayComponent implements OnInit {
 
   popoutHierarchy() {
     const url = this.router.createUrlTree([this.popoutUrl + this.terminology + '/' + this.conceptCode]).toString();
-    console.log('URL = ', url);
     window.open(url, '_blank', 'width=800,height=600');
     this.closeHierarchy();
   }
@@ -138,10 +137,7 @@ export class HierarchyDisplayComponent implements OnInit {
       .then((nodes) => {
         this.hierarchyData = (nodes as TreeNode[]);
         this.displayedPositions = this.hierarchyData.length;
-        this.totalPositions = this.hierarchyData.reduce((
-          acc, node) =>
-          acc + (node['ct'] || 0), this.hierarchyData.length
-        );
+        this.totalPositions = this.hierarchyData.reduce((acc, node) => acc + (node['ct'] || 0), this.hierarchyData.length);
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, null);
         }
@@ -249,13 +245,7 @@ export class HierarchyDisplayComponent implements OnInit {
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
       }
-      // Handle a 'more data' tree positions
-      else {
-        node.data.label = '... Get all tree positions (' + node['ct'] + ')';
-        node.data.parentCode = 'root';
-      }
     }
-
     for (const child of node.children) {
       this.setTreeTableProperties(child, node);
     }
