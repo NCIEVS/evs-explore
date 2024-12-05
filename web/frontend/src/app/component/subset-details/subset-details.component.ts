@@ -421,6 +421,9 @@ export class SubsetDetailsComponent implements OnInit {
 
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
+    if(!concept.isSubset()) {
+      return concept.synonyms.find(syn => syn.termType === "PT" && syn.source === "CDISC")?.name;
+    }
     if(this.selectedSubset.isCdiscGrouper()) {
       return concept.isCdiscGrouper() ? null : this.kimsAlgorithm(concept);
     } else {
@@ -463,6 +466,11 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscName(value) {
+    if(!value.isSubset()) {
+      return this.selectedSubset.synonyms.find(syn => syn.termType === "SY" && syn.source === "CDISC")?.name 
+      ?? this.selectedSubset.synonyms.find(syn => syn.termType === "PT" && syn.source === "CDISC")?.name;
+
+    }
     if (this.selectedSubset?.synonyms && this.selectedSubset.isCdiscGrouper()) {
       if(value.isCdiscGrouper()) {
         return null;
