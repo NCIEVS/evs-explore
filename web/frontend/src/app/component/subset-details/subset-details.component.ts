@@ -94,7 +94,7 @@ export class SubsetDetailsComponent implements OnInit {
         this.termAutoSearch = '';
       });
       this.route.paramMap
-        .pipe(switchMap((params: ParamMap) => this.subsetDetailService.getSubsetInfo(this.titleCode, 'summary,definitions,properties,subsetLink')))
+        .pipe(switchMap((params: ParamMap) => this.subsetDetailService.getSubsetInfo(this.titleCode, 'full')))
         .subscribe((response: any) => {
           this.selectedSubset = new Concept(response, this.configService);
           this.titleDesc = this.selectedSubset.name;
@@ -459,6 +459,7 @@ export class SubsetDetailsComponent implements OnInit {
         );
         return finalSynonym.name;
       }
+      return null;
   }
 
   getCdiscName(value) {
