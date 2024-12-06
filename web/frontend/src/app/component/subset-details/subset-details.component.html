@@ -194,7 +194,7 @@
 
       <!-- "CDISC" Subset Format -->
       <p-table
-        *ngIf="subsets && subsetFormat == 'CDISC'"
+        *ngIf="subsets && subsets.length > 0 && subsetFormat == 'CDISC'"
         #subsetList
         [value]="subsets"
         [rows]="pageSize"
