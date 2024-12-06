@@ -9,6 +9,7 @@ import { writeXLSX, utils, WorkSheet } from 'xlsx-republish';
 import { saveAs } from 'file-saver';
 import { ViewportScroller } from '@angular/common';
 import { LoaderService } from '../../service/loader.service';
+import { environment } from '../../../environments/environment';
 
 // Concept display component
 // BAC - looks like not used
@@ -218,7 +219,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   }
 
   termSuggestionUrl() {
-    window.open('https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode, '_blank');
+    window.open(environment.host + '/evsexplore/termform?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {
