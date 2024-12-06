@@ -447,7 +447,12 @@ export class SubsetDetailsComponent implements OnInit {
         (syn) =>
           syn.code === nci_ab
       );
-      return finalSynonym?.name;
+      if(finalSynonym) {
+        return finalSynonym?.name;
+      } else {
+        return "Unable to find submission value that matches corresponding NCI AB";
+      }
+      
     }
     return "Unable to find submission value";
   }
