@@ -39,8 +39,9 @@ export class HierarchyDisplayComponent implements OnInit {
   selectedSources = null;
 
   // display tree position tracking
-  displayedPositions = 0;
-  totalPositions = 0;
+  displayedPositions;
+  totalPositions;
+  hierarchyLimit = 10;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -130,14 +131,12 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   // Gets path in the hierarchy and scrolls to the active node
-  getPathInHierarchy(limit: number = 100) {
+  getPathInHierarchy(limit: number = this.hierarchyLimit) {
     this.loaderService.showLoader();
     this.conceptDetailService
       .getHierarchyData(this.conceptCode, limit)
       .then((nodes) => {
         this.hierarchyData = (nodes as TreeNode[]);
-        this.displayedPositions = this.hierarchyData.length;
-        this.totalPositions = this.hierarchyData.reduce((acc, node) => acc + (node['ct'] || 0), this.hierarchyData.length);
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, null);
         }
@@ -159,7 +158,8 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   // Load all tree positions for the selected node
-  loadAllPositions() {
+  loadAllPositions(event: Event) {
+    event.preventDefault();
     this.getAllPathsInHierarchy();
   }
 
@@ -244,8 +244,16 @@ export class HierarchyDisplayComponent implements OnInit {
         node.data.label = '... More data (' + node['ct'] + ')';
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
+      } else {
+      // Handle a 'more data' tree positions
+        this.totalPositions = node['ct'];
       }
+    } else {
+      this.totalPositions = 0;
     }
+    // should be equal to the limit passed in getPathInHierarchy call
+    this.displayedPositions = this.hierarchyLimit;
+
     for (const child of node.children) {
       this.setTreeTableProperties(child, node);
     }
