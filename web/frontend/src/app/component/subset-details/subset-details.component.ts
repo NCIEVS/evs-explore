@@ -77,10 +77,8 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsets.push(new Concept(c, this.configService));
           });
         }
-
         const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
-        this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
           if (c && c['synonyms'].length > 0) {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
@@ -91,35 +89,29 @@ export class SubsetDetailsComponent implements OnInit {
         });
         this.synonymSources = synonymMap;
         this.termAutoSearch = '';
-      });
-      this.route.paramMap
-        .pipe(switchMap((params: ParamMap) => this.subsetDetailService.getSubsetInfo(this.titleCode, 'summary,definitions,properties,subsetLink')))
-        .subscribe((response: any) => {
+
+        // getting the subs
+        this.subsetDetailService.getSubsetInfo(this.titleCode, 'full').then((response: any) => {
           this.selectedSubset = new Concept(response, this.configService);
           this.titleDesc = this.selectedSubset.name;
           this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
           const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
-          if (ContSource.length === 1) {
-            if (ContSource[0].value === 'CTRP') {
-              this.subsetFormat = 'CTRP';
+          if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
+            this.subsetFormat = 'CTRP';
+          }
+          // CHECK FOR CDISC
+          else if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
+            this.subsetFormat = 'CDISC';
+            this.cdiscSubsetSource = ContSource[0].value;
+            if (!this.titleDesc) {
+              this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
             }
-            // CHECK FOR CDISC
-            else if (ContSource[0].value.startsWith('CDISC') || ContSource[0].value.startsWith('MRCT-Ctr')) {
-              this.subsetFormat = 'CDISC';
-              this.cdiscSubsetSource = ContSource[0].value;
-              if (!this.titleDesc) {
-                this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
-              }
-            } else {
-              this.subsetFormat = ContSource[0].value;
-            }
+            if(!this.selectedSubset?.isCdiscGrouper())
+              this.subsets.unshift(this.selectedSubset);
+          } else if (ContSource.length === 1) {
+            this.subsetFormat = ContSource[0].value;
           } else {
-            if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
-              this.subsetFormat = 'CDISC';
-              this.cdiscSubsetSource = ContSource[0].value;
-            } else {
-              this.subsetFormat = 'NCIt';
-            }
+            this.subsetFormat = 'NCIt';
           }
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
@@ -142,6 +134,7 @@ export class SubsetDetailsComponent implements OnInit {
           this.setTitle();
           this.lastSearch = '';
         });
+      });
     });
   }
 
@@ -156,7 +149,8 @@ export class SubsetDetailsComponent implements OnInit {
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          this.subsets.unshift(this.selectedSubset);
+          if(!this.selectedSubset?.isCdiscGrouper())
+            this.subsets.unshift(this.selectedSubset);
           if (nodes['concepts']) {
             nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
@@ -234,7 +228,8 @@ export class SubsetDetailsComponent implements OnInit {
       this.hitsFound = nodes['total'];
       if (this.hitsFound > 0) {
         this.subsets = new Array<Concept>();
-        this.subsets.unshift(this.selectedSubset);
+        if(!this.selectedSubset?.isCdiscGrouper())
+          this.subsets.unshift(this.selectedSubset);
         nodes['concepts'].forEach((c) => {
           this.subsets.push(new Concept(c, this.configService));
         });
@@ -323,16 +318,12 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
-      if (firstCDISC) {
-        rowText += '\t';
-      } else {
-        rowText += this.titleCode + '\t';
-      }
+      rowText += this.getCdiscCodelistCode() + '\t';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.getCdiscSynonym() + '\t';
+      rowText += this.getCodelistName(concept) + '\t';
       // cdisc submission value
       rowText += this.getCdiscSubmissionValue(concept) + '\t';
       // cdisc synonyms
@@ -412,23 +403,74 @@ export class SubsetDetailsComponent implements OnInit {
     return propList;
   }
 
+  getCdiscCodelistCode() {
+    if(this.selectedSubset.isCdiscGrouper()) {
+      return null;
+    } else {
+      return this.selectedSubset.code;
+    }
+  }
+
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
-    // If a single CDISC/PT, return it
-    const matchingSynonyms = concept.synonyms.filter((sy) => sy.source === this.cdiscSubsetSource && sy.termType === 'PT');
-    if (matchingSynonyms.length === 1) {
-      return matchingSynonyms[0].name;
+    if(concept.isCdiscGrouper()) {
+      return null;
     }
-    // Otherwise, find the one matching the submissionValueCode
-    const matchingSynonym = matchingSynonyms.find((sy) => sy.code === this.submissionValueCode);
-    if (matchingSynonym) {
-      return matchingSynonym.name;
-    }
-    // can't figure it out, just return the first again
-    if (matchingSynonyms.length > 0) return matchingSynonyms[0].name;
+    // Kim's algorithm
 
-    // if we get all the way here there isn't one
-    return null;
+    // assumption: codelist only has one contributing source
+    var subsetContSource = this.selectedSubset.properties?.find((item) => item.type === 'Contributing_Source')?.value;
+    if(!subsetContSource) {
+      return "Unable to find submission value because codelist lacks contributing source";
+    }
+    const cdiscSynonyms = concept.synonyms.filter(
+      (syn) =>
+        syn.source === subsetContSource &&
+        syn.type === "FULL_SYN" &&
+        syn.termType === "PT"
+    );
+
+    // Check if there's exactly one unique synonym
+    var nci_ab = "";
+    if (cdiscSynonyms.length === 1) {
+      return cdiscSynonyms[0].name;
+    } 
+    nci_ab = this.selectedSubset.synonyms.find(
+      (syn) =>
+        // no multiple MRCT
+        syn.source === "NCI" &&
+        syn.type === "FULL_SYN" &&
+        syn.termType === "AB"
+    )?.name;
+    if(nci_ab) {
+      const finalSynonym = cdiscSynonyms.find(
+        (syn) =>
+          syn.code === nci_ab
+      );
+      if(finalSynonym) {
+        return finalSynonym?.name;
+      } else {
+        return "Unable to find submission value (synonym that matches NCI source and AB term type)";
+      }
+      
+    }
+    return "Unable to find submission value";
+  }
+
+  getCodelistName(value) {
+    if(!value.isSubset()) {
+      return this.selectedSubset.name;
+
+    }
+    if (this.selectedSubset.isCdiscGrouper()) {
+      if(value.isCdiscGrouper()) {
+        return null;
+      } else {
+        return value.name;
+      }
+    } else {
+        return this.selectedSubset.name;
+    }
   }
 
   linkNotInDescription() {
@@ -439,12 +481,4 @@ export class SubsetDetailsComponent implements OnInit {
     return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
   }
 
-  getCdiscSynonym() {
-    if (this.selectedSubset?.synonyms && this.cdiscSubsetSource) {
-      const synonym = this.selectedSubset.synonyms.find((syn) => syn.source === this.cdiscSubsetSource && syn.termType === 'SY');
-      if (synonym?.name) return synonym?.name;
-    }
-    // use NCI PT if CDISC SY isn't there
-    return this.selectedSubset.synonyms.find((syn) => syn.source === 'NCI' && syn.termType === 'PT').name;
-  }
 }
