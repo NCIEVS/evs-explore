@@ -606,11 +606,11 @@ export class Concept {
   }
 
   isCdiscGrouper(): boolean {
-    return (this.code !== "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => syn.source.startsWith('CDISC') && syn.termType === 'SY'))) && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    return (this.code === "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => syn.source?.startsWith('CDISC') && syn.termType === 'SY'))) && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
   }
 
   isCdiscCodeList(): boolean {
-    return this.properties.some(prop => prop.type === "Publish_Value_Set" && prop.value === "true") && this.synonyms.some(syn => syn.source.startsWith('CDISC') && syn.termType === 'SY') && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    return this.properties.some(prop => prop.type === "Publish_Value_Set" && prop.value === "true") && this.synonyms.some(syn => syn.source?.startsWith('CDISC') && syn.termType === 'SY');
   }
 
   isSubset(): boolean {

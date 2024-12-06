@@ -226,19 +226,19 @@
                                   style="margin-left:0.2em;"></i> -->
                 {{ value.code }}
               </a>
-              <span *ngIf="subsetCodes[value.code]"
+              <span *ngIf="subsetCodes[value.code] && !selectedSubset.code === value.code"
                 ><br />( <a [routerLink]="['/subset', terminology, value.code]" target="_top">view subset</a>)
               </span>
             </td>
             <td class="w-10">
-                <span> {{ getCdiscCodelistCode(value) }}</span>
+                <span> {{ getCdiscCodelistCode() }}</span>
             </td>
             <td class="w-10">
               <span *ngFor="let prop of value.properties">
                 <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
               </span>
             </td>
-            <td class="w-20">{{ getCdiscName(value) }}</td>
+            <td class="w-20">{{ getCodelistName(value) }}</td>
             <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
             <td class="w-20">
               <span *ngFor="let syn of value.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">

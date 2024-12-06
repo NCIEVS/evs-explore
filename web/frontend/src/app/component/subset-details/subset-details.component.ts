@@ -77,11 +77,8 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsets.push(new Concept(c, this.configService));
           });
         }
-
         const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
-        if(!this.selectedSubset?.isCdiscGrouper())
-          this.subsets.unshift(this.selectedSubset);
         this.subsets.forEach((c) => {
           if (c && c['synonyms'].length > 0) {
             synonymMap.push(this.getSynonymSources(c['synonyms']));
@@ -92,35 +89,29 @@ export class SubsetDetailsComponent implements OnInit {
         });
         this.synonymSources = synonymMap;
         this.termAutoSearch = '';
-      });
-      this.route.paramMap
-        .pipe(switchMap((params: ParamMap) => this.subsetDetailService.getSubsetInfo(this.titleCode, 'full')))
-        .subscribe((response: any) => {
+
+        // getting the subs
+        this.subsetDetailService.getSubsetInfo(this.titleCode, 'full').then((response: any) => {
           this.selectedSubset = new Concept(response, this.configService);
           this.titleDesc = this.selectedSubset.name;
           this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
           const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
-          if (ContSource.length === 1) {
-            if (ContSource[0].value === 'CTRP') {
-              this.subsetFormat = 'CTRP';
+          if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
+            this.subsetFormat = 'CTRP';
+          }
+          // CHECK FOR CDISC
+          else if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
+            this.subsetFormat = 'CDISC';
+            this.cdiscSubsetSource = ContSource[0].value;
+            if (!this.titleDesc) {
+              this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
             }
-            // CHECK FOR CDISC
-            else if (ContSource[0].value.startsWith('CDISC') || ContSource[0].value.startsWith('MRCT-Ctr')) {
-              this.subsetFormat = 'CDISC';
-              this.cdiscSubsetSource = ContSource[0].value;
-              if (!this.titleDesc) {
-                this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
-              }
-            } else {
-              this.subsetFormat = ContSource[0].value;
-            }
+            if(!this.selectedSubset?.isCdiscGrouper())
+              this.subsets.unshift(this.selectedSubset);
+          } else if (ContSource.length === 1) {
+            this.subsetFormat = ContSource[0].value;
           } else {
-            if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
-              this.subsetFormat = 'CDISC';
-              this.cdiscSubsetSource = ContSource[0].value;
-            } else {
-              this.subsetFormat = 'NCIt';
-            }
+            this.subsetFormat = 'NCIt';
           }
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
@@ -143,6 +134,7 @@ export class SubsetDetailsComponent implements OnInit {
           this.setTitle();
           this.lastSearch = '';
         });
+      });
     });
   }
 
@@ -326,12 +318,12 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + '\t';
       // codelist code
-      rowText += this.getCdiscCodelistCode(concept) + '\t';
+      rowText += this.getCdiscCodelistCode() + '\t';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.getCdiscName(concept) + '\t';
+      rowText += this.getCodelistName(concept) + '\t';
       // cdisc submission value
       rowText += this.getCdiscSubmissionValue(concept) + '\t';
       // cdisc synonyms
@@ -411,8 +403,8 @@ export class SubsetDetailsComponent implements OnInit {
     return propList;
   }
 
-  getCdiscCodelistCode(value) {
-    if(value.isCdiscGrouper()) {
+  getCdiscCodelistCode() {
+    if(this.selectedSubset.isCdiscGrouper()) {
       return null;
     } else {
       return this.selectedSubset.code;
@@ -421,62 +413,55 @@ export class SubsetDetailsComponent implements OnInit {
 
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
-    if(!concept.isSubset()) {
-      return concept.synonyms.find(syn => syn.termType === "PT" && syn.source === "CDISC")?.name;
-    }
-    if(this.selectedSubset.isCdiscGrouper()) {
-      return concept.isCdiscGrouper() ? null : this.kimsAlgorithm(concept);
-    } else {
-      return this.kimsAlgorithm(concept);
-    }
-  }
-
-  kimsAlgorithm(concept) {
-    // Kim's algorithm
-      const cdiscSynonyms = concept.synonyms.filter(
-        (syn) =>
-          syn.source === "CDISC" &&
-          syn.type === "FULL_SYN" &&
-          syn.termType === "PT"
-      );
-
-      // Check if there's exactly one unique synonym
-      var nci_ab = "";
-      if (cdiscSynonyms.length === 1) {
-        return cdiscSynonyms[0].name;
-      } else {
-        nci_ab = concept.synonyms.find(
-          (syn) =>
-            syn.source === "CDISC" &&
-            syn.type === "FULL_SYN" &&
-            syn.termType === "AB"
-        )?.name;
-      }
-      if(nci_ab) {
-        const finalSynonym = concept.synonyms.find(
-          (syn) =>
-            syn.source === "CDISC" &&
-            syn.type === "FULL_SYN" &&
-            syn.termType === "PT" &&
-            syn.name === nci_ab
-        );
-        return finalSynonym.name;
-      }
+    if(concept.isCdiscGrouper()) {
       return null;
+    }
+    // Kim's algorithm
+
+    // assumption: codelist only has one contributing source
+    var subsetContSource = this.selectedSubset.properties?.find((item) => item.type === 'Contributing_Source')?.value;
+    if(!subsetContSource) {
+      return "Unable to find submission value because codelist lacks contributing source";
+    }
+    const cdiscSynonyms = concept.synonyms.filter(
+      (syn) =>
+        syn.source === subsetContSource &&
+        syn.type === "FULL_SYN" &&
+        syn.termType === "PT"
+    );
+
+    // Check if there's exactly one unique synonym
+    var nci_ab = "";
+    if (cdiscSynonyms.length === 1) {
+      return cdiscSynonyms[0].name;
+    } 
+    nci_ab = this.selectedSubset.synonyms.find(
+      (syn) =>
+        // no multiple MRCT
+        syn.source === "NCI" &&
+        syn.type === "FULL_SYN" &&
+        syn.termType === "AB"
+    )?.name;
+    if(nci_ab) {
+      const finalSynonym = cdiscSynonyms.find(
+        (syn) =>
+          syn.code === nci_ab
+      );
+      return finalSynonym.name;
+    }
+    return "Unable to find submission value";
   }
 
-  getCdiscName(value) {
+  getCodelistName(value) {
     if(!value.isSubset()) {
-      return this.selectedSubset.synonyms.find(syn => syn.termType === "SY" && syn.source === "CDISC")?.name 
-      ?? this.selectedSubset.synonyms.find(syn => syn.termType === "PT" && syn.source === "CDISC")?.name;
+      return this.selectedSubset.name;
 
     }
-    if (this.selectedSubset?.synonyms && this.selectedSubset.isCdiscGrouper()) {
+    if (this.selectedSubset.isCdiscGrouper()) {
       if(value.isCdiscGrouper()) {
         return null;
       } else {
-        const synonym = this.selectedSubset.synonyms.find((syn) => syn.source === this.cdiscSubsetSource && syn.termType === 'SY');
-        return synonym?.name;
+        return value.name;
       }
     } else {
         return this.selectedSubset.name;
