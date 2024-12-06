@@ -450,7 +450,7 @@ export class SubsetDetailsComponent implements OnInit {
       if(finalSynonym) {
         return finalSynonym?.name;
       } else {
-        return "Unable to find submission value that matches corresponding NCI AB";
+        return "Unable to find submission value (synonym that matches NCI source and AB term type)";
       }
       
     }
