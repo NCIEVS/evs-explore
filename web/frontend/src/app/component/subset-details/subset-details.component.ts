@@ -447,7 +447,7 @@ export class SubsetDetailsComponent implements OnInit {
         (syn) =>
           syn.code === nci_ab
       );
-      return finalSynonym.name;
+      return finalSynonym?.name;
     }
     return "Unable to find submission value";
   }
