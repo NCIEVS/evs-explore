@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -17,7 +17,7 @@ import { LoaderService } from '../../service/loader.service';
   templateUrl: './concept-display.component.html',
   styleUrls: ['./concept-display.component.css'],
 })
-export class ConceptDisplayComponent implements OnInit {
+export class ConceptDisplayComponent implements OnInit, OnDestroy {
   expandCollapseChange: Subject<boolean> = new Subject();
   getConceptIsSubset: Subject<boolean> = new Subject();
 
@@ -57,6 +57,8 @@ export class ConceptDisplayComponent implements OnInit {
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
   conceptIsSubset: boolean;
+  popoutUrl = '/hierarchy-popout/';
+
 
   subscription = null;
 
@@ -101,37 +103,21 @@ export class ConceptDisplayComponent implements OnInit {
           this.properties.push(property['name']);
         }
       }
-
       // Then look up the concept
       this.lookupConcept(true);
     });
   }
 
-  getHierarchyPopoutConcept() {
-    setTimeout(() => {
-      // check if the concept has changed and redirect if necessary
-      const term: any = localStorage.getItem('concept_terminology');
-      const code: any = localStorage.getItem('concept_code');
-      if (term !== null  && code !== null && !term.isEmpty && !code.isEmpty) {
-        // update the page
-        if (term !== this.terminology || code !== this.conceptCode) {
-          this.router.navigate([
-            this.urlBase + '/' + term + '/' + code
-          ]);
-        } else {
-          // keep checking
-          this.getHierarchyPopoutConcept();
-        }
-      } else {
-        // keep checking again
-        this.getHierarchyPopoutConcept();
-      }
-    }, 100);
-  }
-
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+  }
+
+  getHierarchyPopoutConcept() {
+    if (this.configService.getHierarchyPopupStatus()) {
+      const url = this.router.createUrlTree([this.popoutUrl + this.terminology + '/' + this.conceptCode]).toString();
+      window.open(url, '_blank', 'width=800,height=600');
     }
   }
 

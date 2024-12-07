@@ -7,10 +7,12 @@
           <span style="float:right; margin-right: 10px" class="fa fa-compress pointer" title="Pop-in hierarchy view"
                 (click)="popinHierarchy()"></span>
         </div>
-        <div class="table-info text-body">
-          <span>{{displayedPositions}} / {{totalPositions}} displayed</span>
-          <button class="p-button-icon-right" style="margin-left:10px" (click)="loadAllPositions()">Load All</button>
-        </div>
+          <!-- Only show this section if tree positions (node['ct']) is present -->
+          <div *ngIf="totalPositions != 0" class="table-info text-body">
+            <span style="margin-left:5px">{{displayedPositions}} / {{totalPositions}} tree positions
+              <a href="#" (click)="loadAllPositions($event)">Load All</a>
+            </span>
+          </div>
         <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="single" dataKey="code"
           [(selection)]="selectedNode" [scrollable]="true" scrollHeight="800px"
           (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)"

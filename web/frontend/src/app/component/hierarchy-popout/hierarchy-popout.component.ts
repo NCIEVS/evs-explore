@@ -24,8 +24,9 @@ export class HierarchyPopoutComponent implements OnInit {
   terminology: any;
   title: string;
 
-  urlBase = '/hierarchy-popout/';
+  popoutUrl = '/hierarchy-popout/';
   hierarchyUrl = '/hierarchy/';
+  conceptUrl = '/concept/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -36,8 +37,9 @@ export class HierarchyPopoutComponent implements OnInit {
   selectedSources = null;
 
   // display tree position tracking
-  displayedPositions: number = 0;
-  totalPositions: number = 0;
+  displayedPositions = 0;
+  totalPositions = 0;
+  hierarchyLimit = 100;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -64,11 +66,9 @@ export class HierarchyPopoutComponent implements OnInit {
 
   }
 
+  // TODO: use window.parent to redirect
   popinHierarchy() {
-    // Set the concept terminology and code in local storage and navigate to the hierarchy page
-    localStorage.setItem('concept_terminology', this.terminology);
-    localStorage.setItem('concept_code', this.conceptCode);
-    this.router.navigate([this.hierarchyUrl + this.terminology + '/' + this.conceptCode]);
+    window.opener.location.href = this.hierarchyUrl + this.terminology + '/' + this.conceptCode;
     window.close();
   }
 
@@ -90,7 +90,7 @@ export class HierarchyPopoutComponent implements OnInit {
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
-    console.info('treeTableNodeSelected', event);
+    console.log('treeTableNodeSelected', event);
     // Handle selecting for more data for top level
     if (event.ct && event.data.parentCode === 'root') {
       if (
@@ -116,16 +116,17 @@ export class HierarchyPopoutComponent implements OnInit {
       setTimeout(() => (this.selectedNode = null), 100);
     }  else {
     // Handle selecting a code to navigate away
+      // control the redirect based on the parent window (concept-display)
+      window.opener.location.href = this.conceptUrl + this.terminology + '/' + event.code;
+      // Handle selecting a code to navigate away
       this.router.navigate([
-        this.urlBase + this.terminology + '/' + event.code,
+        this.popoutUrl + this.terminology + '/' + event.code,
       ]);
-      localStorage.setItem('concept_terminology', this.terminology);
-      localStorage.setItem('concept_code', event.code);
     }
   }
 
   // Gets path in the hierarchy and scrolls to the active node
-  getPathInHierarchy(limit: number = 100) {
+  getPathInHierarchy(limit: number = this.hierarchyLimit) {
     this.loaderService.showLoader();
     this.conceptDetailService
       .getHierarchyData(this.conceptCode, limit)
@@ -157,7 +158,8 @@ export class HierarchyPopoutComponent implements OnInit {
   }
 
   // Load all tree positions for the selected node
-  loadAllPositions() {
+  loadAllPositions(event: Event) {
+    event.preventDefault();
     this.getAllPathsInHierarchy();
   }
 
@@ -242,8 +244,14 @@ export class HierarchyPopoutComponent implements OnInit {
         node.data.label = '... More data (' + node['ct'] + ')';
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
+      } else {
+        this.totalPositions = node['ct'];
       }
+    } else {
+      this.totalPositions = 0;
     }
+    // should be equal to the limit passed in getPathInHierarchy call
+    this.displayedPositions = this.hierarchyLimit;
 
     for (const child of node.children) {
       this.setTreeTableProperties(child, node);

@@ -28,6 +28,7 @@ export class ConfigurationService {
 
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;
+  private hierarchyPopupStatus = false;
 
   constructor(private injector: Injector, private http: HttpClient,
               private notificationService: NotificationService,
@@ -526,4 +527,11 @@ export class ConfigurationService {
     );
   }
 
+  getHierarchyPopupStatus(): boolean {
+    return this.hierarchyPopupStatus;
+  }
+
+  setHierarchyPopupStatus(status: boolean) {
+    this.hierarchyPopupStatus = status;
+  }
 }

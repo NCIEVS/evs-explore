@@ -27,8 +27,7 @@ export class HierarchyDisplayComponent implements OnInit {
   terminology: any;
   title: string;
 
-  urlBase = '/hierarchy/';
-  popoutUrl = '/hierarchy-popout/';
+  hierarchyUrl = '/hierarchy/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -55,9 +54,8 @@ export class HierarchyDisplayComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit');
-
-    // this.updateDisplaySize();
     this.getPathInHierarchy();
+    // this.updateDisplaySize();
   }
 
   configSetup() {
@@ -68,9 +66,8 @@ export class HierarchyDisplayComponent implements OnInit {
     this.terminology = this.configService.getTerminologyName();
   }
 
-  popoutHierarchy() {
-    const url = this.router.createUrlTree([this.popoutUrl + this.terminology + '/' + this.conceptCode]).toString();
-    window.open(url, '_blank', 'width=800,height=600');
+  popoutHierarchy(){
+    this.configService.setHierarchyPopupStatus(true);
     this.closeHierarchy();
   }
 
@@ -125,7 +122,7 @@ export class HierarchyDisplayComponent implements OnInit {
     } else {
     // Handle selecting a code to navigate away
       this.router.navigate([
-        this.urlBase + this.terminology + '/' + event.code,
+        this.hierarchyUrl + this.terminology + '/' + event.code,
       ]);
     }
   }
@@ -245,7 +242,6 @@ export class HierarchyDisplayComponent implements OnInit {
         node.data.parentCode = parentNode['code'];
         node.data.parentNode = parentNode;
       } else {
-      // Handle a 'more data' tree positions
         this.totalPositions = node['ct'];
       }
     } else {
