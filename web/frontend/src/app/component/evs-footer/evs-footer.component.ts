@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Inject, AfterViewInit, ElementRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+import { ConfigurationService } from '../../service/configuration.service';
 
 // Footer component
 @Component({
@@ -9,10 +10,12 @@ import { Router } from '@angular/router';
   templateUrl: './evs-footer.component.html',
   styleUrls: ['./evs-footer.component.css']
 })
-export class EvsFooterComponent implements OnInit {
+export class EvsFooterComponent implements OnInit, AfterViewInit {
 
   constructor( @Inject(DOCUMENT) private document,
-  private elementRef: ElementRef, public router: Router) { }
+               private elementRef: ElementRef,
+               public router: Router,
+               protected configService: ConfigurationService) { }
 
   ngOnInit() {
   }
