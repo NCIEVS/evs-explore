@@ -21,7 +21,7 @@ export class EvsHeaderComponent implements OnInit {
   truncated: boolean = true;
 
   constructor(private http: HttpClient,
-              private configService: ConfigurationService,
+              protected configService: ConfigurationService,
               private conceptService: ConceptDetailService,
               public router: Router) {
     this.router.events.subscribe((event) => {
