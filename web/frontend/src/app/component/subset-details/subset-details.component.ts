@@ -266,8 +266,8 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
-    if (this.subsetFormat === 'CDISC') {
-      subsetText += this.exportCodeFormatter(this.selectedSubset, true);
+    if (this.subsetFormat === 'CDISC' && !this.selectedSubset.isCdiscGrouper()) {
+      subsetText += this.exportCodeFormatter(this.selectedSubset);
     }
     for (const page of pageList) {
       await this.subsetDetailService
@@ -290,7 +290,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   // format the export file
-  exportCodeFormatter(concept: Concept, firstCDISC = false) {
+  exportCodeFormatter(concept: Concept) {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
       rowText += concept.code + '\t';
@@ -323,9 +323,9 @@ export class SubsetDetailsComponent implements OnInit {
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.getCodelistName(concept) + '\t';
+      rowText += this.getCodelistName(new Concept(concept, this.configService)) + '\t';
       // cdisc submission value
-      rowText += this.getCdiscSubmissionValue(concept) + '\t';
+      rowText += this.getCdiscSubmissionValue(new Concept(concept, this.configService)) + '\t';
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
       // cdisc definition
@@ -457,16 +457,17 @@ export class SubsetDetailsComponent implements OnInit {
     return "Unable to find submission value";
   }
 
-  getCodelistName(value) {
-    if(!value.isSubset()) {
+  getCodelistName(concept: Concept) {
+    
+    if(!concept.isSubset()) {
       return this.selectedSubset.name;
 
     }
     if (this.selectedSubset.isCdiscGrouper()) {
-      if(value.isCdiscGrouper()) {
+      if(concept.isCdiscGrouper()) {
         return null;
       } else {
-        return value.name;
+        return concept.name;
       }
     } else {
         return this.selectedSubset.name;

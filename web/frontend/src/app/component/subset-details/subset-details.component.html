@@ -227,7 +227,7 @@
                 {{ value.code }}
               </a>
               <span *ngIf="subsetCodes[value.code] && !selectedSubset.code === value.code"
-                ><br />( <a [routerLink]="['/subset', terminology, value.code]" target="_top">view subset</a>)
+                ><br />(<a [routerLink]="['/subset', terminology, value.code]" target="_top">view subset</a>)
               </span>
             </td>
             <td class="w-10">
