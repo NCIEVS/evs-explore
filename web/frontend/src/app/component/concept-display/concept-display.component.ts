@@ -117,7 +117,8 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
 
   openHierarchyPopup() {
     if (this.configService.getTriggerHierarchyPopup()) {
-      const url = this.router.createUrlTree([this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
+      const baseHref = this.location.prepareExternalUrl('');
+      const url = this.router.createUrlTree([baseHref + this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
       window.open(url, '_blank', 'width=600,height=1000');
       this.configService.setTriggerHierarchyPopup(false);
     }
