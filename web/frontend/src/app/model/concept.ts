@@ -606,7 +606,7 @@ export class Concept {
   }
 
   isCdiscGrouper(): boolean {
-    return (this.code === "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => syn.source?.startsWith('CDISC') && syn.termType === 'SY'))) && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    return (this.code === "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => (syn.source?.startsWith('CDISC') || syn.source?.startsWith('MRCT')) && syn.termType === 'SY')) && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset"));
   }
 
   isCdiscCodeList(): boolean {
