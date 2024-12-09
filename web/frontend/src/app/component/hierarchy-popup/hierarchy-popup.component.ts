@@ -10,10 +10,10 @@ import { TreeTable } from 'primeng/treetable';
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
   selector: 'app-hierarchy-display',
-  templateUrl: './hierarchy-popout.component.html',
-  styleUrls: ['./hierarchy-popout.component.css'],
+  templateUrl: './hierarchy-popup.component.html',
+  styleUrls: ['./hierarchy-popup.component.css'],
 })
-export class HierarchyPopoutComponent implements OnInit {
+export class HierarchyPopupComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
   conceptCode: string;
@@ -24,7 +24,7 @@ export class HierarchyPopoutComponent implements OnInit {
   terminology: any;
   title: string;
 
-  popoutUrl = '/hierarchy-popout/';
+  hierarchPopupUrl = '/hierarchy-popup/';
   hierarchyUrl = '/hierarchy/';
   conceptUrl = '/concept/';
   urlTarget = '_top';
@@ -39,7 +39,7 @@ export class HierarchyPopoutComponent implements OnInit {
   // display tree position tracking
   displayedPositions = 0;
   totalPositions = 0;
-  hierarchyLimit = 100;
+  hierarchyLimit = 10;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -54,7 +54,7 @@ export class HierarchyPopoutComponent implements OnInit {
   ngOnInit() {
     console.log('ngOnInit');
     this.getPathInHierarchy();
-    // this.updateDisplaySize();
+    this.configService.setHierarchyPopupStatus(true);
   }
 
   configSetup() {
@@ -66,8 +66,7 @@ export class HierarchyPopoutComponent implements OnInit {
 
   }
 
-  // TODO: use window.parent to redirect
-  popinHierarchy() {
+  closeHierarchyPopup() {
     window.opener.location.href = this.hierarchyUrl + this.terminology + '/' + this.conceptCode;
     window.close();
   }
@@ -90,7 +89,6 @@ export class HierarchyPopoutComponent implements OnInit {
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
-    console.log('treeTableNodeSelected', event);
     // Handle selecting for more data for top level
     if (event.ct && event.data.parentCode === 'root') {
       if (
@@ -119,8 +117,10 @@ export class HierarchyPopoutComponent implements OnInit {
       // control the redirect based on the parent window (concept-display)
       window.opener.location.href = this.conceptUrl + this.terminology + '/' + event.code;
       // Handle selecting a code to navigate away
+      this.conceptCode = event.code;
+      this.getPathInHierarchy();
       this.router.navigate([
-        this.popoutUrl + this.terminology + '/' + event.code,
+        this.hierarchPopupUrl + this.terminology + '/' + event.code,
       ]);
     }
   }
@@ -132,11 +132,6 @@ export class HierarchyPopoutComponent implements OnInit {
       .getHierarchyData(this.conceptCode, limit)
       .then((nodes) => {
         this.hierarchyData = (nodes as TreeNode[]);
-        this.displayedPositions = this.hierarchyData.length;
-        this.totalPositions = this.hierarchyData.reduce((
-          acc, node) =>
-          acc + (node['ct'] || 0), this.hierarchyData.length
-        );
         for (const node of this.hierarchyData) {
           this.setTreeTableProperties(node, null);
         }

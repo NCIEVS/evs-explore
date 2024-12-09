@@ -57,7 +57,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
   conceptIsSubset: boolean;
-  popoutUrl = '/hierarchy-popout/';
+  hierarchyPopupUrl = '/hierarchy-popup/';
 
 
   subscription = null;
@@ -85,7 +85,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
         // Trick the Router into believing it's last link wasn't previously loaded
         this.router.navigated = false;
         if (event.url.indexOf('/hierarchy') === -1) {
-          this.getHierarchyPopoutConcept();
+          this.openHierarchyPopup();
         }
       }
     });
@@ -114,10 +114,11 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     }
   }
 
-  getHierarchyPopoutConcept() {
-    if (this.configService.getHierarchyPopupStatus()) {
-      const url = this.router.createUrlTree([this.popoutUrl + this.terminology + '/' + this.conceptCode]).toString();
-      window.open(url, '_blank', 'width=800,height=600');
+  openHierarchyPopup() {
+    if (this.configService.getTriggerHierarchyPopup()) {
+      const url = this.router.createUrlTree([this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
+      window.open(url, '_blank', 'width=600,height=1000');
+      this.configService.setTriggerHierarchyPopup(false);
     }
   }
 

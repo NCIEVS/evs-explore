@@ -66,9 +66,9 @@ export class HierarchyDisplayComponent implements OnInit {
     this.terminology = this.configService.getTerminologyName();
   }
 
-  popoutHierarchy(){
-    this.configService.setHierarchyPopupStatus(true);
+  openHierarchyPopup(){
     this.closeHierarchy();
+    this.configService.setTriggerHierarchyPopup(true);
   }
 
   closeHierarchy() {
@@ -129,6 +129,7 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy(limit: number = this.hierarchyLimit) {
+    console.log('getPathInHierarchy called');
     this.loaderService.showLoader();
     this.conceptDetailService
       .getHierarchyData(this.conceptCode, limit)
