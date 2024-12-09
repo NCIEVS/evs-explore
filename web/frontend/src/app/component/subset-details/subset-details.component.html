@@ -221,11 +221,7 @@
         <ng-template pTemplate="body" let-value let-i="rowIndex">
           <tr [ngStyle]="{ 'background-color': i === 0 && !selectedSubset.isCdiscGrouper() ? 'lightblue' : 'transparent' }">
             <td class="w-10">
-              <a [routerLink]="[urlBase, terminology, value.code]" target="_top">
-                <!-- <i class="fa fa-external-link"
-                                  style="margin-left:0.2em;"></i> -->
-                {{ value.code }}
-              </a>
+              <a [routerLink]="[urlBase, terminology, value.code]" target="_top">{{ value.code }}</a>
               <span *ngIf="subsetCodes[value.code] && !selectedSubset.code === value.code"
                 ><br />(<a [routerLink]="['/subset', terminology, value.code]" target="_top">view subset</a>)
               </span>
