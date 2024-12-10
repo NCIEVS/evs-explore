@@ -10,24 +10,23 @@ import { TreeTable } from 'primeng/treetable';
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
   selector: 'app-hierarchy-display',
-  templateUrl: './hierarchy-display.component.html',
-  styleUrls: ['./hierarchy-display.component.css'],
+  templateUrl: './hierarchy-popup.component.html',
+  styleUrls: ['./hierarchy-popup.component.css'],
 })
-export class HierarchyDisplayComponent implements OnInit {
+export class HierarchyPopupComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
   conceptCode: string;
-  conceptDetail: Concept;
-  conceptWithRelationships: Concept;
   direction = 'horizontal';
-  hierarchyDisplay = '';
   hierarchyData: TreeNode[];
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
   terminology: any;
   title: string;
 
+  hierarchPopupUrl = '/hierarchy-popup/';
   hierarchyUrl = '/hierarchy/';
+  conceptUrl = '/concept/';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -38,8 +37,8 @@ export class HierarchyDisplayComponent implements OnInit {
   selectedSources = null;
 
   // display tree position tracking
-  displayedPositions;
-  totalPositions;
+  displayedPositions = 0;
+  totalPositions = 0;
   hierarchyLimit = 10;
 
   constructor(
@@ -55,7 +54,7 @@ export class HierarchyDisplayComponent implements OnInit {
   ngOnInit() {
     console.log('ngOnInit');
     this.getPathInHierarchy();
-    // this.updateDisplaySize();
+    this.configService.setHierarchyPopupStatus(true);
   }
 
   configSetup() {
@@ -64,17 +63,12 @@ export class HierarchyDisplayComponent implements OnInit {
     this.selectedSources = this.configService.getSelectedSources();
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
+
   }
 
-  openHierarchyPopup(){
-    this.closeHierarchy();
-    this.configService.setTriggerHierarchyPopup(true);
-  }
-
-  closeHierarchy() {
-    this.router.navigate([
-      '/concept/' + this.terminology + '/' + this.conceptCode,
-    ]);
+  closeHierarchyPopup() {
+    window.opener.location.href = this.hierarchyUrl + this.terminology + '/' + this.conceptCode;
+    window.close();
   }
 
   updateDisplaySize = () => {
@@ -118,17 +112,21 @@ export class HierarchyDisplayComponent implements OnInit {
         );
       }
       setTimeout(() => (this.selectedNode = null), 100);
-    } else {
+    }  else {
     // Handle selecting a code to navigate away
+      // control the redirect based on the parent window (concept-display)
+      window.opener.location.href = this.conceptUrl + this.terminology + '/' + event.code;
+      // Handle selecting a code to navigate away
+      this.conceptCode = event.code;
+      this.getPathInHierarchy();
       this.router.navigate([
-        this.hierarchyUrl + this.terminology + '/' + event.code,
+        this.hierarchPopupUrl + this.terminology + '/' + event.code,
       ]);
     }
   }
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy(limit: number = this.hierarchyLimit) {
-    console.log('getPathInHierarchy called');
     this.loaderService.showLoader();
     this.conceptDetailService
       .getHierarchyData(this.conceptCode, limit)

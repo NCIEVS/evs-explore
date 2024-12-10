@@ -28,6 +28,8 @@ export class ConfigurationService {
 
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;
+  private hierarchyPopupStatus = false;
+  private triggerHierarchyPopup = false;
 
   constructor(private injector: Injector, private http: HttpClient,
               private notificationService: NotificationService,
@@ -213,6 +215,7 @@ export class ConfigurationService {
     // Handle /hierarchy/{terminology}/{code}
     // Handle concept//{terminology}/{code}
     if (splitPath[splitPath.length - 3] === 'hierarchy' ||
+      splitPath[splitPath.length - 3] === 'hierarchy-popup' ||
       splitPath[splitPath.length - 3] === 'concept' ||
       splitPath[splitPath.length - 3] === 'subset'
     ) {
@@ -525,4 +528,19 @@ export class ConfigurationService {
     );
   }
 
+  getHierarchyPopupStatus(): boolean {
+    return this.hierarchyPopupStatus;
+  }
+
+  setHierarchyPopupStatus(status: boolean) {
+    this.hierarchyPopupStatus = status;
+  }
+
+  getTriggerHierarchyPopup(): boolean {
+    return this.hierarchyPopupStatus;
+  }
+
+  setTriggerHierarchyPopup(status: boolean) {
+    this.hierarchyPopupStatus = status;
+  }
 }

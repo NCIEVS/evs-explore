@@ -1,4 +1,4 @@
-<footer class="site-footer">
+<footer  *ngIf="!this.configService.getHierarchyPopupStatus()" class="site-footer">
   <div id="nvcgSlFooter">
     <div class="slot-item only-SI">
       <div class="site-footer__container">

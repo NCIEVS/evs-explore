@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 import { NavigationEnd, Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { NavigationEnd, Router } from '@angular/router';
   templateUrl: './evs-header.component.html',
   styleUrls: ['./evs-header.component.css']
 })
-export class EvsHeaderComponent implements OnInit {
+export class EvsHeaderComponent implements OnInit, OnDestroy {
   versionInfo = '';
   terminology = null;
   firstRoot = '';
@@ -20,7 +20,7 @@ export class EvsHeaderComponent implements OnInit {
   truncated: boolean = true;
 
   constructor(private http: HttpClient,
-              private configService: ConfigurationService,
+              protected configService: ConfigurationService,
               private conceptService: ConceptDetailService,
               public router: Router) {
     this.router.events.subscribe((event) => {
@@ -131,5 +131,4 @@ export class EvsHeaderComponent implements OnInit {
   toggleTruncation() {
     this.truncated = !this.truncated;
   }
-
 }

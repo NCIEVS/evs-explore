@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -18,7 +18,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './concept-display.component.html',
   styleUrls: ['./concept-display.component.css'],
 })
-export class ConceptDisplayComponent implements OnInit {
+export class ConceptDisplayComponent implements OnInit, OnDestroy {
   expandCollapseChange: Subject<boolean> = new Subject();
   getConceptIsSubset: Subject<boolean> = new Subject();
 
@@ -58,6 +58,8 @@ export class ConceptDisplayComponent implements OnInit {
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
   conceptIsSubset: boolean;
+  hierarchyPopupUrl = '/hierarchy-popup/';
+
 
   subscription = null;
 
@@ -73,6 +75,7 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromPathname(window.location.pathname);
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
+    this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -82,6 +85,9 @@ export class ConceptDisplayComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         // Trick the Router into believing it's last link wasn't previously loaded
         this.router.navigated = false;
+        if (event.url.indexOf('/hierarchy') === -1) {
+          this.openHierarchyPopup();
+        }
       }
     });
   }
@@ -98,7 +104,6 @@ export class ConceptDisplayComponent implements OnInit {
           this.properties.push(property['name']);
         }
       }
-
       // Then look up the concept
       this.lookupConcept(true);
     });
@@ -107,6 +112,15 @@ export class ConceptDisplayComponent implements OnInit {
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+  }
+
+  openHierarchyPopup() {
+    if (this.configService.getTriggerHierarchyPopup()) {
+      const baseHref = this.location.prepareExternalUrl('');
+      const url = this.router.createUrlTree([baseHref + this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
+      window.open(url, '_blank', 'width=600,height=1000');
+      this.configService.setTriggerHierarchyPopup(false);
     }
   }
 
