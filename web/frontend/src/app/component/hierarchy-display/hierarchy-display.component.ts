@@ -95,7 +95,6 @@ export class HierarchyDisplayComponent implements OnInit {
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
-    console.log('treeTableNodeSelected', event);
     // Handle selecting for more data for top level
     if (event.ct && event.data.parentCode === 'root') {
       if (

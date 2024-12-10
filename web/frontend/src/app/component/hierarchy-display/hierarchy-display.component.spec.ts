@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HierarchyDisplayComponent } from './hierarchy-display.component';
 
-// Testing for HierarchyPopupComponent (default tests)
+// Testing for HierarchyDisplayComponent (default tests)
 describe('HierarchyDisplayComponent', () => {
   let component: HierarchyDisplayComponent;
   let fixture: ComponentFixture<HierarchyDisplayComponent>;

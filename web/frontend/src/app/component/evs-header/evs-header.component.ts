@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
 import { NavigationEnd, Router } from '@angular/router';
-import {str} from "ajv";
 
 // Header component
 @Component({
@@ -11,7 +10,7 @@ import {str} from "ajv";
   templateUrl: './evs-header.component.html',
   styleUrls: ['./evs-header.component.css']
 })
-export class EvsHeaderComponent implements OnInit {
+export class EvsHeaderComponent implements OnInit, OnDestroy {
   versionInfo = '';
   terminology = null;
   firstRoot = '';
@@ -132,6 +131,4 @@ export class EvsHeaderComponent implements OnInit {
   toggleTruncation() {
     this.truncated = !this.truncated;
   }
-
-  protected readonly str = str;
 }
