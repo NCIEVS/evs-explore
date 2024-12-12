@@ -31,7 +31,6 @@ export class SubsetDetailsComponent implements OnInit {
   subsets: Array<Concept>;
   avoidLazyLoading = true;
   loading: boolean;
-  synonymSources: any;
   termAutoSearch: string;
   textSuggestions: string[] = [];
   subsetFormat: string;
@@ -77,17 +76,13 @@ export class SubsetDetailsComponent implements OnInit {
             this.subsets.push(new Concept(c, this.configService));
           });
         }
-        const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
+        this.subsetCodes[this.selectedSubset?.code] = 1;
         this.subsets.forEach((c) => {
-          if (c && c['synonyms'].length > 0) {
-            synonymMap.push(this.getSynonymSources(c['synonyms']));
-          }
-          if (c && c['inverseAssociations'].length > 0 && c['inverseAssociations'].find((assoc) => assoc.type == 'Concept_In_Subset')) {
+          if (c && c.isSubset()) {
             this.subsetCodes[c.code] = 1;
           }
         });
-        this.synonymSources = synonymMap;
         this.termAutoSearch = '';
 
         // getting the subs
@@ -102,12 +97,12 @@ export class SubsetDetailsComponent implements OnInit {
           // CHECK FOR CDISC
           else if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
             this.subsetFormat = 'CDISC';
+            // For subsets there will be only one contributing source value, take the first
             this.cdiscSubsetSource = ContSource[0].value;
-            if (!this.titleDesc) {
-              this.titleDesc = this.getSynonymNames(this.selectedSubset, 'CDISC', 'PT')[0];
-            }
-            if(!this.selectedSubset?.isCdiscGrouper())
+            // If this is a codelist, add the "blue" row at the top of the table
+            if (this.selectedSubset?.isCdiscCodeList()) {
               this.subsets.unshift(this.selectedSubset);
+            }
           } else if (ContSource.length === 1) {
             this.subsetFormat = ContSource[0].value;
           } else {
@@ -149,50 +144,26 @@ export class SubsetDetailsComponent implements OnInit {
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          if(!this.selectedSubset?.isCdiscGrouper())
+          if (this.selectedSubset?.isCdiscCodeList()) {
             this.subsets.unshift(this.selectedSubset);
+          }
           if (nodes['concepts']) {
             nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
             });
           }
 
-          const synonymMap = new Array<Map<string, string>>();
           this.subsetCodes = {};
+          this.subsetCodes[this.selectedSubset?.code] = 1;
           this.subsets.forEach((c) => {
-            synonymMap.push(this.getSynonymSources(c['synonyms']));
-            if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+            if (c && c.isSubset()) {
               this.subsetCodes[c.code] = 1;
             }
           });
-          this.synonymSources = synonymMap;
         });
       this.fromRecord = fromRecord;
       this.pageSize = event.rows;
     }
-  }
-
-  // get synonym sources for a concept
-  getSynonymSources(synonyms) {
-    const synonymSourceMap = new Map<string, string>();
-    synonyms.forEach((synonym) => {
-      if (synonym['source'] === undefined) {
-        if (!synonymSourceMap.has('No Source')) {
-          synonymSourceMap.set('No Source', synonym['name']);
-        } else {
-          const key = synonymSourceMap.get('No Source') + ', ' + synonym['name'];
-          synonymSourceMap.set('No Source', key);
-        }
-      } else {
-        if (!synonymSourceMap.has(synonym['source'])) {
-          synonymSourceMap.set(synonym['source'], synonym['name']);
-        } else {
-          const key = synonymSourceMap.get(synonym['source']) + ', ' + synonym['name'];
-          synonymSourceMap.set(synonym['source'], key);
-        }
-      }
-    });
-    return synonymSourceMap;
   }
 
   // search for a concept
@@ -228,21 +199,20 @@ export class SubsetDetailsComponent implements OnInit {
       this.hitsFound = nodes['total'];
       if (this.hitsFound > 0) {
         this.subsets = new Array<Concept>();
-        if(!this.selectedSubset?.isCdiscGrouper())
+        if (this.selectedSubset?.isCdiscCodeList()) {
           this.subsets.unshift(this.selectedSubset);
+        }
         nodes['concepts'].forEach((c) => {
           this.subsets.push(new Concept(c, this.configService));
         });
 
-        const synonymMap = new Array<Map<string, string>>();
         this.subsetCodes = {};
+        this.subsetCodes[this.selectedSubset?.code] = 1;
         this.subsets.forEach((c) => {
-          synonymMap.push(this.getSynonymSources(c['synonyms']));
-          if (c.inverseAssociations?.find((assoc) => assoc.type == 'Concept_In_Subset')) {
+          if (c.isSubset()) {
             this.subsetCodes[c.code] = 1;
           }
         });
-        this.synonymSources = synonymMap;
       } else {
         this.subsets = null;
       }
@@ -323,7 +293,7 @@ export class SubsetDetailsComponent implements OnInit {
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
       rowText += (extensible ? extensible : '') + '\t';
       // codelist name
-      rowText += this.getCodelistName(new Concept(concept, this.configService)) + '\t';
+      rowText += this.getCdiscCodelistName(new Concept(concept, this.configService)) + '\t';
       // cdisc submission value
       rowText += this.getCdiscSubmissionValue(new Concept(concept, this.configService)) + '\t';
       // cdisc synonyms
@@ -404,8 +374,8 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscCodelistCode() {
-    if(this.selectedSubset.isCdiscGrouper()) {
-      return null;
+    if (this.selectedSubset.isCdiscGrouper()) {
+      return '';
     } else {
       return this.selectedSubset.code;
     }
@@ -413,64 +383,70 @@ export class SubsetDetailsComponent implements OnInit {
 
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
-    if(concept.isCdiscGrouper()) {
-      return null;
+    // Groupers do not have a submission value
+    if (concept.isCdiscGrouper()) {
+      return '';
     }
-    // Kim's algorithm
 
-    // assumption: codelist only has one contributing source
-    var subsetContSource = this.selectedSubset.properties?.find((item) => item.type === 'Contributing_Source')?.value;
-    if(!subsetContSource) {
-      return "Unable to find submission value because codelist lacks contributing source";
+    // Codelists have a submission value matching CDISC or MRCTPT
+    if (concept.isCdiscCodeList()) {
+      return concept.getCdiscPtName();
     }
-    const cdiscSynonyms = concept.synonyms.filter(
-      (syn) =>
-        syn.source === subsetContSource &&
-        syn.type === "FULL_SYN" &&
-        syn.termType === "PT"
-    );
+
+    // Otherwise our concept is just a regular value
+
+    // CDISC Submission Value algorithm
+
+    // ASSUMPTION: codelist only has one contributing source
+    var subsetContSource = this.selectedSubset.properties?.find((item) => item.type === 'Contributing_Source')?.value;
+    if (!subsetContSource) {
+      return 'Unable to find submission value because codelist lacks contributing source';
+    }
+    // Find the matching contributing source PT
+    // ASSUMPTION: there will be at least 1
+    const cdiscSynonyms = concept.synonyms.filter((syn) => syn.source === subsetContSource && syn.termType === 'PT');
+    if (cdiscSynonyms.length == 0) {
+      return 'Unable to find submission value for ' + subsetContSource + '/PT';
+    }
 
     // Check if there's exactly one unique synonym
-    var nci_ab = "";
+    var nci_ab = '';
     if (cdiscSynonyms.length === 1) {
       return cdiscSynonyms[0].name;
-    } 
-    nci_ab = this.selectedSubset.synonyms.find(
-      (syn) =>
-        // no multiple MRCT
-        syn.source === "NCI" &&
-        syn.type === "FULL_SYN" &&
-        syn.termType === "AB"
-    )?.name;
-    if(nci_ab) {
-      const finalSynonym = cdiscSynonyms.find(
-        (syn) =>
-          syn.code === nci_ab
-      );
-      if(finalSynonym) {
-        return finalSynonym?.name;
-      } else {
-        return "Unable to find submission value (synonym that matches NCI source and AB term type)";
-      }
-      
     }
-    return "Unable to find submission value";
+    // Otherwise, find the NCI/AB of the codelist concept and find the CDISC/PT witha code matching the NCI/AB's name
+    nci_ab = this.selectedSubset.synonyms.find((syn) => syn.source === 'NCI' && syn.termType === 'AB')?.name;
+    if (nci_ab) {
+      const finalSynonym = cdiscSynonyms.find((syn) => syn.code === nci_ab);
+      if (finalSynonym) {
+        return finalSynonym.name;
+      }
+      // ASSUMPTION: there will be a final synonym
+      else {
+        return 'Unable to find submission value (synonym that matches NCI source and AB term type)';
+      }
+    }
+    return 'Unable to find submission value';
   }
 
-  getCodelistName(concept: Concept) {
-    
-    if(!concept.isSubset()) {
+  getCdiscCodelistName(concept: Concept) {
+    // For a regular entry in the table, the subset we are on is the codelist
+    if (!concept.isSubset()) {
       return this.selectedSubset.name;
-
     }
+
+    // If the subset we are on is a grouper
     if (this.selectedSubset.isCdiscGrouper()) {
-      if(concept.isCdiscGrouper()) {
-        return null;
-      } else {
+      // and the concept itself is a grouper, then don't show a name
+      if (concept.isCdiscGrouper()) {
+        return '';
+      }
+      // otherwise, the concept itself is a codelist entry, show its own name
+      else {
         return concept.name;
       }
     } else {
-        return this.selectedSubset.name;
+      return this.selectedSubset.name;
     }
   }
 
@@ -481,5 +457,4 @@ export class SubsetDetailsComponent implements OnInit {
     const desc = this.selectedSubset.properties.find((item) => item.type === 'Term_Browser_Value_Set_Description');
     return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
   }
-
 }
