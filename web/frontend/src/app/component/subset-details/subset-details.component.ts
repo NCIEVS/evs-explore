@@ -393,6 +393,11 @@ export class SubsetDetailsComponent implements OnInit {
       return concept.getCdiscPtName();
     }
 
+    // if selected subset is a grouper, no value
+    if (this.selectedSubset.isCdiscGrouper()) {
+      return '';
+    }
+
     // Otherwise our concept is just a regular value
 
     // CDISC Submission Value algorithm
@@ -432,6 +437,9 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscCodelistName(concept: Concept) {
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
+      if (this.selectedSubset.isCdiscGrouper()) { 
+        return ''; 
+      }
       return this.selectedSubset.name;
     }
 
