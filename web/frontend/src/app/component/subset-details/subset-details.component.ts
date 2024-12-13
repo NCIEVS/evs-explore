@@ -297,7 +297,7 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc submission value
       rowText += this.getCdiscSubmissionValue(new Concept(concept, this.configService)) + '\t';
       // cdisc synonyms
-      rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + '\t';
+      rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + '\t';
       // cdisc definition
       rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition + '\t';
       // NCIt pref term

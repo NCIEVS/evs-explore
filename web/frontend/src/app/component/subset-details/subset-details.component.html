@@ -236,7 +236,7 @@
             </td>
             <td class="w-20">{{ getCdiscCodelistName(value) }}</td>
             <td class="w-10">{{ getCdiscSubmissionValue(value) }}</td>
-            <td class="w-20">
+            <td class="w-15">
               <span *ngFor="let syn of value.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">
                 <span
                   >{{ syn }} <span *ngIf="!isLast"><br /></span>
