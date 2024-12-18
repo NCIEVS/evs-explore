@@ -614,7 +614,7 @@ export class Concept {
   }
 
   isSubset(): boolean {
-    return this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    return this.inverseAssociations?.some(invAssoc => invAssoc.type === "Concept_In_Subset");
   }
 
   // Default string representation is the name
