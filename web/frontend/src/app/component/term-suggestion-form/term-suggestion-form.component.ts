@@ -123,8 +123,8 @@ export class TermSuggestionFormComponent implements OnInit {
 
   // Popup information for a form submitted.
   @ViewChild('isSuccess', {static: true}) isSuccess: TemplateRef<any>;
-  protected submitFormMsg: string = '';
-  protected severity: string = '';
+  protected submitFormMsg = '';
+  protected severity = '';
 
   // set a default form
   private selectedForm = this.forms[0].id;
@@ -162,14 +162,25 @@ export class TermSuggestionFormComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const formId = params['formId'];
-      if (formId) {
-        // if the formId parameter is present, load that form
-        this.onloadForm(formId).catch(e => {
+      const code = params['code'];
+      if (formId && code) {
+        // if the formId parameter and code are present, load that form with the code passed
+        this.onloadForm(formId, code).catch(e => {
           console.error('Error loading form:', e);
         });
+      } else if (formId && !code) {
+        // If the formId param ispresent but the code is not present, load the form without the code
+        this.onloadForm(formId, null).catch(e => {
+          console.error('Error loading form:', e);
+        });
+      } else if (!formId && code) {
+        // If the formId param is not present but the code is present, load the default form with the code passed
+        this.onloadForm(this.selectedForm, code).catch(e => {
+          console.error('Error loading default form:', e);
+        });
       } else {
-        // If the formId param is not present, load the default form
-        this.onloadForm(this.selectedForm).catch(e => {
+        // If the formId and code param are not present, load the default form
+        this.onloadForm(this.selectedForm, null).catch(e => {
           console.error('Error loading default form:', e);
         });
       }
@@ -189,7 +200,7 @@ export class TermSuggestionFormComponent implements OnInit {
   }
 
   // load the form based on the formType selected. Handle the validation checks.
-  async onloadForm(formType: string): Promise<void> {
+  async onloadForm(formType: string, code: string): Promise<void> {
     console.log('Loading form ', formType);
     this.clearTermFormData();
     const response = await this.formService.getForm(formType);
@@ -236,6 +247,14 @@ export class TermSuggestionFormComponent implements OnInit {
         section.name,
         sectionGroup
       );
+    }
+
+    // Set the term field value if the code parameter is present
+    if (code) {
+      const termField = this.formGroup.get('termInfo.term');
+      if (termField) {
+        termField.setValue(code);
+      }
     }
     this.selectedForm = formType;
     this.displayLoadedForm();

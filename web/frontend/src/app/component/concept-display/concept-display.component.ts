@@ -219,8 +219,10 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  termSuggestionUrl() {
-    window.open(environment.host + '/evsexplore/termform?code=' + this.conceptCode, '_blank');
+  openTermSuggestionFormWithCode() {
+    const baseHref = this.location.prepareExternalUrl('');
+    const termFormUrl = this.router.createUrlTree([baseHref + '/termform']).toString();
+    window.open(termFormUrl + '?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {

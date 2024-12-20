@@ -364,7 +364,7 @@ export class Concept {
         }
       }
     }
-    return null;
+    return '';
   }
 
   // Get value from Concept_Status parameter
@@ -606,15 +606,38 @@ export class Concept {
   }
 
   isCdiscGrouper(): boolean {
-    return (this.code === "C61410" || ((this.name.startsWith("CDISC ") || this.name.startsWith("MRCT")) && !this.synonyms.some(syn => syn.source?.startsWith('CDISC') && syn.termType === 'SY'))) && this.inverseAssociations.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    // Only subsets can be groupers
+    if (!this.isSubset()) {
+      return false;
+    }
+
+    // CDISC subset without a CDISC/SY
+    return this.isCdiscSubset() && !this.hasCdiscSy();
   }
 
   isCdiscCodeList(): boolean {
-    return this.properties.some(prop => prop.type === "Publish_Value_Set" && prop.value === "true") && this.synonyms.some(syn => syn.source?.startsWith('CDISC') && syn.termType === 'SY');
+    // CDISC Subset with CDISC name a CDISC/SY
+    return this.isCdiscSubset() && this.hasCdiscSy();
+  }
+
+  hasCdiscSy(): boolean {
+    // source with CDISC* or MRCT* and termType = SY
+    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'SY');
+  }
+
+  getCdiscPtName(): string {
+    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'PT')
+      ?.name;
+  }
+
+  isCdiscSubset(): boolean {
+    // subset with a name starting with CDISC or MRCT
+    return this.code === 'C61410' || (this.isSubset() && (this.name.startsWith('CDISC ') || this.name.startsWith('MRCT-Ctr')));
   }
 
   isSubset(): boolean {
-    return this.inverseAssociations?.some(invAssoc => invAssoc.type === "Concept_In_Subset");
+    // It's a subset if it has Publish_Value_Set=Yes
+    return this.properties.some((prop) => prop.type === 'Publish_Value_Set' && prop.value === 'Yes');
   }
 
   // Default string representation is the name
