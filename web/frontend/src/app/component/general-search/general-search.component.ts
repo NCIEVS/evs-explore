@@ -575,8 +575,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
     var conceptFormatString = '';
     if (displayColumns.includes('Terminology'))
       conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, '') + ',';
-    if (displayColumns.includes('Code')) conceptFormatString += concept.code + ',';
-    if (displayColumns.includes('Preferred Name')) conceptFormatString += concept.name + ',';
+    if (displayColumns.includes('Code')) conceptFormatString += this.escapeValue(concept.code) + ',';
+    if (displayColumns.includes('Preferred Name')) conceptFormatString += this.escapeValue(concept.name) + ',';
 
     if (displayColumns.includes('Synonyms')) {
       var synonymString = '';
@@ -619,10 +619,17 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         }
       }
-      conceptFormatString += semString;
+      conceptFormatString += this.escapeValue(semString);
     }
     conceptFormatString += '\n';
     return conceptFormatString;
+  }
+
+  escapeValue(value) {
+    if (/[,\n"]/.test(value)) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // Set default selected columns

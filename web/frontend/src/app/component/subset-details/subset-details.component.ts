@@ -294,7 +294,7 @@ export class SubsetDetailsComponent implements OnInit {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
       rowText += concept.code + ',';
-      rowText += concept.name + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
       rowText += ',';
       if (concept.definitions) {
@@ -308,9 +308,9 @@ export class SubsetDetailsComponent implements OnInit {
       rowText += this.titleCode + ',';
       rowText += this.titleDesc + ',';
       rowText += concept.code + ',';
-      rowText += concept.name + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       concept.synonyms.forEach((syn) => {
-        if (syn.type === 'Display_Name') rowText += syn.name;
+        if (syn.type === 'Display_Name') rowText += this.escapeValue(syn.name);
       });
       rowText += ',';
       rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
@@ -318,20 +318,20 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc code
       rowText += concept.code + ',';
       // codelist code
-      rowText += this.getCdiscCodelistCode() + ',';
+      rowText += this.escapeValue(this.getCdiscCodelistCode()) + ',';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
-      rowText += (extensible ? extensible : '') + ',';
+      rowText += this.escapeValue((extensible ? extensible : '')) + ',';
       // codelist name
-      rowText += this.getCodelistName(concept) + ',';
+      rowText += this.escapeValue(this.getCodelistName(concept)) + ',';
       // cdisc submission value
-      rowText += this.getCdiscSubmissionValue(concept) + ',';
+      rowText += this.escapeValue(this.getCdiscSubmissionValue(concept)) + ',';
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, 'CDISC', 'SY').join('\n') + '"' + ',';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition + ',';
+      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition) + ',';
       // NCIt pref term
-      rowText += concept.name;
+      rowText += this.escapeValue(concept.name);
     } else {
       rowText += concept.code + ',';
       rowText += '"' + this.getSynonymNames(concept, this.subsetFormat, null).join('\n') + '"';
@@ -360,6 +360,13 @@ export class SubsetDetailsComponent implements OnInit {
     }
     rowText += '\n';
     return rowText;
+  }
+
+  escapeValue(value) {
+    if (/[,\n"]/.test(value)) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // get synonym names for a concept
@@ -405,7 +412,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   getCdiscCodelistCode() {
     if(this.selectedSubset.isCdiscGrouper()) {
-      return null;
+      return "";
     } else {
       return this.selectedSubset.code;
     }
@@ -414,7 +421,7 @@ export class SubsetDetailsComponent implements OnInit {
   // Uses this.submissionValueCode to determine the submission value column for CDISC display
   getCdiscSubmissionValue(concept: Concept): string {
     if(concept.isCdiscGrouper()) {
-      return null;
+      return "";
     }
     // Kim's algorithm
 
@@ -464,7 +471,7 @@ export class SubsetDetailsComponent implements OnInit {
     }
     if (this.selectedSubset.isCdiscGrouper()) {
       if(value.isCdiscGrouper()) {
-        return null;
+        return "";
       } else {
         return value.name;
       }
