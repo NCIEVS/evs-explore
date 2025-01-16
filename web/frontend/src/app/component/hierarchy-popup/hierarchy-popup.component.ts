@@ -9,7 +9,7 @@ import { TreeTable } from 'primeng/treetable';
 
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
-  selector: 'app-hierarchy-display',
+  selector: 'app-hierarchy-popup',
   templateUrl: './hierarchy-popup.component.html',
   styleUrls: ['./hierarchy-popup.component.css'],
 })
@@ -24,9 +24,10 @@ export class HierarchyPopupComponent implements OnInit {
   terminology: any;
   title: string;
 
-  hierarchPopupUrl = '/hierarchy-popup/';
-  hierarchyUrl = '/hierarchy/';
-  conceptUrl = '/concept/';
+  route = 'hierarchy-popup';
+  parentUrl = window.location.origin;
+  hierarchyPart = 'hierarchy';
+  conceptPart = 'concept';
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -45,10 +46,18 @@ export class HierarchyPopupComponent implements OnInit {
     private conceptDetailService: ConceptDetailService,
     private router: Router,
     private loaderService: LoaderService,
-    public configService: ConfigurationService
+    public configService: ConfigurationService,
   ) {
     // Do this in the constructor so it's ready to go when this component is injected
     this.configSetup();
+
+    const parts = window.location.href.split('/');
+    if (parts.length > 3) {
+      // Assuming at least one path segment after domain
+      if (parts[3] !== this.route) {
+        this.parentUrl = window.location.origin + '/' + parts[3];
+      }
+    }
   }
 
   ngOnInit() {
@@ -63,89 +72,72 @@ export class HierarchyPopupComponent implements OnInit {
     this.selectedSources = this.configService.getSelectedSources();
     this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
-
   }
 
   closeHierarchyPopup() {
-    window.opener.location.href = this.hierarchyUrl + this.terminology + '/' + this.conceptCode;
-    window.close();
+    window.opener.location.href = [this.parentUrl, this.hierarchyPart, this.terminology, this.conceptCode].join('/');
+    setTimeout(() => {
+      window.close();
+    }, 100);
   }
 
-  updateDisplaySize = () => {
-    const bodyHeight = document.documentElement.scrollHeight;
-    document.getElementById('hierarchyTableDisplay').style.height =
-      bodyHeight + 'px';
-    /*
-     * Adjust the size of the hierarchy display
-     */
-    let tableHeight = 0;
-    if (bodyHeight > 1200) {
-      tableHeight = 1200;
-    } else {
-      tableHeight = bodyHeight;
-    }
-    this.hierarchyTable.scrollHeight = tableHeight - 200 + 'px';
-  }
+  // updateDisplaySize = () => {
+  //   const bodyHeight = document.documentElement.scrollHeight;
+  //   document.getElementById('hierarchyTableDisplay').style.height = bodyHeight + 'px';
+  //   /*
+  //    * Adjust the size of the hierarchy display
+  //    */
+  //   let tableHeight = 0;
+  //   if (bodyHeight > 1200) {
+  //     tableHeight = 1200;
+  //   } else {
+  //     tableHeight = bodyHeight;
+  //   }
+  //   this.hierarchyTable.scrollHeight = tableHeight - 200 + 'px';
+  // };
 
   // Handler for selecting a tree node
   treeTableNodeSelected(event) {
     // Handle selecting for more data for top level
     if (event.ct && event.data.parentCode === 'root') {
-      if (
-        confirm(
-          'Loading all tree positions may take a while, are you sure you want to proceed?'
-        )
-      ) {
+      if (confirm('Loading all tree positions may take a while, are you sure you want to proceed?')) {
         this.getAllPathsInHierarchy();
       }
       setTimeout(() => (this.selectedNode = null), 100);
     } else if (event.ct) {
-    // Handle selecting for more data for sibling level
-      if (
-        confirm(
-          'Loading more data may take a while, are you sure you want to proceed?'
-        )
-      ) {
-        this.getAllTreeTableChildrenNodes(
-          event.data.parentCode,
-          event.data.parentNode
-        );
+      // Handle selecting for more data for sibling level
+      if (confirm('Loading more data may take a while, are you sure you want to proceed?')) {
+        this.getAllTreeTableChildrenNodes(event.data.parentCode, event.data.parentNode);
       }
       setTimeout(() => (this.selectedNode = null), 100);
-    }  else {
-    // Handle selecting a code to navigate away
+    } else {
+      // Handle selecting a code to navigate away
       // control the redirect based on the parent window (concept-display)
-      window.opener.location.href = this.conceptUrl + this.terminology + '/' + event.code;
+      window.opener.location.href = [this.parentUrl, this.conceptPart, this.terminology, event.code].join('/');
+
       // Handle selecting a code to navigate away
       this.conceptCode = event.code;
       this.getPathInHierarchy();
-      this.router.navigate([
-        this.hierarchPopupUrl + this.terminology + '/' + event.code,
-      ]);
+      this.router.navigate([this.route, this.terminology, event.code]);
     }
   }
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy(limit: number = this.hierarchyLimit) {
     this.loaderService.showLoader();
-    this.conceptDetailService
-      .getHierarchyData(this.conceptCode, limit)
-      .then((nodes) => {
-        this.hierarchyData = (nodes as TreeNode[]);
-        for (const node of this.hierarchyData) {
-          this.setTreeTableProperties(node, null);
-        }
-        this.updateDisplaySize();
-        if (this.selectedNodes.length > 0) {
-          setTimeout(() => {
-            this.scrollToSelectionTableTree(
-              this.selectedNodes[0],
-              this.hierarchyTable
-            );
-          }, 100);
-        }
-        this.loaderService.hideLoader();
-      });
+    this.conceptDetailService.getHierarchyData(this.conceptCode, limit).then((nodes) => {
+      this.hierarchyData = nodes as TreeNode[];
+      for (const node of this.hierarchyData) {
+        this.setTreeTableProperties(node, null);
+      }
+      //this.updateDisplaySize();
+      if (this.selectedNodes.length > 0) {
+        setTimeout(() => {
+          this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
+        }, 100);
+      }
+      this.loaderService.hideLoader();
+    });
   }
 
   getAllPathsInHierarchy() {
@@ -161,29 +153,24 @@ export class HierarchyPopupComponent implements OnInit {
   // Get child tree nodes (for an expanded node)
   getTreeTableChildrenNodes(code: string, node: any, limit: number = 100) {
     this.loaderService.showLoader();
-    this.conceptDetailService
-      .getHierarchyChildData(code, limit)
-      .then((nodes) => {
-        if (limit == null) {
-          const codes = new Set(node.children.map((n) => n.code));
-          // Remove the 'ct' node and combine the list with the remaining elements
-          // NOTE: this may require resorting
-          node.children = [
-            ...node.children.filter((n) => !n.ct),
-            ...nodes.filter((n) => !codes.has(n['code'])),
-          ];
-        } else {
-          node.children = nodes;
-        }
-        for (const child of node.children) {
-          this.setTreeTableProperties(child, node);
-        }
-        this.deepCopyHierarchyData();
-        setTimeout(() => {
-          this.scrollToSelectionTableTree(node, this.hierarchyTable);
-        }, 100);
-        this.loaderService.hideLoader();
-      });
+    this.conceptDetailService.getHierarchyChildData(code, limit).then((nodes) => {
+      if (limit == null) {
+        const codes = new Set(node.children.map((n) => n.code));
+        // Remove the 'ct' node and combine the list with the remaining elements
+        // NOTE: this may require resorting
+        node.children = [...node.children.filter((n) => !n.ct), ...nodes.filter((n) => !codes.has(n['code']))];
+      } else {
+        node.children = nodes;
+      }
+      for (const child of node.children) {
+        this.setTreeTableProperties(child, node);
+      }
+      this.deepCopyHierarchyData();
+      setTimeout(() => {
+        this.scrollToSelectionTableTree(node, this.hierarchyTable);
+      }, 100);
+      this.loaderService.hideLoader();
+    });
   }
 
   getAllTreeTableChildrenNodes(code: string, node: any) {
@@ -257,9 +244,7 @@ export class HierarchyPopupComponent implements OnInit {
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
     // console.log('scroll to selection', selectedNode);
     let index = 0;
-    const hierarchyRows = this.hierarchyTable.el.nativeElement.querySelectorAll(
-      '.p-treetable-tbody>tr'
-    );
+    const hierarchyRows = this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr');
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
@@ -267,18 +252,20 @@ export class HierarchyPopupComponent implements OnInit {
         break;
       }
     }
-    if (
-      this.hierarchyTable.el.nativeElement.querySelectorAll(
-        '.p-treetable-tbody>tr'
-      )[index] !== undefined
-    ) {
-      this.hierarchyTable.el.nativeElement
-        .querySelectorAll('.p-treetable-tbody>tr')
-      [index].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'start',
-      });
+    if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
+      if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
+        this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index].scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'start',
+        });
+        setTimeout(() => {
+          document.getElementById('hierarchyTableDisplay').scrollIntoView({
+            behavior: 'smooth',
+            inline: 'start',
+          });
+        }, 100);
+      }
     }
   }
 
@@ -312,9 +299,7 @@ export class HierarchyPopupComponent implements OnInit {
     }
 
     // If there is no overlap between sourceList and selectedSources, clear selectedSources
-    const intersection = [...sourceList].filter((x) =>
-      this.selectedSources.has(x)
-    );
+    const intersection = [...sourceList].filter((x) => this.selectedSources.has(x));
     if (intersection.length === 0) {
       this.toggleSelectedSource('All');
     }
@@ -325,10 +310,7 @@ export class HierarchyPopupComponent implements OnInit {
 
   toggleSelectedSource(source) {
     // clear if All is selected or was last selected
-    if (
-      source === 'All' ||
-      (this.selectedSources.size === 1 && this.selectedSources.has('All'))
-    ) {
+    if (source === 'All' || (this.selectedSources.size === 1 && this.selectedSources.has('All'))) {
       this.selectedSources.clear();
     }
     if (this.selectedSources.has(source)) {
