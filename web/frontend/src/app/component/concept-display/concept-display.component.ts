@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
@@ -60,7 +60,6 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   conceptIsSubset: boolean;
   hierarchyPopupUrl = '/hierarchy-popup/';
 
-
   subscription = null;
 
   constructor(
@@ -119,7 +118,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     if (this.configService.getTriggerHierarchyPopup()) {
       const baseHref = this.location.prepareExternalUrl('');
       const url = this.router.createUrlTree([baseHref + this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
-      window.open(url, '_blank', 'width=600,height=1000');
+      window.open(url, '_blank', 'width=600,height=850,scrolbars=no');
       this.configService.setTriggerHierarchyPopup(false);
     }
   }
