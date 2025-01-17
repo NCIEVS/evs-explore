@@ -91,7 +91,10 @@ export class SubsetDetailsComponent implements OnInit {
           this.titleDesc = this.selectedSubset.name;
           this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
           const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
-          if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
+          if(this.selectedSubset.properties.find((prop) => prop.value === 'NCI' && prop.type === 'EVSRESTAPI_Subset_Format')) {
+            this.subsetFormat = 'NCIt';
+          }
+          else if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
             this.subsetFormat = 'CTRP';
           }
           // CHECK FOR CDISC
