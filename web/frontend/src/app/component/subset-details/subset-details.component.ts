@@ -111,7 +111,9 @@ export class SubsetDetailsComponent implements OnInit {
           this.subsetLink = this.selectedSubset.getSubsetLink();
 
           // Lookup the subset description.
-          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, this.selectedSubset.getSubsetDescription());
+          // FIX to move a period outside the closing </p> tag to inside it
+          var fixDesc = this.selectedSubset.getSubsetDescription().replace('</p>.', '.</p>');
+          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, fixDesc);
           if (!this.subsetDescription) {
             for (let definition of this.selectedSubset.definitions) {
               if (definition.source === 'NCI') {
@@ -437,8 +439,8 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscCodelistName(concept: Concept) {
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
-      if (this.selectedSubset.isCdiscGrouper()) { 
-        return ''; 
+      if (this.selectedSubset.isCdiscGrouper()) {
+        return '';
       }
       return this.selectedSubset.name;
     }
