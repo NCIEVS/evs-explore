@@ -771,7 +771,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Incoming Role Relationships',
           'Incoming Associations',
           'Disjoint With',
-          'History',
+          'Concept History',
         ],
       };
     } else {
@@ -787,7 +787,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Broader Concepts': broaderConceptWorksheet,
           'Narrower Concepts': narrowerConceptWorksheet,
           'Other Relationships': otherRelationshipsWorksheet,
-          History: historyWorksheet,
+          'Concept History': historyWorksheet,
         },
         SheetNames: [
           'Name',
@@ -801,7 +801,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Broader Concepts',
           'Narrower Concepts',
           'Other Relationships',
-          'History',
+          'Concept History',
         ],
       };
     }
