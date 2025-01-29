@@ -153,17 +153,11 @@
           the search words entered in
           the specified order.
         </li>
-        <li><b>Phrase</b> performs a search that looks for matches containing all search
-          words entered in the specified
-          order (but does not require the match to be at the beginning of the concept or
-          an exact match). Searches in
-          this mode will also find all results returned by the same search using <b>Exact
-            Match</b> or <b>Starts
-            With</b>.
+        <li><b>Phrase</b> performs a search that looks for the full string entered into the search box, without regard for its position. Searches in
+          this mode will find all results returned by the same search using <b>Exact
+            Match</b> or <b>Starts With</b>, as well as anything that merely <i>contains</i> the full string entered. For example, searching for <span class="tt">Blood Sample</span> will return <i>Blood Sample</i> and <i>Archived Newborn Blood Sample</i>, but not <i>sample of peripheral blood</i>.
         </li>
-        <li><b>Fuzzy</b> performs a search that looks for any words typed and for fuzzy
-          variants of those words,
-          favoring results with more words matched, and with words matched in order.
+        <li><b>Fuzzy</b> finds results that include the words you type, along with similar "fuzzy" variations (e.g., "color" may also find "colour", and vice versa). It prioritizes results that match more words and keep them in the same order.
         </li>
         <li><b>AND</b> performs a search that looks for matches containing all of the words
           that were entered in any
