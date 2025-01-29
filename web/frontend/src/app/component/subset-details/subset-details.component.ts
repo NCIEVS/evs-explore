@@ -240,7 +240,7 @@ export class SubsetDetailsComponent implements OnInit {
 
     let term = document.getElementById('termauto').getAttribute('ng-reflect-model');
     term = term && term.length > 2 ? term : '';
-    let subsetText = titles.join('\t') + '\n';
+    let subsetText = titles.join(',') + '\n';
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
@@ -253,7 +253,7 @@ export class SubsetDetailsComponent implements OnInit {
         .toPromise()
         .then((result) => {
           result.concepts.forEach((c) => {
-            subsetText += this.exportCodeFormatter(c);
+            subsetText += this.exportCodeFormatter(new Concept(c, this.configService));
           });
         });
     }
@@ -262,7 +262,7 @@ export class SubsetDetailsComponent implements OnInit {
       new Blob([subsetText], {
         type: 'text/plain',
       }),
-      fileName + new Date().toISOString() + '.xls',
+      fileName + new Date().toISOString() + '.csv',
     );
     this.loaderService.hideLoader();
   }
@@ -271,10 +271,10 @@ export class SubsetDetailsComponent implements OnInit {
   exportCodeFormatter(concept: Concept) {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
-      rowText += concept.code + '\t';
-      rowText += concept.name + '\t';
+      rowText += concept.code + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
           if (def.source === 'NCI') {
@@ -283,41 +283,41 @@ export class SubsetDetailsComponent implements OnInit {
         });
       }
     } else if (this.subsetFormat === 'CTRP') {
-      rowText += this.titleCode + '\t';
-      rowText += this.titleDesc + '\t';
-      rowText += concept.code + '\t';
-      rowText += concept.name + '\t';
+      rowText += this.titleCode + ',';
+      rowText += this.titleDesc + ',';
+      rowText += concept.code + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       concept.synonyms.forEach((syn) => {
-        if (syn.type === 'Display_Name') rowText += syn.name;
+        if (syn.type === 'Display_Name') rowText += this.escapeValue(syn.name);
       });
-      rowText += '\t';
+      rowText += ',';
       rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
     } else if (this.subsetFormat === 'CDISC') {
       // cdisc code
-      rowText += concept.code + '\t';
+      rowText += concept.code + ',';
       // codelist code
-      rowText += this.getCdiscCodelistCode() + '\t';
+      rowText += this.escapeValue(this.getCdiscCodelistCode()) + ',';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
-      rowText += (extensible ? extensible : '') + '\t';
+      rowText += this.escapeValue((extensible ? extensible : '')) + ',';
       // codelist name
-      rowText += this.getCdiscCodelistName(new Concept(concept, this.configService)) + '\t';
+      rowText += this.escapeValue(this.getCdiscCodelistName(new Concept(concept, this.configService))) + ',';
       // cdisc submission value
-      rowText += this.getCdiscSubmissionValue(new Concept(concept, this.configService)) + '\t';
+      rowText += this.escapeValue(this.getCdiscSubmissionValue(new Concept(concept, this.configService))) + ',';
       // cdisc synonyms
-      rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + '\t';
+      rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + ',';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition + '\t';
+      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition) + ',';
       // NCIt pref term
-      rowText += concept.name;
+      rowText += this.escapeValue(concept.name);
     } else {
-      rowText += concept.code + '\t';
+      rowText += concept.code + ',';
       rowText += '"' + this.getSynonymNames(concept, this.subsetFormat, null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
 
-      rowText += concept.name + '\t';
+      rowText += concept.name + ',';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
 
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
@@ -326,7 +326,7 @@ export class SubsetDetailsComponent implements OnInit {
           }
         });
       }
-      rowText += '\t';
+      rowText += ',';
 
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
@@ -338,6 +338,13 @@ export class SubsetDetailsComponent implements OnInit {
     }
     rowText += '\n';
     return rowText;
+  }
+
+  escapeValue(value) {
+    if (/[,\n"]/.test(value)) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // get synonym names for a concept
