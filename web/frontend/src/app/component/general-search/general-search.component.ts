@@ -575,7 +575,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
     var conceptFormatString = '';
     if (displayColumns.includes('Terminology'))
       conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, '') + ',';
-    if (displayColumns.includes('Code')) conceptFormatString += this.escapeValue(concept.code) + ',';
+    if (displayColumns.includes('Code') || displayColumns.includes('CUI')) conceptFormatString += this.escapeValue(concept.code) + ',';
     if (displayColumns.includes('Preferred Name')) conceptFormatString += this.escapeValue(concept.name) + ',';
 
     if (displayColumns.includes('Synonyms')) {
