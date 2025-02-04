@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConceptDetailService } from './../../service/concept-detail.service';
 import { Concept } from './../../model/concept';
 import { ConfigurationService } from '../../service/configuration.service';
 import { Subject } from 'rxjs';
-import { writeXLSX, utils, WorkSheet } from 'xlsx';
+import { writeXLSX, utils, WorkSheet } from 'xlsx-republish';
 import { saveAs } from 'file-saver';
 import { ViewportScroller } from '@angular/common';
 import { LoaderService } from '../../service/loader.service';
+import { environment } from '../../../environments/environment';
 
 // Concept display component
 // BAC - looks like not used
@@ -17,7 +18,7 @@ import { LoaderService } from '../../service/loader.service';
   templateUrl: './concept-display.component.html',
   styleUrls: ['./concept-display.component.css'],
 })
-export class ConceptDisplayComponent implements OnInit {
+export class ConceptDisplayComponent implements OnInit, OnDestroy {
   expandCollapseChange: Subject<boolean> = new Subject();
   getConceptIsSubset: Subject<boolean> = new Subject();
 
@@ -57,6 +58,7 @@ export class ConceptDisplayComponent implements OnInit {
   collapsed: boolean = false;
   collapsedText: string = 'Collapse All';
   conceptIsSubset: boolean;
+  hierarchyPopupUrl = '/hierarchy-popup/';
 
   subscription = null;
 
@@ -72,6 +74,7 @@ export class ConceptDisplayComponent implements OnInit {
     this.configService.setConfigFromPathname(window.location.pathname);
     this.configService.setConfigFromQuery(window.location.search);
     this.selectedSources = this.configService.getSelectedSources();
+    this.conceptCode = this.configService.getCode();
     this.terminology = this.configService.getTerminologyName();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -81,6 +84,9 @@ export class ConceptDisplayComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         // Trick the Router into believing it's last link wasn't previously loaded
         this.router.navigated = false;
+        if (event.url.indexOf('/hierarchy') === -1) {
+          this.openHierarchyPopup();
+        }
       }
     });
   }
@@ -97,7 +103,6 @@ export class ConceptDisplayComponent implements OnInit {
           this.properties.push(property['name']);
         }
       }
-
       // Then look up the concept
       this.lookupConcept(true);
     });
@@ -106,6 +111,15 @@ export class ConceptDisplayComponent implements OnInit {
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+  }
+
+  openHierarchyPopup() {
+    if (this.configService.getTriggerHierarchyPopup()) {
+      const baseHref = this.location.prepareExternalUrl('');
+      const url = this.router.createUrlTree([baseHref + this.hierarchyPopupUrl + this.terminology + '/' + this.conceptCode]).toString();
+      window.open(url, '_blank', 'width=600,height=850,scrolbars=no');
+      this.configService.setTriggerHierarchyPopup(false);
     }
   }
 
@@ -204,8 +218,10 @@ export class ConceptDisplayComponent implements OnInit {
     return result;
   }
 
-  termSuggestionUrl() {
-    window.open('https://ncitermform.nci.nih.gov/ncitermform/?code=' + this.conceptCode, '_blank');
+  openTermSuggestionFormWithCode() {
+    const baseHref = this.location.prepareExternalUrl('');
+    const termFormUrl = this.router.createUrlTree([baseHref + '/termform']).toString();
+    window.open(termFormUrl + '?code=' + this.conceptCode, '_blank');
   }
 
   expandCollapseTables() {
@@ -740,7 +756,7 @@ export class ConceptDisplayComponent implements OnInit {
           'Incoming Role Relationships': incomingRoleRelationshipsWorksheet,
           'Incoming Associations': incomingAssociationsWorksheet,
           'Disjoint With': disjointWithWorksheet,
-          History: historyWorksheet,
+          'Concept History': historyWorksheet,
         },
         SheetNames: [
           'Name',
@@ -755,7 +771,7 @@ export class ConceptDisplayComponent implements OnInit {
           'Incoming Role Relationships',
           'Incoming Associations',
           'Disjoint With',
-          'History',
+          'Concept History',
         ],
       };
     } else {
@@ -771,7 +787,7 @@ export class ConceptDisplayComponent implements OnInit {
           'Broader Concepts': broaderConceptWorksheet,
           'Narrower Concepts': narrowerConceptWorksheet,
           'Other Relationships': otherRelationshipsWorksheet,
-          History: historyWorksheet,
+          'Concept History': historyWorksheet,
         },
         SheetNames: [
           'Name',
@@ -785,7 +801,7 @@ export class ConceptDisplayComponent implements OnInit {
           'Broader Concepts',
           'Narrower Concepts',
           'Other Relationships',
-          'History',
+          'Concept History',
         ],
       };
     }

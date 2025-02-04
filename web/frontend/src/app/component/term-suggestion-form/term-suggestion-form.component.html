@@ -1,8 +1,23 @@
 <div class="container" style="padding-top: 4px;padding-bottom: 6px;">
   <div class="page-header-container">
     <div class="page-header">
-      Term Suggestion</div>
+      Term Suggestion
+    </div>
   </div>
+  <!-- Display the message banner when form is submitted successfully-->
+  <ng-template #isSuccess let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{ severity }}</h4>
+    </div>
+    <div class="modal-body">
+      <p>{{ submitFormMsg }}</p>
+    </div>
+    <div class="modal-footer">
+      <form action="" (submit)="modal.close()" method="POST">
+        <button type="submit" class="btn btn-sm btn-secondary">Close</button>
+      </form>
+    </div>
+  </ng-template>
   <div class="form-container" *ngIf="uiState.isFormLoaded">
     <!-- Selector for changing the form -->
     <div class="form-selector-container">
@@ -44,11 +59,17 @@
               <span
                 *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
             </div>
-            <!-- Dropdown -->
-            <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="text-body field-input">
+            <!-- Dropdown with multiple select -->
+            <p-multiSelect *ngIf="field.type === 'dropdown' && field.multiple"
+                           [formControlName]="field.name" [options]="field.mappedOptions" [filter]="true"
+                           [placeholder]="field.placeholder" [selectedItemsLabel]="'{0} items selected'"
+                           [defaultLabel]="field.label" class="text-body field-input">
+            </p-multiSelect>
+            <!-- Dropdown no multiple select-->
+            <select *ngIf="field.type === 'dropdown' && !field.multiple" [formControlName]="field.name"
+                    class="text-body field-input">
               <option value="" disabled selected>{{ field.placeholder }}</option>
-              <option *ngFor="let option of field.options" [value]="option">{{ option }}
-              </option>
+              <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
             </select>
             <!-- Error Messages from validation checks -->
           </div>

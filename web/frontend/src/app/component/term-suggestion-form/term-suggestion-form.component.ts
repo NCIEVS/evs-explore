@@ -1,12 +1,12 @@
-import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
 import {LoaderService} from 'src/app/service/loader.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ReCaptcha2Component} from 'ngx-captcha';
-import {MessageService} from 'primeng/api';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 // interface for core form structure
@@ -33,6 +33,7 @@ interface Field {
   type?: string;
   value: string;
   options?: string[];
+  mappedOptions?: { label: string, value: string }[];
   placeholder?: string;
   multiple?: boolean;
   readonly?: boolean;
@@ -120,6 +121,11 @@ export class TermSuggestionFormComponent implements OnInit {
     {id: 'cdisc-form', name: 'CDISC Form'},
   ];
 
+  // Popup information for a form submitted.
+  @ViewChild('isSuccess', {static: true}) isSuccess: TemplateRef<any>;
+  protected submitFormMsg = '';
+  protected severity = '';
+
   // set a default form
   private selectedForm = this.forms[0].id;
 
@@ -132,11 +138,11 @@ export class TermSuggestionFormComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private configService: ConfigurationService,
     private loaderService: LoaderService,
+    private modalService: NgbModal,
     // inject the router service
     private router: Router,
     // inject the ActivatedRoute service
     private route: ActivatedRoute,
-    private messageService: MessageService,
   ) {
     this.uiState = new UIState(fb);
     // initialize the termFormData to an empty form.
@@ -152,18 +158,29 @@ export class TermSuggestionFormComponent implements OnInit {
     });
   }
 
-  // Load the form, if no formId is present, load default
+  // Load the form, if no formId is present, load default. Populate submitFormMsgs array
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const formId = params['formId'];
-      if (formId) {
-        // if the formId parameter is present, load that form
-        this.onloadForm(formId).catch(e => {
+      const code = params['code'];
+      if (formId && code) {
+        // if the formId parameter and code are present, load that form with the code passed
+        this.onloadForm(formId, code).catch(e => {
           console.error('Error loading form:', e);
         });
+      } else if (formId && !code) {
+        // If the formId param ispresent but the code is not present, load the form without the code
+        this.onloadForm(formId, null).catch(e => {
+          console.error('Error loading form:', e);
+        });
+      } else if (!formId && code) {
+        // If the formId param is not present but the code is present, load the default form with the code passed
+        this.onloadForm(this.selectedForm, code).catch(e => {
+          console.error('Error loading default form:', e);
+        });
       } else {
-        // If the formId param is not present, load the default form
-        this.onloadForm(this.selectedForm).catch(e => {
+        // If the formId and code param are not present, load the default form
+        this.onloadForm(this.selectedForm, null).catch(e => {
           console.error('Error loading default form:', e);
         });
       }
@@ -173,12 +190,17 @@ export class TermSuggestionFormComponent implements OnInit {
   // Change the form with the dropdown
   async onFormChange(formId: string): Promise<void> {
     this.loaderService.showLoader();
+    // show the loader for slightly longer before navigating to the new form
+    await new Promise(resolve => setTimeout(resolve, 100));
     await this.router.navigate(['/termform'], {queryParams: {formId}});
-    this.loaderService.hideLoader();
+    // wait to hide loader just a little bit for smoother transition
+    setTimeout(() => {
+      this.loaderService.hideLoader();
+    }, 350);
   }
 
   // load the form based on the formType selected. Handle the validation checks.
-  async onloadForm(formType: string): Promise<void> {
+  async onloadForm(formType: string, code: string): Promise<void> {
     console.log('Loading form ', formType);
     this.clearTermFormData();
     const response = await this.formService.getForm(formType);
@@ -202,6 +224,12 @@ export class TermSuggestionFormComponent implements OnInit {
           field.name,
           this.fb.control(field.value, validators),
         );
+        // Check if the field is a multiple select dropdown and map options to required format
+        if (field.type === 'dropdown' && field.multiple) {
+          field.mappedOptions = field.options.map(option => ({
+            label: option, value: option
+          }));
+        }
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
         formControl.valueChanges.subscribe(() => {
@@ -220,6 +248,14 @@ export class TermSuggestionFormComponent implements OnInit {
         sectionGroup
       );
     }
+
+    // Set the term field value if the code parameter is present
+    if (code) {
+      const termField = this.formGroup.get('termInfo.term');
+      if (termField) {
+        termField.setValue(code);
+      }
+    }
     this.selectedForm = formType;
     this.displayLoadedForm();
     this.cdr.detectChanges();
@@ -234,45 +270,38 @@ export class TermSuggestionFormComponent implements OnInit {
     this.uiState.isFormLoaded = true;
   }
 
-  // When submit is clicked, build the terFormData to populate our model form submission and call submitForm api
+  // When submit is clicked, build the terFormData to populate our model and call submitForm api
   async onSubmit() {
     // Check our captcha was completed successfully
     if (!this.captchaSuccessEvent) {
       console.log('ERROR: Captcha not completed successfully');
-      return;
+      this.submitFormMsg = 'Error found with captcha';
+      this.severity = 'Error';
+      this.modalService.open(this.isSuccess);
     }
 
     // create the termFormData from the filled out form
-    let submittedFormData: TermFormData;
-    let submittedSubject = '';
-
-    // set the subject based on the submitted form
-    if (this.formData.formType === 'CDISC') {
-      submittedSubject = 'Term Suggestion for CDISC Terminology: ';
-    } else if (this.formData.formType === 'NCIT') {
-      submittedSubject = 'Term Suggestion: ';
-    }
-    // populate the submittedFormData
-    submittedFormData = {
-      formName: this.formData.formType,
-      recipientEmail: this.formData.recipientEmail,
-      businessEmail: this.formGroup.get('contact.email').value,
-      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
-      body: this.formGroup.value,
-    };
+    const submittedFormData: TermFormData = this.populateSubmittedFormData();
     console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
+
     // show the spinner
     this.loaderService.showLoader();
     // send our form with the captcha token
     try {
       await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+      this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
+      this.severity = 'Success';
+      this.modalService.open(this.isSuccess);
+      this.onClear();
     } catch (error) {
-      await this.router.navigate(['/error']);
+      console.log('Error occurred while submitting form: ', error);
+      this.submitFormMsg = 'Error Submitting form.';
+      this.severity = 'Failure';
+      // Show a banner when the form is submitted. Message is based on success/fail
+      this.modalService.open(this.isSuccess);
     } finally {
       // hide the spinner
       this.loaderService.hideLoader();
-      // clear the form (except for readonly fields)
-      this.onClear();
     }
   }
 
@@ -372,8 +401,61 @@ export class TermSuggestionFormComponent implements OnInit {
     return fieldControl.errors && fieldControl.touched;
   }
 
+
   // Get the formGroup
   public getFormGroup(): FormGroup<any> {
     return this.formGroup;
+  }
+
+  // Private helper method to populate the TermFormData from submitted form data
+  private populateSubmittedFormData(): TermFormData {
+    // set the subject based on the submitted form
+    const submittedSubject: string = this.setFormSubject(this.formData.formType);
+    // Build the submitted form data using the form labels
+    const formDataLabeled: {} = this.buildFormDataWithLabels(this.formGroup, this.formFields);
+
+    // populate the submittedFormData
+    return {
+      formName: this.formData.formType,
+      recipientEmail: this.formData.recipientEmail,
+      businessEmail: this.formGroup.get('contact.email').value,
+      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
+      body: formDataLabeled,
+    };
+  }
+
+  // Private helper method to set the subject of the email based on the formtype submitted
+  private setFormSubject(formType: string): string {
+    // set the subject based on the submitted form
+    if (formType === 'CDISC') {
+      return 'Term Suggestion for CDISC Terminology: ';
+    } else if (this.formData.formType === 'NCIT') {
+      return 'Term Suggestion: ';
+    }
+  }
+
+  // Helper method to build the submitted form so that it uses the label values instead of the name values
+  private buildFormDataWithLabels(formGroup: FormGroup, formFields: { [key: string]: Field }): {} {
+    // create a new object to hold the form data with labels
+    const formData: {} = {};
+    // iterate over the form controls
+    for (const sectionName in this.formGroup.controls) {
+      // skip the recaptcha control
+      if (sectionName === 'recaptcha') continue;
+      // get the section control
+      const sectionControl = formGroup.controls[sectionName];
+      // find the corresponding section in the formData.sections array
+      const section: Section = this.formData.sections.find(s => s.name === sectionName);
+      // use the section label instead of name
+      formData[section.label] = {};
+
+      for (const fieldName in sectionControl['controls']) {
+        const fieldControl = sectionControl['controls'][fieldName];
+        const field: Field = formFields[fieldName];
+        // add the field label and the control value to the new object
+        formData[section.label][field.label] = fieldControl.value;
+      }
+    }
+    return formData;
   }
 }

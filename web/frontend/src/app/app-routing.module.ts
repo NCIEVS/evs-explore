@@ -24,6 +24,7 @@ import { SubsetNcitComponent } from './component/documentation/subset-ncit/subse
 import { EvsApiComponent } from './component/evs-api/evs-api.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
+import {HierarchyPopupComponent} from './component/hierarchy-popup/hierarchy-popup.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
@@ -33,6 +34,8 @@ const routes: Routes = [
   { path: 'concept/:code', redirectTo: 'concept/ncit/:code' },
   { path: 'hierarchy/:terminology/:code', component: HierarchyDisplayComponent },
   { path: 'hierarchy/:code', redirectTo: 'hierarchy/:terminology/:code' },
+  { path: 'hierarchy-popup/:terminology/:code', component: HierarchyPopupComponent },
+  { path: 'hierarchy-popup/:code', redirectTo: 'hierarchy-popup/:terminology/:code' },
   { path: 'subset/:terminology/:code', component: SubsetDetailsComponent },
   { path: 'subset/:code', redirectTo: 'subset/ncit/:code' },
   { path: 'mappings', component: MappingsComponent },

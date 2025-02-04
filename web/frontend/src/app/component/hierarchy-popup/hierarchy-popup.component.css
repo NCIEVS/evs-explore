@@ -1,3 +1,9 @@
+
+/* No vertical scrollbar for popup */
+#hierarchyTableDisplay {
+  overflow-y: hidden !important; 
+}
+
 .treenode-highlight {
   color: #FFFFFF !important;
   background-color: #1c5e86 !important;

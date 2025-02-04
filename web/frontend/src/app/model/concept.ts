@@ -364,7 +364,7 @@ export class Concept {
         }
       }
     }
-    return null;
+    return '';
   }
 
   // Get value from Concept_Status parameter
@@ -463,14 +463,14 @@ export class Concept {
   }
 
   // Return unique ynonym names for a specified source
-  getSynonymNames(source: string, termType: string): string[] {
+  getSynonymNames(source: string, termType: string, sourceCode: string): string[] {
     let syns = [];
     if (this.synonyms.length > 0) {
       for (let i = 0; i < this.synonyms.length; i++) {
-        if (termType !== null && this.synonyms[i].termType !== termType) {
+        if (termType !== null && termType != undefined && this.synonyms[i].termType !== termType) {
           continue;
         }
-        if (source !== null && this.synonyms[i].source !== source) {
+        if (source !== null && source != undefined && this.synonyms[i].source !== source) {
           continue;
         }
         if (syns.indexOf(this.synonyms[i].name) !== -1) {
@@ -603,6 +603,41 @@ export class Concept {
       }
     }
     return mapInfo;
+  }
+
+  isCdiscGrouper(): boolean {
+    // Only subsets can be groupers
+    if (!this.isSubset()) {
+      return false;
+    }
+
+    // CDISC subset without a CDISC/SY
+    return this.isCdiscSubset() && !this.hasCdiscSy();
+  }
+
+  isCdiscCodeList(): boolean {
+    // CDISC Subset with CDISC name a CDISC/SY
+    return this.isCdiscSubset() && this.hasCdiscSy();
+  }
+
+  hasCdiscSy(): boolean {
+    // source with CDISC* or MRCT* and termType = SY
+    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'SY');
+  }
+
+  getCdiscPtName(): string {
+    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'PT')
+      ?.name;
+  }
+
+  isCdiscSubset(): boolean {
+    // subset with a name starting with CDISC or MRCT
+    return this.code === 'C61410' || (this.isSubset() && (this.name.startsWith('CDISC ') || this.name.startsWith('MRCT-Ctr')));
+  }
+
+  isSubset(): boolean {
+    // It's a subset if it has Publish_Value_Set=Yes
+    return this.properties.some((prop) => prop.type === 'Publish_Value_Set' && prop.value === 'Yes');
   }
 
   // Default string representation is the name
