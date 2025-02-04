@@ -17,7 +17,6 @@ export class SubsetDetailsComponent implements OnInit {
   @ViewChild('subsetList', { static: false }) subsetList: any;
 
   first = 0;
-  lastSearch: string;
   pageSize = 10;
   fromRecord = 0;
   hitsFound = 0;
@@ -29,7 +28,6 @@ export class SubsetDetailsComponent implements OnInit {
   titleCode: string;
   titleDesc: string;
   subsets: Array<Concept>;
-  avoidLazyLoading = true;
   loading: boolean;
   termAutoSearch: string;
   textSuggestions: string[] = [];
@@ -39,12 +37,12 @@ export class SubsetDetailsComponent implements OnInit {
   terminology: string;
   cdiscSubsetSource: string;
 
-  currentSortColumn = 'code';
-  currentSortDirection = false;
   sortDirection = {
     ASC: true,
     DESC: false,
   };
+  currentSortColumn = null;
+  currentSortDirection = null;
 
   urlBase = '/concept';
 
@@ -62,88 +60,104 @@ export class SubsetDetailsComponent implements OnInit {
 
   // initialize the component
   ngOnInit(): void {
-    if (this.subsetList !== undefined) {
-      this.subsetList._first = 0;
-    }
-
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      this.subsetDetailService.getSubsetMembers(this.titleCode).then((nodes) => {
-        this.hitsFound = nodes['total'];
-        this.subsets = new Array<Concept>();
-        if (nodes['concepts']) {
-          nodes['concepts'].forEach((c) => {
-            this.subsets.push(new Concept(c, this.configService));
-          });
-        }
-        this.subsetCodes = {};
-        this.subsetCodes[this.selectedSubset?.code] = 1;
-        this.subsets.forEach((c) => {
-          if (c && c.isSubset()) {
-            this.subsetCodes[c.code] = 1;
-          }
-        });
-        this.termAutoSearch = '';
+      console.debug('xxx3 titleCode', this.titleCode);
+      // reset to first page
+      if (this.subsetList !== undefined) {
+        this.subsetList._first = 0;
+      }
 
-        // getting the subs
-        this.subsetDetailService.getSubsetInfo(this.titleCode, 'full').then((response: any) => {
-          this.selectedSubset = new Concept(response, this.configService);
-          this.titleDesc = this.selectedSubset.name;
-          this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
-          const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
-          if(this.selectedSubset.properties.find((prop) => prop.value === 'NCI' && prop.type === 'EVSRESTAPI_Subset_Format')) {
-            this.subsetFormat = 'NCIt';
+      // This gets called on "reset" button click
+      this.fromRecord = 0;
+      this.termAutoSearch = '';
+      this.subsetDetailService
+        .getSubsetMembers(this.titleCode, this.fromRecord, this.pageSize, this.termAutoSearch, this.currentSortDirection, this.currentSortColumn)
+        .then((nodes) => {
+          this.hitsFound = nodes['total'];
+          this.subsets = new Array<Concept>();
+          if (nodes['concepts']) {
+            nodes['concepts'].forEach((c) => {
+              this.subsets.push(new Concept(c, this.configService));
+            });
           }
-          else if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
-            this.subsetFormat = 'CTRP';
-          }
-          // CHECK FOR CDISC
-          else if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
-            this.subsetFormat = 'CDISC';
-            // For subsets there will be only one contributing source value, take the first
-            this.cdiscSubsetSource = ContSource[0].value;
-            // If this is a codelist, add the "blue" row at the top of the table
-            if (this.selectedSubset?.isCdiscCodeList()) {
-              this.subsets.unshift(this.selectedSubset);
+          this.subsetCodes = {};
+          this.subsetCodes[this.selectedSubset?.code] = 1;
+          this.subsets.forEach((c) => {
+            if (c && c.isSubset()) {
+              this.subsetCodes[c.code] = 1;
             }
-          } else if (ContSource.length === 1) {
-            this.subsetFormat = ContSource[0].value;
-          } else {
-            this.subsetFormat = 'NCIt';
-          }
-          this.subsetLink = this.selectedSubset.getSubsetLink();
+          });
 
-          // Lookup the subset description.
-          this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, this.selectedSubset.getSubsetDescription());
-          if (!this.subsetDescription) {
-            for (let definition of this.selectedSubset.definitions) {
-              if (definition.source === 'NCI') {
-                this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, definition.definition);
-                break;
+          // getting the subs
+          this.subsetDetailService.getSubsetInfo(this.titleCode, 'full').then((response: any) => {
+            this.selectedSubset = new Concept(response, this.configService);
+            this.titleDesc = this.selectedSubset.name;
+            this.submissionValueCode = this.selectedSubset.synonyms.find((sy) => sy.source === 'NCI' && sy.termType === 'AB')?.name;
+            const ContSource = this.selectedSubset.properties?.filter((item) => item.type === 'Contributing_Source');
+            if(this.selectedSubset.properties.find((prop) => prop.value === 'NCI' && prop.type === 'EVSRESTAPI_Subset_Format')) {
+              this.subsetFormat = 'NCIt';
+            }
+            else if (ContSource.some((entry) => entry.value.startsWith('CTRP'))) {
+              this.subsetFormat = 'CTRP';
+            }
+            // CHECK FOR CDISC
+            else if (ContSource.some((entry) => entry.value.startsWith('CDISC') || entry.value.startsWith('MRCT-Ctr'))) {
+              this.subsetFormat = 'CDISC';
+              // For subsets there will be only one contributing source value, take the first
+              this.cdiscSubsetSource = ContSource[0].value;
+              // If this is a codelist, add the "blue" row at the top of the table
+              if (this.selectedSubset?.isCdiscCodeList()) {
+                this.subsets.unshift(this.selectedSubset);
+              }
+            } else if (ContSource.length === 1) {
+              this.subsetFormat = ContSource[0].value;
+            } else {
+              this.subsetFormat = 'NCIt';
+            }
+            this.subsetLink = this.selectedSubset.getSubsetLink();
+
+            // Lookup the subset description.
+            // FIX to move a period outside the closing </p> tag to inside it
+            var fixDesc = this.selectedSubset.getSubsetDescription().replace('</p>.', '.</p>');
+            this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, fixDesc);
+            if (!this.subsetDescription) {
+              for (let definition of this.selectedSubset.definitions) {
+                if (definition.source === 'NCI') {
+                  this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, definition.definition);
+                  break;
+                }
               }
             }
-          }
-          const sortCols = document.getElementsByClassName('sortable');
-          for (let i = 0; i < sortCols.length; i++) {
-            const str = sortCols[i].innerHTML;
-            const text = str.replace('↓', '').replace('↑', '');
-            sortCols[i].innerHTML = text;
-          }
-          this.setTitle();
-          this.lastSearch = '';
+            const sortCols = document.getElementsByClassName('sortable');
+            for (let i = 0; i < sortCols.length; i++) {
+              const str = sortCols[i].innerHTML;
+              const text = str.replace('↓', '').replace('↑', '');
+              sortCols[i].innerHTML = text;
+            }
+            this.setTitle();
+            this.termAutoSearch = '';
+          });
         });
-      });
     });
   }
 
   // Handle lazy loading of table
   onLazyLoadData(event) {
-    if (this.avoidLazyLoading) {
-      this.avoidLazyLoading = false;
-    } else {
-      const fromRecord = event.first;
+    console.debug('xxx4 event', event.first, this.fromRecord, event.rows, this.pageSize);
+
+    // lazy loading is only for paging changes
+    if (event.first == this.fromRecord && event.rows == this.pageSize) {
+      return;
+    }
+
+    // if page change
+    else {
+      console.debug('xxx term auto search', this.termAutoSearch);
+      this.fromRecord = event.first;
+      this.pageSize = event.rows;
       this.subsetDetailService
-        .getSubsetMembers(this.titleCode, fromRecord, event.rows, this.lastSearch, this.currentSortDirection, this.currentSortColumn)
+        .getSubsetMembers(this.titleCode, this.fromRecord, this.pageSize, this.termAutoSearch, this.currentSortDirection, this.currentSortColumn)
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
@@ -164,21 +178,16 @@ export class SubsetDetailsComponent implements OnInit {
             }
           });
         });
-      this.fromRecord = fromRecord;
-      this.pageSize = event.rows;
     }
   }
 
   // search for a concept
   search(event, columnName = null) {
-    if (this.lastSearch !== event.query) {
-      if (this.subsetList !== undefined) {
-        this.subsetList._first = 0;
-      }
-      this.fromRecord = 0;
+    // reset to first page
+    if (this.subsetList !== undefined) {
+      this.subsetList._first = 0;
     }
-    let sort = null;
-    let sortDirection = null;
+    this.fromRecord = 0;
     let sortCols = document.getElementsByClassName('sortable');
     for (let i = 0; i < sortCols.length; i++) {
       const str = sortCols[i].innerHTML;
@@ -194,32 +203,33 @@ export class SubsetDetailsComponent implements OnInit {
         this.currentSortDirection = this.sortDirection.ASC;
       }
       this.currentSortColumn = columnName;
-      sort = this.currentSortColumn;
-      sortDirection = this.currentSortDirection;
       document.getElementById(columnName).innerText += this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓';
     }
-    this.subsetDetailService.getSubsetMembers(this.titleCode, 0, this.pageSize, this.termAutoSearch, sortDirection, sort).then((nodes) => {
-      this.hitsFound = nodes['total'];
-      if (this.hitsFound > 0) {
-        this.subsets = new Array<Concept>();
-        if (this.selectedSubset?.isCdiscCodeList()) {
-          this.subsets.unshift(this.selectedSubset);
-        }
-        nodes['concepts'].forEach((c) => {
-          this.subsets.push(new Concept(c, this.configService));
-        });
-
-        this.subsetCodes = {};
-        this.subsetCodes[this.selectedSubset?.code] = 1;
-        this.subsets.forEach((c) => {
-          if (c.isSubset()) {
-            this.subsetCodes[c.code] = 1;
+    console.debug('xxx2 term auto search', this.termAutoSearch);
+    this.subsetDetailService
+      .getSubsetMembers(this.titleCode, this.fromRecord, this.pageSize, this.termAutoSearch, this.currentSortDirection, this.currentSortColumn)
+      .then((nodes) => {
+        this.hitsFound = nodes['total'];
+        if (this.hitsFound > 0) {
+          this.subsets = new Array<Concept>();
+          if (this.selectedSubset?.isCdiscCodeList()) {
+            this.subsets.unshift(this.selectedSubset);
           }
-        });
-      } else {
-        this.subsets = null;
-      }
-    });
+          nodes['concepts'].forEach((c) => {
+            this.subsets.push(new Concept(c, this.configService));
+          });
+
+          this.subsetCodes = {};
+          this.subsetCodes[this.selectedSubset?.code] = 1;
+          this.subsets.forEach((c) => {
+            if (c.isSubset()) {
+              this.subsetCodes[c.code] = 1;
+            }
+          });
+        } else {
+          this.subsets = null;
+        }
+      });
     this.textSuggestions = [];
   }
 
@@ -235,7 +245,7 @@ export class SubsetDetailsComponent implements OnInit {
 
     let term = document.getElementById('termauto').getAttribute('ng-reflect-model');
     term = term && term.length > 2 ? term : '';
-    let subsetText = titles.join('\t') + '\n';
+    let subsetText = titles.join(',') + '\n';
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
@@ -248,7 +258,7 @@ export class SubsetDetailsComponent implements OnInit {
         .toPromise()
         .then((result) => {
           result.concepts.forEach((c) => {
-            subsetText += this.exportCodeFormatter(c);
+            subsetText += this.exportCodeFormatter(new Concept(c, this.configService));
           });
         });
     }
@@ -257,7 +267,7 @@ export class SubsetDetailsComponent implements OnInit {
       new Blob([subsetText], {
         type: 'text/plain',
       }),
-      fileName + new Date().toISOString() + '.xls',
+      fileName + new Date().toISOString() + '.csv',
     );
     this.loaderService.hideLoader();
   }
@@ -266,10 +276,10 @@ export class SubsetDetailsComponent implements OnInit {
   exportCodeFormatter(concept: Concept) {
     let rowText = '';
     if (this.subsetFormat === 'NCIt') {
-      rowText += concept.code + '\t';
-      rowText += concept.name + '\t';
+      rowText += concept.code + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
           if (def.source === 'NCI') {
@@ -278,41 +288,41 @@ export class SubsetDetailsComponent implements OnInit {
         });
       }
     } else if (this.subsetFormat === 'CTRP') {
-      rowText += this.titleCode + '\t';
-      rowText += this.titleDesc + '\t';
-      rowText += concept.code + '\t';
-      rowText += concept.name + '\t';
+      rowText += this.titleCode + ',';
+      rowText += this.titleDesc + ',';
+      rowText += concept.code + ',';
+      rowText += this.escapeValue(concept.name) + ',';
       concept.synonyms.forEach((syn) => {
-        if (syn.type === 'Display_Name') rowText += syn.name;
+        if (syn.type === 'Display_Name') rowText += this.escapeValue(syn.name);
       });
-      rowText += '\t';
+      rowText += ',';
       rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
     } else if (this.subsetFormat === 'CDISC') {
       // cdisc code
-      rowText += concept.code + '\t';
+      rowText += concept.code + ',';
       // codelist code
-      rowText += this.getCdiscCodelistCode() + '\t';
+      rowText += this.escapeValue(this.getCdiscCodelistCode()) + ',';
       // codelist extensible
       const extensible = concept.properties.filter((prop) => prop.type == 'Extensible_List')[0]?.value;
-      rowText += (extensible ? extensible : '') + '\t';
+      rowText += this.escapeValue((extensible ? extensible : '')) + ',';
       // codelist name
-      rowText += this.getCdiscCodelistName(new Concept(concept, this.configService)) + '\t';
+      rowText += this.escapeValue(this.getCdiscCodelistName(new Concept(concept, this.configService))) + ',';
       // cdisc submission value
-      rowText += this.getCdiscSubmissionValue(new Concept(concept, this.configService)) + '\t';
+      rowText += this.escapeValue(this.getCdiscSubmissionValue(new Concept(concept, this.configService))) + ',';
       // cdisc synonyms
-      rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + '\t';
+      rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + ',';
       // cdisc definition
-      rowText += concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition + '\t';
+      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition) + ',';
       // NCIt pref term
-      rowText += concept.name;
+      rowText += this.escapeValue(concept.name);
     } else {
-      rowText += concept.code + '\t';
+      rowText += concept.code + ',';
       rowText += '"' + this.getSynonymNames(concept, this.subsetFormat, null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
 
-      rowText += concept.name + '\t';
+      rowText += concept.name + ',';
       rowText += '"' + this.getSynonymNames(concept, 'NCI', null).join('\n') + '"';
-      rowText += '\t';
+      rowText += ',';
 
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
@@ -321,7 +331,7 @@ export class SubsetDetailsComponent implements OnInit {
           }
         });
       }
-      rowText += '\t';
+      rowText += ',';
 
       if (concept.definitions) {
         concept.definitions.forEach((def) => {
@@ -333,6 +343,13 @@ export class SubsetDetailsComponent implements OnInit {
     }
     rowText += '\n';
     return rowText;
+  }
+
+  escapeValue(value) {
+    if (/[,\n"]/.test(value)) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // get synonym names for a concept
@@ -440,8 +457,8 @@ export class SubsetDetailsComponent implements OnInit {
   getCdiscCodelistName(concept: Concept) {
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
-      if (this.selectedSubset.isCdiscGrouper()) { 
-        return ''; 
+      if (this.selectedSubset.isCdiscGrouper()) {
+        return '';
       }
       return this.selectedSubset.name;
     }

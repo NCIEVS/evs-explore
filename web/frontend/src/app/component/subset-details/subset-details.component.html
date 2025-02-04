@@ -144,9 +144,9 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th class="w-10 subsetTitle sortable" style="cursor: pointer" id="code" (click)="search($event, 'code')">NCIt Subset Code</th>
+            <th class="w-10 subsetTitle">NCIt Subset Code</th>
             <th class="w-20 subsetTitle">NCIt Subset Name</th>
-            <th class="w-10 subsetTitle">NCIt Code</th>
+            <th class="w-10 subsetTitle sortable" style="cursor: pointer" id="code" (click)="search($event, 'code')">NCIt Code</th>
             <th class="w-20 subsetTitle sortable" style="cursor: pointer" id="normName" (click)="search($event, 'normName')">NCIt Preferred Name</th>
             <th class="w-20 subsetTitle">NCIt Display Name</th>
             <th class="w-20 subsetTitle">CTRP Display Name</th>
@@ -215,7 +215,7 @@
             <th class="w-10 subsetTitle">CDISC Submission Value</th>
             <th class="w-15 subsetTitle">CDISC Synonyms(s)</th>
             <th class="w-20 subsetTitle">CDISC Definition</th>
-            <th class="w-20 subsetTitle">NCIt Preferred Term</th>
+            <th class="w-20 subsetTitle sortable" style="cursor: pointer" id="normName" (click)="search($event, 'normName')">NCIt Preferred Term</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">

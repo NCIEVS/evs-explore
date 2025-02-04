@@ -11,6 +11,7 @@
   <ul>
     <li><a href="overview#introduction">Introduction</a></li>
     <li><a href="overview#welcome">EVS Explore Welcome Page</a></li>
+    <li><a href="overview#terminology">Choosing a Terminology</a></li>
     <li><a href="overview#search">Using the Search Box</a></li>
     <li><a href="overview#multiterm">Using the Multiple Terminology Search</a></li>
     <li><a href="overview#search-results">Search Results</a></li>
@@ -66,6 +67,11 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>EVS Explore Welcome Page</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSWelcome.png" alt="Welcome Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
+
   <p>
     When a user first visits the EVS Explore Browser, the experience begins with a welcome page
     on which users will be
@@ -79,8 +85,20 @@
     <a href="overview#search" aria-label="Scroll to search"><b>Search Box</b></a> (and search
     controls),
     features available from the header toolbar, including: direct link to the <b>Hierarchy
-    view</b>, metadata
-    <b>Documentation</b> pages, and access to this <b>Help</b> page.
+    view</b> (<b style="color:red">A</b>), metadata
+    <b>Documentation</b> (<b style="color:red">B</b>) pages, and access to this <b>Help</b> (<b style="color:red">C</b>) page.
+  </p>
+
+  <a name="terminology"></a>
+  <span>
+    <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
+    <h4>Choosing a Terminology</h4>
+  </span>
+  <p>
+    There are multiple terminologies available in the EVS Explore Browser. The user can choose a single terminology to search by using the <b>Terminology</b> dropdown in the upper right of the welcome page. The user can also choose to search multiple terminologies by selecting <b>Multiple Terminology Search</b> in the same dropdown, or by clicking the <b>Multiple Terminology Search</b> (<b style="color:red">D</b>) link on the right-hand side of the page. Both of these options will direct the user to the <b>Multiple Terminology Search</b> page.
+  </p>
+  <p>
+    More information on the <b>Multiple Terminology Search</b> page can be found <a href="overview#multiterm" aria-label="Scroll to Using the Multiple Terminology Search">here</a>. A direct link to the page itself can be found <a href="welcome?terminology=multi" aria-label="Multiple Terminology Search">here</a>.
   </p>
 
   <a name="search"></a>
@@ -89,7 +107,7 @@
     <h4>Using the Search Box</h4>
   </span>
   <p>
-    The <b>Search Box</b> is located in the upper left of the EVS Explore Browser welcome page.
+    The <b>Search Box</b> (<b style="color:red">E</b>) is located in the upper left of the EVS Explore Browser welcome page.
     You can also get to
     the search box from the search results pages by clicking the <b>New Search</b> button. There
     are a number
@@ -140,17 +158,11 @@
           the search words entered in
           the specified order.
         </li>
-        <li><b>Phrase</b> performs a search that looks for matches containing all search
-          words entered in the specified
-          order (but does not require the match to be at the beginning of the concept or
-          an exact match). Searches in
-          this mode will also find all results returned by the same search using <b>Exact
-            Match</b> or <b>Starts
-            With</b>.
+        <li><b>Phrase</b> performs a search that looks for the full string entered into the search box, without regard for its position. Searches in
+          this mode will find all results returned by the same search using <b>Exact
+            Match</b> or <b>Starts With</b>, as well as anything that merely <i>contains</i> the full string entered. For example, searching for <span class="tt">Blood Sample</span> will return <i>Blood Sample</i> and <i>Archived Newborn Blood Sample</i>, but not <i>sample of peripheral blood</i>.
         </li>
-        <li><b>Fuzzy</b> performs a search that looks for any words typed and for fuzzy
-          variants of those words,
-          favoring results with more words matched, and with words matched in order.
+        <li><b>Fuzzy</b> finds results that include the words you type, along with similar "fuzzy" variations (e.g., "color" may also find "colour", and vice versa). It prioritizes results that match more words and keep them in the same order.
         </li>
         <li><b>AND</b> performs a search that looks for matches containing all of the words
           that were entered in any
@@ -211,12 +223,16 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Using the Multiple Terminology Search</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSMultiTerminologySearch.png" alt="Multi-Terminology Search Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>
     The <b>Multiple Terminology Search</b> is located in the Terminology dropdown in the upper right of the EVS Explore
     Browser welcome page.
   </p>
   <p>
-    Selecting <b>Multiple Terminology Search</b>, a new view in a new window is opened with a list of the all
+    Selecting <b>Multiple Terminology Search</b>, a new view is opened with a list of the all
     terminologies. Each terminology has a checkbox next to it for selecting the terminology to search in. At the top
     of the list, there are three preset selections to quickly select terminologies.
   </p>
@@ -237,7 +253,7 @@
     Box</b></a>. The results will be pulled from the list of terminologies selected.
   </p>
   <p>
-    If a terminology has a license requirement, a popup will appear before that terminology is selected. That
+    If a terminology has a license requirement (such as MedDRA), a popup will appear before that terminology is selected. That
     terminology will only be checked if the license is accepted.
   </p>
 
@@ -246,6 +262,10 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Search Results</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSSearchResults.png" alt="Search Results Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>
     When a search is performed, <b>Search Results</b> are displayed with some basic concept
     information
@@ -281,12 +301,12 @@
     </li>
     <li>By default, the search results table shows the highlights icon, the concept code, the
       preferred name, synonyms,
-      and definitions. The <b>Search Result Details</b> drop-down can be clicked to reveal a
+      and definitions. The <b>Search Result Details</b> (<b style="color:red">A</b>) drop-down can be clicked to reveal a
       control that allows you
       to select which of the data columns should be shown in the <b>Search Results</b>
       display.
     </li>
-    <li>The first column of the <b>Search Results</b> table contains an icon. When clicked, it
+    <li>The first column of the <b>Search Results</b> (<b style="color:red">B</b>) table contains an icon. When clicked, it
       reveals a panel beneath
       the
       corresponding search result that shows highlighted portions of the concept that were
@@ -310,6 +330,10 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Concept Details</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSConceptDetails.png" alt="Concept Details Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>
     Detailed information on a selected concept is shown when that concept code is clicked in the
     <a href="overview#search-results" aria-label="Scroll to Search Results"><b>Search
@@ -317,7 +341,7 @@
     The concept detail view is loaded into a new tab for display.
   </p>
   <p>The top of this view shows the preferred name and concept code along with an <b>Open in
-    Hierarchy</b> button.
+    Hierarchy</b> (<b style="color:red">A</b>) button.
     Clicking on that button will open the <a href="overview#hierarchy" aria-label="Scroll to hierarchy"><b>hierarchy
       view</b>
     </a>.
@@ -331,12 +355,12 @@
       preferred name, the display
       name, the label, and the concept code.
     </li>
-    <li><b>Definitions</b> shows any concept definitions in a sortable table. This table
+    <li><b>Definitions</b> (<b style="color:red">B</b>) shows any concept definitions in a sortable table. This table
       includes columns for the
       definition text, the source of the definition, and any associated
       attribution(s).
     </li>
-    <li><b>Synonyms & Abbreviations</b> shows all of the terms associated with this
+    <li><b>Synonyms & Abbreviations</b> (<b style="color:red">C</b>) shows all of the terms associated with this
       concept in a sortable table.
       This table includes columns for the term, the sub-source, the term type, the
       sub-source code, and the
@@ -399,6 +423,10 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Subsets</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSSubsets.png" alt="Subsets Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>The <b>Subset Page</b> of EVS Explore supports the browsing of subsets, which are flat lists
     of member concepts intended for specific coding purposes. </p>
   <p>The <b>Subset Page</b> is enabled by clicking on the <b>Subsets</b> link along the top
@@ -406,8 +434,8 @@
   </p>
   <p>
     In this page, there is a hierarchical view of the available subsets. Clicking on the <i
-    class="pi pi-fw pi-chevron-right"></i> to the left of a subset entry expands the view
-    to show its children. The <b>Expand All</b> button near the page title will fully expand
+    class="pi pi-fw pi-chevron-right"></i> (<b style="color:red">A</b>) to the left of a subset entry expands the view
+    to show its children. The <b>Expand All</b> (<b style="color:red">B</b>)  button near the page title will fully expand
     the tree to reveal all available subsets within the hierarchy.
   </p>
   <p>
@@ -422,8 +450,8 @@
     information about each member including information like the code, various names and synonyms,
     and one or more definitions for that member. At the top of this table is a <a href="overview#search"
                                                                                   aria-label="Scroll to Search Box"><b>Search
-    Box</b></a> that can be used to restrict to only those member concepts
-    whose contents are matches to the search text provided. Click the <b>Reset</b> button to clear any search text and
+    Box</b></a> (<b style="color:red">C</b>)  that can be used to restrict to only those member concepts
+    whose contents are matches to the search text provided. Click the <b>Reset</b> (<b style="color:red">D</b>)  button to clear any search text and
     retrieve the full list.
   </p>
 
@@ -432,6 +460,10 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Mappings</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSMappings.png" alt="Mappings Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>The <b>Mappings Page</b> of EVS Explore supports the browsing of mappings, which are manual EVS maps concepts
     with equivalent meaning in the source and target terminology versions.
   </p>
@@ -494,6 +526,10 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Hierarchy</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSHierarchy.png" alt="Hierarchy Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>The hierarchy page is enabled by clicking on the <b>Open in Hierarchy</b> button when viewing
     <a href="overview#concept-details" aria-label="Scroll to concept details"><b>Concept Details</b>
     </a> or by clicking on the <b>Hierarchy</b> link in the top banner.
@@ -523,9 +559,13 @@
     <span style="float:right">[<a href="overview#top" aria-label="Scroll to top">Top</a>]</span>
     <h4>Metadata Documentation</h4>
   </span>
+  <details>
+    <summary style="cursor: pointer; font-weight:bold">Toggle Image</summary>
+    <img src="assets/images/EVSDocumentationDropdown.png" alt="Documentation Page" style="width: 100%; max-width: 100%; border: 1px solid black;">
+  </details>
   <p>
-    Along the top toolbar, there is a <b>Documentation</b> drop-down that when clicked reveals a
-    number of sub-entries
+    Along the top toolbar, there is a <b>Documentation</b> drop-down (<b style="color:red">A</b>) that when clicked reveals a
+    number of sub-entries (<b style="color:red">B</b>)
     for the various kinds of metadata, including: Associations, Properties, Qualifiers, Roles,
     Term Types, Sources, Synonym Types, and Definition Types.
   </p>

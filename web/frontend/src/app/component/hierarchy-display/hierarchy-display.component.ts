@@ -41,6 +41,8 @@ export class HierarchyDisplayComponent implements OnInit {
   displayedPositions;
   totalPositions;
   hierarchyLimit = 10;
+  hierarchyIndex = 0;
+  hierarchySize = 0;
 
   constructor(
     private conceptDetailService: ConceptDetailService,
@@ -110,6 +112,24 @@ export class HierarchyDisplayComponent implements OnInit {
     }
   }
 
+  getPreviousHierarchyPosition() {
+    if (this.hierarchyIndex > 0) {
+      this.hierarchyIndex--;
+    } else {
+      this.hierarchyIndex = this.hierarchySize - 1;
+    }
+    this.scrollToSelectionTableTree(this.selectedNodes[this.hierarchyIndex], this.hierarchyTable);
+  }
+
+  getNextHierarchyPosition() {
+    if (this.hierarchyIndex < this.hierarchySize - 1) {
+      this.hierarchyIndex++;
+    } else {
+      this.hierarchyIndex = 0;
+    }
+    this.scrollToSelectionTableTree(this.selectedNodes[this.hierarchyIndex], this.hierarchyTable);
+  }
+
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy(limit: number = this.hierarchyLimit) {
     console.log('getPathInHierarchy called');
@@ -121,8 +141,9 @@ export class HierarchyDisplayComponent implements OnInit {
       }
       this.updateDisplaySize();
       if (this.selectedNodes.length > 0) {
+        this.hierarchySize = this.selectedNodes.length;
         setTimeout(() => {
-          this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
+          this.scrollToSelectionTableTree(this.selectedNodes[this.hierarchyIndex], this.hierarchyTable);
         }, 100);
       }
       this.loaderService.hideLoader();
@@ -233,12 +254,15 @@ export class HierarchyDisplayComponent implements OnInit {
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
     // console.log('scroll to selection', selectedNode);
     let index = 0;
+    let selectedNodeIndex = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr');
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
-        index = i;
-        break;
+        if(selectedNodeIndex++ == this.hierarchyIndex) {
+          index = i;
+          break;
+        }
       }
     }
     if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
