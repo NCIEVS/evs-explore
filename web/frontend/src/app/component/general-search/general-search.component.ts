@@ -544,7 +544,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
   // export search results
   async exportSearch() {
     var columnHeaders = this.displayColumns.map((col) => col.header);
-    var toJoin = columnHeaders.join('\t').replace('Highlights\t', '') + '\n';
+    var toJoin = columnHeaders.join(',').replace('Highlights,', '') + '\n';
     var exportPageSize = this.configService.getExportPageSize();
     var maxExport = this.configService.getMaxExportSize();
     var pages = Math.ceil(Math.min(maxExport, this.totalRecords) / exportPageSize);
@@ -567,16 +567,16 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       new Blob([toJoin], {
         type: 'text/plain',
       }),
-      this.searchCriteria.term + '.' + new Date().toISOString() + '.xls',
+      this.searchCriteria.term + '.' + new Date().toISOString() + '.csv',
     );
   }
 
   exportCodeFormatter(concept, displayColumns) {
     var conceptFormatString = '';
     if (displayColumns.includes('Terminology'))
-      conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, '') + '\t';
-    if (displayColumns.includes('Code')) conceptFormatString += concept.code + '\t';
-    if (displayColumns.includes('Preferred Name')) conceptFormatString += concept.name + '\t';
+      conceptFormatString += this.configService.getTerminologyByName(concept.terminology).metadata.uiLabel.replace(/\:.*/, '') + ',';
+    if (displayColumns.includes('Code') || displayColumns.includes('CUI')) conceptFormatString += this.escapeValue(concept.code) + ',';
+    if (displayColumns.includes('Preferred Name')) conceptFormatString += this.escapeValue(concept.name) + ',';
 
     if (displayColumns.includes('Synonyms')) {
       var synonymString = '';
@@ -590,7 +590,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
         // remove last newline
         synonymString = synonymString.substring(0, synonymString.length - 1) + '"';
       }
-      synonymString += '\t';
+      synonymString += ',';
       conceptFormatString += synonymString;
     }
 
@@ -604,7 +604,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
         // remove last newline
         definitionString = definitionString.substring(0, definitionString.length - 1) + '"';
       }
-      definitionString += '\t';
+      definitionString += ',';
       conceptFormatString += definitionString;
     }
 
@@ -619,10 +619,17 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         }
       }
-      conceptFormatString += semString;
+      conceptFormatString += this.escapeValue(semString);
     }
     conceptFormatString += '\n';
     return conceptFormatString;
+  }
+
+  escapeValue(value) {
+    if (/[,\n"]/.test(value)) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // Set default selected columns
