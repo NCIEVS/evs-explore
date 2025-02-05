@@ -62,7 +62,6 @@ export class SubsetDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.titleCode = params.code;
-      console.debug('xxx3 titleCode', this.titleCode);
       // reset to first page
       if (this.subsetList !== undefined) {
         this.subsetList._first = 0;
@@ -144,8 +143,6 @@ export class SubsetDetailsComponent implements OnInit {
 
   // Handle lazy loading of table
   onLazyLoadData(event) {
-    console.debug('xxx4 event', event.first, this.fromRecord, event.rows, this.pageSize);
-
     // lazy loading is only for paging changes
     if (event.first == this.fromRecord && event.rows == this.pageSize) {
       return;
@@ -153,7 +150,6 @@ export class SubsetDetailsComponent implements OnInit {
 
     // if page change
     else {
-      console.debug('xxx term auto search', this.termAutoSearch);
       this.fromRecord = event.first;
       this.pageSize = event.rows;
       this.subsetDetailService
@@ -205,7 +201,6 @@ export class SubsetDetailsComponent implements OnInit {
       this.currentSortColumn = columnName;
       document.getElementById(columnName).innerText += this.currentSortDirection === this.sortDirection.ASC ? '↑' : '↓';
     }
-    console.debug('xxx2 term auto search', this.termAutoSearch);
     this.subsetDetailService
       .getSubsetMembers(this.titleCode, this.fromRecord, this.pageSize, this.termAutoSearch, this.currentSortDirection, this.currentSortColumn)
       .then((nodes) => {
