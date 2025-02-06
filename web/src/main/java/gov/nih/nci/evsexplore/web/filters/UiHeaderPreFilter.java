@@ -1,22 +1,13 @@
+/*
+ * Copyright 2020 West Coast Informatics - All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains the property of West Coast Informatics
+ * The intellectual and technical concepts contained herein are proprietary to
+ * West Coast Informatics and may be covered by U.S. and Foreign Patents, patents in process,
+ * and are protected by trade secret or copyright law.  Dissemination of this information
+ * or reproduction of this material is strictly forbidden.
+ */
 package gov.nih.nci.evsexplore.web.filters;
-
-//import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
-import gov.nih.nci.evsexplore.web.properties.WebProperties;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -26,18 +17,34 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Class to add a header prefilter to the UI.
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+import gov.nih.nci.evsexplore.web.properties.WebProperties;
+// import gov.nih.nci.evsexplore.web.configuration.PropertiesConfiguration;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+
+/** Class to add a header prefilter to the UI. */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class UiHeaderPreFilter implements Filter {
+
   /** The logger. */
+  @SuppressWarnings("unused")
   private static final Logger logger = LoggerFactory.getLogger(UiHeaderPreFilter.class);
 
   /** The web properties. */
-  @Autowired
-  WebProperties properties;
+  @Autowired WebProperties properties;
 
   /** The header name. */
   private String headerName = "X-EVSRESTAPI-License-Key";
@@ -53,7 +60,7 @@ public class UiHeaderPreFilter implements Filter {
    */
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-          throws IOException, ServletException {
+      throws IOException, ServletException {
     HttpServletRequest httpServletRequest = (HttpServletRequest) request;
     MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpServletRequest);
     mutableRequest.putHeader(headerName, properties.getUiLicense());
@@ -62,8 +69,8 @@ public class UiHeaderPreFilter implements Filter {
   }
 
   /**
-   * MutableHttpServletRequest class that allows the addition and modification of headers
-   * for a request. This is useful when you want to add custom headers to a request.
+   * MutableHttpServletRequest class that allows the addition and modification of headers for a
+   * request. This is useful when you want to add custom headers to a request.
    */
   static class MutableHttpServletRequest extends HttpServletRequestWrapper {
     /** The custom headers. */
@@ -71,7 +78,8 @@ public class UiHeaderPreFilter implements Filter {
 
     /**
      * Instantiates a new mutable http servlet request.
-     * @param request
+     *
+     * @param request the request
      */
     public MutableHttpServletRequest(HttpServletRequest request) {
       super(request);
@@ -80,6 +88,7 @@ public class UiHeaderPreFilter implements Filter {
 
     /**
      * Put header in the servlet request.
+     *
      * @param name header name
      * @param value header value
      */
@@ -89,8 +98,10 @@ public class UiHeaderPreFilter implements Filter {
 
     /**
      * Get header names.
+     *
      * @return Enumeration of header names
      */
+    @Override
     public Enumeration<String> getHeaderNames() {
       // create a set of the custom header names
       Set<String> set = new HashSet<String>(customHeaders.keySet());
@@ -108,11 +119,12 @@ public class UiHeaderPreFilter implements Filter {
     }
 
     /**
-     * Get header value
-     * @param name a <code>String</code> specifying the header name
+     * Get header value.
      *
+     * @param name a <code>String</code> specifying the header name
      * @return a <code>String</code> containing the value of the requested
      */
+    @Override
     public String getHeader(String name) {
       // check the custom headers first
       String value = this.customHeaders.get(name);
