@@ -81,7 +81,9 @@ dependencies {
     implementation 'io.netty:netty-common:4.1.115.Final'
     implementation 'io.netty:netty-resolver-dns-native-macos'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+      exclude group: "net.minidev", module: "json-smart"
+    }
 }
 
 jar {
