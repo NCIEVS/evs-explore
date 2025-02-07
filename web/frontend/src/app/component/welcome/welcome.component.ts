@@ -146,7 +146,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
     // check if the license text is accepted, the perform the checkbox action
     this.appComponent.checkLicenseText(normalizedTerm).then((isLicenseAccepted) => {
       // check if the license is accepted or not
-      if (isLicenseAccepted) {
+      if (isLicenseAccepted && this.checkboxStates[normalizedTerm] == true) {
         // set our checkboxState to true and add the term to selectedMultiTerms
         this.checkboxStates[normalizedTerm] = true;
         this.selectedMultiTerminologies.add(normalizedTerm);
