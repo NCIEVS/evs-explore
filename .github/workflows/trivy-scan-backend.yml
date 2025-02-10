@@ -56,7 +56,7 @@ jobs:
         # List the HIGH and CRITICAL vulnerabilities, if any
         if [ "$vuln_count" -gt 0 ]; then
           echo "Listing HIGH and CRITICAL vulnerabilities found in gradle.lockfile:"
-          jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {ID, Severity, Description, PkgName, InstalledVersion, FixedVersion}' reportJava.json
+          jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {VulnerabilityID, Severity, Description, PkgName, InstalledVersion, FixedVersion}' reportJava.json
           exit 1
         else
           echo "No HIGH or CRITICAL vulnerabilities found in gradle.lockfile."
