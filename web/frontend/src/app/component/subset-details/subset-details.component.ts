@@ -174,6 +174,7 @@ export class SubsetDetailsComponent implements OnInit {
             }
           });
         });
+      window.scroll({ top: 0 });
     }
   }
 
