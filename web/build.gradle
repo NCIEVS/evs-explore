@@ -102,9 +102,6 @@ jar {
     }
 }
 
-//frontend:build will be run before the processResources
-processResources.dependsOn('frontend:build')
-
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:$bomVersion"
