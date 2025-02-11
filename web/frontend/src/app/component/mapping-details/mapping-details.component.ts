@@ -167,6 +167,7 @@ export class MappingDetailsComponent implements OnInit {
       this.fromRecord = fromRecord;
       this.pageSize = pageSize;
     }
+    window.scroll({ top: 0 });
   }
 
   search(event, columnName = null) {
