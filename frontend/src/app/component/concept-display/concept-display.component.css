@@ -1,0 +1,15 @@
+.customtabview .p-panel-titlebar {
+  background: #000000
+}
+
+.center {
+  margin: auto;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.p-button {
+  margin-left: 2px;
+  margin-right: 2px;
+}

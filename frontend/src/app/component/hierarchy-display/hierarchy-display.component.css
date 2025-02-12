@@ -1,0 +1,20 @@
+.treenode-highlight {
+  color: #FFFFFF !important;
+  background-color: #1c5e86 !important;
+  border-color: #1c5e86 !important;
+}
+
+.treenode {
+  color: black;
+}
+
+.customtabview .p-panel-titlebar {
+  background: #000000
+}
+
+.center {
+  margin: auto;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

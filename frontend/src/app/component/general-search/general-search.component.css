@@ -1,0 +1,93 @@
+.mh400 {
+  min-height: 400px;
+}
+
+em {
+  background-color: lightyellow;
+}
+
+.radio-padding {
+  padding-right: 0.2rem !important;
+}
+
+/*toolbar*/
+
+.custom-toolbar {
+  padding: .25em .5em;
+  max-height: 35px;
+}
+
+.custom-toolbar.p-toolbar {
+  border: 0px;
+  padding: .50em 0em;
+  background: none !important;
+}
+
+.shared-logo-box {
+  padding: 6px;
+  box-shadow: 0 1px 12px 0 #ecf2f8;
+  border: 2px solid #ecf2f8;
+  border-radius: 3px;
+}
+
+.announcements-header {
+  color: #337ab7 !important;
+  font-size: 14px !important;
+  padding-bottom: 0px;
+  border-bottom: 1px solid #ccc !important;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.p-multiselect {
+  display: inline-flex;
+  position: relative;
+  width: auto;
+  cursor: pointer;
+}
+
+.link {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.divider {
+  width: 5px;
+  height: auto;
+  display: inline-block;
+}
+
+.large-divider {
+  width: 25px;
+  height: auto;
+  display: inline-block;
+}
+
+.terminology-button {
+  border-radius: 0px !important;
+  background-color: #706f6f;
+  border-color: #706f6f;
+}
+
+.ml3 {
+  margin-left: 3px;
+}
+
+.ui-state-default {
+  border: 1px solid #d6d6d6;
+  background-color: #ffffff;
+  color: #555555;
+}
+
+.p-tooltip {
+  background-color: #555555;
+  color: white;
+}
+
+.term-dropdown [aria-label="Multiple Terminology Search"].p-dropdown-item {
+  border-bottom: 1px solid black;
+}

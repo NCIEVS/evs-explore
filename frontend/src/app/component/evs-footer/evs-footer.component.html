@@ -1,0 +1,81 @@
+<footer  *ngIf="!this.configService.getHierarchyPopupStatus()" class="site-footer">
+  <div id="nvcgSlFooter">
+    <div class="slot-item only-SI">
+      <div class="site-footer__container">
+        <div class="site-footer__header">
+          <h1>
+            National Cancer Institute
+            <span>at the National Institutes of Health</span>
+          </h1>
+        </div>
+
+
+        <div class="site-footer__nav">
+
+          <div>&nbsp;</div>
+
+          <div>
+            <h2>CONTACT INFORMATION</h2>
+            <ul>
+              <li>
+                <a [routerLink]="['/contact']" title="">Contact Us</a>
+              </li>
+            </ul>
+          </div>
+
+
+
+          <div>
+            <h2>POLICIES</h2>
+
+            <ul>
+              <li>
+                <a href="https://www.cancer.gov/policies/accessibility">Accessibility</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/comments">Comments</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/disclaimer">Disclaimer</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/foia">FOIA</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/privacy-security">Privacy and Security</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/copyright-reuse">
+                  Reuse &amp; Copyright</a>
+              </li>
+              <li>
+                <a href="https://www.cancer.gov/policies/linking">
+                  Website Linking</a>
+              </li>
+              <li>
+                <a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html">
+                  HHS Vulnerability Disclosure</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="site-footer__agencies">
+          <ul>
+            <li>
+              <a href="https://www.hhs.gov/">U.S. Department of Health and Human Services</a>
+            </li>
+            <li><a href="https://www.nih.gov">National Institutes of Health</a></li>
+            <li><a href="https://www.cancer.gov/">National Cancer Institute</a></li>
+            <li><a href="https://usa.gov">USA.gov</a></li>
+          </ul>
+        </div>
+
+        <div class="site-footer__tagline">
+          <h4>NIH ... Turning Discovery Into Health <sup>®</sup></h4>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</footer>

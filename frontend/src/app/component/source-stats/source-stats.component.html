@@ -1,0 +1,33 @@
+<div *ngIf="validStats" class="container">
+  <div class="page-header">
+    <span class="ui-coloring">Source Statistics for {{this.source}}</span>
+  </div>
+  <div *ngFor="let entry of sourceStats | keyvalue">
+    <br>
+    <p style="margin-bottom: 0.5em; font-size: 17px"><b>{{entry.key}}</b></p>
+    <p-table class="table table-striped table-bordered" [value]="entry.value" sortMode="single">
+      <ng-template pTemplate="header">
+        <tr *ngIf="entry.key == 'Source Overlap'">
+          <th class="w-30">Source
+          </th>
+          <th class="w-40"># Concepts Sharing Atom/# Total Concepts
+          </th>
+          <th class="w-30">Percentage Distribution
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-stats>
+        <tr>
+          <td>{{ stats.code }}</td>
+          <td>{{ stats.key }}</td>
+          <td>{{ stats.value }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<div *ngIf="!validStats" class="container">
+  <p><b>No stats available for {{this.source}}</b></p>
+</div>
+
+<p>&nbsp;</p>

@@ -1,0 +1,96 @@
+<div class="container" style="padding-top: 4px;padding-bottom: 6px;">
+  <div class="page-header-container">
+    <div class="page-header">
+      Term Suggestion
+    </div>
+  </div>
+  <!-- Display the message banner when form is submitted successfully-->
+  <ng-template #isSuccess let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{ severity }}</h4>
+    </div>
+    <div class="modal-body">
+      <p>{{ submitFormMsg }}</p>
+    </div>
+    <div class="modal-footer">
+      <form action="" (submit)="modal.close()" method="POST">
+        <button type="submit" class="btn btn-sm btn-secondary">Close</button>
+      </form>
+    </div>
+  </ng-template>
+  <div class="form-container" *ngIf="uiState.isFormLoaded">
+    <!-- Selector for changing the form -->
+    <div class="form-selector-container">
+      <select [(ngModel)]="uiState.selectedTermForm" (change)="onFormChange($event.target.value)" class="form-selector">
+        <option *ngFor="let form of uiState.forms" [value]="form.id">{{ form.name }}</option>
+      </select>
+    </div>
+    <!-- Form -->
+    <div class="page-subheader"> {{ uiState.termFormData.formName }}</div>
+    <!--    <div class="page-header">{{ uiState.termFormData.formName }}</div>-->
+    <form [formGroup]="uiState.termFormGroup" (ngSubmit)="onSubmit()">
+      <div *ngFor="let section of uiState.termFormData.sections" [formGroupName]="section.name">
+        <div class="section-title">{{ section.label }}</div>
+        <!--        <div class="page-subheader">{{ section.label }}</div>-->
+        <!-- If instructions are present, loop through the text, populate the links, and concatenated the parts together -->
+        <p *ngIf="section.instructions" class="instructions text-body">
+          <ng-container *ngFor="let part of section.instructions.parts; let isLast=last">
+            <a *ngIf="part.link; else textOnly" [href]="part.link"> {{ part.text }}</a>
+            <ng-template #textOnly><span
+              [ngClass]="{'highlight': part.text === 'Privacy Notice:'}">{{ part.text }}</span></ng-template>
+            <ng-container *ngIf="!isLast">&nbsp;</ng-container>
+          </ng-container>
+        </p>
+        <!-- Load the fields from the form and their input types -->
+        <div *ngFor="let field of section.fields" class="section-container">
+          <div class="field-container">
+            <label class="field-label text-body"> {{ field.label }}
+              <!-- Add red start next to label if the field is required -->
+              <span *ngIf="isRequired(field)" class="highlight">*</span>
+            </label>
+            <!-- Text input -->
+            <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
+                   [placeholder]="field.placeholder" [value]="field.value" [readonly]="field.readonly"
+                   class="text-body field-input"/>
+            <!-- Textarea: Shows how many characters when maxlength is set -->
+            <div *ngIf="field.type === 'textarea'" class="textarea-container">
+               <textarea [formControlName]="field.name" [placeholder]="field.placeholder"
+                         [maxlength]="getMaxLength(field)" class="text-input field-input">{{ field.value }}</textarea>
+              <span
+                *ngIf="getMaxLength(field)">{{ displayMaxLengthCount(section, field) }}</span>
+            </div>
+            <!-- Dropdown with multiple select -->
+            <p-multiSelect *ngIf="field.type === 'dropdown' && field.multiple"
+                           [formControlName]="field.name" [options]="field.mappedOptions" [filter]="true"
+                           [placeholder]="field.placeholder" [selectedItemsLabel]="'{0} items selected'"
+                           [defaultLabel]="field.label" class="text-body field-input">
+            </p-multiSelect>
+            <!-- Dropdown no multiple select-->
+            <select *ngIf="field.type === 'dropdown' && !field.multiple" [formControlName]="field.name"
+                    class="text-body field-input">
+              <option value="" disabled selected>{{ field.placeholder }}</option>
+              <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+            </select>
+            <!-- Error Messages from validation checks -->
+          </div>
+          <div *ngIf="shouldDisplayValidationError(section, field)" class="error-message">
+            {{ getErrorMessage(uiState.termFormGroup.get(section.name).get(field.name), field) }}
+          </div>
+        </div>
+      </div>
+      <div class="captcha-container">
+        <!-- Recaptcha Validation -->
+        <ngx-recaptcha2 #captchaElem [siteKey]="recaptchaSiteKey"
+                        (success)="onCaptchaSuccess($event)" (expire)="onCaptchaExpired()"
+                        formControlName="recaptcha"></ngx-recaptcha2>
+      </div>
+      <!-- Form Buttons -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-primary btn-space"
+                [disabled]="uiState.termFormGroup.invalid || isCaptchaExpired">Submit
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="onClear()">Clear</button>
+      </div>
+    </form>
+  </div>
+</div>

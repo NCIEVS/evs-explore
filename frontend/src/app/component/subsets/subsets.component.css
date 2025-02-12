@@ -1,0 +1,27 @@
+.treenode-highlight {
+  color: #FFFFFF !important;
+  background-color: #186ba0 !important
+}
+
+.treenode {
+  color: black;
+}
+
+.customtabview .p-panel-titlebar {
+  background: #000000
+}
+
+.newSearch {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 0.25em;
+  float: right
+}
+
+.expandAll {
+  padding: 0
+}
+
+.page-header {
+  padding-bottom: 0.5em;
+}

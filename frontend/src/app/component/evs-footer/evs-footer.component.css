@@ -1,0 +1,439 @@
+body {
+  line-height: 1.375em;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.site-footer {
+  padding: 1em 0;
+}
+
+.site-footer * {
+  background: #123e57;
+  color: #fff;
+  font-family: Noto Sans, Century Gothic, Arial, sans-serif;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+.site-footer h4 {
+  font-size: 16px;
+}
+
+.site-footer h2 {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-bottom: 1em;
+}
+
+.site-footer .back-to-top {
+  z-index: 998;
+  display: none;
+  position: fixed;
+  right: 0.5em;
+  bottom: 1em;
+  color: #2e2e2e;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px 0;
+  text-shadow: -1px -1px 3px #fff, 1px -1px 3px #fff, -1px 1px 3px #fff, 1px 1px 3px #fff;
+}
+
+.site-footer a {
+  font-weight: 700;
+}
+
+.site-footer__agencies {
+  width: auto;
+  align-self: center;
+  font-size: .8em;
+}
+
+.site-footer__agencies ul {
+  display: flex;
+  flex-direction: column;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.site-footer__agencies li:nth-child(4n):after {
+  display: none;
+}
+
+.site-footer__agencies li:after {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  margin: 0 10px;
+  width: 1px;
+  height: 12px;
+  background: hsla(0, 0%, 100%, .6);
+}
+
+.site-footer__container {
+  width: 100%;
+  max-width: 62.5em;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer__header {
+  text-align: left;
+  margin: 0.9375em;
+  margin-top: 0px;
+}
+
+.site-footer__header * {
+  text-align: left;
+}
+
+.site-footer__header h1 {
+  font-family: Montserrat, Avant Garde, Arial, sans-serif;
+  font-size: 23px;
+}
+
+.site-footer__header h1 span {
+  font-family: Montserrat, Avant Garde, Arial, sans-serif;
+  display: block;
+  font-size: 16px;
+}
+
+.site-footer__nav {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 0.9375em;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.site-footer__nav * {
+  text-align: left !important;
+}
+
+.site-footer__nav div {
+  flex: 1;
+  padding-right: 1.1em;
+}
+
+.site-footer__nav li {
+  width: 100%;
+  margin-bottom: 1em;
+  line-height: 1.3em;
+}
+
+.site-footer__tagline {
+  width: 95%;
+  align-self: center;
+}
+
+.site-footer__tagline * {
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 1.375em;
+}
+
+h2 {
+  line-height: 1.215em;
+  font-size: 1.4375em;
+}
+
+a {
+  color: #2ba6cb;
+  text-decoration: none;
+  line-height: inherit;
+}
+
+footer .footercustom a {
+  color: white;
+}
+
+footer blockquote {
+  color: white;
+  margin: 0;
+}
+
+footer ul {
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+}
+
+footer li {
+  color: white;
+  float: left;
+}
+
+ul.menu {
+  display: inline-block;
+  text-align: center !important;
+}
+
+.inner {
+  width: 90%;
+  text-align: center !important;
+  margin: 0 auto;
+}
+
+.site-footer .back-to-top {
+  z-index: 998;
+  display: none;
+  position: fixed;
+  right: 0.5em;
+  bottom: 1em;
+  color: #2e2e2e;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px 0;
+  text-shadow: -1px -1px 3px #fff, 1px -1px 3px #fff, -1px 1px 3px #fff, 1px 1px 3px #fff;
+}
+
+.site-footer .back-to-top:before {
+  content: " ";
+  display: block;
+  width: 55px;
+  height: 55px;
+  border: 4px solid #7fd0d1;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-bottom: 2px;
+}
+
+.site-footer .back-to-top:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.25em;
+  height: 0.78125em;
+  background-position: 5.84795% 19.56593%;
+  font-size: 30px;
+}
+
+.legend,
+.related-resources h6,
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.related-resources h6,
+blockquote,
+dd,
+div,
+dl,
+dt,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+ol,
+p,
+pre,
+td,
+th,
+ul {
+  margin: 0;
+  padding: 0;
+  direction: ltr;
+}
+
+.related-resources h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Montserrat, Avant Garde, Arial, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #606060;
+  text-rendering: optimizeLegibility;
+  margin-top: 0.5em;
+  line-height: 1.2125em;
+}
+
+.related-resources h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+#nvcgSlMainNav.searching .mobile-menu-bar .menu-btn:before,
+#section-menu-button:before,
+#sitesearch,
+.ap-button:before,
+.arrows-for-ic-carousel .next,
+.arrows-for-ic-carousel .previous,
+.arrows-for-other-nci-sites .next,
+.arrows-for-other-nci-sites .next:hover,
+.arrows-for-other-nci-sites .previous,
+.arrows-for-other-nci-sites .previous:hover,
+.borderless-button:after,
+.button.startover:before,
+.CDR_audiofile,
+.checkbox input[type=checkbox]:checked+label:before,
+.contact-buttons .chat:before,
+.contact-buttons .email:before,
+.contact-buttons .phone:before,
+.cthp-card-image a.icon-exit-notification,
+.feature-card .image-hover a.icon-exit-notification,
+.filetype.ebook,
+.filetype.excel,
+.filetype.exe,
+.filetype.pdf,
+.filetype.ppt,
+.filetype.txt,
+.filetype.word,
+.icon-exit-notification,
+.modal__btn-close:before,
+.modal__content .CDR_audiofile,
+.news-share a.news-events:before,
+.news-share a.news-facebook:before,
+.news-share a.news-govdelivery:before,
+.news-share a.news-rss:before,
+.news-share a.news-twitter:before,
+.news-share a.news-youtube:before,
+.popup-close a,
+.ProactiveLiveHelpPrompt .close,
+.ProactiveLiveHelpPrompt .live-help,
+.ProactiveLiveHelpPrompt .spanish-livehelp .live-help,
+.pub-buttons a.epub:before,
+.pub-buttons a.free:before,
+.pub-buttons a.html:before,
+.pub-buttons a.kindle:before,
+.pub-buttons a.lector:before,
+.pub-buttons a.pdf:before,
+.site-footer .back-to-top:after,
+.slick-slide .site-link:before,
+.p-selectmenu-button span.p-icon:before,
+.yt-carousel-arrows .next,
+.yt-carousel-arrows .previous,
+.yt-carousel-m-arrows .m-next,
+.yt-carousel-m-arrows .m-previous,
+a.arrow-link-white:before,
+a.arrow-link-white:hover:before,
+a.arrow-link:before,
+a.arrow-link:hover:before,
+a.borderless-button:after,
+a.data-download-btn:before,
+a.infographic-view-full:before,
+a.nav-contact:before,
+a.nav-dictionary:before,
+a.toggle-arrow-link:after,
+a.toggle-arrow-link:focus:after,
+a.toggle-arrow-link:hover:after,
+a.video-view-full:before,
+button.nav-header:before,
+button.nav-search:before,
+figure a.article-image-enlarge:before,
+form button.startover:before,
+table[data-sortable] th[data-sorted=down]:before,
+table[data-sortable] th[data-sorted=up]:before,
+table[data-sortable] thead th:before {
+  display: inline-block;
+  /* background-image: url(../images/sprites/svg-sprite.svg); */
+  background-size: 12em 287.375em;
+}
