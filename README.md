@@ -6,9 +6,9 @@ EVS terminology browser application
 
 See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
-* Run "npm outdated" from frontend to see whether versions are out of date
+* Run "npm outdated" from `frontend` to see whether versions are out of date
   * Some fixing of packages was done, but this is really finicky.
-  * Sticking with Angular 8 for now.
+  * Sticking with Angular 16 for now.
 
 ### Building the Java Webapp
 
@@ -19,12 +19,12 @@ Run `make clean build` from the top level or `./gradlew clean build -x test"` fr
 ### Deploying to AWS servers
 
 The built application has an application.yml file that drives the proxy endpoint for the redirected
-calls to the teh API.  Make sure this environment variable is set correctly for the deployment env.
+calls to the the API.  Make sure this environment variable is set correctly for the deployment env.
 
 
 ### Launching EVS-EXPLORE for development
 
-Install npm, ideally the version specified in package.json
+Install npm, ideally the version specified in package.json. Then run `npm install` from `frontend`.
 
 There are three ways to launch EVS-EXPLORE for development:
 
@@ -68,12 +68,13 @@ npm install -g @angular/cli@latest
 ```
 
 ### Supported Browsers
-The application has been specifically tested on the following browsers:The application has been specifically tested on the following browsers:
+The application has been specifically tested on the following browsers:
 
 * Google Chrome
 * Mozilla Firefox
 * Microsoft Edge
 * Opera
+* Brave
 
 ### Setting up Prettier
 
