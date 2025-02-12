@@ -25,6 +25,11 @@ clean:
 build:
 	cd web; ./gradlew clean build -x test
 
+# build the frontend
+frontend:
+	/bin/rm -rf web/src/main/resources/static/*
+	cd web/frontend; ./gradlew build
+
 # Run
 run:
 	cd web/frontend; npm start
