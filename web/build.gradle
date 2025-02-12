@@ -95,12 +95,12 @@ jar {
     }
 }
 
-jar {
+/*jar {
     from('frontend/dist') {
         //Public is a default supported Spring Boot resources directory.
         into 'public'
     }
-}
+}*/
 
 dependencyManagement {
     imports {

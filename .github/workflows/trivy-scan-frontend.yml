@@ -28,7 +28,7 @@ jobs:
     - name: Run Trivy scan for package-lock.json
       id: trivy-scan-frontend
       run: |
-        trivy fs web/frontend/package-lock.json --format json --output reportFrontend.json
+        trivy fs frontend/package-lock.json --format json --output reportFrontend.json
       env:
         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
         TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db

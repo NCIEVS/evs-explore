@@ -28,11 +28,11 @@ build:
 # build the frontend
 frontend:
 	/bin/rm -rf web/src/main/resources/static/*
-	cd web/frontend; ./gradlew build
+	cd frontend; ./gradlew build
 
 # Run
 run:
-	cd web/frontend; npm start
+	cd frontend; npm start
 
 releasetag:
 	git tag -a "${VERSION}-RC-`/bin/date +%Y-%m-%d`" -m "Release ${VERSION}-RC-`/bin/date +%Y-%m-%d`"
@@ -54,7 +54,7 @@ version:
 	@echo $(APP_VERSION)
 
 scan:
-	trivy fs web/frontend/package-lock.json --format template -o report.html --template "@config/trivy/html.tpl"
+	trivy fs frontend/package-lock.json --format template -o report.html --template "@config/trivy/html.tpl"
 	grep CRITICAL report.html
 	cd web; ./gradlew dependencies --write-locks
 	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
@@ -65,3 +65,5 @@ scanJava:
 	cd web; ./gradlew dependencies --write-locks
 	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
 	grep CRITICAL reportJava.html
+
+.PHONY: frontend
