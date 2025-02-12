@@ -39,10 +39,12 @@ java -Xmx4096M -jar build/libs/evsexplore-*.war
 
 ### Making tag for deployment
 
-There are three main steps to making a tag to deploy to the testing environments (dev, stage, qa, etc):
+There are a few steps to making a tag to deploy to the testing environments (dev, stage, qa, etc):
 1. Build the frontend. Use the `make frontend` command from the top level directory.
 2. Build the Java app. Use the `make build` command from the top level, or in `web` with the command `./gradlew clean build -x test`.
-3. Make the tag. Use the `make tag` command from the top level. This will require that you don't have any changes waiting to be pushed, otherwise it will fail.
+3. Test that the application works.
+4. Push all changes to your branch.
+5. Make the tag. Use the `make tag` command from the top level. This will require that you don't have any changes waiting to be pushed, otherwise it will fail.
 
 ### Upgrading to latest
 
