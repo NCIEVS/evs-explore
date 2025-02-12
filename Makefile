@@ -43,8 +43,7 @@ rmreleasetag:
 	git push origin --delete "${VERSION}-RC-`/bin/date +%Y-%m-%d`"
 
 tag: frontend
-	@echo "verify no repository changes on frontend build, commit changes from make frontend before running make tag"
-	git diff-index --quiet HEAD --
+	@git diff --quiet HEAD -- || { echo "verify no repository changes on frontend build, commit changes from make frontend before running make tag"; exit 1; }
 	git tag -a "v`/bin/date +%Y-%m-%d`-${APP_VERSION}" -m "Release `/bin/date +%Y-%m-%d`"
 	git push origin "v`/bin/date +%Y-%m-%d`-${APP_VERSION}"
 
