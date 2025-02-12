@@ -42,7 +42,8 @@ rmreleasetag:
 	git tag -d "${VERSION}-RC-`/bin/date +%Y-%m-%d`"
 	git push origin --delete "${VERSION}-RC-`/bin/date +%Y-%m-%d`"
 
-tag:
+tag: frontend
+	git diff-index --quiet HEAD --
 	git tag -a "v`/bin/date +%Y-%m-%d`-${APP_VERSION}" -m "Release `/bin/date +%Y-%m-%d`"
 	git push origin "v`/bin/date +%Y-%m-%d`-${APP_VERSION}"
 
