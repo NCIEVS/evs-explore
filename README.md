@@ -6,9 +6,9 @@ EVS terminology browser application
 
 See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
-* Run "npm outdated" from frontend to see whether versions are out of date
+* Run "npm outdated" from `frontend` to see whether versions are out of date
   * Some fixing of packages was done, but this is really finicky.
-  * Sticking with Angular 8 for now.
+  * Sticking with Angular 16 for now.
 
 ### Building the Java Webapp
 
@@ -19,23 +19,32 @@ Run `make clean build` from the top level or `./gradlew clean build -x test"` fr
 ### Deploying to AWS servers
 
 The built application has an application.yml file that drives the proxy endpoint for the redirected
-calls to the teh API.  Make sure this environment variable is set correctly for the deployment env.
+calls to the the API.  Make sure this environment variable is set correctly for the deployment env.
 
 
 ### Launching EVS-EXPLORE for development
 
-Install npm, ideally the version specified in package.json
+Install npm, ideally the version specified in package.json. Then run `npm install` from `frontend`.
 
 There are three ways to launch EVS-EXPLORE for development:
 
-* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `web/frontend`
-* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `web/frontend`
+* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `frontend`.
+* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `frontend`. This method requires being connected to the NIH/NCI VPN.
 * To simulate the production environment, perform the gradle build and then launch the .war file.  For example:
 
 ```bash
 cd web
 java -Xmx4096M -jar build/libs/evsexplore-*.war
 ```
+
+### Making tag for deployment
+
+There are a few steps to making a tag to deploy to the testing environments (dev, stage, qa, etc):
+1. Build the frontend. Use the `make frontend` command from the top level directory.
+2. Build the Java app. Use the `make build` command from the top level, or in `web` with the command `./gradlew clean build -x test`.
+3. Test that the application works.
+4. Push all changes to your branch.
+5. Make the tag. Use the `make tag` command from the top level. This will require that you don't have any changes waiting to be pushed, otherwise it will fail.
 
 ### Upgrading to latest
 
@@ -68,12 +77,13 @@ npm install -g @angular/cli@latest
 ```
 
 ### Supported Browsers
-The application has been specifically tested on the following browsers:The application has been specifically tested on the following browsers:
+The application has been specifically tested on the following browsers:
 
 * Google Chrome
 * Mozilla Firefox
 * Microsoft Edge
 * Opera
+* Brave
 
 ### Setting up Prettier
 

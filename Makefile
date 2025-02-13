@@ -25,9 +25,14 @@ clean:
 build:
 	cd web; ./gradlew clean build -x test
 
+# build the frontend
+frontend:
+	/bin/rm -rf web/src/main/resources/static/*
+	cd frontend; ./gradlew build
+
 # Run
 run:
-	cd web/frontend; npm start
+	cd frontend; npm start
 
 releasetag:
 	git tag -a "${VERSION}-RC-`/bin/date +%Y-%m-%d`" -m "Release ${VERSION}-RC-`/bin/date +%Y-%m-%d`"
@@ -37,7 +42,8 @@ rmreleasetag:
 	git tag -d "${VERSION}-RC-`/bin/date +%Y-%m-%d`"
 	git push origin --delete "${VERSION}-RC-`/bin/date +%Y-%m-%d`"
 
-tag:
+tag: frontend
+	@git diff --quiet HEAD -- || { echo "verify no repository changes on frontend build, commit changes from make frontend before running make tag"; exit 1; }
 	git tag -a "v`/bin/date +%Y-%m-%d`-${APP_VERSION}" -m "Release `/bin/date +%Y-%m-%d`"
 	git push origin "v`/bin/date +%Y-%m-%d`-${APP_VERSION}"
 
@@ -49,7 +55,7 @@ version:
 	@echo $(APP_VERSION)
 
 scan:
-	trivy fs web/frontend/package-lock.json --format template -o report.html --template "@config/trivy/html.tpl"
+	trivy fs frontend/package-lock.json --format template -o report.html --template "@config/trivy/html.tpl"
 	grep CRITICAL report.html
 	cd web; ./gradlew dependencies --write-locks
 	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
@@ -60,3 +66,5 @@ scanJava:
 	cd web; ./gradlew dependencies --write-locks
 	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
 	grep CRITICAL reportJava.html
+
+.PHONY: frontend

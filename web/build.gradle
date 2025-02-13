@@ -78,9 +78,9 @@ dependencies {
     implementation 'org.springframework:spring-web:6.1.14' // Updated version
     implementation 'org.springframework:spring-webmvc:6.1.14' // Updated version
     // fixes netty resolver error for macos
-    implementation 'io.netty:netty-common:4.1.118.Final'
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.118.Final'
-    implementation 'io.netty:netty-handler:4.1.118.Final'
+    //implementation 'io.netty:netty-common:4.1.118.Final'
+    //implementation 'io.netty:netty-resolver-dns-native-macos:4.1.118.Final'
+    //implementation 'io.netty:netty-handler:4.1.118.Final'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
       exclude group: "net.minidev", module: "json-smart"
@@ -95,15 +95,12 @@ jar {
     }
 }
 
-jar {
+/*jar {
     from('frontend/dist') {
         //Public is a default supported Spring Boot resources directory.
         into 'public'
     }
-}
-
-//frontend:build will be run before the processResources
-processResources.dependsOn('frontend:build')
+}*/
 
 dependencyManagement {
     imports {

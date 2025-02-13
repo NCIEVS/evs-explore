@@ -7,8 +7,8 @@ plugins {
 version = '2.1.0.RELEASE'
 
 node {
-  version = '16.14.1'
-  npmVersion = '9.5.1'
+  version = '22.14.0'
+  npmVersion = '10.9.2'
   download = true
   workDir = file("${project.buildDir}/node")
   nodeModulesDir = file("${project.projectDir}")
@@ -24,7 +24,7 @@ task npmBuild(type: NpmTask, dependsOn: npm_install) {
 // Copy the distribution up to the static folder to complete the build
 task build(type: Copy, dependsOn: npmBuild) {
     from 'dist'
-    into '../src/main/resources/static'
+    into '../web/src/main/resources/static'
 }
 
 //build.dependsOn(npm_install)
