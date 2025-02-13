@@ -28,8 +28,8 @@ Install npm, ideally the version specified in package.json. Then run `npm instal
 
 There are three ways to launch EVS-EXPLORE for development:
 
-* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `frontend`
-* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `frontend`
+* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `frontend`.
+* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `frontend`. This method requires being connected to the NIH/NCI VPN.
 * To simulate the production environment, perform the gradle build and then launch the .war file.  For example:
 
 ```bash
