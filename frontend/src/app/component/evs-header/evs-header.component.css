@@ -914,3 +914,7 @@ html.nav-moving #mega-nav {
 .hierarchyButton {
   cursor: pointer;
 }
+
+.eonotice {
+  text-align: center;
+}
