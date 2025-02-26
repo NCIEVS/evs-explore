@@ -915,7 +915,18 @@ html.nav-moving #mega-nav {
   cursor: pointer;
 }
 
+.eocontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   /* min-height: 100vh; Ensure container takes full viewport height */
+  padding: 20px 0;
+}
+
 .eonotice {
-  text-align: center;
+  text-align: start;
   background-color: rgb(254, 240, 200);
+  width: 80%;
+  padding: 10px;
+  border-radius: 9px;
 }
