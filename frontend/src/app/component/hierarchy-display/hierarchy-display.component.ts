@@ -131,12 +131,16 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   // Gets path in the hierarchy and scrolls to the active node
-  getPathInHierarchy(limit: number = this.hierarchyLimit) {
+  getPathInHierarchy(limit: number = this.hierarchyLimit, loadAll = null) {
     console.log('getPathInHierarchy called');
     this.loaderService.showLoader();
     this.conceptDetailService.getHierarchyData(this.conceptCode, limit).then((nodes) => {
       this.hierarchyData = nodes as TreeNode[];
+      if(loadAll) {
+        this.selectedNodes = [];
+      }
       for (const node of this.hierarchyData) {
+
         this.setTreeTableProperties(node, null);
       }
       this.updateDisplaySize();
@@ -150,14 +154,14 @@ export class HierarchyDisplayComponent implements OnInit {
     });
   }
 
-  getAllPathsInHierarchy() {
-    this.getPathInHierarchy(null);
+  getAllPathsInHierarchy(loadAll = null) {
+    this.getPathInHierarchy(null, loadAll);
   }
 
   // Load all tree positions for the selected node
   loadAllPositions(event: Event) {
     event.preventDefault();
-    this.getAllPathsInHierarchy();
+    this.getAllPathsInHierarchy(true);
   }
 
   // Get child tree nodes (for an expanded node)
