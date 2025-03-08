@@ -9,7 +9,7 @@
           label="Export"
           icon="fa fa-download"
           id="mappingExportButton"
-          pTooltip="Click to download mapping search results"
+          pTooltip="Click to download mapping search results" showDelay="300" 
           (click)="exportMapping()"
           [disabled]="total == 0"
         ></button>
@@ -55,7 +55,7 @@
               type="button"
               pButton
               [label]="getRulesToggleString"
-              pTooltip="Click to {{ getRulesToggleString }}"
+              pTooltip="Click to {{ getRulesToggleString }}" showDelay="300" 
               tooltipPosition="bottom"
               (click)="showOrHideRules()"
             ></button>

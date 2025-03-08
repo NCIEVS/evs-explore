@@ -13,7 +13,13 @@
       ></button>
     </span>
     <span *ngIf="displayHierarchy && configService.isMultiSource()">
-      &nbsp;<button (click)="openTermSuggestionFormWithCode()" class="p-button-coloring" [label]="termSuggestionButton" pButton type="button"></button>
+      &nbsp;<button
+        (click)="openTermSuggestionFormWithCode()"
+        class="p-button-coloring"
+        [label]="termSuggestionButton"
+        pButton
+        type="button"
+      ></button>
     </span>
     <span style="float: right">
       <button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button" class="p-button-coloring"></button>
@@ -24,6 +30,7 @@
         icon="fa fa-download"
         class="p-button-coloring"
         pTooltip="Click to download concept details"
+        showDelay="300"
         (click)="exportDetails()"
       ></button>
       <button

@@ -8,6 +8,13 @@
 /******************************************************/
 /********************Import PrimeNG********************/
 
+.p-tooltip .p-tooltip-text{
+  background-color: #555555;
+  color: white;
+  border-radius: 3px;
+  padding: .5em;
+} 
+
 /*
 * Deprecated: Use nova instead
 */
