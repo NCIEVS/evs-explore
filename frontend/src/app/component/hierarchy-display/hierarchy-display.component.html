@@ -12,7 +12,7 @@
             label="Previous"
             icon="fa fa-solid fa-long-arrow-up"
             class="p-button-coloring" 
-            pTooltip="Scroll to previous hierarchy position"
+            pTooltip="Scroll to previous hierarchy position" showDelay="300" 
             (click)="getPreviousHierarchyPosition()">
           </button>
           <button 
@@ -23,7 +23,7 @@
             label="Next"
             icon="fa fa-solid fa-long-arrow-down"
             class="p-button-coloring"
-            pTooltip="Scroll to next hierarchy position"
+            pTooltip="Scroll to next hierarchy position" showDelay="300" 
             (click)="getNextHierarchyPosition()">
           </button>
           <span style="font-size: 14px; vertical-align: 0.1em">Hierarchy Position: {{hierarchyIndex + 1}} / {{selectedNodes.length}} </span>

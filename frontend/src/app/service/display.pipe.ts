@@ -9,10 +9,9 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Example:
  *   {{ 1024 |  fileSize}}
  *   formats to: 1 KB
-*/
+ */
 @Pipe({ name: 'transformDisplay' })
 export class DisplayPipe implements PipeTransform {
-
   transform(value: any, field: string): string {
     if (field === 'Maps_To') {
       let mapstos: any[];
@@ -23,7 +22,6 @@ export class DisplayPipe implements PipeTransform {
 
       //html = html + 'test123';
       return html;
-
     } /*else if ( field === 'selectedFacet') {
       const facetType = value.toString().split(/:(.+)/)[0].replace('.', '_');
       const facetValue = value.toString().split(/:(.+)/)[1];
@@ -38,5 +36,4 @@ export class DisplayPipe implements PipeTransform {
         }
     }
     }*/
-
 }
