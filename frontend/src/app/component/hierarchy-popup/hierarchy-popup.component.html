@@ -2,6 +2,28 @@
   <div class="hierarchy-div">
     <div class="page-header p-coloring">
       Concept Hierarchy
+      <button 
+        *ngIf="this.selectedNodes.length > 1"
+        type="button"
+        pButton
+        style="margin-right: 0.1em"
+        label="Previous"
+        icon="fa fa-solid fa-long-arrow-up"
+        class="p-button-coloring" 
+        pTooltip="Scroll to previous hierarchy position" showDelay="300" 
+        (click)="getPreviousHierarchyPosition()">
+      </button>
+      <button 
+        *ngIf="this.selectedNodes.length > 1"
+        type="button"
+        pButton
+        style="margin-right: 0.25em"
+        label="Next"
+        icon="fa fa-solid fa-long-arrow-down"
+        class="p-button-coloring"
+        pTooltip="Scroll to next hierarchy position" showDelay="300" 
+        (click)="getNextHierarchyPosition()">
+      </button>
       <span
         style="float: right; margin-right: 10px"
         class="fa fa-compress pointer"
