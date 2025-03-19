@@ -26,6 +26,7 @@
             pTooltip="Scroll to next hierarchy position" showDelay="300" 
             (click)="getNextHierarchyPosition()">
           </button>
+          <span style="font-size: 14px; vertical-align: 0.1em">Hierarchy Position: {{hierarchyIndex + 1}} / {{selectedNodes.length}} </span>
           <span style="float: right" class="fa fa-close pointer" title="Close hierarchy view" (click)="closeHierarchy()"></span>
           <span
             style="float: right; margin-right: 10px"
