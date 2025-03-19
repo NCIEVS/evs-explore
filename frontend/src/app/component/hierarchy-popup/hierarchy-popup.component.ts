@@ -40,6 +40,8 @@ export class HierarchyPopupComponent implements OnInit {
   // display tree position tracking
   displayedPositions = 0;
   totalPositions = 0;
+  hierarchyIndex = 0;
+  hierarchySize = 0;
   hierarchyLimit = 10;
 
   constructor(
@@ -122,6 +124,24 @@ export class HierarchyPopupComponent implements OnInit {
     }
   }
 
+  getPreviousHierarchyPosition() {
+    if (this.hierarchyIndex > 0) {
+      this.hierarchyIndex--;
+    } else {
+      this.hierarchyIndex = this.hierarchySize - 1;
+    }
+    this.scrollToSelectionTableTree(this.selectedNodes[this.hierarchyIndex], this.hierarchyTable);
+  }
+
+  getNextHierarchyPosition() {
+    if (this.hierarchyIndex < this.hierarchySize - 1) {
+      this.hierarchyIndex++;
+    } else {
+      this.hierarchyIndex = 0;
+    }
+    this.scrollToSelectionTableTree(this.selectedNodes[this.hierarchyIndex], this.hierarchyTable);
+  }
+
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy(limit: number = this.hierarchyLimit) {
     this.loaderService.showLoader();
@@ -132,6 +152,7 @@ export class HierarchyPopupComponent implements OnInit {
       }
       //this.updateDisplaySize();
       if (this.selectedNodes.length > 0) {
+        this.hierarchySize = this.selectedNodes.length;
         setTimeout(() => {
           this.scrollToSelectionTableTree(this.selectedNodes[0], this.hierarchyTable);
         }, 100);
@@ -244,16 +265,20 @@ export class HierarchyPopupComponent implements OnInit {
   scrollToSelectionTableTree(selectedNode, hierarchyTable) {
     // console.log('scroll to selection', selectedNode);
     let index = 0;
+    let selectedNodeIndex = 0;
     const hierarchyRows = this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr');
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
-        index = i;
-        break;
+        if(selectedNodeIndex++ == this.hierarchyIndex) {
+          index = i;
+          break;
+        }
       }
     }
     if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
       if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
+        console.log(this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index]);
         this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index].scrollIntoView({
           behavior: 'smooth',
           block: 'center',
