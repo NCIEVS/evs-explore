@@ -118,7 +118,10 @@ export class SubsetDetailsComponent implements OnInit {
 
             // Lookup the subset description.
             // FIX to move a period outside the closing </p> tag to inside it
-            var fixDesc = this.selectedSubset.getSubsetDescription().replace('</p>.', '.</p>');
+            var fixDesc = this.selectedSubset.getSubsetDescription();
+            if(fixDesc) {
+              fixDesc = fixDesc.replace('</p>.', '.</p>');
+            }
             this.subsetDescription = this.sanitizer.sanitize(SecurityContext.HTML, fixDesc);
             if (!this.subsetDescription) {
               for (let definition of this.selectedSubset.definitions) {
