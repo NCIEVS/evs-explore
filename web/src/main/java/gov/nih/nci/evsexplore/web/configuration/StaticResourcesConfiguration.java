@@ -32,7 +32,7 @@ public class StaticResourcesConfiguration implements WebMvcConfigurer {
     static final String[] STATIC_RESOURCES = new String[] {
             "/**/*.css", "/**/*.html", "/**/*.js", "/**/*.json", "/**/*.bmp",
             "/**/*.jpeg", "/**/*.jpg", "/**/*.png", "/**/*.ttf", "/**/*.eot",
-            "/**/*.svg", "/**/*.woff", "/**/*.woff2", "/**/*.xls" 
+            "/**/*.svg", "/**/*.woff", "/**/*.woff2", "/**/*.xls"
     };
 
     /**

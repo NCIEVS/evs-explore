@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0.RELEASE] - 2024-03-18
+### Added
+- Adding Executive Order Disclaimer Statement to Home Page.
+### Changed
+- Ability to scroll through each highlighted concept in the View in Hierarchy display with next/previous buttons
+- Change the exports to download as .csv file instead of .xls.
+- Reorganized backend build to separate "frontend" from "deployment container"
+- Upgraded versions to address vulnerabilities
+
+## [2.0.0.RELEASE] - 2024-01-28
+### Added
+- Improvements to the "hierarchy" view, including ability to "pop out" that view and better handling of more than 10 tree positions
+- Implement views for CDISC subsets
+### Changed
+- Add vulnerability scanning
+- Minor bug fixes to mapping details display and interactions
+- Term form improvements and hardening (and ability to open with a code)
+
 ## [1.10.0.RELEASE] - 2024-06-15
 ### Added
 - Support for CDISC subsets on subset details page

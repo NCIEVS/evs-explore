@@ -1,0 +1,72 @@
+<div id="hierarchyTableDisplay" class="container">
+  <div class="hierarchy-div">
+    <div class="page-header">
+      Subsets
+      <span class="newSearch"><button [routerLink]="['/welcome']" [queryParams]="{terminology: terminology}"
+          label="New Search" icon="fa fa-search" pTooltip="Click to start new search" showDelay="300" tooltipPosition="bottom" pButton type="button"
+          class="p-button-coloring"></button></span>
+    </div>
+    <p>View subsets organized by standards category. Standards categories group the subsets
+      supporting them; all other
+      labels lead to the home pages of actual subsets. Search or browse a subset from its home page
+      to find which ones
+      contain a particular code or term. Many of these subsets are subsets of NCI Thesaurus that are
+      developed jointly
+      with EVS partners as federal and international coding standards.</p>
+    <p>See the
+      <a [routerLink]="['/subsetncit']" target="_top" class="regular-link">
+        NCI Thesaurus Subsets Page
+      </a>
+    </p>    
+    <div class="table-responsive">
+      <div class="row search-row">
+        <div class="col-sm-4 search-bar">
+          <div>
+            <p-autoComplete id="subsetSearch" [(ngModel)]="enteredSearchText"            
+        [inputStyle]="{'width':'100%'}" [delay]="800" [suggestions]="subsetSuggestions"
+        (completeMethod)="performSubsetSearch()" placeholder="{{placeholderText}}" [minLength]="3"
+        [disabled]="searchDisabled">
+      </p-autoComplete>
+          </div>
+
+        </div>
+        <div class="col-sm-4">
+          <div class="p-inputgroup" style="padding-bottom: 6px;">
+            <button type="button" pButton label="Search" icon="fa fa-search" (click)="performSubsetSearch()"
+              [disabled]="!enteredSearchText || enteredSearchText.length < 3"></button>&nbsp;
+
+              <button type="button" pButton icon="fa fa-undo"
+              (click)="resetSearch()" pTooltip="Click to reset search" showDelay="300" label="Reset" tooltipPosition="bottom"
+              [disabled]="searchDisabled"></button>&nbsp;
+
+              <button type="button" pButton [label]="expandLabel" [disabled]="expandDisabled"
+              pTooltip="Click to {{expandLabel}}" showDelay="300" tooltipPosition="bottom" (click)="expandOrCollapseAllNodes(hierarchyData)"
+               ></button>
+            </div>
+        </div>
+      </div>
+
+
+
+    <p-treeTable #hierarchyTable [value]="hierarchyData" selectionMode="none" dataKey="code"
+      (onNodeExpand)="treeTableNodeExpand($event)" (onNodeCollapse)="treeTableNodeCollapse($event)">
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData" *ngIf="subsetsFound">
+        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode" [ngClass]="{'treenode-highlight': rowData.highlight}">
+          <td>
+            <div style="cursor: pointer; display:flex;">
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              <a [routerLink]="['/subset/', terminology, rowData.code]" target="_top" class="regular-link">
+                <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-blank"></i>
+                <mark *ngIf="hasText(rowData.code + rowData.label); else nonMatch"
+                  style="color: #319fbe">{{rowData.code}}
+                  - {{rowData.label}}</mark>
+                <ng-template #nonMatch>{{rowData.code}} - {{rowData.label}}</ng-template>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+    <p *ngIf="!subsetsFound">No Subsets Found</p>
+  </div>
+</div>

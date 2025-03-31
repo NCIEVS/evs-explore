@@ -1,0 +1,61 @@
+<div class="hierarchy-div">
+  <div class="page-header p-coloring">
+    {{ title }}
+    <span *ngIf="displayHierarchy">
+      --
+      <button
+        [routerLink]="['/hierarchy', terminology, conceptCode]"
+        class="p-button-coloring"
+        [queryParams]="getSelectedSourcesQueryParam()"
+        [label]="hierarchyButtonLabel"
+        pButton
+        type="button"
+      ></button>
+    </span>
+    <span *ngIf="displayHierarchy && configService.isMultiSource()">
+      &nbsp;<button
+        (click)="openTermSuggestionFormWithCode()"
+        class="p-button-coloring"
+        [label]="termSuggestionButton"
+        pButton
+        type="button"
+      ></button>
+    </span>
+    <span style="float: right">
+      <button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button" class="p-button-coloring"></button>
+      <button
+        type="button"
+        pButton
+        label="Export"
+        icon="fa fa-download"
+        class="p-button-coloring"
+        pTooltip="Click to download concept details"
+        showDelay="300"
+        (click)="exportDetails()"
+      ></button>
+      <button
+        [routerLink]="['/welcome']"
+        [queryParams]="{ terminology: terminology }"
+        label="New Search"
+        icon="fa fa-search"
+        pButton
+        type="button"
+        class="p-button-coloring"
+      ></button>
+    </span>
+  </div>
+  <div *ngIf="configService.isMultiSource()" class="center">
+    <span *ngIf="sources.length > 1">
+      <span *ngFor="let source of sources; index as i">
+        <span *ngIf="i != 0"> | </span>
+        <a href="javascript:void(0)" *ngIf="!selectedSources.has(source)" (click)="toggleSelectedSource(source)">{{ source }}</a>
+        <span class="pointer" *ngIf="selectedSources.has(source)" (click)="toggleSelectedSource(source)"
+          ><b>{{ source }}</b></span
+        >
+      </span>
+    </span>
+  </div>
+  <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+  <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget"> </app-concept-relationship>
+  <app-concept-history [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget"></app-concept-history>
+</div>
