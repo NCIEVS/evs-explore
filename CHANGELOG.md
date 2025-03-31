@@ -35,6 +35,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Terminology sources not clearing when different terminology was selected
 - Subsets with 0 members not displaying correctly
 
+## [2.0.0.RELEASE] - 2024-01-28
+### Added
+- Improvements to the "hierarchy" view, including ability to "pop out" that view and better handling of more than 10 tree positions
+- Implement views for CDISC subsets
+
+### Changed
+- Add vulnerability scanning
+- Minor bug fixes to mapping details display and interactions
+- Term form improvements and hardening (and ability to open with a code)
+
+## [1.10.0.RELEASE] - 2024-07-29
+### Added
+- Implement term form (NCIt and CDISC)
+- Add ability to decline license agreement
+
+### Changed
+- Upgrade Java application that runs the deployment to Spring 3 (and J17)
+- Improve help screens for mappings and multiple terminology search
+- Minor bug fixes for paging-related issues
+
 ## [1.9.0.RELEASE] - 2024-02-01
 ### Added
 - Use concept active flag instead of "Retired_Concept"
