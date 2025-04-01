@@ -177,7 +177,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
   // Send focus to the search field
   ngAfterViewInit() {
     console.log('after content initialized');
-    setTimeout(() => this.termauto.focusInput());
+    //temporarily search doesn't autofocus -- focusInput() broke in updating primeng and angular to 18
+    setTimeout(() => (this.termauto));
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
       setTimeout(() => this.performSearch());
