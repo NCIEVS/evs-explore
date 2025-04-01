@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularSplitModule } from 'angular-split';
 
 // Facebook modules
-import { FacebookModule } from 'ngx-facebook';
+// import { FacebookModule } from 'ngx-facebook';
 
 // Primeng Modules, Services
 import { MessageService } from 'primeng/api';
@@ -143,7 +143,7 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FacebookModule.forRoot(),
+    // FacebookModule.forRoot(),
     MessagesModule,
     MessageModule,
     HttpClientModule,
