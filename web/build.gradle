@@ -40,7 +40,7 @@ ext['log4j2.version'] = '2.17.1'
 def bomVersion = "2023.0.0"
 
 group = "gov.nih.nci.term.browser.web"
-version = "2.1.0.RELEASE"
+version = "2.1.2.RELEASE"
 
 springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build
@@ -80,9 +80,11 @@ dependencies {
     implementation 'org.springframework:spring-webmvc:6.1.14'
 
     // fixes netty resolver error for macos
-    //implementation 'io.netty:netty-common:4.1.118.Final'
-    //implementation 'io.netty:netty-resolver-dns-native-macos:4.1.118.Final'
-    //implementation 'io.netty:netty-handler:4.1.118.Final'
+    implementation 'io.netty:netty-common:4.1.118.Final'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.118.Final'
+    implementation 'io.netty:netty-handler:4.1.118.Final'
+
+    implementation 'org.springframework.security:spring-security-crypto:6.3.8'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
       exclude group: "net.minidev", module: "json-smart"
