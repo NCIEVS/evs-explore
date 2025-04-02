@@ -503,7 +503,7 @@ export class Concept {
   // returns the subset descritpion
   getSubsetDescription() {
     // NCIt-specific
-    return this.getProperty('Term_Browser_Value_Set_Description');
+    return this.getProperty('Term_Browser_Value_Set_Description') ? this.getProperty('Term_Browser_Value_Set_Description') : null;
   }
 
   // Return roles text
