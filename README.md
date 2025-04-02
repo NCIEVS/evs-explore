@@ -65,13 +65,13 @@ npm install -g npm-windows-upgrade
 npm-windows-upgrade
 ```
 
+From the list provided, use the arrow keys to select version 10.8.3.
+
 To update Node/ng, first install `nvm`:
 
 ```
-# node version (google "windows install nvm" for how to install "nvm")
-nvm install 18.16.0
-nvm use 18.16.0
-# ng version
+nvm install 18.20.7
+nvm use 18.20.7
 npm uninstall -g @angular/cli
 npm install -g @angular/cli@latest
 ```
