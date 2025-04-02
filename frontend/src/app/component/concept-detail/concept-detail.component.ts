@@ -71,6 +71,7 @@ export class ConceptDetailComponent implements OnInit {
 
       // build metadata entries for each synonym source
       this.concept.synonyms.forEach(s => {
+        console.log('synonym: ' + JSON.stringify(s));
         if (s.source) {
           const term = this.getTerminologyBySource(s.source);
           // don't do for the current terminology
