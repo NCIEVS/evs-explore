@@ -77,21 +77,96 @@
           title="Display Documentation"
           >Documentation</a
         >
-        <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">
-          <a class="dropdown-item dropdown-links" [routerLink]="['/associations', terminology?.terminology]" title="List of Associations"
-            >Associations</a
-          >
-          <a class="dropdown-item dropdown-links" [routerLink]="['/properties', terminology?.terminology]" title="List of Properties">Properties</a>
-          <a class="dropdown-item dropdown-links" [routerLink]="['/qualifiers', terminology?.terminology]" title="List of Qualifiers">Qualifiers</a>
-          <a class="dropdown-item dropdown-links" [routerLink]="['/roles', terminology?.terminology]" title="List of Roles">Roles</a>
-          <a class="dropdown-item dropdown-links" [routerLink]="['/termtypes', terminology?.terminology]" title="List of Term Types">Term Types</a>
-          <a class="dropdown-item dropdown-links" [routerLink]="['/sources', terminology?.terminology]" title="List of Sources">Sources</a>
-          <a class="dropdown-item dropdown-links" [routerLink]="['/definitiontypes', terminology?.terminology]" title="List of Definition Types"
-            >Definition Types</a
-          >
-          <a class="dropdown-item dropdown-links" [routerLink]="['/synonymtypes', terminology?.terminology]" title="List of Synonym Types"
-            >Synonym Types</a
-          >
+          <div class="dropdown-menu dropdown-menu-right dropdown-links" aria-labelledby="helpMenu">
+            <div *ngIf="configService.getTermDoc('associations'); else associationsText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/associations', terminology?.terminology]" title="List of Associations">
+              Associations
+            </a>
+          </div>
+          <ng-template #associationsText>
+            <span class="dropdown-item disabled-link" title="List of Associations">
+              Associations
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('properties'); else propertiesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/properties', terminology?.terminology]" title="List of Properties">
+              Properties
+            </a>
+          </div>
+          <ng-template #propertiesText>
+            <span class="dropdown-item disabled-link" title="List of Properties">
+              Properties
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('qualifiers'); else qualifiersText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/qualifiers', terminology?.terminology]" title="List of Qualifiers">
+              Qualifiers
+            </a>
+          </div>
+          <ng-template #qualifiersText>
+            <span class="dropdown-item disabled-link" title="List of Qualifiers">
+              Qualifiers
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('roles'); else rolesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/roles', terminology?.terminology]" title="List of Roles">
+              Roles
+            </a>
+          </div>
+          <ng-template #rolesText>
+            <span class="dropdown-item disabled-link" title="List of Roles">
+              Roles
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('termTypes'); else termTypesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/termtypes', terminology?.terminology]" title="List of Term Types">
+              Term Types
+            </a>
+          </div>
+          <ng-template #termTypesText>
+            <span class="dropdown-item disabled-link" title="List of Term Types">
+              Term Types
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('sources'); else sourcesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/sources', terminology?.terminology]" title="List of Sources">
+              Sources
+            </a>
+          </div>
+          <ng-template #sourcesText>
+            <span class="dropdown-item disabled-link" title="List of Sources">
+              Sources
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('definitionTypes'); else definitionTypesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/definitiontypes', terminology?.terminology]" title="List of Definition Types">
+              Definition Types
+            </a>
+          </div>
+          <ng-template #definitionTypesText>
+            <span class="dropdown-item disabled-link" title="List of Definition Types">
+              Definition Types
+            </span>
+          </ng-template>
+
+          <div *ngIf="configService.getTermDoc('synonymTypes'); else synonymTypesText">
+            <a class="dropdown-item dropdown-links" [routerLink]="['/synonymtypes', terminology?.terminology]" title="List of Synonym Types">
+              Synonym Types
+            </a>
+          </div>
+          <ng-template #synonymTypesText>
+            <span class="dropdown-item disabled-link" title="List of Synonym Types">
+              Synonym Types
+            </span>
+          </ng-template>
+
+
           <div class="dropdown-divider"></div>
           <a class="dropdown-item dropdown-links" [routerLink]="['/alldocs', terminology?.terminology]" title="List of All Metadata Tables"
             >All Metadata</a

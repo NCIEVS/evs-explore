@@ -16,6 +16,12 @@
   display: block !important;
 }
 
+.disabled-link {
+  color: #888;
+  cursor: default;
+  pointer-events: none;
+}
+
 .sharedDataApplicationHeader {
   /* min-height: 30px;
         padding-top: 1px; */

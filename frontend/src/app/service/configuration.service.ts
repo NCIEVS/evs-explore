@@ -5,7 +5,6 @@ import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { Concept } from '../model/concept';
 import { TreeNode } from 'primeng/api';
 
 
@@ -26,6 +25,17 @@ export class ConfigurationService {
   private multiSearchTerminologies: Set<string> = null;
   public subsets: TreeNode[];
 
+  termDocs: { [key: string]: boolean | null } = {
+    associations: null,
+    properties: null,
+    qualifiers: null,
+    roles: null,
+    sources: null,
+    termTypes: null,
+    definitionTypes: null,
+    synonymTypes: null
+  };
+
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;
   private hierarchyPopupStatus = false;
@@ -36,6 +46,50 @@ export class ConfigurationService {
               private cookieService: CookieService) {
     this.selectedSources = new Set<string>().add('All');
 
+  }
+
+  getTermDoc(key: string): boolean | null {
+    if (this.termDocs[key] === undefined) {
+      this.termDocs[key] = null;
+    }
+    return this.termDocs[key];
+  }
+
+  setTermDocs() {
+    this.getAssociations(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["associations"] = (response !== undefined && response.length > 0);
+      });
+    this.getProperties(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["properties"] = (response !== undefined && response.length > 0);
+      });
+    this.getQualifiers(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["qualifiers"] = (response !== undefined && response.length > 0);
+      });
+    this.getRoles(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["roles"] = (response !== undefined && response.length > 0);
+      });
+    this.getTermTypes(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["termTypes"] = (response !== undefined && response.length > 0);
+      });
+    this.getSynonymSources(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["sources"] = (response !== undefined && response.length > 0);
+      });
+    this.getDefinitionTypes(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["definitionTypes"] = (response !== undefined && response.length > 0);
+      });
+    this.getSynonymTypes(this.getTerminologyName())
+      .subscribe(response => {
+        this.termDocs["synonymTypes"] = (response !== undefined && response.length > 0);
+      });
+    
+    return this.termDocs;
   }
 
   getExportPageSize() {
@@ -113,6 +167,7 @@ export class ConfigurationService {
 
   setTerminology(terminology) {
     this.terminology = terminology;
+    this.setTermDocs();
     this.cookieService.set('term', terminology.terminology);
     this.subject.next(this.terminology);
   }
