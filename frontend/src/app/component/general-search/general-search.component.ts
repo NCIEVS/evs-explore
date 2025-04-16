@@ -250,7 +250,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
         source: this.searchCriteria.synonymSource ? this.searchCriteria.synonymSource.join(',') : '',
       },
     });
-    this.titleService.setTitle('EVS Explore - ' + this.searchCriteria.toString());
+    this.titleService.setTitle('EVS Explore - page ' + (this.searchCriteria.fromRecord/10 + 1).toString() + ' of search results for ' + this.searchCriteria.type.toString() + ' \"' + this.searchCriteria.term + '\", ' + this.searchCriteria.synonymSource.toString());
   }
 
   // filter out terminologies that shouldn't be in the list on the search page
