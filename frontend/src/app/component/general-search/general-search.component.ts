@@ -406,7 +406,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       this.configService.setMultiSearch(false);
       this.configService.setTerminology(terminology.value);
       this.loadAllSources();
-      this.configService.setTermDocs();
     } else {
       this.configService.setMultiSearch(true);
     }
