@@ -56,40 +56,27 @@ export class ConfigurationService {
   }
 
   setTermDocs() {
-    this.getAssociations(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["associations"] = (response !== undefined && response.length > 0);
-      });
-    this.getProperties(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["properties"] = (response !== undefined && response.length > 0);
-      });
-    this.getQualifiers(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["qualifiers"] = (response !== undefined && response.length > 0);
-      });
-    this.getRoles(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["roles"] = (response !== undefined && response.length > 0);
-      });
-    this.getTermTypes(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["termTypes"] = (response !== undefined && response.length > 0);
-      });
-    this.getSynonymSources(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["sources"] = (response !== undefined && response.length > 0);
-      });
-    this.getDefinitionTypes(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["definitionTypes"] = (response !== undefined && response.length > 0);
-      });
-    this.getSynonymTypes(this.getTerminologyName())
-      .subscribe(response => {
-        this.termDocs["synonymTypes"] = (response !== undefined && response.length > 0);
-      });
+    var metadata = null;
+    // Clear out all the term docs
+    Object.keys(this.termDocs).forEach(key => this.termDocs[key] = null);
+
+    this.getTerminologyMetadata(this.getTerminologyName()).subscribe(
+      (response) => {
+        metadata = response;
+        this.termDocs["associations"] = metadata["associations"] !== undefined && metadata["associations"].length > 0;
+        this.termDocs["properties"] = metadata["properties"] !== undefined && metadata["properties"].length > 0;
+        this.termDocs["qualifiers"] = metadata["qualifiers"] !== undefined && metadata["qualifiers"].length > 0;
+        this.termDocs["roles"] = metadata["roles"] !== undefined && metadata["roles"].length > 0;
+        this.termDocs["sources"] = metadata["sources"] !== undefined && metadata["sources"].length > 0;
+        this.termDocs["termTypes"] = metadata["termTypes"] !== undefined && metadata["termTypes"].length > 0;
+        this.termDocs["definitionTypes"] = metadata["definitionTypes"] !== undefined && metadata["definitionTypes"].length > 0;
+        this.termDocs["synonymTypes"] = metadata["synonymTypes"] !== undefined && metadata["synonymTypes"].length > 0;
+      },
+      (error) => {
+        throw new Error('Error loading metadata for ' + this.getTerminologyName() + ': ' + error);
+      }
+    );
     
-    return this.termDocs;
   }
 
   getExportPageSize() {
@@ -405,6 +392,23 @@ export class ConfigurationService {
           throw error;
         });
     });
+  }
+
+  // Load terminology metadata
+  getTerminologyMetadata(terminology: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch metadata for ' + terminology));
+        })
+      );
   }
 
   // Load associations

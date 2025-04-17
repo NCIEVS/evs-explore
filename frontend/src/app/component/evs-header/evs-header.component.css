@@ -17,7 +17,7 @@
 }
 
 .disabled-link {
-  color: #888;
+  color: #D3D3D3;
   cursor: default;
   pointer-events: none;
 }
