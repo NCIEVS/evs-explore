@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { LoaderService } from 'src/app/service/loader.service';
 import { saveAs } from 'file-saver';
+import { Title } from '@angular/platform-browser';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapsetService } from 'src/app/service/mapset.service';
 import { ConceptDetailService } from 'src/app/service/concept-detail.service';
@@ -59,6 +60,7 @@ export class MappingDetailsComponent implements OnInit {
     private loaderService: LoaderService,
     private mapsetService: MapsetService,
     private sanitizer: DomSanitizer,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +70,7 @@ export class MappingDetailsComponent implements OnInit {
     this.route.params.subscribe((params: any) => {
       this.lastQuery = '';
       this.mapsetCode = params.code;
+      this.titleService.setTitle('EVS Explore - ' + this.mapsetCode);
       this.mapsetService.getMapsetByCode(this.mapsetCode, 'properties').subscribe((response) => {
         this.version = response['version'];
         this.properties = response['properties'];

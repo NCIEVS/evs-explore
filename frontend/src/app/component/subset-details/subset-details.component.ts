@@ -375,7 +375,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   // set the title
   setTitle() {
-    this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc);
+    this.titleService.setTitle('Subset ' + this.titleCode + ' - ' + this.titleDesc);
   }
 
   // get properties for a concept
