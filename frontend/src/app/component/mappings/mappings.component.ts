@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 import { saveAs } from 'file-saver';
+import { Title } from '@angular/platform-browser';
 import { LoaderService } from 'src/app/service/loader.service';
 import { MapsetService } from 'src/app/service/mapset.service';
 
@@ -11,7 +12,12 @@ import { MapsetService } from 'src/app/service/mapset.service';
   styleUrls: ['./mappings.component.css'],
 })
 export class MappingsComponent implements OnInit {
-  constructor(private configService: ConfigurationService, private loaderService: LoaderService, private mapsetService: MapsetService) {}
+  constructor(
+    private configService: ConfigurationService, 
+    private loaderService: LoaderService, 
+    private mapsetService: MapsetService,
+    private titleService: Title
+  ) {}
 
   dummyList = ['one', 'two', 'three'];
   mappings: any = null;
@@ -23,6 +29,7 @@ export class MappingsComponent implements OnInit {
   MAX_PAGE = 10000;
 
   ngOnInit() {
+    this.titleService.setTitle('EVS Explore - Mappings');
     this.mapsetService.getMapsets('properties').subscribe((response) => {
       this.mappings = response;
       this.mappings.forEach((map) => {
