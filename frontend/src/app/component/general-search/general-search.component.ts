@@ -599,6 +599,20 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       if (concept.definitions != undefined && concept.definitions.length > 0) {
         definitionString += '"';
         for (let def of concept.definitions) {
+
+          //if definition is "complex" (contains <>), remove <>s
+          while (def.definition.includes('<')){
+            if (def.definition.indexOf('<') <= 1) {
+              def.definition = def.definition.substring(def.definition.indexOf('>')+1);
+            }
+            // else if (def.defintion.) {
+            //   def.definition = def.definition.substring(0, def.definition.indexOf('<')) + def.definition.substring(def.definition.indexOf('>'));
+            // }
+            else {
+              def.definition = def.definition.substring(0, def.definition.indexOf('<'));
+            }
+          }
+
           definitionString += (def.source ? def.source + ': ' : '') + def.definition.replace(/"/g, '""') + '\n';
         }
         // remove last newline
