@@ -5,7 +5,6 @@ import { EvsError } from '../model/evsError';
 import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { Concept } from '../model/concept';
 import { TreeNode } from 'primeng/api';
 
 
@@ -26,6 +25,17 @@ export class ConfigurationService {
   private multiSearchTerminologies: Set<string> = null;
   public subsets: TreeNode[];
 
+  termDocs: { [key: string]: boolean | null } = {
+    associations: null,
+    properties: null,
+    qualifiers: null,
+    roles: null,
+    sources: null,
+    termTypes: null,
+    definitionTypes: null,
+    synonymTypes: null
+  };
+
   private MAX_EXPORT_SIZE = 10000;
   private EXPORT_PAGE_SIZE = 1000;
   private hierarchyPopupStatus = false;
@@ -36,6 +46,37 @@ export class ConfigurationService {
               private cookieService: CookieService) {
     this.selectedSources = new Set<string>().add('All');
 
+  }
+
+  getTermDoc(key: string): boolean | null {
+    if (this.termDocs[key] === undefined) {
+      this.termDocs[key] = null;
+    }
+    return this.termDocs[key];
+  }
+
+  setTermDocs() {
+    var metadata = null;
+    // Clear out all the term docs
+    Object.keys(this.termDocs).forEach(key => this.termDocs[key] = null);
+
+    this.getTerminologyMetadata(this.getTerminologyName()).subscribe(
+      (response) => {
+        metadata = response;
+        this.termDocs["associations"] = metadata["associations"] !== undefined && metadata["associations"].length > 0;
+        this.termDocs["properties"] = metadata["properties"] !== undefined && metadata["properties"].length > 0;
+        this.termDocs["qualifiers"] = metadata["qualifiers"] !== undefined && metadata["qualifiers"].length > 0;
+        this.termDocs["roles"] = metadata["roles"] !== undefined && metadata["roles"].length > 0;
+        this.termDocs["sources"] = metadata["sources"] !== undefined && metadata["sources"].length > 0;
+        this.termDocs["termTypes"] = metadata["termTypes"] !== undefined && metadata["termTypes"].length > 0;
+        this.termDocs["definitionTypes"] = metadata["definitionTypes"] !== undefined && metadata["definitionTypes"].length > 0;
+        this.termDocs["synonymTypes"] = metadata["synonymTypes"] !== undefined && metadata["synonymTypes"].length > 0;
+      },
+      (error) => {
+        throw new Error('Error loading metadata for ' + this.getTerminologyName() + ': ' + error);
+      }
+    );
+    
   }
 
   getExportPageSize() {
@@ -113,6 +154,7 @@ export class ConfigurationService {
 
   setTerminology(terminology) {
     this.terminology = terminology;
+    this.setTermDocs();
     this.cookieService.set('term', terminology.terminology);
     this.subject.next(this.terminology);
   }
@@ -350,6 +392,23 @@ export class ConfigurationService {
           throw error;
         });
     });
+  }
+
+  // Load terminology metadata
+  getTerminologyMetadata(terminology: string): Observable<any> {
+    return this.http.get(encodeURI('/api/v1/metadata/' + terminology),
+      {
+        responseType: 'json',
+        params: {
+          hideLoader: 'true'
+        }
+      }
+    )
+      .pipe(
+        catchError((error) => {
+          return observableThrowError(new EvsError(error, 'Could not fetch metadata for ' + terminology));
+        })
+      );
   }
 
   // Load associations
