@@ -6,6 +6,7 @@ import { Concept } from './../../model/concept';
 import { ConfigurationService } from '../../service/configuration.service';
 import { LoaderService } from '../../service/loader.service';
 import { TreeTable } from 'primeng/treetable';
+import { Title } from '@angular/platform-browser';
 
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
@@ -49,6 +50,7 @@ export class HierarchyPopupComponent implements OnInit {
     private router: Router,
     private loaderService: LoaderService,
     public configService: ConfigurationService,
+    private titleService: Title
   ) {
     // Do this in the constructor so it's ready to go when this component is injected
     this.configSetup();
@@ -66,6 +68,7 @@ export class HierarchyPopupComponent implements OnInit {
     console.log('ngOnInit');
     this.getPathInHierarchy();
     this.configService.setHierarchyPopupStatus(true);
+    this.titleService.setTitle("EVS Explore - Concept Hierarchy");
   }
 
   configSetup() {
