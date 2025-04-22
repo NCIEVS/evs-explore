@@ -70,7 +70,7 @@ export class MappingDetailsComponent implements OnInit {
     this.route.params.subscribe((params: any) => {
       this.lastQuery = '';
       this.mapsetCode = params.code;
-      this.titleService.setTitle('EVS Explore - ' + this.mapsetCode);
+      this.titleService.setTitle(this.mapsetCode);
       this.mapsetService.getMapsetByCode(this.mapsetCode, 'properties').subscribe((response) => {
         this.version = response['version'];
         this.properties = response['properties'];
