@@ -25,7 +25,7 @@
     <div>
       <p [innerHTML]="subsetDescription"></p>
     </div>
-    <div *ngIf="subsetLink != null && linkNotInDescription()">
+    <div *ngIf="subsetLink && linkNotInDescription()">
       Subset Download Link: <a href="{{ subsetLink }}" target="_blank">{{ subsetLink }}</a>
     </div>
     <!-- NCIt and default formats may differ -->
