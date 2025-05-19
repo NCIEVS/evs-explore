@@ -122,7 +122,8 @@
               <td *ngIf="!val.ct"><span [innerHTML]="bypassHTML(val.definition)"></span>
                 <div *ngIf=" val.qualifiers !=null">
                   <div *ngFor="let qual of val.qualifiers">
-                    <span *ngIf="qual.type != 'attribution'" class="qualEntry">&ensp;{{ qual.type }}:
+                    <!-- removed  *ngIf="qual.type != 'attribution'" from below -- accomodate for NPO, what does it break? -->
+                    <span class="qualEntry">&ensp;{{ qual.type }}:
                       {{ qual.value }}</span>
                   </div>
                 </div>
