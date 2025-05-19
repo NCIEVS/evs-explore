@@ -375,7 +375,7 @@ export class SubsetDetailsComponent implements OnInit {
 
   // set the title
   setTitle() {
-    this.titleService.setTitle(this.titleCode + ' - ' + this.titleDesc);
+    this.titleService.setTitle('Subset ' + this.titleCode + ' - ' + this.titleDesc);
   }
 
   // get properties for a concept
@@ -482,6 +482,6 @@ export class SubsetDetailsComponent implements OnInit {
       return false;
     }
     const desc = this.selectedSubset.properties.find((item) => item.type === 'Term_Browser_Value_Set_Description');
-    return this.selectedSubset.subsetLink !== undefined && desc !== undefined && !desc.value.includes(this.selectedSubset.subsetLink);
+    return this.selectedSubset.subsetLink && !(desc && desc.value.includes(this.selectedSubset.subsetLink));
   }
 }
