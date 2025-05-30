@@ -219,7 +219,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
-          <tr [ngStyle]="{ 'background-color': i === 0 && selectedSubset.isCdiscCodeList() ? 'lightblue' : 'transparent' }">
+          <tr [ngStyle]="{ 'background-color': value.code == titleCode && selectedSubset.isCdiscCodeList() ? 'lightblue' : 'transparent' }">
             <td class="w-10">
               <a [routerLink]="[urlBase, terminology, value.code]" target="_top">{{ value.code }}</a>
               <span *ngIf="subsetCodes[value.code]"
