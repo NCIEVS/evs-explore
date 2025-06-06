@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: 'concept/:code', redirectTo: 'concept/ncit/:code' },
   { path: 'hierarchy/:terminology/:code', component: HierarchyDisplayComponent },
   { path: 'hierarchy/:code', redirectTo: 'hierarchy/:terminology/:code' },
-  { path: 'hierarchy-popup/:terminology/:code', component: HierarchyPopupComponent },
+  { path: 'hierarchy-popup/:terminology/:code', component: HierarchyDisplayComponent },
   { path: 'hierarchy-popup/:code', redirectTo: 'hierarchy-popup/:terminology/:code' },
   { path: 'subset/:terminology/:code', component: SubsetDetailsComponent },
   { path: 'subset/:code', redirectTo: 'subset/ncit/:code' },

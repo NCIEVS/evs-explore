@@ -25,7 +25,7 @@
     <div>
       <p [innerHTML]="subsetDescription"></p>
     </div>
-    <div *ngIf="subsetLink != null && linkNotInDescription()">
+    <div *ngIf="subsetLink && linkNotInDescription()">
       Subset Download Link: <a href="{{ subsetLink }}" target="_blank">{{ subsetLink }}</a>
     </div>
     <!-- NCIt and default formats may differ -->
@@ -219,7 +219,40 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-value let-i="rowIndex">
-          <tr [ngStyle]="{ 'background-color': i === 0 && selectedSubset.isCdiscCodeList() ? 'lightblue' : 'transparent' }">
+          <!-- show selected subset at top of table -->
+          <tr *ngIf="i%pageSize===0" [ngStyle]="{ 'background-color': 'lightblue' }">
+            <td class="w-10">
+              <a [routerLink]="[urlBase, terminology, selectedSubset.code]" target="_top">{{ selectedSubset.code }}</a>
+              <span *ngIf="subsetCodes[selectedSubset.code]"
+                ><br />(<a [routerLink]="['/subset', terminology, selectedSubset.code]" target="_top">view subset</a>)
+              </span>
+            </td>
+            <td class="w-10">
+              <span> {{ getCdiscCodelistCode() }}</span>
+            </td>
+            <td class="w-10">
+              <span *ngFor="let prop of selectedSubset.properties">
+                <span *ngIf="prop.type == 'Extensible_List'">{{ prop.value }}</span>
+              </span>
+            </td>
+            <td class="w-20">{{ getCdiscCodelistName(selectedSubset) }}</td>
+            <td class="w-10">{{ getCdiscSubmissionValue(selectedSubset) }}</td>
+            <td class="w-15">
+              <span *ngFor="let syn of selectedSubset.getSynonymNames(cdiscSubsetSource, 'SY'); last as isLast">
+                <span
+                  >{{ syn }} <span *ngIf="!isLast"><br /></span>
+                </span>
+              </span>
+            </td>
+            <td class="w-20">
+              <span *ngFor="let def of selectedSubset.definitions; last as isLast">
+                <span *ngIf="def.source == cdiscSubsetSource"> {{ def.definition }} </span>
+              </span>
+            </td>
+            <td class="w-20">{{ selectedSubset.name }}</td>
+          </tr>
+
+          <tr [ngStyle]="{ 'background-color': value.code == titleCode && selectedSubset.isCdiscCodeList() ? 'lightblue' : 'transparent' }">
             <td class="w-10">
               <a [routerLink]="[urlBase, terminology, value.code]" target="_top">{{ value.code }}</a>
               <span *ngIf="subsetCodes[value.code]"

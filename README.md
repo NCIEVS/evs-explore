@@ -10,11 +10,17 @@ See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
   * Some fixing of packages was done, but this is really finicky.
   * Sticking with Angular 16 for now.
 
-### Building the Java Webapp
+### Building and running the Java Webapp
 
 This is how things run in production.
 
 Run `make clean build` from the top level or `./gradlew clean build -x test"` from the "web/" folder.
+
+Launch the application with
+
+    java  --add-opens=java.base/java.io=ALL-UNNAMED -jar build/libs/evsexplore-*.war
+
+Then view the browser in http://localhost:4200/evsexplore/welcome
 
 ### Deploying to AWS servers
 
