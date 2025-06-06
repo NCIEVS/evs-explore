@@ -55,6 +55,7 @@ export class ConceptDetailComponent implements OnInit {
     this.terminology = configService.getTerminologyName();
     this.metadataMap = configService.getMetadataMap();
     this.metadata = this.metadataMap[this.terminology];
+    this.configService.setTermDocs();
   }
 
   // On initialization

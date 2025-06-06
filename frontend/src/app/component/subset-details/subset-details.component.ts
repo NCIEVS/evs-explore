@@ -461,7 +461,13 @@ export class SubsetDetailsComponent implements OnInit {
       if (this.selectedSubset.isCdiscGrouper()) {
         return '';
       }
-      return this.selectedSubset.name;
+      //the names of subsets are usually the NCIT versions; show CDISC names for CDISC entries
+      //use default name if no CDISC-SY name is found
+      var cdiscName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
+      if (!cdiscName) {
+        cdiscName = this.selectedSubset.name;
+      }
+      return cdiscName;
     }
 
     // If the subset we are on is a grouper
