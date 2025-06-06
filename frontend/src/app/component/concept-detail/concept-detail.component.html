@@ -110,7 +110,7 @@
               [pSortableColumn]="'source'">Source
               <p-sortIcon [field]="'source'"></p-sortIcon>
             </th>
-            <th *ngIf="concept.definitions[0].qualifiers || (metadata.detailsColumns && metadata.detailsColumns['definitions-attribution'])" class="w-10">
+            <th *ngIf="metadata.detailsColumns && metadata.detailsColumns['definitions-attribution']" class="w-10">
               Attribution</th>
           </tr>
         </ng-template>
@@ -122,16 +122,16 @@
               <td *ngIf="!val.ct"><span [innerHTML]="bypassHTML(val.definition)"></span>
                 <div *ngIf=" val.qualifiers !=null">
                   <div *ngFor="let qual of val.qualifiers">
-                    <!-- DON'T show attributions here -- column below -->
-                    <span *ngIf="qual.type != 'attribution'" class="qualEntry">&ensp;{{ qual.type }}:
+                    <!-- removed  *ngIf="qual.type != 'attribution'" from below -- accomodate for NPO, what does it break? -->
+                    <span class="qualEntry">&ensp;{{ qual.type }}:
                       {{ qual.value }}</span>
                   </div>
                 </div>
               </td>
               <td *ngIf="metadata.detailsColumns && metadata.detailsColumns['definitions-source']">{{val.source}}</td>
-              <!-- prev NCIt-specific -> expanded to check if qualifers are present, and if so show them -->
-              <td *ngIf="val.qualifiers || (metadata.detailsColumns && metadata.detailsColumns['definitions-attribution'])">
-                <span *ngFor="let qual of val.qualifiers"> 
+              <!-- TODO: NCIt-specific, expand to generally use qualifiers -->
+              <td *ngIf="metadata.detailsColumns && metadata.detailsColumns['definitions-attribution']">
+                <span *ngFor="let qual of val.qualifiers">
                   <span *ngIf="qual.type == 'attribution'">{{ qual.value }}</span></span>
               </td>
             </tr>
