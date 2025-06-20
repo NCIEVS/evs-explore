@@ -201,8 +201,9 @@ export class SubsetsComponent implements OnInit {
     });
   }
 
-  performSubsetSearchHelper(tn, string) {
+  performSubsetSearchHelper(tn, string, match=false) {
     const newChildren = new Array();
+    // if an element has children, search the children
     if (tn.children) {
       tn.children.forEach((element) => {
         const newChild = this.performSubsetSearchHelper(element, string);
@@ -211,17 +212,28 @@ export class SubsetsComponent implements OnInit {
         }
       });
     }
-    if (
-      newChildren.length !== 0 ||
-      !tn.name.toLowerCase().includes(string.toLowerCase()) ||
-      !tn.code.toLowerCase().includes(string.toLowerCase())
+    // if an element has children that includes the search string or itself includes the search string
+    if (newChildren.length > 0 ||
+      tn.name.toLowerCase().includes(string.toLowerCase()) ||
+      tn.code.toLowerCase().includes(string.toLowerCase())
     ) {
-      tn.children = newChildren;
+      match = true;
       tn.expanded = true;
     }
+    // if an element has children that match OR its name/code DOES NOT include the search string
+    // else if (
+    //   newChildren.length !== 0 ||
+    //   !tn.name.toLowerCase().includes(string.toLowerCase()) ||
+    //   !tn.code.toLowerCase().includes(string.toLowerCase())
+    // ) {
+    //   tn.children = newChildren;
+    //   tn.expanded = true;
+    // }
+    // send the element back if it has children OR if it includes the search string (base case)
     return tn.name.toLowerCase().includes(string.toLowerCase()) ||
       tn.code.toLowerCase().includes(string.toLowerCase()) ||
-      tn.children.length > 0
+      // tn.children.length > 0 
+      match
       ? tn
       : null;
   }
