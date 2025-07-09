@@ -59,9 +59,10 @@
                 <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-blank"></i>
                 <mark *ngIf="hasText(rowData.code + rowData.label); else nonMatch"
                   style="color: #319fbe">{{rowData.code}}
-                  - {{rowData.label}}</mark>
+                  - {{rowData.label}}</mark>&nbsp;
                 <ng-template #nonMatch>{{rowData.code}} - {{rowData.label}}</ng-template>
               </a>
+              <em *ngIf="moreChildren(rowNode)"><a (click)="revealMore(rowNode, 'children')">show all children... ({{moreChildren(rowNode)}} more)</a></em>
             </div>
           </td>
         </tr>
