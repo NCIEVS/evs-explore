@@ -25,6 +25,7 @@ export class SubsetsComponent implements OnInit {
   subsetSuggestions: string[] = [];
   title: string;
   expand = true;
+  originalHierarchy: TreeNode[];
   terminology: string;
   subsetsFound = false;
   expandLabel = 'Expand All';
@@ -71,6 +72,7 @@ export class SubsetsComponent implements OnInit {
         this.placeholderText = 'Enter at least 3 letters of a subset.';
         this.searchDisabled = false;
         this.loaderService.hideLoader();
+        this.originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
       });
     } else {
       this.resetSearch();
@@ -252,12 +254,12 @@ export class SubsetsComponent implements OnInit {
 
   moreChildren(tn) {
     if (this.subsetSearchText) {
-      const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
+      // const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
       
-      var index = this.findInTree(tn.node, originalHierarchy);
+      var index = this.findInTree(tn.node, this.originalHierarchy);
 
       //while index has unused indices, continue down tree with said indices
-      var originalNode = originalHierarchy[index[index.length-1]];
+      var originalNode = this.originalHierarchy[index[index.length-1]];
 
       //get the original node for comparison
       if (index.length > 1 && originalNode?.children.length > 0) {
@@ -280,17 +282,17 @@ export class SubsetsComponent implements OnInit {
     if (type == "children") {
       //locate the current node, replace with node from previous hierarchy
       if (tn.node.children) {
-        const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
+        // const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
 
         //find tn in current tree -- get index;
         var currId = this.findInTree(tn.node, this.hierarchyData);
 
         //find tn in original tree
-        var origId = this.findInTree(tn.node, originalHierarchy);
+        var origId = this.findInTree(tn.node, this.originalHierarchy);
 
         // replace data in hierarchy data at current tree with original tree
         //get the original node for comparison
-        var originalNode = originalHierarchy[origId[origId.length-1]];
+        var originalNode = this.originalHierarchy[origId[origId.length-1]];
         if (origId.length > 1 && originalNode?.children.length > 0) {
           for (var i = origId.length-2; i >= 0; i--) {
             originalNode = originalNode?.children[origId[i]];
@@ -365,7 +367,7 @@ export class SubsetsComponent implements OnInit {
       this.hierarchyData = this.filteredHierarchy;
       this.sortNcitFirst();
       this.loaderService.hideLoader();
-    });
+    }, 10);
   }
 
   hasText(codeAndLabel) {
