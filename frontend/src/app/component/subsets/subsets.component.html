@@ -22,11 +22,19 @@
       <div class="row search-row">
         <div class="col-sm-4 search-bar">
           <div>
-            <p-autoComplete id="subsetSearch" [(ngModel)]="enteredSearchText"            
-        [inputStyle]="{'width':'100%'}" [delay]="800" [suggestions]="subsetSuggestions"
-        (completeMethod)="performSubsetSearch()" placeholder="{{placeholderText}}" [minLength]="3"
-        [disabled]="searchDisabled">
-      </p-autoComplete>
+            <p-autoComplete
+              id="subsetSearch" 
+              [(ngModel)]="enteredSearchText" 
+              [inputStyle]="{'width':'100%'}" 
+              [delay]="800" 
+              [suggestions]="subsetSuggestions"
+              (completeMethod)="performSubsetSearch()" 
+              placeholder="{{placeholderText}}" 
+              [minLength]="3"
+              [disabled]="searchDisabled" 
+              [showEmptyMessage]="false"
+            >
+            </p-autoComplete>
           </div>
 
         </div>
