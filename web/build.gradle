@@ -70,10 +70,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway-mvc'
 		
     //
-    implementation 'org.apache.tomcat:tomcat-annotations-api:10.1.35'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.35'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-el:10.1.35'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket:10.1.35'
+    implementation 'org.apache.tomcat:tomcat-annotations-api:10.1.42'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.42'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-el:10.1.42'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket:10.1.42'
 
     // These are strict
     implementation 'org.springframework:spring-web:6.1.14' 
