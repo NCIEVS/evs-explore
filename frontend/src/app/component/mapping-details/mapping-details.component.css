@@ -2,3 +2,7 @@
   margin-left: 2px;
   margin-right: 2px;
 }
+
+.table-responsive {
+  overflow-x: visible;
+}
