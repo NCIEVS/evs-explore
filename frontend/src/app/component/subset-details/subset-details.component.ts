@@ -105,10 +105,10 @@ export class SubsetDetailsComponent implements OnInit {
               this.subsetFormat = 'CDISC';
               // For subsets there will be only one contributing source value, take the first
               this.cdiscSubsetSource = ContSource[0].value;
-              // If this is a codelist, add the "blue" row at the top of the table
-              if (this.selectedSubset?.isCdiscCodeList()) {
-                this.subsets.unshift(this.selectedSubset);
-              }
+              // If this is a codelist, add the "blue" row at the top of the table -- changed to be handled by HTML
+              // if (this.selectedSubset?.isCdiscCodeList()) {
+              //   this.subsets.unshift(this.selectedSubset);
+              // }
             } else if (ContSource.length === 1) {
               this.subsetFormat = ContSource[0].value;
             } else {
@@ -160,9 +160,10 @@ export class SubsetDetailsComponent implements OnInit {
         .then((nodes) => {
           this.hitsFound = nodes['total'];
           this.subsets = new Array<Concept>();
-          if (this.selectedSubset?.isCdiscCodeList()) {
-            this.subsets.unshift(this.selectedSubset);
-          }
+          // This is handled by the HTML
+          // if (this.selectedSubset?.isCdiscCodeList()) {
+          //   this.subsets.unshift(this.selectedSubset);
+          // }
           if (nodes['concepts']) {
             nodes['concepts'].forEach((c) => {
               this.subsets.push(new Concept(c, this.configService));
@@ -211,9 +212,10 @@ export class SubsetDetailsComponent implements OnInit {
         this.hitsFound = nodes['total'];
         if (this.hitsFound > 0) {
           this.subsets = new Array<Concept>();
-          if (this.selectedSubset?.isCdiscCodeList()) {
-            this.subsets.unshift(this.selectedSubset);
-          }
+          // Handled by HTML
+          // if (this.selectedSubset?.isCdiscCodeList()) {
+          //   this.subsets.unshift(this.selectedSubset);
+          // }
           nodes['concepts'].forEach((c) => {
             this.subsets.push(new Concept(c, this.configService));
           });
@@ -454,12 +456,18 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscCodelistName(concept: Concept) {
+    var cdiscName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
       if (this.selectedSubset.isCdiscGrouper()) {
         return '';
       }
-      return this.selectedSubset.name;
+      //the names of subsets are usually the NCIT versions; show CDISC names for CDISC entries
+      //use default name if no CDISC-SY name is found
+      if (!cdiscName) {
+        cdiscName = this.selectedSubset.name;
+      }
+      return cdiscName;
     }
 
     // If the subset we are on is a grouper
@@ -473,7 +481,11 @@ export class SubsetDetailsComponent implements OnInit {
         return concept.name;
       }
     } else {
-      return this.selectedSubset.name;
+      //use default name if no CDISC-SY name is found
+      if (!cdiscName){
+        return this.selectedSubset.name;
+      }
+      return cdiscName;
     }
   }
 

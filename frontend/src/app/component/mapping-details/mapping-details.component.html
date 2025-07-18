@@ -34,6 +34,7 @@
               (onClear)="ngOnInit()"
               placeholder="Enter at least 3 letters of a term."
               [minLength]="3"
+              [showEmptyMessage]="false"
             >
             </p-autoComplete>
           </div>
@@ -62,10 +63,12 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!mapsetMappings && termAutoSearch">
-        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No mappings found that matched the above search.
-      </div>
-      <div *ngIf="mapsetMappings" class="table-responsive">
+      <p-toolbar *ngIf="mapsetMappings?.length == 0 && termAutoSearch">
+        <div>
+          <i class="fa fa-info-circle"></i>&nbsp;&nbsp;No mappings found that matched the above search.
+        </div>
+      </p-toolbar>
+      <div *ngIf="mapsetMappings?.length > 0" class="table-responsive">
         <p-table
           *ngIf="mapsetMappings"
           #mappings

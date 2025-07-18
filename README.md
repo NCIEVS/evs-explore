@@ -10,11 +10,17 @@ See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
   * Some fixing of packages was done, but this is really finicky.
   * Sticking with Angular 16 for now.
 
-### Building the Java Webapp
+### Building and running the Java Webapp
 
 This is how things run in production.
 
 Run `make clean build` from the top level or `./gradlew clean build -x test"` from the "web/" folder.
+
+Launch the application with
+
+    java  --add-opens=java.base/java.io=ALL-UNNAMED -jar build/libs/evsexplore-*.war
+
+Then view the browser in http://localhost:4200/evsexplore/welcome
 
 ### Deploying to AWS servers
 
@@ -65,13 +71,13 @@ npm install -g npm-windows-upgrade
 npm-windows-upgrade
 ```
 
+From the list provided, use the arrow keys to select version 10.8.3.
+
 To update Node/ng, first install `nvm`:
 
 ```
-# node version (google "windows install nvm" for how to install "nvm")
-nvm install 18.16.0
-nvm use 18.16.0
-# ng version
+nvm install 18.20.7
+nvm use 18.20.7
 npm uninstall -g @angular/cli
 npm install -g @angular/cli@latest
 ```

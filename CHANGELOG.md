@@ -4,15 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.1.RELEASE] - 2024-04-28
+## [2.2.0.RELEASE] - 2025-06-10
 ### Changed
-- Fixed logic for showing subsetLink to work for manufactured childhood neoplasm subsets
+- Upgrade to Angular 18
+- Improvement in the use of browser tab titles
+- Fixed a few links in swagger
+- Minor changes to polish the CDISC view of subsets (show the correct names and the blue "top" row on all pages)
+- Fixes to show childhood neoplasm subsets properly
+- Improvements to NPO (complex) definition handling
+- Disable metadata sub-menus for terminologies where there is no matching content
 
-## [2.1.2.RELEASE] - 2024-04-02, [2.1.1.RELEASE] - 2024-03-31
+## [2.1.2.RELEASE] - 2025-04-02
 ### Changed
 - Fixed logic that was "fixing" the subset description in some instances and causing errors in others.
 
-## [2.0.0.RELEASE] - 2024-03-18
+## [2.1.1.RELEASE] - 2025-04-28
+### Changed
+- Fixed logic for showing subsetLink to work for manufactured childhood neoplasm subsets
+
+## [2.0.0.RELEASE] - 2025-03-18
 ### Added
 - Adding Executive Order Disclaimer Statement to Home Page.
 ### Changed
