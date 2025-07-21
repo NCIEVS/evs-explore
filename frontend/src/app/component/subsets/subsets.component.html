@@ -62,7 +62,7 @@
                   - {{rowData.label}}</mark>&nbsp;
                 <ng-template #nonMatch>{{rowData.code}} - {{rowData.label}}</ng-template>
               </a>
-              <em *ngIf="moreChildren(rowNode)"><a (click)="revealMore(rowNode, 'children')">show all children... ({{moreChildren(rowNode)}} more)</a></em>
+              <em *ngIf="moreChildren(rowNode)"><a (click)="revealMore(rowNode, 'children')">show all children... (<u class="moreChildren">{{moreChildren(rowNode)}} more</u>)</a></em>
             </div>
           </td>
         </tr>

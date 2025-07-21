@@ -235,46 +235,30 @@ export class SubsetsComponent implements OnInit {
     const indices = new Array();
     for (var i = 0; i < tree.length; i++) {
       //check the children regularly
-      if (tree[i].data.code == tn.data.code) {
-        indices.push(i);
+      if (tree[i].data.code == tn.node.data.code) {
+        return tree[i];
       }
 
+      //if this child has children, check those
       if (tree[i].children?.length > 0) {
         var childId = this.findInTree(tn, tree[i].children);
-        if (childId?.length > 0) {
-          childId.forEach(element => {
-            indices.push(element);
-          });
-          indices.push(i);
+        if (childId) {
+          return childId;
         }
       }
     }
-    return indices.length > 0 ? indices : null;
+    return null;
   }
 
   moreChildren(tn) {
+    // only check this if we are searching
     if (this.subsetSearchText) {
-      // const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
-      
-      var index = this.findInTree(tn.node, this.originalHierarchy);
+      var originalNode = this.findInTree(tn, this.originalHierarchy);
 
-      //while index has unused indices, continue down tree with said indices
-      var originalNode = this.originalHierarchy[index[index.length-1]];
-
-      //get the original node for comparison
-      if (index.length > 1 && originalNode?.children.length > 0) {
-        for (var i = index.length-2; i >= 0; i--) {
-          originalNode = originalNode?.children[index[i]];
-        }
-      }
-      // if (originalNode?.children?.length - tn.node.children.length == originalNode?.children?.length) {
-      //   tn.node.expanded = false;
-      // }
-      
       //compare
       return originalNode?.children?.length - tn.node.children.length;
     }
-    return false
+    return false;
   }
 
   revealMore(tn, type) {
@@ -282,85 +266,71 @@ export class SubsetsComponent implements OnInit {
     if (type == "children") {
       //locate the current node, replace with node from previous hierarchy
       if (tn.node.children) {
-        // const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
-
-        //find tn in current tree -- get index;
-        var currId = this.findInTree(tn.node, this.hierarchyData);
+        const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
 
         //find tn in original tree
-        var origId = this.findInTree(tn.node, this.originalHierarchy);
+        var originalNode = this.findInTree(tn, originalHierarchy);
 
         // replace data in hierarchy data at current tree with original tree
-        //get the original node for comparison
-        var originalNode = this.originalHierarchy[origId[origId.length-1]];
-        if (origId.length > 1 && originalNode?.children.length > 0) {
-          for (var i = origId.length-2; i >= 0; i--) {
-            originalNode = originalNode?.children[origId[i]];
-          }
-        }
-
-        //get current open nodes
+        //get current open nodes if they are currently expanded (user is using them) or if they have children
         const openNodes = new Array();
         this.hierarchyData.forEach(child => {
-          if (child.expanded && child.children?.length > 0) {
-            openNodes.push(child.data?.code, child.children);
+          if (child.expanded) {
+            openNodes.push(child.data?.code, child);
           }
           child.children?.forEach(child2 => {
-            if (child2.expanded && child2.children?.length > 0) {
-              openNodes.push(child2.data?.code, child2.children);
+            if (child2.expanded) {
+              openNodes.push(child2.data?.code, child2);
             }
             child2.children?.forEach(child3 => {
-              if (child3.expanded && child3.children?.length > 0) {
-                openNodes.push(child3.data?.code, child3.children);
+              if (child3.expanded) {
+                openNodes.push(child3.data?.code, child3);
               }
               child3.children?.forEach(child4 => {
-                if (child4.expanded && child4.children?.length > 0) {
-                  openNodes.push(child4.data?.code, child4.children)
+                if (child4.expanded) {
+                  openNodes.push(child4.data?.code, child4)
                 }
               });
             });
           });
         });
 
-        //replacement (leave open nodes)
+        // replacement (leave open nodes)
         originalNode.children?.forEach(child => {
           if (openNodes.includes(child.data?.code) && tn.node.data.code != child.data.code) {
-            child.children = openNodes[openNodes.indexOf(child.data?.code)+1];
-            child.expanded = true;
+            child.children = openNodes[openNodes.indexOf(child.data?.code)+1]?.children;
+            if (openNodes[openNodes.indexOf(child.data?.code)+1]?.expanded) {
+              child.expanded = true;
+            }
           }
           child.children?.forEach(child2 => {
             if (openNodes.includes(child2.data?.code)) {
-              child2.children = openNodes[openNodes.indexOf(child2.data?.code)+1];
-              child2.expanded = true;
+              child2.children = openNodes[openNodes.indexOf(child2.data?.code)+1]?.children;
+              if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded){
+                child2.expanded = true;
+              }
             }
             child2.children?.forEach(child3 => {
               if (openNodes.includes(child3.data?.code)) {
-                child3.children = openNodes[openNodes.indexOf(child3.data?.code)+1];
-                child3.expanded = true;
+                child3.children = openNodes[openNodes.indexOf(child3.data?.code)+1]?.children;
+                if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded) {
+                  child3.expanded = true;
+                }                
               }
               child3.children?.forEach(child4 => {
-                if (child4.expanded && child4.children?.length > 0) {
-                  child4.children = openNodes[openNodes.indexOf(child4.data?.code)+1];
-                  child4.expanded = true;
+                if (openNodes.includes(child4.data?.code)) {
+                  child4.children = openNodes[openNodes.indexOf(child4.data?.code)+1]?.children;
+                  if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded) {
+                    child4.expanded = true;
+                  }                  
                 }
               });
             });
           })
         });
 
-        //replacement - max is 3 levels down
-        if (origId.length == 3) {
-          this.filteredHierarchy[currId[2]].children[currId[1]].children[currId[0]] = originalNode;
-          this.filteredHierarchy[currId[2]].children[currId[1]].children[currId[0]].expanded = true;
-        }
-        else if (origId.length == 2) {
-          this.filteredHierarchy[currId[1]].children[currId[0]] = originalNode;
-          this.filteredHierarchy[currId[1]].children[currId[0]].expanded = true;
-        }
-        else if (origId.length == 1) {
-          this.filteredHierarchy[currId[0]] = originalNode;
-          this.filteredHierarchy[currId[0]].expanded = true;
-        }
+        //replace children at current node
+        tn.node.children = originalNode.children;
       }
     }
     setTimeout(() => {
