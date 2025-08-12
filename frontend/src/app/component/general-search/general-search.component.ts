@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import { DefinitionTypesComponent } from '../documentation/definition-types/definition-types.component';
 
 // Prior imports, now unused
 // import { Inject, ElementRef } from '@angular/core';
@@ -177,7 +178,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
   // Send focus to the search field
   ngAfterViewInit() {
     console.log('after content initialized');
-    setTimeout(() => this.termauto.focusInput());
+    //temporarily search doesn't autofocus -- focusInput() broke in updating primeng and angular to 18
+    setTimeout(() => (this.termauto));
     if (!this.welcomePage) {
       this.avoidLazyLoading = true;
       setTimeout(() => this.performSearch());
@@ -250,7 +252,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
         source: this.searchCriteria.synonymSource ? this.searchCriteria.synonymSource.join(',') : '',
       },
     });
-    this.titleService.setTitle('EVS Explore - ' + this.searchCriteria.toString());
+    this.titleService.setTitle('EVS Explore - page ' + (this.searchCriteria.fromRecord/10 + 1).toString() + ' of search results for ' + this.searchCriteria.type + ' \"' + this.searchCriteria.term + '\" from ' + this.configService.terminology.terminology);
   }
 
   // filter out terminologies that shouldn't be in the list on the search page

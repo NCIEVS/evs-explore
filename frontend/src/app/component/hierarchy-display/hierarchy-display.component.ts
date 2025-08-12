@@ -6,6 +6,7 @@ import { Concept } from './../../model/concept';
 import { ConfigurationService } from '../../service/configuration.service';
 import { LoaderService } from '../../service/loader.service';
 import { TreeTable } from 'primeng/treetable';
+import { Title } from '@angular/platform-browser';
 
 // Hierarchy display component - loaded via the /hierarchy route
 @Component({
@@ -17,10 +18,10 @@ export class HierarchyDisplayComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
 
   conceptCode: string;
-  conceptDetail: Concept;
-  conceptWithRelationships: Concept;
+  conceptDetail: Concept; //display
+  conceptWithRelationships: Concept; //display
   direction = 'horizontal';
-  hierarchyDisplay = '';
+  hierarchyDisplay = ''; //display
   hierarchyData: TreeNode[];
   selectedNode: any;
   selectedNodes: TreeNode[] = [];
@@ -28,6 +29,13 @@ export class HierarchyDisplayComponent implements OnInit {
   title: string;
 
   hierarchyUrl = '/hierarchy/';
+
+  //for dealing with the popup
+  route = 'hierarchy-popup';
+  parentUrl = window.location.origin;
+  hierarchyPart = 'hierarchy';
+  conceptPart = 'concept';
+
   urlTarget = '_top';
 
   conceptPanelSize = '70.0';
@@ -38,8 +46,8 @@ export class HierarchyDisplayComponent implements OnInit {
   selectedSources = null;
 
   // display tree position tracking
-  displayedPositions;
-  totalPositions;
+  displayedPositions = 0;
+  totalPositions = 0;
   hierarchyLimit = 10;
   hierarchyIndex = 0;
   hierarchySize = 0;
@@ -49,15 +57,41 @@ export class HierarchyDisplayComponent implements OnInit {
     private router: Router,
     private loaderService: LoaderService,
     public configService: ConfigurationService,
+    private titleService: Title
   ) {
     // Do this in the constructor so it's ready to go when this component is injected
     this.configSetup();
+
+    //ONLY for popup
+    if (window.location.href.includes('popup')){
+      const parts = window.location.href.split('/');
+      if (parts.length > 3) {
+        // Assuming at least one path segment after domain
+        if (parts[3] !== this.route) {
+          this.parentUrl = window.location.origin + '/' + parts[3];
+        }
+      }
+    }
+    
   }
 
   ngOnInit() {
     console.log('ngOnInit');
     this.getPathInHierarchy();
-    this.updateDisplaySize();
+    if (window.location.href.includes('popup')) { 
+      this.configService.setHierarchyPopupStatus(true); 
+      document.querySelector('.fa-expand').remove();
+      document.querySelector('.fa-close').remove();
+      document.querySelector('app-concept-display').remove();
+      this.hierarchyPanelSize = '100.0';
+      this.direction = 'vertical';
+    }
+    else {
+      this.updateDisplaySize();
+      document.querySelector('.fa-compress').remove();
+    }
+    this.titleService.setTitle("EVS Explore - Concept Hierarchy");
+
   }
 
   configSetup() {
@@ -75,6 +109,13 @@ export class HierarchyDisplayComponent implements OnInit {
 
   closeHierarchy() {
     this.router.navigate(['/concept/' + this.terminology + '/' + this.conceptCode]);
+  }
+
+  closeHierarchyPopup() {
+    window.opener.location.href = [this.parentUrl, this.hierarchyPart, this.terminology, this.conceptCode].join('/');
+    setTimeout(() => {
+      window.close();
+    }, 100);
   }
 
   updateDisplaySize = () => {
@@ -108,7 +149,19 @@ export class HierarchyDisplayComponent implements OnInit {
       setTimeout(() => (this.selectedNode = null), 100);
     } else {
       // Handle selecting a code to navigate away
-      this.router.navigate([this.hierarchyUrl + this.terminology + '/' + event.code]);
+      // If we are in popup, redirect the parent page; otherwise, redirect the current page.
+      if (this.configService.getHierarchyPopupStatus()) {
+        // control the redirect based on the parent window (concept-display)
+        window.opener.location.href = [this.parentUrl, this.conceptPart, this.terminology, event.code].join('/');
+
+        // Handle selecting a code to navigate away
+        this.conceptCode = event.code;
+        this.getPathInHierarchy();
+        this.router.navigate([this.route, this.terminology, event.code]);
+      }
+      else {
+        this.router.navigate([this.hierarchyUrl + this.terminology + '/' + event.code]);
+      }
     }
   }
 
@@ -143,7 +196,9 @@ export class HierarchyDisplayComponent implements OnInit {
 
         this.setTreeTableProperties(node, null);
       }
-      this.updateDisplaySize();
+      if (!this.configService.getHierarchyPopupStatus()){
+        this.updateDisplaySize();
+      }
       if (this.selectedNodes.length > 0) {
         this.hierarchySize = this.selectedNodes.length;
         setTimeout(() => {
@@ -270,17 +325,28 @@ export class HierarchyDisplayComponent implements OnInit {
       }
     }
     if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
-      this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'start',
-      });
-      setTimeout(() => {
-        document.getElementById('header-top').scrollIntoView({
+      if (this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index] !== undefined) {
+        console.log(this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index]);
+        this.hierarchyTable.el.nativeElement.querySelectorAll('.p-treetable-tbody>tr')[index].scrollIntoView({
           behavior: 'smooth',
+          block: 'center',
           inline: 'start',
         });
-      }, 100);
+        setTimeout(() => {
+          if (this.configService.getHierarchyPopupStatus()){
+            document.getElementById('hierarchyTableDisplay').scrollIntoView({
+              behavior: 'smooth',
+              inline: 'start',
+            });
+          }
+          else {
+            document.getElementById('header-top').scrollIntoView({
+              behavior: 'smooth',
+              inline: 'start',
+            });
+          }
+        }, 100);
+      }
     }
   }
 
