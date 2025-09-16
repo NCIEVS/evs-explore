@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../../service/configuration.service';
 
 @Component({
   selector: 'app-subset-ncit',

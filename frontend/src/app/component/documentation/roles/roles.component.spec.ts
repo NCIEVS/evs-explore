@@ -1,15 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RolesComponent } from './roles.component';
+
+import { NotificationService } from '../../../service/notification.service';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Testing for RolesComponent (default tests)
 describe('RolesComponent', () => {
   let component: RolesComponent;
   let fixture: ComponentFixture<RolesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [RolesComponent]
+      declarations: [RolesComponent],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));
