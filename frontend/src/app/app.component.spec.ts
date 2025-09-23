@@ -1,5 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
-// import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { NotificationService } from './service/notification.service';
@@ -7,10 +6,12 @@ import { AppModule } from './app.module';
 
 // Testing for app component
 describe('AppComponent', () => {
+  let component: AppComponent
+  let fixture: ComponentFixture<AppComponent>
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        // RouterTestingModule
         AppModule
       ],
       declarations: [
@@ -23,12 +24,19 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges()
+  })
+
   it('should create the app', waitForAsync(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    // const fixture = TestBed.createComponent(AppComponent);
+    // const app = fixture.debugElement.componentInstance;
+    expect(component).toBeTruthy();
   }));
 
+  // ADD BETTER TESTS LATER
   // it(`should have as title 'frontend'`, () => {
   //   const fixture = TestBed.createComponent(AppComponent);
   //   const app = fixture.debugElement.componentInstance;

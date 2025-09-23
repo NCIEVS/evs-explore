@@ -3,6 +3,9 @@ import { SourcesComponent } from './sources.component';
 
 import { NotificationService } from '../../../service/notification.service';
 
+import { PanelModule } from 'primeng/panel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { provideHttpClient } from '@angular/common/http';
 
 // Testing for SourcesComponent (default tests)
@@ -13,6 +16,10 @@ describe('SourcesComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SourcesComponent],
+      imports: [
+        BrowserAnimationsModule,
+        PanelModule
+      ],
       providers: [
         NotificationService,
         provideHttpClient()

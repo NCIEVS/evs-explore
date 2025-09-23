@@ -3,7 +3,11 @@ import { OverviewComponent } from './overview.component';
 
 import { NotificationService } from '../../../service/notification.service';
 
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+
 import { provideHttpClient } from '@angular/common/http';
+import { provideRouter, RouterModule } from '@angular/router';
 
 // Testing for documentation OverviewComponent (default tests)
 describe('OverviewComponent', () => {
@@ -13,9 +17,15 @@ describe('OverviewComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [OverviewComponent],
+      imports: [
+        ButtonModule,
+        RouterModule,
+        FormsModule
+      ],
       providers: [
         NotificationService,
-        provideHttpClient()
+        provideHttpClient(),
+        provideRouter([])
       ]
     })
       .compileComponents();

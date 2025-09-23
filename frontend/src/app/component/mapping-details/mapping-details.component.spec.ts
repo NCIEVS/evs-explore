@@ -5,8 +5,14 @@ import { ConceptDetailService } from '../../service/concept-detail.service';
 import { LoaderService } from '../../service/loader.service';
 import { NotificationService } from '../../service/notification.service';
 
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
+
 import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, RouterModule } from '@angular/router';
 
 describe('MappingDetailsComponent', () => {
   let component: MappingDetailsComponent;
@@ -15,6 +21,14 @@ describe('MappingDetailsComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [MappingDetailsComponent],
+      imports: [
+        AutoCompleteModule,
+        BrowserAnimationsModule,
+        ButtonModule,
+        FormsModule,
+        PanelModule,
+        RouterModule,
+      ],
       providers: [
         ConceptDetailService,
         LoaderService,

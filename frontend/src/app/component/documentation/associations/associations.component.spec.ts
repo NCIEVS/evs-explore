@@ -3,6 +3,9 @@ import { AssociationsComponent } from './associations.component';
 
 import { NotificationService } from '../../../service/notification.service';
 
+import { PanelModule } from 'primeng/panel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { provideHttpClient } from '@angular/common/http';
 
 // Tests for documentation AssociationsComponent (default tests)
@@ -13,6 +16,10 @@ describe('AssociationsComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AssociationsComponent],
+      imports: [
+        PanelModule,
+        BrowserAnimationsModule
+      ],
       providers: [
         NotificationService,
         provideHttpClient()
