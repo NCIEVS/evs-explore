@@ -36,7 +36,7 @@ export class SourcesComponent implements OnInit {
         this.definitionSources.sort((a, b) => a.code.localeCompare(b.code, undefined, { sensitivity: 'base' }));
       });
 
-    this.terminology = this.configService.getTerminology().terminology;
+    this.terminology = this.configService.getTerminology()?.terminology;
     this.titleService.setTitle('EVS Explore - Sources');
 
   }

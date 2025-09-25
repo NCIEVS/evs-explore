@@ -9,6 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 import { provideHttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 describe('GeneralSearchComponent', () => {
   let component: GeneralSearchComponent;
@@ -20,7 +21,8 @@ describe('GeneralSearchComponent', () => {
       imports: [
         RadioButtonModule,
         DropdownModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        FormsModule
       ],
       providers: [
         NotificationService,

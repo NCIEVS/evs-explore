@@ -150,7 +150,7 @@ export class MappingDetailsComponent implements OnInit {
   }
 
   rulesExist() {
-    return this.mapsetCode.startsWith('SNOMED');
+    return this.mapsetCode?.startsWith('SNOMED');
   }
 
   // Handle lazy loading of table
