@@ -1,15 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EvsFooterComponent } from './evs-footer.component';
+
+import { NotificationService } from '../../service/notification.service';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Testing for EvsFooterComponent (default tests)
 describe('EvsFooterComponent', () => {
   let component: EvsFooterComponent;
   let fixture: ComponentFixture<EvsFooterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EvsFooterComponent ]
+      declarations: [ EvsFooterComponent ],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
     .compileComponents();
   }));

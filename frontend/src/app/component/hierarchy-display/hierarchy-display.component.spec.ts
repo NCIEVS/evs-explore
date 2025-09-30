@@ -1,15 +1,33 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HierarchyDisplayComponent } from './hierarchy-display.component';
+
+import { ConceptDetailService } from '../../service/concept-detail.service';
+import { LoaderService } from '../../service/loader.service';
+import { provideHttpClient } from '@angular/common/http';
+
+import { NotificationService } from '../../service/notification.service';
+import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
+import { TreeTableModule } from 'primeng/treetable';
+import { AngularSplitModule } from 'angular-split';
 
 // Testing for HierarchyDisplayComponent (default tests)
 describe('HierarchyDisplayComponent', () => {
   let component: HierarchyDisplayComponent;
   let fixture: ComponentFixture<HierarchyDisplayComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HierarchyDisplayComponent]
+      declarations: [HierarchyDisplayComponent],
+      imports: [
+        TreeTableModule,
+        AngularSplitModule
+      ],
+      providers: [
+        ConceptDetailService,
+        LoaderService,
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

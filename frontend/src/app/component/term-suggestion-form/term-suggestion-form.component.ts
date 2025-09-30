@@ -1,12 +1,12 @@
-import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
-import {TermFormData} from '../../model/termFormData.model';
-import {ConfigurationService} from 'src/app/service/configuration.service';
-import {LoaderService} from 'src/app/service/loader.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ReCaptcha2Component} from 'ngx-captcha';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TermSuggestionFormService } from '../../service/term-suggestion-form.service';
+import { TermFormData } from '../../model/termFormData.model';
+import { ConfigurationService } from '../../service/configuration.service';
+import { LoaderService } from '../../service/loader.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ReCaptcha2Component } from 'ngx-captcha';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 // interface for core form structure

@@ -1,14 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { QualifiersComponent } from './qualifiers.component';
+
+import { NotificationService } from '../../../service/notification.service';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Testing for QualifiersComponent
 describe('QualifiersComponent', () => {
   let component: QualifiersComponent;
   let fixture: ComponentFixture<QualifiersComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [QualifiersComponent]
+      declarations: [QualifiersComponent],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

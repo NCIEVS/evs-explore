@@ -423,7 +423,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
 
   // Load source list
   loadAllSources() {
-    this.configService.getSynonymSources(this.selectedTerminology.terminology).subscribe((response) => {
+    this.configService.getSynonymSources(this.selectedTerminology?.terminology).subscribe((response) => {
       this.sourcesAll = response.map((element) => {
         return {
           label: element.code,
