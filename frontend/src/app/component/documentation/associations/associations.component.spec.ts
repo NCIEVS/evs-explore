@@ -1,14 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssociationsComponent } from './associations.component';
+
+import { NotificationService } from '../../../service/notification.service';
+
+import { PanelModule } from 'primeng/panel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Tests for documentation AssociationsComponent (default tests)
 describe('AssociationsComponent', () => {
   let component: AssociationsComponent;
   let fixture: ComponentFixture<AssociationsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AssociationsComponent]
+      declarations: [AssociationsComponent],
+      imports: [
+        PanelModule,
+        BrowserAnimationsModule
+      ],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { SortEvent } from 'primeng/api';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
 import { Concept } from '../../model/concept';
 
