@@ -1,6 +1,12 @@
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ConceptDetailComponent } from './concept-detail.component';
+
+import { provideHttpClient } from '@angular/common/http';
+
+import { ConceptDisplayComponent } from '../concept-display/concept-display.component';
+import { ConceptDetailService } from '../../service/concept-detail.service';
+import { LoaderService } from '../../service/loader.service';
+import { NotificationService } from '../../service/notification.service';
 
 // Tests for ConceptDetailComponent (default tests)
 describe('ConceptDetailComponent', () => {
@@ -9,7 +15,14 @@ describe('ConceptDetailComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ConceptDetailComponent]
+      declarations: [ConceptDetailComponent],
+      providers: [
+        ConceptDisplayComponent,
+        ConceptDetailService,
+        LoaderService,
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

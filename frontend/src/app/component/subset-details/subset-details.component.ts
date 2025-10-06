@@ -456,6 +456,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscCodelistName(concept: Concept) {
+    var cdiscName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
       if (this.selectedSubset.isCdiscGrouper()) {
@@ -463,7 +464,6 @@ export class SubsetDetailsComponent implements OnInit {
       }
       //the names of subsets are usually the NCIT versions; show CDISC names for CDISC entries
       //use default name if no CDISC-SY name is found
-      var cdiscName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
       if (!cdiscName) {
         cdiscName = this.selectedSubset.name;
       }
@@ -481,7 +481,11 @@ export class SubsetDetailsComponent implements OnInit {
         return concept.name;
       }
     } else {
-      return this.selectedSubset.name;
+      //use default name if no CDISC-SY name is found
+      if (!cdiscName){
+        return this.selectedSubset.name;
+      }
+      return cdiscName;
     }
   }
 

@@ -22,11 +22,19 @@
       <div class="row search-row">
         <div class="col-sm-4 search-bar">
           <div>
-            <p-autoComplete id="subsetSearch" [(ngModel)]="enteredSearchText"            
-        [inputStyle]="{'width':'100%'}" [delay]="800" [suggestions]="subsetSuggestions"
-        (completeMethod)="performSubsetSearch()" placeholder="{{placeholderText}}" [minLength]="3"
-        [disabled]="searchDisabled">
-      </p-autoComplete>
+            <p-autoComplete
+              id="subsetSearch" 
+              [(ngModel)]="enteredSearchText" 
+              [inputStyle]="{'width':'100%'}" 
+              [delay]="800" 
+              [suggestions]="subsetSuggestions"
+              (completeMethod)="performSubsetSearch()" 
+              placeholder="{{placeholderText}}" 
+              [minLength]="3"
+              [disabled]="searchDisabled" 
+              [showEmptyMessage]="false"
+            >
+            </p-autoComplete>
           </div>
 
         </div>
@@ -59,9 +67,10 @@
                 <i *ngIf="rowData.root && rowNode.node.children.length == 0" class="pi pi-blank"></i>
                 <mark *ngIf="hasText(rowData.code + rowData.label); else nonMatch"
                   style="color: #319fbe">{{rowData.code}}
-                  - {{rowData.label}}</mark>
+                  - {{rowData.label}}</mark>&nbsp;
                 <ng-template #nonMatch>{{rowData.code}} - {{rowData.label}}</ng-template>
               </a>
+              <em *ngIf="moreChildren(rowNode)"><a (click)="revealMore(rowNode, 'children')">show all children... (<u class="moreChildren">{{moreChildren(rowNode)}} more</u>)</a></em>
             </div>
           </td>
         </tr>

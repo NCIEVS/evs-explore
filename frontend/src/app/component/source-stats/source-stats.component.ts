@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 @Component({
   selector: 'app-source-stats',

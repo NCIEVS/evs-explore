@@ -2,9 +2,9 @@ import { Component, ViewChild, TemplateRef, SecurityContext, OnInit, OnDestroy, 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 import { ActivatedRoute } from '@angular/router';
-import { AppComponent } from 'src/app/app.component';
+import { AppComponent } from '../../app.component';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({

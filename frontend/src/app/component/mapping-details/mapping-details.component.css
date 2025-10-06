@@ -7,3 +7,7 @@
   max-width: 80%;
   padding: 10px;
 }
+
+.table-responsive {
+  overflow-x: visible;
+}

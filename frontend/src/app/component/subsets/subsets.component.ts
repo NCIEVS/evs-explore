@@ -25,6 +25,7 @@ export class SubsetsComponent implements OnInit {
   subsetSuggestions: string[] = [];
   title: string;
   expand = true;
+  originalHierarchy: TreeNode[];
   terminology: string;
   subsetsFound = false;
   expandLabel = 'Expand All';
@@ -71,6 +72,7 @@ export class SubsetsComponent implements OnInit {
         this.placeholderText = 'Enter at least 3 letters of a subset.';
         this.searchDisabled = false;
         this.loaderService.hideLoader();
+        this.originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
       });
     } else {
       this.resetSearch();
@@ -203,6 +205,7 @@ export class SubsetsComponent implements OnInit {
 
   performSubsetSearchHelper(tn, string) {
     const newChildren = new Array();
+    // if an element has children, search the children
     if (tn.children) {
       tn.children.forEach((element) => {
         const newChild = this.performSubsetSearchHelper(element, string);
@@ -211,6 +214,7 @@ export class SubsetsComponent implements OnInit {
         }
       });
     }
+    // if an element has children that match OR its name/code DOES NOT include the search string
     if (
       newChildren.length !== 0 ||
       !tn.name.toLowerCase().includes(string.toLowerCase()) ||
@@ -219,11 +223,121 @@ export class SubsetsComponent implements OnInit {
       tn.children = newChildren;
       tn.expanded = true;
     }
+    // send the element back if it has children OR if it includes the search string (base case)
     return tn.name.toLowerCase().includes(string.toLowerCase()) ||
       tn.code.toLowerCase().includes(string.toLowerCase()) ||
-      tn.children.length > 0
+      tn.children.length > 0 
       ? tn
       : null;
+  }
+
+  findInTree(tn, tree) {
+    const indices = new Array();
+    for (var i = 0; i < tree.length; i++) {
+      //check the children regularly
+      if (tree[i].data.code == tn.node.data.code) {
+        return tree[i];
+      }
+
+      //if this child has children, check those
+      if (tree[i].children?.length > 0) {
+        var childId = this.findInTree(tn, tree[i].children);
+        if (childId) {
+          return childId;
+        }
+      }
+    }
+    return null;
+  }
+
+  moreChildren(tn) {
+    // only check this if we are searching
+    if (this.subsetSearchText) {
+      var originalNode = this.findInTree(tn, this.originalHierarchy);
+
+      //compare
+      return originalNode?.children?.length - tn.node.children.length;
+    }
+    return false;
+  }
+
+  revealMore(tn, type) {
+    this.loaderService.showLoader();
+    if (type == "children") {
+      //locate the current node, replace with node from previous hierarchy
+      if (tn.node.children) {
+        const originalHierarchy = JSON.parse(JSON.stringify(this.configService.subsets));
+
+        //find tn in original tree
+        var originalNode = this.findInTree(tn, originalHierarchy);
+
+        // replace data in hierarchy data at current tree with original tree
+        //get current open nodes if they are currently expanded (user is using them) or if they have children
+        const openNodes = new Array();
+        this.hierarchyData.forEach(child => {
+          if (child.expanded) {
+            openNodes.push(child.data?.code, child);
+          }
+          child.children?.forEach(child2 => {
+            if (child2.expanded) {
+              openNodes.push(child2.data?.code, child2);
+            }
+            child2.children?.forEach(child3 => {
+              if (child3.expanded) {
+                openNodes.push(child3.data?.code, child3);
+              }
+              child3.children?.forEach(child4 => {
+                if (child4.expanded) {
+                  openNodes.push(child4.data?.code, child4)
+                }
+              });
+            });
+          });
+        });
+
+        // replacement (leave open nodes)
+        originalNode.children?.forEach(child => {
+          if (openNodes.includes(child.data?.code) && tn.node.data.code != child.data.code) {
+            child.children = openNodes[openNodes.indexOf(child.data?.code)+1]?.children;
+            if (openNodes[openNodes.indexOf(child.data?.code)+1]?.expanded) {
+              child.expanded = true;
+            }
+          }
+          child.children?.forEach(child2 => {
+            if (openNodes.includes(child2.data?.code)) {
+              child2.children = openNodes[openNodes.indexOf(child2.data?.code)+1]?.children;
+              if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded){
+                child2.expanded = true;
+              }
+            }
+            child2.children?.forEach(child3 => {
+              if (openNodes.includes(child3.data?.code)) {
+                child3.children = openNodes[openNodes.indexOf(child3.data?.code)+1]?.children;
+                if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded) {
+                  child3.expanded = true;
+                }                
+              }
+              child3.children?.forEach(child4 => {
+                if (openNodes.includes(child4.data?.code)) {
+                  child4.children = openNodes[openNodes.indexOf(child4.data?.code)+1]?.children;
+                  if (openNodes[openNodes.indexOf(child2.data?.code)+1]?.expanded) {
+                    child4.expanded = true;
+                  }                  
+                }
+              });
+            });
+          })
+        });
+
+        //replace children at current node
+        tn.node.children = originalNode.children;
+      }
+    }
+    setTimeout(() => {
+      this.hierarchyData = this.filteredHierarchy;
+      this.sortNcitFirst();
+      this.loaderService.hideLoader();
+    }, 10);
   }
 
   hasText(codeAndLabel) {

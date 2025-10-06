@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 import { saveAs } from 'file-saver';
 import { Title } from '@angular/platform-browser';
-import { LoaderService } from 'src/app/service/loader.service';
-import { MapsetService } from 'src/app/service/mapset.service';
+import { LoaderService } from '../../service/loader.service';
+import { MapsetService } from '../../service/mapset.service';
 
 // Component for mappings.  Currently, this just redirects to another page.
 @Component({

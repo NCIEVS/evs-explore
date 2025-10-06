@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfigurationService } from 'src/app/service/configuration.service';
+import { ConfigurationService } from '../../../service/configuration.service';
 import { Title } from '@angular/platform-browser';
 
 // Documentation overview component
