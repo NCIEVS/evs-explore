@@ -1,14 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PropertiesComponent } from './properties.component';
+
+import { NotificationService } from '../../../service/notification.service';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Testing for PropertiesComponent
 describe('PropertiesComponent', () => {
   let component: PropertiesComponent;
   let fixture: ComponentFixture<PropertiesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PropertiesComponent]
+      declarations: [PropertiesComponent],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

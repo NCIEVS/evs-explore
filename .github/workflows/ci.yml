@@ -1,0 +1,30 @@
+name: Angular Jest Tests
+on:
+  push:
+    branches:
+      - develop # the primary branch
+  pull_request:
+    branches:
+      - develop # the primary branch
+permissions:
+    contents: read
+    pull-requests: write
+jobs:
+  run-jest-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '19' #set the project Angular version
+      - name: Install Dependencies
+        run: npm install
+      - name: Build Application
+        run: ./gradlew build # change to command that builds the project
+      - name: Run Jest Tests
+        run: npm run test # change to command that tests the project
