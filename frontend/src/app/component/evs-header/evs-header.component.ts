@@ -58,7 +58,7 @@ export class EvsHeaderComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.subscription = this.configService.getSubject().subscribe(terminology => {
+    this.subscription = this.configService.getSubject()?.subscribe(terminology => {
       this.firstRoot = null;
       this.terminology = terminology;
       if (this.terminology) {
