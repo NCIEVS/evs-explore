@@ -362,4 +362,7 @@ body .alert-info {
   width: 100%
 }
 
-
+.container {
+  max-width: 80%;
+  padding: 10px;
+}

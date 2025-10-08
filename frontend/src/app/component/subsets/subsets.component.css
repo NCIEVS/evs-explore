@@ -29,3 +29,8 @@
 .moreChildren {
   color:#319fbe !important;
 }
+
+.container {
+  max-width: 80%;
+  padding: 10px;
+}
