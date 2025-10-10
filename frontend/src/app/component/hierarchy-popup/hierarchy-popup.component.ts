@@ -62,13 +62,14 @@ export class HierarchyPopupComponent implements OnInit {
         this.parentUrl = window.location.origin + '/' + parts[3];
       }
     }
+    console.log('xxx');
+
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
+    console.log('ngOnInit - hierarchy popup');
     this.getPathInHierarchy();
     this.configService.setHierarchyPopupStatus(true);
-    this.titleService.setTitle("EVS Explore - Concept Hierarchy");
   }
 
   configSetup() {
@@ -273,7 +274,7 @@ export class HierarchyPopupComponent implements OnInit {
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
-        if(selectedNodeIndex++ == this.hierarchyIndex) {
+        if (selectedNodeIndex++ == this.hierarchyIndex) {
           index = i;
           break;
         }

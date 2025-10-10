@@ -163,8 +163,17 @@ export class ConceptDetailComponent implements OnInit {
   }
 
   public setTitle() {
-    this.titleService.setTitle(this.concept.code + ' - ' + this.concept.name);
-    this.titleSet = true;
+    // Bypass this behavior if we are in the hierarchy popup
+    if (window.location.href.includes('hierarchy-popup')) {
+      // do nothing
+    } else if (window.location.href.includes('hierarchy')) {
+      this.titleService.setTitle('EVS Explore - ' + this.concept.code + ' - ' + this.concept.name + ' (with hierarchy)');
+      this.titleSet = true;
+    } else {
+      this.titleService.setTitle('EVS Explore - ' + this.concept.code + ' - ' + this.concept.name);
+      this.titleSet = true;
+
+    }
   }
 
   getTerminologyBySource(source: string) {
