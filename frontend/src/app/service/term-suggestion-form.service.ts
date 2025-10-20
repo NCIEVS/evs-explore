@@ -15,7 +15,7 @@ export class TermSuggestionFormService {
   // Get the term form
   async getForm(formType: string): Promise<any> {
     try {
-      return await this.http.get<any>(encodeURI('/api/v1/suggest/' + formType)).toPromise();
+      return await this.http.get<any>(encodeURI('/api/v1/form/suggest/' + formType)).toPromise();
     } catch (error) {
       throw new EvsError(error, 'Could not fetch form');
     }
@@ -26,7 +26,25 @@ export class TermSuggestionFormService {
     try {
       const headers: HttpHeaders = new HttpHeaders().set('Captcha-Token', captchaToken);
       const options = {headers};
-      return await this.http.post<any>(encodeURI('/api/v1/suggest'), formData, options).toPromise();
+      return await this.http.post<any>(encodeURI('/api/v1/form/submit'), formData, options).toPromise();
+    } catch (error) {
+      throw new EvsError(error, 'An error occurred submitting the form');
+    }
+  }
+
+  // Submit filled out form with batch file attachment.
+  async submitFormWithAttachment(formData: TermFormData, file: File, captchaToken: any): Promise<any> {
+    try {
+      const headers: HttpHeaders = new HttpHeaders().set('Captcha-Token', captchaToken);
+      const options = {headers};
+      const multipartForm = new FormData();
+      const formDataBlob = new Blob([JSON.stringify(formData)], {type: 'application/json'});
+      multipartForm.append('formData', formDataBlob);
+      if (file) {
+        multipartForm.append('file', file)
+      }
+
+      return await this.http.post<any>(encodeURI('/api/v1/form/submitWithAttachment'), multipartForm, options).toPromise();
     } catch (error) {
       throw new EvsError(error, 'An error occurred submitting the form');
     }

@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, RequiredValidator, Validators} from '@angular/forms';
 import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
 import {TermFormData} from '../../model/termFormData.model';
 import {ConfigurationService} from 'src/app/service/configuration.service';
@@ -18,10 +18,17 @@ interface FormData {
 
 }
 
+const requiredFields = [
+  'type',
+  'subset',
+  'codelist',
+  'term'
+]
+
 const customFormData = {
     "formName": "CDISC Terminology Change Request",
     "formType":"CDISC",
-    "recipientEmail":"NCIEvsCdiscHelp@mail.nih.gov",
+    "recipientEmail":"asinha@westcoastinformatics.com",
     "sections": [
         {
             "name":"contact",
@@ -272,51 +279,10 @@ const customFormData = {
             },
             "fields": [
                 {
-                    "name":"vocabulary",
-                    "label":"Vocabulary",
-                    "type":"text",
-                    "value":"CDISC Terminology",
-                    "readonly":true
-                },
-                {
-                    "name":"type",
-                    "label":"Request Type",
-                    "type":"dropdown",
-                    "value":"",
-                    "options": [
-                        "Create New Term",
-                        "Create New Codelist",
-                        "Modify Existing Term",
-                        "Inquiry",
-                        "Other"
-                    ],
-                    "placeholder":"Select request type",
-                    "validations": [
-                        {
-                            "name":"required",
-                            "validator":"required",
-                            "message":"Request Type is required"
-                        }
-                    ]
-                },
-                {
-                    "name":"reportFile",
+                    "name":"file",
                     "label":"File Upload",
                     "type":"file",
-                    "value":null,
-                    "validations": [
-                        {
-                          "name": "required",
-                          "validator": "required",
-                          "message": "A report file is required."
-                        },
-                        {
-                          "name": "allowedTypes",
-                          "validator": "allowedFileTypes",
-                          "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv",
-                          "message": "Only PDF, JPEG, and PNG files are allowed."
-                        }
-                    ]
+                    "value":null
                 },
             ]
         },
@@ -348,7 +314,7 @@ const customFormData = {
             ]
         }
     ],
-    "recaptchaSiteKey":"6LdSBfEpAAAAAFVVDfaINoqy5qi3IgGEL3b_nlhf"
+    // "recaptchaSiteKey":"TEST-KEY"
 }
 
 // interface for the sections of the form
@@ -538,8 +504,9 @@ export class TermSuggestionFormComponent implements OnInit {
     this.clearTermFormData();
     const response = await this.formService.getForm(formType);
 
-    // get the recaptcha site key from the response
-    this.recaptchaSiteKey = response.recaptchaSiteKey;
+    // get the recaptcha site key from the response FOR TESTING
+    this.recaptchaSiteKey = "6LdSBfEpAAAAAFVVDfaINoqy5qi3IgGEL3b_nlhf";
+    // console.log("KEY: ", this.recaptchaSiteKey)
 
     // create a formData instance of the response
     this.formData = response;
@@ -571,6 +538,60 @@ export class TermSuggestionFormComponent implements OnInit {
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
         formControl.valueChanges.subscribe(() => {
+          // If there is a change in the file upload field, 
+          if (field.name == 'file') {
+            // console.log("THIS IS THE SECTION GROUP", this.formGroup.controls);
+
+            //set required controls based on file upload
+            for (const reqControlName in this.formGroup.controls) {
+              const reqControlGroup = this.formGroup.get(reqControlName) as FormGroup;
+              if (reqControlGroup?.controls) {
+                for (const reqControl in reqControlGroup.controls) {
+                  const control = reqControlGroup.get(reqControl) as FormGroup;
+                  if (requiredFields.includes(reqControl) && control.hasValidator(Validators.required) && formControl.value != "" && formControl != null) {
+                    console.log(reqControl, control, "IS REQUIRED!!!")
+                    control.removeValidators(Validators.required)
+                    // console.log(this.formData.sections[reqControl])
+                    // this.formData.sections[reqControl]?.validations.splice(this.formData.sections[reqControl]?.validations)
+                    control.updateValueAndValidity();
+                  }
+                  else if (requiredFields.includes(reqControl) && (formControl.value == "" || formControl != null)) {
+                    console.log(reqControl, 'is now required :]')
+                    control.setValidators(Validators.required)
+                    control.updateValueAndValidity();
+                    sectionGroup.setControl(
+                      this.formData.sections[reqControl]?.name,
+                      control
+                    )
+                  }
+                }
+              }
+            }
+
+            //set required based on file upload
+            for (const section of this.formData.sections) {
+              for (const reqField of section.fields) {
+                if (requiredFields.includes(reqField.name) && formControl.value != "" && formControl != null) {
+                  console.log("REQUIRED", reqField);
+                  //reqField.validations.find((v => v.validator === 'required'))
+                  let validators = [];
+                  validators = this.getValidators(validators, reqField);
+                  reqField.validations.splice(reqField.validations.findIndex(v => v.validator === 'required'))
+                  console.log (reqField);
+                }
+                //not currently working
+                else if (requiredFields.includes(reqField.name) && (formControl.value == "" || formControl == null)) {
+                  // console.log("not req", reqField)
+                  
+                  console.log ("NOT REQ", reqField, this.getValidators(validators, reqField));
+                  // reqField.validations.
+                }
+              }
+            }
+            
+            this.uiState.termFormGroup = this.formGroup;
+            // console.log("term form group UI STATE", this.uiState.termFormGroup)
+          }
           this.errorMessages[field.name] = this.getErrorMessage(formControl, field);
         });
         formControl.statusChanges.subscribe(() => {
@@ -620,13 +641,22 @@ export class TermSuggestionFormComponent implements OnInit {
 
     // create the termFormData from the filled out form
     const submittedFormData: TermFormData = this.populateSubmittedFormData();
-    console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
-
+    // grab batchInfoFile if present
+    const file = this.getBatchInfoFile(this.formGroup, this.formFields);
     // show the spinner
     this.loaderService.showLoader();
     // send our form with the captcha token
     try {
-      await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+      //check if there is a file attachment
+      // when this is finished CHANGE TEST KEY BACK TO CAPTCHA
+      if (file) {
+        await this.formService.submitFormWithAttachment(submittedFormData, file, "TEST-KEY")
+      } else {
+        console.log("with NO attachment")
+        // await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+        await this.formService.submitForm(submittedFormData, "TEST-KEY");
+      }
+
       this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
       this.severity = 'Success';
       this.modalService.open(this.isSuccess);
@@ -772,6 +802,13 @@ export class TermSuggestionFormComponent implements OnInit {
     }
   }
 
+  // Helper method to grab file input (if present) and send it along with termformdata to email
+  private getBatchInfoFile(formGroup: FormGroup, formFields: { [key: string]: Field }) {
+    const fileInput = document.getElementById('file') as HTMLInputElement;
+    console.log(fileInput.files);
+    return fileInput?.files[0];
+  }
+
   // Helper method to build the submitted form so that it uses the label values instead of the name values
   private buildFormDataWithLabels(formGroup: FormGroup, formFields: { [key: string]: Field }): {} {
     // create a new object to hold the form data with labels
@@ -779,7 +816,7 @@ export class TermSuggestionFormComponent implements OnInit {
     // iterate over the form controls
     for (const sectionName in this.formGroup.controls) {
       // skip the recaptcha control
-      if (sectionName === 'recaptcha') continue;
+      if (sectionName === 'recaptcha' || sectionName === 'batchTermInfo') continue;
       // get the section control
       const sectionControl = formGroup.controls[sectionName];
       // find the corresponding section in the formData.sections array
