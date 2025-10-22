@@ -46,7 +46,7 @@
           <div class="field-container">
             <label class="field-label text-body"> {{ field.label }}
               <!-- Add red start next to label if the field is required -->
-              <span *ngIf="isRequired(field)" class="highlight">*</span>
+              <span *ngIf="isRequired(section, field)" class="highlight">*</span>
             </label>
             <!-- Text input -->
             <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
