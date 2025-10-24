@@ -306,7 +306,7 @@ export class TermSuggestionFormComponent implements OnInit {
     // create the termFormData from the filled out form
     const submittedFormData: TermFormData = this.populateSubmittedFormData();
     // grab batchInfoFile if present
-    const file = this.getBatchInfoFile(this.formGroup, this.formFields);
+    const file = this.getBatchInfoFile();
     // show the spinner
     this.loaderService.showLoader();
     // send our form with the captcha token
@@ -314,10 +314,9 @@ export class TermSuggestionFormComponent implements OnInit {
       //check if there is a file attachment
       // when this is finished CHANGE TEST KEY BACK TO CAPTCHA
       if (file) {
-        await this.formService.submitFormWithAttachment(submittedFormData, file, "TEST-KEY")
+        await this.formService.submitFormWithAttachment(submittedFormData, file, this.captchaSuccessEvent)
       } else {
-        // await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
-        await this.formService.submitForm(submittedFormData, "TEST-KEY");
+        await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
       }
 
       this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
@@ -467,10 +466,12 @@ export class TermSuggestionFormComponent implements OnInit {
   }
 
   // Helper method to grab file input (if present) and send it along with termformdata to email
-  private getBatchInfoFile(formGroup: FormGroup, formFields: { [key: string]: Field }) {
-    const fileInput = document.getElementById('file') as HTMLInputElement;
-    console.log(fileInput.files);
-    return fileInput?.files[0];
+  private getBatchInfoFile() {
+    // only check the batch info file if the section is present
+    if (this.formGroup.contains('batchTermInfo')) {
+      const fileInput = document.getElementById('file') as HTMLInputElement;
+      return fileInput?.files[0];
+    }
   }
 
   // Helper method to build the submitted form so that it uses the label values instead of the name values
