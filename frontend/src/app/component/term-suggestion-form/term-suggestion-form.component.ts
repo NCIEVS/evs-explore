@@ -325,7 +325,7 @@ export class TermSuggestionFormComponent implements OnInit {
       this.onClear();
     } catch (error) {
       console.log('Error occurred while submitting form: ', error);
-      this.submitFormMsg = 'Error Submitting form.';
+      this.submitFormMsg = error.displayMessage || 'Error Submitting form.';
       this.severity = 'Failure';
       // Show a banner when the form is submitted. Message is based on success/fail
       this.modalService.open(this.isSuccess);
