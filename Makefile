@@ -30,6 +30,9 @@ frontend:
 	/bin/rm -rf web/src/main/resources/static/*
 	cd frontend; ./gradlew build
 
+test: 
+	cd frontend; npm run test
+
 # Run
 run:
 	cd frontend; npm start

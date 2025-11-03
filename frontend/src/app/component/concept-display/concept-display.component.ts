@@ -93,7 +93,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // show hierarchy if NOT in hierarchy page and there is a hierarchy
-    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') && this.configService.getTerminology().metadata.hierarchy;
+    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') && this.configService.getTerminology()?.metadata.hierarchy;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties().subscribe((properties: any) => {

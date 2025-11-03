@@ -1,14 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SourcesComponent } from './sources.component';
+
+import { NotificationService } from '../../../service/notification.service';
+
+import { PanelModule } from 'primeng/panel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { provideHttpClient } from '@angular/common/http';
 
 // Testing for SourcesComponent (default tests)
 describe('SourcesComponent', () => {
   let component: SourcesComponent;
   let fixture: ComponentFixture<SourcesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SourcesComponent]
+      declarations: [SourcesComponent],
+      imports: [
+        BrowserAnimationsModule,
+        PanelModule
+      ],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
       .compileComponents();
   }));

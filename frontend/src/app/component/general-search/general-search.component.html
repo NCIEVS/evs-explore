@@ -100,7 +100,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12" style="padding-top: 5px">
+          <div class="col-sm-7" style="padding-top: 5px">
             <p-radioButton
               class="radio-padding"
               styleClass="radio-style"
@@ -164,6 +164,11 @@
             >
             </p-radioButton>
             <p-button icon="pi pi-angle-double-left" (onClick)="toggleShowMoreSearchOptions()" *ngIf="showMoreSearchOption"> </p-button>
+          </div>
+          <div class="col-sm-5" style="padding-top: 5px">
+            <div style="float: right">
+              <a *ngIf="!welcomePage && selectedTerminology?.terminology == 'ncit'" class="regular-link" href="https://evsexplore.semantics.cancer.gov/evsexplore/termform">Term Suggestion Form</a>
+            </div>
           </div>
           <div class="col-md-12" style="padding-top: 3px">
             <p-chips

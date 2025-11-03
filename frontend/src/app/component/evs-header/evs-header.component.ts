@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
-import { ConceptDetailService } from 'src/app/service/concept-detail.service';
+import { ConceptDetailService } from '../../service/concept-detail.service';
 import { NavigationEnd, Router } from '@angular/router';
 
 // Header component
@@ -58,7 +58,7 @@ export class EvsHeaderComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.subscription = this.configService.getSubject().subscribe(terminology => {
+    this.subscription = this.configService.getSubject()?.subscribe(terminology => {
       this.firstRoot = null;
       this.terminology = terminology;
       if (this.terminology) {
@@ -106,7 +106,9 @@ export class EvsHeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   displayMultiSearchTerms() {

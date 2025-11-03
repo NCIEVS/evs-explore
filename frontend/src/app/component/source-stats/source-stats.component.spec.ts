@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SourceStatsComponent } from './source-stats.component';
+
+import { NotificationService } from '../../service/notification.service';
+
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SourceStatsComponent', () => {
   let component: SourceStatsComponent;
@@ -8,7 +11,11 @@ describe('SourceStatsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SourceStatsComponent ]
+      declarations: [ SourceStatsComponent ],
+      providers: [
+        NotificationService,
+        provideHttpClient()
+      ]
     })
     .compileComponents();
 

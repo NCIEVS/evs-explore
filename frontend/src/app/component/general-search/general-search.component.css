@@ -1,5 +1,7 @@
 .mh400 {
   min-height: 400px;
+  max-width: 80%;
+  padding: 10px;
 }
 
 em {
