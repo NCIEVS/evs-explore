@@ -46,7 +46,7 @@
           <div class="field-container">
             <label class="field-label text-body"> {{ field.label }}
               <!-- Add red start next to label if the field is required -->
-              <span *ngIf="isRequired(field)" class="highlight">*</span>
+              <span *ngIf="isRequired(section, field)" class="highlight">*</span>
             </label>
             <!-- Text input -->
             <input *ngIf="field.type === 'text'" [type]="field.type" [formControlName]="field.name"
@@ -71,6 +71,7 @@
               <option value="" disabled selected>{{ field.placeholder }}</option>
               <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
             </select>
+            <input type="file" *ngIf="field.type === 'file'" id="{{field.name}}" [formControlName]="field.name" class="text-body field-input" accept=".xls" maxFileSize="1000000" />
             <!-- Error Messages from validation checks -->
           </div>
           <div *ngIf="shouldDisplayValidationError(section, field)" class="error-message">
