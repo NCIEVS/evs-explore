@@ -24,7 +24,6 @@ import { SubsetNcitComponent } from './component/documentation/subset-ncit/subse
 import { EvsApiComponent } from './component/evs-api/evs-api.component';
 import { MappingDetailsComponent } from './component/mapping-details/mapping-details.component';
 import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
-import {HierarchyPopupComponent} from './component/hierarchy-popup/hierarchy-popup.component';
 // import { WelcomeComponent } from './component/welcome/welcome.component';
 
 // Routes defined
