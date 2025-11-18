@@ -94,7 +94,6 @@ import { TermSuggestionFormComponent } from './component/term-suggestion-form/te
 
 // Google ReCaptcha
 import {NgxCaptchaModule} from 'ngx-captcha';
-import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-popup.component';
 
 // Angular configuration for this application
 @NgModule({ declarations: [
@@ -134,8 +133,7 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
         NotificationComponent,
         MappingDetailsComponent,
         SourceStatsComponent,
-        TermSuggestionFormComponent,
-        HierarchyPopupComponent,
+        TermSuggestionFormComponent
     ],
     exports: [DisplayPipe],
     bootstrap: [AppComponent], imports: [NgbModule,
