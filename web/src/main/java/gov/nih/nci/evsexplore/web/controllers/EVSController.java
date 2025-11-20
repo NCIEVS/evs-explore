@@ -38,7 +38,7 @@ public class EVSController {
    * @return The response entity.
    */
   @RequestMapping("api/v1/**")
-  public ResponseEntity<String> sendRequestToEVSRestApi(@RequestBody(required = false) String body,
+  public ResponseEntity<String> sendRequestToEVSRestApi(@RequestBody(required = false) byte[] body,
     HttpMethod method, HttpServletRequest request) {
     try {
       // Send the request to the proxy service
