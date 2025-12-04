@@ -45,7 +45,7 @@ public class ProxyService {
    * @param request The request.
    * @return The response entity.
    */
-  public ResponseEntity<String> processProxyRequest(final String body, final HttpMethod method,
+  public ResponseEntity<String> processProxyRequest(final byte[] body, final HttpMethod method,
     final HttpServletRequest request) {
     // Get the request URL
     String requestUrl = request.getServletPath();
@@ -64,11 +64,14 @@ public class ProxyService {
     // Add the headers to the request
     while (headerNames.hasMoreElements()) {
       String headerName = headerNames.nextElement();
+      if ("content-length".equalsIgnoreCase(headerName) || "transfer-encoding".equalsIgnoreCase(headerName)) {
+        continue;
+      }
       headers.set(headerName, request.getHeader(headerName));
     }
 
     // Create the request entity
-    HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
+    HttpEntity<byte[]> httpEntity = new HttpEntity<>(body, headers);
     ClientHttpRequestFactory factory =
         new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
     RestTemplate restTemplate = new RestTemplate(factory);
