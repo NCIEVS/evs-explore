@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
   selector: 'app-concept-display',
   templateUrl: './concept-display.component.html',
   styleUrls: ['./concept-display.component.css'],
+  standalone: false,
 })
 export class ConceptDisplayComponent implements OnInit, OnDestroy {
   expandCollapseChange: Subject<boolean> = new Subject();

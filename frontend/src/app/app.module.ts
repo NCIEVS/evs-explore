@@ -10,6 +10,8 @@ import { AngularSplitModule } from 'angular-split';
 // import { FacebookModule } from 'ngx-facebook';
 
 // Primeng Modules, Services
+import { providePrimeNG } from 'primeng/config';
+import MyPreset from './my-preset';
 import { MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -93,11 +95,12 @@ import { SourceStatsComponent } from './component/source-stats/source-stats.comp
 import { TermSuggestionFormComponent } from './component/term-suggestion-form/term-suggestion-form.component';
 
 // Google ReCaptcha
-import {NgxCaptchaModule} from 'ngx-captcha';
+import { NgxCaptchaModule } from 'ngx-captcha';
 import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-popup.component';
 
 // Angular configuration for this application
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         EvsApiComponent,
         EvsHeaderComponent,
@@ -137,7 +140,7 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
         TermSuggestionFormComponent,
         HierarchyPopupComponent,
     ],
-    exports: [DisplayPipe],
+    exports: [],
     bootstrap: [AppComponent], imports: [NgbModule,
         BrowserModule,
         AppRoutingModule,
@@ -165,38 +168,44 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
         AngularSplitModule.forRoot(),
         ReactiveFormsModule,
         NgxCaptchaModule], providers: [
-        CookieService,
-        NotificationService,
-        CommonDataService,
-        Title,
-        MessageService,
-        LoaderService,
-        ConceptDetailService,
-        AppComponent,
-        ConceptDisplayComponent,
-        WelcomeComponent,
-        SearchTermService,
-        GlobalErrorHandler,
-        {
-            provide: ErrorHandler,
-            useClass: GlobalErrorHandler,
-        },
-        ConfigurationService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: (configService: ConfigurationService) => function () {
-                return configService.loadConfig();
+            CookieService,
+            NotificationService,
+            CommonDataService,
+            Title,
+            MessageService,
+            LoaderService,
+            ConceptDetailService,
+            AppComponent,
+            ConceptDisplayComponent,
+            WelcomeComponent,
+            SearchTermService,
+            GlobalErrorHandler,
+            {
+                provide: ErrorHandler,
+                useClass: GlobalErrorHandler,
             },
-            deps: [ConfigurationService],
-            multi: true,
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: LoadingInterceptor,
-            multi: true,
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+            ConfigurationService,
+            {
+                provide: APP_INITIALIZER,
+                useFactory: (configService: ConfigurationService) => function () {
+                    return configService.loadConfig();
+                },
+                deps: [ConfigurationService],
+                multi: true,
+            },
+            {
+                provide: HTTP_INTERCEPTORS,
+                useClass: LoadingInterceptor,
+                multi: true,
+            },
+            provideHttpClient(withInterceptorsFromDi()),
+            providePrimeNG({
+                theme: {
+                    preset: MyPreset
+                }
+            })
+        ]
+})
 
 // Export this module
 export class AppModule { }

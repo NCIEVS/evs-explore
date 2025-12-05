@@ -10,7 +10,8 @@ import { Concept } from './../../model/concept';
 @Component({
   selector: 'app-concept-relationship',
   templateUrl: './concept-relationship.component.html',
-  styleUrls: ['./concept-relationship.component.css']
+  styleUrls: ['./concept-relationship.component.css'],
+  standalone: false
 })
 export class ConceptRelationshipComponent implements OnInit {
   @Input() concept: Concept;

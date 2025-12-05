@@ -12,6 +12,7 @@ import { LoaderService } from '../../service/loader.service';
   selector: 'app-subset-details',
   templateUrl: './subset-details.component.html',
   styleUrls: ['./subset-details.component.css'],
+  standalone: false,
 })
 export class SubsetDetailsComponent implements OnInit {
   @ViewChild('subsetList', { static: false }) subsetList: any;

@@ -5,7 +5,8 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-evs-api',
   templateUrl: './evs-api.component.html',
-  styleUrls: ['./evs-api.component.css']
+  styleUrls: ['./evs-api.component.css'],
+  standalone: false
 })
 export class EvsApiComponent implements OnInit {
 

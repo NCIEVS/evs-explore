@@ -10,6 +10,7 @@ em {
 
 .radio-padding {
   padding-right: 0.2rem !important;
+  vertical-align: middle;
 }
 
 /*toolbar*/
@@ -87,4 +88,13 @@ em {
 
 .term-dropdown [aria-label="Multiple Terminology Search"].p-dropdown-item {
   border-bottom: 1px solid black;
+}
+
+.radio-label {
+  font-size: 1rem;
+  margin-left: 4px;
+  margin-right: 10px;
+  margin-bottom: 0px !important;
+  cursor: pointer;
+  vertical-align: middle;
 }

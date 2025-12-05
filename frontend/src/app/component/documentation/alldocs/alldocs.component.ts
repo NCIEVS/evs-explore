@@ -5,7 +5,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-alldocs',
   templateUrl: './alldocs.component.html',
-  styleUrls: ['./alldocs.component.css']
+  styleUrls: ['./alldocs.component.css'],
+  standalone: false
 })
 export class AlldocsComponent {
 

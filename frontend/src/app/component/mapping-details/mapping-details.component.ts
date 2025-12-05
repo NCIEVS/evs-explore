@@ -12,6 +12,7 @@ import { ConceptDetailService } from '../../service/concept-detail.service';
   selector: 'app-mapping-details',
   templateUrl: './mapping-details.component.html',
   styleUrls: ['./mapping-details.component.css'],
+  standalone: false
 })
 export class MappingDetailsComponent implements OnInit {
   @ViewChild('mappings', { static: false }) mappings: any;
@@ -61,7 +62,7 @@ export class MappingDetailsComponent implements OnInit {
     private mapsetService: MapsetService,
     private sanitizer: DomSanitizer,
     private titleService: Title
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.mappings) {

@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-synonym-types',
   templateUrl: './synonym-types.component.html',
-  styleUrls: ['./synonym-types.component.css']
+  styleUrls: ['./synonym-types.component.css'],
+  standalone: false
 })
 export class SynonymTypesComponent implements OnInit {
 

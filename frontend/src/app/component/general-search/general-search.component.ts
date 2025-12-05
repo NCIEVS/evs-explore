@@ -29,6 +29,7 @@ import { DefinitionTypesComponent } from '../documentation/definition-types/defi
   selector: 'app-general-search',
   templateUrl: './general-search.component.html',
   styleUrls: ['./general-search.component.css'],
+  standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit {

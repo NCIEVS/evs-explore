@@ -11,6 +11,7 @@ import { TreeTable } from 'primeng/treetable';
   selector: 'subsets',
   templateUrl: './subsets.component.html',
   styleUrls: ['./subsets.component.css'],
+  standalone: false,
 })
 export class SubsetsComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;

@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
+  standalone: false
 })
 export class NotificationComponent implements OnInit, OnDestroy {
   stickNotification: Boolean = true;

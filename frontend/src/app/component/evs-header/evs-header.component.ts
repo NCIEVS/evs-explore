@@ -8,7 +8,8 @@ import { NavigationEnd, Router } from '@angular/router';
 @Component({
   selector: 'app-evs-header',
   templateUrl: './evs-header.component.html',
-  styleUrls: ['./evs-header.component.css']
+  styleUrls: ['./evs-header.component.css'],
+  standalone: false
 })
 export class EvsHeaderComponent implements OnInit, OnDestroy {
   versionInfo = '';

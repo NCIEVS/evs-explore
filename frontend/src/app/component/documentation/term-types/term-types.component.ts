@@ -6,7 +6,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-term-types',
   templateUrl: './term-types.component.html',
-  styleUrls: ['./term-types.component.css']
+  styleUrls: ['./term-types.component.css'],
+  standalone: false
 })
 export class TermTypesComponent implements OnInit {
 

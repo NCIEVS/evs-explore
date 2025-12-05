@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
-  styleUrls: ['./roles.component.css']
+  styleUrls: ['./roles.component.css'],
+  standalone: false
 })
 export class RolesComponent implements OnInit {
 

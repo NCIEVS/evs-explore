@@ -13,6 +13,7 @@ import { Title } from '@angular/platform-browser';
   selector: 'app-hierarchy-popup',
   templateUrl: './hierarchy-popup.component.html',
   styleUrls: ['./hierarchy-popup.component.css'],
+  standalone: false
 })
 export class HierarchyPopupComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
