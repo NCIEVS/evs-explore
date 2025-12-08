@@ -11,7 +11,7 @@ import { AngularSplitModule } from 'angular-split';
 
 // Primeng Modules, Services
 import { providePrimeNG } from 'primeng/config';
-import MyPreset from './my-preset';
+import EvsTheme from './evs-theme';
 import { MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -201,7 +201,7 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
             provideHttpClient(withInterceptorsFromDi()),
             providePrimeNG({
                 theme: {
-                    preset: MyPreset
+                    preset: EvsTheme
                 }
             })
         ]
