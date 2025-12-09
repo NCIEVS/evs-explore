@@ -15,15 +15,12 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-bottom: 0.25em;
-  float: right
+  /* float: right; */
+  /* margin-bottom: 1em */
 }
 
 .expandAll {
   padding: 0
-}
-
-.page-header {
-  padding-bottom: 0.5em;
 }
 
 .moreChildren {

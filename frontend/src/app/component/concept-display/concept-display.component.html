@@ -3,45 +3,37 @@
     {{ title }}
     <span *ngIf="displayHierarchy">
       --
-      <button
+      <p-button
         [routerLink]="['/hierarchy', terminology, conceptCode]"
         class="p-button-coloring"
         [queryParams]="getSelectedSourcesQueryParam()"
         [label]="hierarchyButtonLabel"
-        pButton
-        type="button"
-      ></button>
+      ></p-button>
     </span>
     <span *ngIf="displayHierarchy && configService.isMultiSource()">
-      &nbsp;<button
+      &nbsp;<p-button
         (click)="openTermSuggestionFormWithCode()"
         class="p-button-coloring"
         [label]="termSuggestionButton"
-        pButton
-        type="button"
-      ></button>
+      ></p-button>
     </span>
     <span style="float: right">
-      <button (click)="expandCollapseTables()" [label]="collapsedText" pButton type="button" class="p-button-coloring"></button>
-      <button
-        type="button"
-        pButton
+      <p-button (click)="expandCollapseTables()" [label]="collapsedText" class="p-button-coloring"></p-button>
+      <p-button
         label="Export"
         icon="fa fa-download"
         class="p-button-coloring"
         pTooltip="Click to download concept details"
         showDelay="300"
         (click)="exportDetails()"
-      ></button>
-      <button
+      ></p-button>
+      <p-button
         [routerLink]="['/welcome']"
         [queryParams]="{ terminology: terminology }"
         label="New Search"
         icon="fa fa-search"
-        pButton
-        type="button"
         class="p-button-coloring"
-      ></button>
+      ></p-button>
     </span>
   </div>
   <div *ngIf="configService.isMultiSource()" class="center">

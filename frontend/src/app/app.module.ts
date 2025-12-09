@@ -201,7 +201,10 @@ import { HierarchyPopupComponent } from './component/hierarchy-popup/hierarchy-p
             provideHttpClient(withInterceptorsFromDi()),
             providePrimeNG({
                 theme: {
-                    preset: EvsTheme
+                    preset: EvsTheme,
+                    options: {
+                        darkModeSelector: false
+                    }
                 }
             })
         ]

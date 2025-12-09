@@ -21,13 +21,16 @@ table a:hover {
 
 .page-header {
   font-weight: bold;
-  padding: 6px 10px;
+  padding: 0px .25rem;
   background-color: #fff !important;
   color: #337ab7 !important;
   font-size: 20px !important;
-  padding: 0px;
-  padding-bottom: 3px;
   border-bottom: 1px solid #ccc !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 2.25rem;
+  padding-bottom: .3rem;
 }
 
 .page-subheader {
@@ -199,13 +202,28 @@ body .alert-info {
 }
 
 .p-treetable .p-treetable-toggler {
-  top: -10% !important
+  top: -10% !important;
+  margin-right: .4rem;
+}
+
+.p-treetable-tbody {
+  border: 1px solid #d1d1d1;
 }
 
 .p-button-coloring {
-  border-radius: 0px !important;
+  border-radius: .375rem;
   background-color: #1c5e86 !important;
   border-color: #1c5e86 !important;
+  margin: 0px 2px;
+}
+
+.p-datatable table {
+  border: 1px solid #d1d1d1;
+}
+
+.p-datatable-thead > tr > th {
+  border-width: 1px;
+  border-collapse: collapse;
 }
 
 .p-coloring {

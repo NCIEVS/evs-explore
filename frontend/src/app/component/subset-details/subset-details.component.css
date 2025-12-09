@@ -92,3 +92,11 @@ em {
 .w-80 {
   width: 80% !important;
 }
+
+.ui-inputgroup {
+  width: max-content;
+}
+
+p-button {
+  margin: 0px 2px;
+}
