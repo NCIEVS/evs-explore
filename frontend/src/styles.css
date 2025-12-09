@@ -30,7 +30,7 @@ table a:hover {
   justify-content: space-between;
   align-items: center;
   min-height: 2.25rem;
-  padding-bottom: .3rem;
+  padding-bottom: .25rem;
 }
 
 .page-subheader {
@@ -210,6 +210,10 @@ body .alert-info {
   border: 1px solid #d1d1d1;
 }
 
+.p-button {
+  font-size: .875rem !important;
+}
+
 .p-button-coloring {
   border-radius: .375rem;
   background-color: #1c5e86 !important;
@@ -381,6 +385,6 @@ body .alert-info {
 }
 
 .container {
-  max-width: 80%;
+  max-width: 85%;
   padding: 10px;
 }

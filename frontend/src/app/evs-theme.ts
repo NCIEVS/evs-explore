@@ -10,8 +10,8 @@ const EvsTheme = definePreset(Lara, {
             root: {
                 roundedBorderRadius: '.375rem',
                 borderRadius: '.375rem',
-                paddingX: '.725rem',
-                paddingY: '.580rem'
+                paddingX: '.625rem',
+                paddingY: '.5rem'
             }
         },
         datatable: {
@@ -26,9 +26,31 @@ const EvsTheme = definePreset(Lara, {
                 borderColor: '#d1d1d1',
             }
         },
+        inputtext: {
+            root: {
+                paddingY: '.5rem'
+            }
+        },
+        multiselect: {
+            root: {
+                paddingY: '.375rem'
+            }
+        },
         panel: {
             content: {
                 padding: '.65rem 1.125rem'
+            }
+        },
+        radiobutton: {
+            root: {
+                width: '1.25rem',
+                height: '1.25rem',
+                checkedBackground: '#016294'
+            }
+        },
+        select: {
+            root: {
+                paddingY: '.375rem'
             }
         },
         toolbar: {

@@ -63,6 +63,7 @@ em {
 
 .search-bar {
   padding-left: 0 !important;
+  padding-bottom: .25rem !important;
 }
 
 .subset-table {
