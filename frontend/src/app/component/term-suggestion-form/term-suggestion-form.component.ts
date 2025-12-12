@@ -450,7 +450,7 @@ export class TermSuggestionFormComponent implements OnInit {
       formName: this.formData.formType,
       recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
-      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
+      subject: submittedSubject + this.formGroup.get('termInfo.term')?.value,
       body: formDataLabeled,
     };
   }
