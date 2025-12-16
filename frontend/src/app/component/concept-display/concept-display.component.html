@@ -1,21 +1,23 @@
 <div class="hierarchy-div">
   <div class="page-header p-coloring">
-    {{ title }}
-    <span *ngIf="displayHierarchy">
-      --
-      <p-button
-        [routerLink]="['/hierarchy', terminology, conceptCode]"
-        class="p-button-coloring"
-        [queryParams]="getSelectedSourcesQueryParam()"
-        [label]="hierarchyButtonLabel"
-      ></p-button>
-    </span>
-    <span *ngIf="displayHierarchy && configService.isMultiSource()">
-      &nbsp;<p-button
-        (click)="openTermSuggestionFormWithCode()"
-        class="p-button-coloring"
-        [label]="termSuggestionButton"
-      ></p-button>
+    <span>
+      {{ title }}
+      <span *ngIf="displayHierarchy">
+        --
+        <p-button
+          [routerLink]="['/hierarchy', terminology, conceptCode]"
+          class="p-button-coloring"
+          [queryParams]="getSelectedSourcesQueryParam()"
+          [label]="hierarchyButtonLabel"
+        ></p-button>
+      </span>
+      <span *ngIf="displayHierarchy && configService.isMultiSource()">
+        &nbsp;<p-button
+          (click)="openTermSuggestionFormWithCode()"
+          class="p-button-coloring"
+          [label]="termSuggestionButton"
+        ></p-button>
+      </span>
     </span>
     <span style="float: right">
       <p-button (click)="expandCollapseTables()" [label]="collapsedText" class="p-button-coloring"></p-button>

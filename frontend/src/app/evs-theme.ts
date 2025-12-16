@@ -9,60 +9,84 @@ const EvsTheme = definePreset(Lara, {
         button: {
             root: {
                 roundedBorderRadius: '.375rem',
-                borderRadius: '.375rem',
-                paddingX: '.625rem',
-                paddingY: '.5rem'
+                borderRadius: '.125rem',
+                paddingX: '.375rem',
+                paddingY: '.325rem',
+                label: {
+                    fontWeight: '400'
+                }
             }
         },
         datatable: {
             bodyCell: {
-                padding: '.25rem .5rem',
-                
+                padding: '.15rem .25rem',
             },
             headerCell: {
-                borderColor: '#d1d1d1'
+                padding: '.15rem .25rem',
             },
             root: {
-                borderColor: '#d1d1d1',
+                borderColor: '#d5d5d5',
+            },
+            paginatorTop: {
+                borderColor: '#d5d5d5',
+                borderWidth: '1px'
             }
         },
         inputtext: {
             root: {
-                paddingY: '.5rem'
+                // paddingX: '.375rem',
+                paddingY: '.25rem',
+                borderRadius: '.125rem'
             }
         },
         multiselect: {
             root: {
-                paddingY: '.375rem'
+                paddingY: '.25rem',
+                borderRadius: '.125rem'
+            }
+        },
+        paginator: {
+            root: {
+                padding: '.25rem .5rem'
+            },
+            navButton: {
+                borderRadius: '.125rem',
+                // background: '#d5d5d5',
+                width: '2.125rem',
+                height: '2.125rem'
             }
         },
         panel: {
             content: {
-                padding: '.65rem 1.125rem'
+                padding: '.65rem 1.125rem',
+            },
+            header: {
+                background: '#ebebec'
             }
         },
         radiobutton: {
             root: {
                 width: '1.25rem',
-                height: '1.25rem',
-                checkedBackground: '#016294'
+                height: '1.25rem'
             }
         },
         select: {
             root: {
-                paddingY: '.375rem'
+                paddingY: '.25rem',
+                borderRadius: '.125rem'
             }
         },
         toolbar: {
             root: {
-                padding: '.575rem .75rem',
+                padding: '.3rem .75rem',
                 borderRadius: '0px'
             }
         },
         treetable: {
             bodyCell: {
-                borderColor: '#D5D5D5'
-            }
+                borderColor: '#D5D5D5',
+                padding: '.15rem .15rem'
+            },
         },
     }
 });

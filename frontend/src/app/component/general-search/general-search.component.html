@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <div style="padding-top: 6px">
+            <div style="padding-top: 4px">
               <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch()"
                 [disabled]="searchCriteria.term.length < 3"></button>
               &nbsp;
@@ -32,6 +32,7 @@
 
           <div class="col-sm-5">
             <div style="padding-top: 6px; float: right">
+              <!-- TODO: CHANGE TO MULTISELECT -->
               <p-dropdown title="Select terminology" class="term-dropdown" [options]="termsAll"
                 [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
                 <ng-template let-terminology pTemplate="item">
@@ -51,32 +52,32 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-9" style="padding-top: 5px">
+          <div class="col-md-9">
             <p-radioButton class="radio-padding" styleClass="radio-style" name="searchtype" value="contains"
               inputId="searchtype-contains" [(ngModel)]="searchCriteria.type"
-              (onClick)="changeSearchType('contains')"></p-radioButton>
+              (onClick)="changeSearchType('contains')" variant="filled"></p-radioButton>
             <label for="searchtype-contains" class="radio-label">Contains</label>
             <p-radioButton class="radio-padding" name="searchtype" value="match" inputId="searchtype-match"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('match')">
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('match')" variant="filled">
             </p-radioButton>
             <label for="searchtype-match" class="radio-label">Exact Match</label>
             <p-radioButton class="radio-padding" name="searchtype" value="startsWith" inputId="searchtype-startsWith"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('startsWith')"></p-radioButton>
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('startsWith')" variant="filled"></p-radioButton>
             <label for="searchtype-startsWith" class="radio-label">Starts With</label>
             <p-radioButton class="radio-padding" name="searchtype" value="phrase" inputId="searchtype-phrase"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('phrase')">
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('phrase')" variant="filled">
             </p-radioButton>
             <label for="searchtype-phrase" class="radio-label">Phrase</label>
             <p-radioButton class="radio-padding" name="searchtype" value="fuzzy" inputId="searchtype-fuzzy"
               title="Returns approximate string matches" [(ngModel)]="searchCriteria.type"
-              (onClick)="changeSearchType('fuzzy')"></p-radioButton>
+              (onClick)="changeSearchType('fuzzy')" variant="filled"></p-radioButton>
             <label for="searchtype-fuzzy" class="radio-label" title="Returns approximate string matches">Fuzzy</label>
             <p-radioButton class="radio-padding" name="searchtype" value="AND" inputId="searchtype-AND"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('AND')">
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('AND')" variant="filled">
             </p-radioButton>
             <label for="searchtype-AND" class="radio-label">AND</label>
             <p-radioButton class="radio-padding" name="searchtype" value="OR" inputId="searchtype-OR"
-              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('OR')">
+              [(ngModel)]="searchCriteria.type" (onClick)="changeSearchType('OR')" variant="filled">
             </p-radioButton>
             <label for="searchtype-OR" class="radio-label">OR</label>
             <p-button icon="pi pi-angle-double-left" (onClick)="toggleShowMoreSearchOptions()"
@@ -126,12 +127,12 @@
       </div>
 
       <div *ngIf="loadedMultipleConcept && !noMatchedConcepts">
-        <div class="row" style="margin-bottom: 10px; padding-top: 5px">
+        <div class="row" style="margin-bottom: 10px">
           <div class="col-sm-12">
             <p-table #dtSearch [columns]="displayColumns" [value]="reportData" [paginator]="true"
               [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3" [rows]="pageSize" [scrollable]="true"
               dataKey="column1" [reorderableColumns]="true" [totalRecords]="totalRecords" paginatorPosition="both"
-              [lazy]="true" (onLazyLoad)="loadDataLazily($event)">
+              [lazy]="true" (onLazyLoad)="loadDataLazily($event)" showGridlines>
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                   <!--<col style="width: 1.8em">-->
