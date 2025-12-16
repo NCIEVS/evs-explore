@@ -76,7 +76,7 @@ table a:hover {
   background-color: white;
   border: 0 !important;
   justify-content: left;
-  color: #007bff;
+  color: #0173ae;
   cursor: pointer;
 }
 
@@ -88,8 +88,6 @@ table a:hover {
 .link-table-entry {
   margin-left: 0.25em;
 }
-
-
 
 html {
   scroll-behavior: smooth;

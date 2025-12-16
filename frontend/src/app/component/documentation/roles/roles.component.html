@@ -23,6 +23,7 @@
         *ngIf="roles && roles.length > 0; else elseBlockDefinitions"
         (sortFunction)="customSort($event)"
         [customSort]="true"
+        showGridlines
       >
         <ng-template pTemplate="header">
           <tr>

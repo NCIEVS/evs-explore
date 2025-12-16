@@ -3,7 +3,7 @@ import Lara from '@primeng/themes/lara';
 
 const EvsTheme = definePreset(Lara, {
     semantic: {
-        primary: palette('#016294') as any
+        primary: palette('#1c5e86') as any
     },
     components: {
         button: {
@@ -22,13 +22,13 @@ const EvsTheme = definePreset(Lara, {
                 padding: '.15rem .25rem',
             },
             headerCell: {
-                padding: '.15rem .25rem',
+                padding: '.15rem .25rem'
             },
             root: {
-                borderColor: '#d5d5d5',
+                borderColor: '#d4d4d4',
             },
             paginatorTop: {
-                borderColor: '#d5d5d5',
+                borderColor: '#d4d4d4',
                 borderWidth: '1px'
             }
         },
@@ -51,7 +51,6 @@ const EvsTheme = definePreset(Lara, {
             },
             navButton: {
                 borderRadius: '.125rem',
-                // background: '#d5d5d5',
                 width: '2.125rem',
                 height: '2.125rem'
             }
@@ -84,7 +83,7 @@ const EvsTheme = definePreset(Lara, {
         },
         treetable: {
             bodyCell: {
-                borderColor: '#D5D5D5',
+                borderColor: '#d4d4d4',
                 padding: '.15rem .15rem'
             },
         },
