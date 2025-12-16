@@ -224,17 +224,17 @@ body .alert-info {
 .p-datatable table {
   border: 1px solid #d5d5d5;
   border-collapse: collapse;
-  --p-datatable-border-color: #d5d5d5 !important;
 }
 
 .p-datatable-thead > tr > th {
   border-width: 1px;
   border-collapse: collapse;
+  border-color: #d5d5d5 !important;
 }
 
 .p-datatable-tbody > tr > td {
   vertical-align: top;
-  
+  border-color: #d5d5d5 !important;
 }
 
 .p-coloring {
