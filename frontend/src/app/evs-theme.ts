@@ -80,10 +80,11 @@ const EvsTheme = definePreset(Lara, {
             root: {
                 width: '1.25rem',
                 height: '1.25rem',
+                borderColor: '#d4d4d4'
             },
             icon: {
-                checkedColor: '#1c5e86',
-                checkedHoverColor: '#1c5e86'
+                checkedColor: '#000000ff',
+                checkedHoverColor: '#000000ff'
             }
         },
         select: {

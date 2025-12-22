@@ -91,9 +91,9 @@
           </div>
           <div class="col-md-12">
             <p-autocomplete 
-              [(ngModel)]="searchCriteria.synonymSource" class="synSourceHolder" [multiple]="true"
-              [unique]="true" [dropdown]="false" (onUnselect)="onSourceDeselect($event)"
-              (keydown)="onChipsKeyEvent($event)">
+               *ngIf="searchCriteria.synonymSource?.length > 0" [(ngModel)]="searchCriteria.synonymSource"
+              class="synSourceHolder" [multiple]="true" [unique]="true" [dropdown]="false" 
+              (onUnselect)="onSourceDeselect($event)" (keydown)="onChipsKeyEvent($event)">
               <ng-template let-item pTemplate="chip">{{ item }}&nbsp; </ng-template>
             </p-autocomplete>
           </div>
