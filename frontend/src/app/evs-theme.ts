@@ -3,9 +3,19 @@ import Lara from '@primeng/themes/lara';
 
 const EvsTheme = definePreset(Lara, {
     semantic: {
-        primary: palette('#1c5e86') as any
+        primary: palette('#1c5e86') as any,
     },
     components: {
+        autocomplete: {
+            root: {
+                borderColor: '#ffffff',
+                hoverBorderColor: '#ffffff',
+                focusBorderColor: '#ffffff',
+                focusRing: {
+                    shadow: '#ffffff'
+                }
+            }
+        },
         button: {
             root: {
                 roundedBorderRadius: '.375rem',
@@ -43,6 +53,9 @@ const EvsTheme = definePreset(Lara, {
             root: {
                 paddingY: '.25rem',
                 borderRadius: '.125rem'
+            },
+            option: {
+                padding: '.25rem'
             }
         },
         paginator: {
@@ -66,7 +79,11 @@ const EvsTheme = definePreset(Lara, {
         radiobutton: {
             root: {
                 width: '1.25rem',
-                height: '1.25rem'
+                height: '1.25rem',
+            },
+            icon: {
+                checkedColor: '#1c5e86',
+                checkedHoverColor: '#1c5e86'
             }
         },
         select: {
