@@ -361,7 +361,7 @@ export class TermSuggestionFormComponent implements OnInit {
   onCaptchaSuccess(event: string) {
     this.captchaSuccessEvent = event;
     this.isCaptchaExpired = false;
-    console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
+    // console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
   }
 
   // Set the captcha status
