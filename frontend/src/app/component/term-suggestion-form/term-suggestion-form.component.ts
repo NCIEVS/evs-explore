@@ -361,7 +361,7 @@ export class TermSuggestionFormComponent implements OnInit {
   onCaptchaSuccess(event: string) {
     this.captchaSuccessEvent = event;
     this.isCaptchaExpired = false;
-    console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
+    // console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
   }
 
   // Set the captcha status
@@ -450,7 +450,7 @@ export class TermSuggestionFormComponent implements OnInit {
       formName: this.formData.formType,
       recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
-      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
+      subject: submittedSubject + this.formGroup.get('termInfo.term')?.value,
       body: formDataLabeled,
     };
   }
