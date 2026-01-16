@@ -27,6 +27,7 @@
         sortMode="single"
         *ngIf="termTypes && termTypes.length > 0; else elseBlockDefinitions"
         (sortFunction)="customSort($event)"
+        showGridlines
       >
         <ng-template pTemplate="header">
           <tr>

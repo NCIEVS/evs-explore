@@ -10,7 +10,10 @@ import { Pipe, PipeTransform } from '@angular/core';
  *   {{ 1024 |  fileSize}}
  *   formats to: 1 KB
  */
-@Pipe({ name: 'transformDisplay' })
+@Pipe({
+  name: 'transformDisplay',
+  standalone: false
+})
 export class DisplayPipe implements PipeTransform {
   transform(value: any, field: string): string {
     if (field === 'Maps_To') {

@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-associations',
   templateUrl: './associations.component.html',
-  styleUrls: ['./associations.component.css']
+  styleUrls: ['./associations.component.css'],
+  standalone: false
 })
 export class AssociationsComponent implements OnInit {
 

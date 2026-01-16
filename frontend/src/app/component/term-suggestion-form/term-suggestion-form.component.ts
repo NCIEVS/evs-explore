@@ -73,8 +73,8 @@ class UIState {
   ) {
     this.isFormLoaded = false;
     this.forms = [
-      {id: 'ncit-form', name: 'NCIT Form'},
-      {id: 'cdisc-form', name: 'CDISC Form'},
+      { id: 'ncit-form', name: 'NCIT Form' },
+      { id: 'cdisc-form', name: 'CDISC Form' },
     ];
     this.termFormData = {
       formName: '',
@@ -92,7 +92,8 @@ class UIState {
   selector: 'app-term-suggestion-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './term-suggestion-form.component.html',
-  styleUrls: ['./term-suggestion-form.component.css']
+  styleUrls: ['./term-suggestion-form.component.css'],
+  standalone: false
 })
 export class TermSuggestionFormComponent implements OnInit {
   // Field reference for form controls
@@ -117,12 +118,12 @@ export class TermSuggestionFormComponent implements OnInit {
 
   // Store list of forms we can toggle between
   private forms = [
-    {id: 'ncit-form', name: 'NCIT Form'},
-    {id: 'cdisc-form', name: 'CDISC Form'},
+    { id: 'ncit-form', name: 'NCIT Form' },
+    { id: 'cdisc-form', name: 'CDISC Form' },
   ];
 
   // Popup information for a form submitted.
-  @ViewChild('isSuccess', {static: true}) isSuccess: TemplateRef<any>;
+  @ViewChild('isSuccess', { static: true }) isSuccess: TemplateRef<any>;
   protected submitFormMsg = '';
   protected severity = '';
 
@@ -192,7 +193,7 @@ export class TermSuggestionFormComponent implements OnInit {
     this.loaderService.showLoader();
     // show the loader for slightly longer before navigating to the new form
     await new Promise(resolve => setTimeout(resolve, 100));
-    await this.router.navigate(['/termform'], {queryParams: {formId}});
+    await this.router.navigate(['/termform'], { queryParams: { formId } });
     // wait to hide loader just a little bit for smoother transition
     setTimeout(() => {
       this.loaderService.hideLoader();
@@ -245,7 +246,7 @@ export class TermSuggestionFormComponent implements OnInit {
             }
             this.uiState.termFormGroup = this.formGroup;
           }
-          else if (field.name == 'file'){
+          else if (field.name == 'file') {
             // hard code to only look at termInfo section, as this is the section where required will be toggled
             const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
             for (const field in termInfoSection.controls) {

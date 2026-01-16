@@ -11,7 +11,8 @@ import { ViewportScroller } from '@angular/common';
 @Component({
   selector: 'app-concept-detail',
   templateUrl: './concept-detail.component.html',
-  styleUrls: ['./concept-detail.component.css']
+  styleUrls: ['./concept-detail.component.css'],
+  standalone: false
 })
 export class ConceptDetailComponent implements OnInit {
   @Input() concept: Concept;

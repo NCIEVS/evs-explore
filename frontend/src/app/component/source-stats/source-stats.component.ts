@@ -5,7 +5,8 @@ import { ConfigurationService } from '../../service/configuration.service';
 @Component({
   selector: 'app-source-stats',
   templateUrl: './source-stats.component.html',
-  styleUrls: ['./source-stats.component.css']
+  styleUrls: ['./source-stats.component.css'],
+  standalone: false
 })
 export class SourceStatsComponent {
 

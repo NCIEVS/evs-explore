@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-sources',
   templateUrl: './sources.component.html',
-  styleUrls: ['./sources.component.css']
+  styleUrls: ['./sources.component.css'],
+  standalone: false
 })
 export class SourcesComponent implements OnInit {
 

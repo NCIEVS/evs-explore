@@ -12,7 +12,7 @@
       <p-table [value]="concept.parents" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.parents &&
             concept.parents.length > 0;
-          else elseBlockParentConcept" (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockParentConcept" (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20" [pSortableColumn]="'code'">Code
@@ -67,7 +67,7 @@
           concept.children &&
             concept.children.length > 0;
           else elseBlockChildConcept
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-20" [pSortableColumn]="'code'">Code
@@ -123,7 +123,7 @@
     <div class="table-responsive">
       <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.roles && concept.roles.length > 0;
-          else elseBlockRole" (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockRole" (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -173,7 +173,7 @@
       <p-table [value]="concept.associations" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.associations && concept.associations.length > 0;
           else elseBlockAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -224,7 +224,7 @@
     <div class="table-responsive">
       <p-table [value]="concept.broader" sortMode="single" class="table table-striped table-bordered" *ngIf="
         concept.broader && concept.broader.length > 0;
-          else elseBlockAssociation" (sortFunction)="customSort($event)" [customSort]="true">
+          else elseBlockAssociation" (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'rela'">Relationship
@@ -282,7 +282,7 @@
       <p-table [value]="concept.inverseRoles" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseRoles && concept.inverseRoles.length > 0;
           else elseBlockIncomingRole
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'rela'">Relationship
@@ -330,7 +330,7 @@
       <p-table [value]="concept.narrower" sortMode="single" class="table table-striped table-bordered" *ngIf="
         concept.narrower && concept.narrower.length > 0;
           else elseBlockAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -392,7 +392,7 @@
       <p-table [value]="concept.inverseAssociations" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.inverseAssociations && concept.inverseAssociations.length > 0;
           else elseBlockIncomingAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -447,7 +447,7 @@
       <p-table [value]="concept.other" sortMode="single" class="table table-striped table-bordered" *ngIf="concept.other &&
           concept.other.length > 0;
           else elseBlockAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
@@ -506,7 +506,7 @@
       <p-table [value]="concept.disjointWith" sortMode="single" class="table table-striped table-bordered" *ngIf="
           concept.disjointWith && concept.disjointWith.length > 0;
           else elseBlockDisjointAssociation
-        " (sortFunction)="customSort($event)" [customSort]="true">
+        " (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship
