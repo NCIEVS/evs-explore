@@ -190,7 +190,7 @@ export class SubsetsComponent implements OnInit {
       this.hierarchyData.forEach((element) => {
         const newTn = this.performSubsetSearchHelper(
           element,
-          this.subsetSearchText
+          this.subsetSearchText.trim()
         );
         if (newTn) {
           this.filteredHierarchy.push(element);
@@ -344,7 +344,7 @@ export class SubsetsComponent implements OnInit {
   hasText(codeAndLabel) {
     return (
       this.subsetSearchText &&
-      codeAndLabel.toLowerCase().includes(this.subsetSearchText.toLowerCase())
+      codeAndLabel.toLowerCase().includes(this.subsetSearchText.trim().toLowerCase())
     );
   }
 
