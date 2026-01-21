@@ -15,7 +15,7 @@
           <div class="col-sm-3">
             <div style="padding-top: 4px">
               <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch()"
-                [disabled]="searchCriteria.term.length < 3"></button>
+                [disabled]="searchCriteria.term.length < 3" id="icon-button"></button>
               &nbsp;
               <p-multiSelect title="Filter by sub-sources"
                 *ngIf="configService.isMultiSource() && !configService.getMultiSearch()" autoWidth="false"
@@ -43,7 +43,7 @@
               </p-dropdown>
               <span style="margin-left: 10px"><button type="button" pButton label="Export" style="border: 0"
                   icon="fa fa-download" pTooltip="Click to download search results" showDelay="300"
-                  (click)="exportSearch()" [disabled]="totalRecords == 0"></button>
+                  (click)="exportSearch()" [disabled]="totalRecords == 0" id="icon-button"></button>
               </span>
               <span style="margin-left: 2px"><button type="button" pButton style="border: 0; margin-left: 10px"
                   icon="fa fa-search" (click)="onResetSearch($event)" pTooltip="Click to start new search"
