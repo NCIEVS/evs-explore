@@ -1,11 +1,9 @@
 .mh400 {
   min-height: 400px;
-  max-width: 80%;
-  padding: 10px;
 }
 
 /* get rid of labels after a certain width */
-@media screen and ( max-width: 1177px ) {
+@media screen and ( max-width: 1115px ) {
   button#icon-button > span.p-button-label {
     display: none;
   }
@@ -27,7 +25,6 @@
   min-width: max-content;
 }
 
-/* row settings */
 .col-sm-5 {
   min-width: max-content;
 }
