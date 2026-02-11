@@ -85,7 +85,7 @@ export class SearchResultTableFormat {
           if ((field === 'Definitions' || field === 'ALT_DEFINITION')) {
             if (searchResult.concepts[i].definitions) {
               searchResult.concepts[i].definitions = searchResult.concepts[i].definitions
-                .filter(def => this.selectedSources.includes(def.source) || this.selectedSources.length === 0);
+                .filter(def => !this.selectedSources || this.selectedSources?.includes(def.source) || this.selectedSources?.length === 0);
             }
             if (searchResult.concepts[i].getDefinitionsText().split('<br />').join('').length > 100
               || searchResult.concepts[i].getDefinitionsText().split('<br />').length > 3) {
@@ -99,7 +99,7 @@ export class SearchResultTableFormat {
           } else if (field === 'Synonyms') {
             if (searchResult.concepts[i].synonyms) {
               searchResult.concepts[i].synonyms = searchResult.concepts[i].synonyms
-                .filter(syn => this.selectedSources.includes(syn.source) || this.selectedSources.length === 0);
+                .filter(syn => !this.selectedSources || this.selectedSources?.includes(syn.source) || this.selectedSources?.length === 0);
             }
             if (searchResult.concepts[i].getFullSynText().split('<br />').join('').length > 100
               || searchResult.concepts[i].getFullSynText().split('<br />').length > 3) {
