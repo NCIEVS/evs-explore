@@ -103,9 +103,9 @@ export class MappingDetailsComponent implements OnInit {
   // After loading map records compute source/target term codes to link
   computeLinkCodes() {
     const validTerminologies = this.configService.getTerminologies().map((obj) => obj.terminology);
-    this.sourceTerm = this.properties.find((prop) => prop.type === 'source')?.value;
+    this.sourceTerm = this.properties.find((prop) => prop.type === 'sourceTerminology')?.value;
     this.sourceTermSaved = validTerminologies.includes(this.sourceTerm);
-    this.targetTerm = this.properties.find((prop) => prop.type === 'target')?.value;
+    this.targetTerm = this.properties.find((prop) => prop.type === 'targetTerminology')?.value;
     this.targetTermSaved = validTerminologies.includes(this.targetTerm);
     if (this.sourceTermLoaded && this.total > 0) {
       this.conceptDetailService
