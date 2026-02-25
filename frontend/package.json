@@ -43,7 +43,7 @@
     "ngx-captcha": "^13.0.0",
     "ngx-cookie-service": "^18.0.0",
     "ngx-spinner": "^18.0.0",
-    "npm": "^10.9.4",
+    "npm": "^11.10.1",
     "popper.js": "^1.16.0",
     "primeicons": "^1.0.0",
     "primeng": "^17.18.15",
