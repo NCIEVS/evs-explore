@@ -192,9 +192,9 @@
         </ng-template>
       </p-table>
 
-      <!-- "CDISC" Subset Format -->
+      <!-- "CDISC" Subset Format (includes ICH) -->
       <p-table
-        *ngIf="subsets && subsets.length > 0 && subsetFormat == 'CDISC'"
+        *ngIf="subsets && subsets.length > 0 && (subsetFormat == 'CDISC' || subsetFormat == 'ICH')"
         #subsetList
         [value]="subsets"
         [rows]="pageSize"
@@ -212,9 +212,10 @@
             <th class="w-10 subsetTitle">Codelist Code</th>
             <th class="w-10 subsetTitle">Codelist Extensible</th>
             <th class="w-20 subsetTitle">Codelist Name</th>
-            <th class="w-10 subsetTitle">CDISC Submission Value</th>
-            <th class="w-15 subsetTitle">CDISC Synonyms(s)</th>
-            <th class="w-20 subsetTitle">CDISC Definition</th>
+            <th *ngIf="subsetFormat==='CDISC'" class="w-10 subsetTitle">CDISC Submission Value</th>
+            <th *ngIf="subsetFormat==='ICH'" class="w-10 subsetTitle">ICH Preferred Term</th>
+            <th class="w-15 subsetTitle">{{ subsetFormat }} Synonyms(s)</th>
+            <th class="w-20 subsetTitle">{{ subsetFormat }} Definition</th>
             <th class="w-20 subsetTitle sortable" style="cursor: pointer" id="normName" (click)="search($event, 'normName')">NCIt Preferred Term</th>
           </tr>
         </ng-template>
