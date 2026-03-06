@@ -110,13 +110,14 @@ export class SubsetDetailsComponent implements OnInit {
               //   this.subsets.unshift(this.selectedSubset);
               // }
             } else if (ContSource.some((entry) => entry.value.startsWith('ICH M11'))) {
-              this.subsetFormat = 'ICH';
+              this.subsetFormat = ContSource[0].value;
               this.cdiscSubsetSource = ContSource[0].value;
             } else if (ContSource.length === 1) {
               this.subsetFormat = ContSource[0].value;
             } else {
               this.subsetFormat = 'NCIt';
             }
+            console.log(this.subsetFormat, this.cdiscSubsetSource);
             this.subsetLink = this.selectedSubset.getSubsetLink();
 
             // Lookup the subset description.
