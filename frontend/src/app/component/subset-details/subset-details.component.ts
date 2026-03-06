@@ -109,6 +109,9 @@ export class SubsetDetailsComponent implements OnInit {
               // if (this.selectedSubset?.isCdiscCodeList()) {
               //   this.subsets.unshift(this.selectedSubset);
               // }
+            } else if (ContSource.some((entry) => entry.value.startsWith('ICH M11'))) {
+              this.subsetFormat = 'ICH';
+              this.cdiscSubsetSource = ContSource[0].value;
             } else if (ContSource.length === 1) {
               this.subsetFormat = ContSource[0].value;
             } else {
@@ -313,7 +316,7 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + ',';
       // cdisc definition
-      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition) + ',';
+      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr') || def.source.startsWith('ICH'))[0]?.definition) + ',';
       // NCIt pref term
       rowText += this.escapeValue(concept.name);
     } else {

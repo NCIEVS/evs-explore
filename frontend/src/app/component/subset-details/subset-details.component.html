@@ -29,7 +29,7 @@
       Subset Download Link: <a href="{{ subsetLink }}" target="_blank">{{ subsetLink }}</a>
     </div>
     <!-- NCIt and default formats may differ -->
-    <div *ngIf="subsetFormat != 'CTRP' && subsetFormat != 'CDISC'">
+    <div *ngIf="subsetFormat != 'CTRP' && subsetFormat != 'CDISC' && subsetFormat != 'ICH'">
       NOTE: the table below shows standard columns for this tool and may not exactly match the file available from the download link.
     </div>
     <div><br /></div>
@@ -296,7 +296,7 @@
 
       <!-- "Other" Subset Format -->
       <p-table
-        *ngIf="subsets && subsetFormat != 'NCIt' && subsetFormat != 'CTRP' && subsetFormat != 'CDISC'"
+        *ngIf="subsets && subsetFormat != 'NCIt' && subsetFormat != 'CTRP' && subsetFormat != 'CDISC' && subsetFormat != 'ICH'"
         #subsetList
         [value]="subsets"
         [rows]="pageSize"
