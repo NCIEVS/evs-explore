@@ -109,7 +109,7 @@ export class SubsetDetailsComponent implements OnInit {
               // if (this.selectedSubset?.isCdiscCodeList()) {
               //   this.subsets.unshift(this.selectedSubset);
               // }
-            } else if (ContSource.some((entry) => entry.value.startsWith('ICH M11'))) {
+            } else if (ContSource.some((entry) => entry.value.startsWith('ICH'))) {
               this.subsetFormat = 'ICH';
               this.cdiscSubsetSource = ContSource[0].value;
             } else if (ContSource.length === 1) {
@@ -117,6 +117,7 @@ export class SubsetDetailsComponent implements OnInit {
             } else {
               this.subsetFormat = 'NCIt';
             }
+            console.log(this.subsetFormat, this.cdiscSubsetSource)
             this.subsetLink = this.selectedSubset.getSubsetLink();
 
             // Lookup the subset description.
