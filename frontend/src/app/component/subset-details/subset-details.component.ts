@@ -413,7 +413,7 @@ export class SubsetDetailsComponent implements OnInit {
       return '';
     }
 
-    // Codelists have a submission value matching CDISC or MRCTPT
+    // Codelists have a submission value matching CDISC or MRCTPT or ICH
     if (concept.isCdiscCodeList()) {
       return concept.getCdiscPtName();
     }
@@ -460,7 +460,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscCodelistName(concept: Concept) {
-    var synonymName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
+    var synonymName = this.selectedSubset.synonyms.find((syn) => (syn.source === 'CDISC' || syn.source === 'ICH') && syn.termType === 'SY')?.name;
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
       if (this.selectedSubset.isCdiscGrouper()) {
