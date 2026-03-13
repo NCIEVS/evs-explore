@@ -52,5 +52,7 @@ public class StaticResourcesConfiguration implements WebMvcConfigurer {
     registry
         .addViewController("/{path:[^\\.]*}/**/{path2:[^\\.]*}")
         .setViewName("forward:/index.html");
+    // Add explicit mapping for concept routes that may contain dots
+    registry.addViewController("/concept/**").setViewName("forward:/index.html");
   }
 }

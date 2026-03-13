@@ -621,18 +621,18 @@ export class Concept {
   }
 
   hasCdiscSy(): boolean {
-    // source with CDISC* or MRCT* and termType = SY
-    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'SY');
+    // source with CDISC* or MRCT* or ICH* and termType = SY
+    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH') || this.name.startsWith('ICH')) && syn.termType === 'SY');
   }
 
   getCdiscPtName(): string {
-    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr')) && syn.termType === 'PT')
+    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH')) && syn.termType === 'PT')
       ?.name;
   }
 
   isCdiscSubset(): boolean {
-    // subset with a name starting with CDISC or MRCT
-    return this.code === 'C61410' || (this.isSubset() && (this.name.startsWith('CDISC ') || this.name.startsWith('MRCT-Ctr')));
+    // subset with a name starting with CDISC or MRCT or ICH
+    return this.code === 'C61410' || (this.isSubset() && (this.name.startsWith('CDISC ') || this.name.startsWith('MRCT-Ctr') || this.name.startsWith('ICH')));
   }
 
   isSubset(): boolean {
