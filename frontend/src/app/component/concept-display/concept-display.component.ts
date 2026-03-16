@@ -146,6 +146,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToAnchor(scrollToId);
       }
       this.loaderService.hideLoader();
+      this.displayHierarchy = this.displayHierarchy && this.concept.parents;
     });
   }
 

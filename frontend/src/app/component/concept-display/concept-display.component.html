@@ -11,7 +11,7 @@
           [label]="hierarchyButtonLabel"
         ></p-button>
       </span>
-      <span *ngIf="displayHierarchy && configService.isMultiSource()">
+      <span *ngIf="configService.isMultiSource()">
         &nbsp;<p-button
           (click)="openTermSuggestionFormWithCode()"
           class="p-button-coloring"
