@@ -18,7 +18,8 @@ export class ConfigurationService {
   selectedSources = null;
   terminology = null;
   private terminologies: Array<any> = [];
-  private subject: Subject<any>;
+  // Set subject immediately and do not change
+  private subject: Subject<any> = new Subject<any>();
   private sources: string = null;
   private defaultTerminologyName = 'ncit';
   private multiSearch = false;
@@ -42,8 +43,8 @@ export class ConfigurationService {
   private triggerHierarchyPopup = false;
 
   constructor(private injector: Injector, private http: HttpClient,
-              private notificationService: NotificationService,
-              private cookieService: CookieService) {
+    private notificationService: NotificationService,
+    private cookieService: CookieService) {
     this.selectedSources = new Set<string>().add('All');
 
   }
@@ -76,7 +77,7 @@ export class ConfigurationService {
         throw new Error('Error loading metadata for ' + this.getTerminologyName() + ': ' + error);
       }
     );
-    
+
   }
 
   getExportPageSize() {
@@ -153,19 +154,18 @@ export class ConfigurationService {
   }
 
   setTerminology(terminology) {
-    this.terminology = terminology;
-    this.setTermDocs();
-    this.cookieService.set('term', terminology.terminology);
-    this.subject.next(this.terminology);
+    if (terminology) {
+      this.terminology = terminology;
+      this.setTermDocs();
+      this.cookieService.set('term', terminology.terminology);
+      this.subject.next(this.terminology);
+    }
   }
 
   getSubject(): Subject<any> {
-    return this.subject;
+    return this.subject ? this.subject : new Subject();
   }
 
-  setSubject(subject) {
-    this.subject = subject;
-  }
 
   getSources(): string {
     return this.sources;
@@ -186,22 +186,22 @@ export class ConfigurationService {
 
   // Indicates whether current terminology is loaded from RDF (e.g. ncit)
   isRdf() {
-    return this.getTerminology().metadata['loader'] === 'rdf';
+    return this.getTerminology()?.metadata['loader'] === 'rdf';
   }
 
   // Indicates whether current terminology is loaded from RRF (e.g. ncim, mdr)
   isRrf() {
-    return this.getTerminology().metadata['loader'] === 'rrf';
+    return this.getTerminology()?.metadata['loader'] === 'rrf';
   }
 
   // Indicates whether current terminology selection is a metathesaurus or a single source
   isSingleSource() {
-    return this.getTerminology().metadata['sourceCt'] === 1;
+    return this.getTerminology()?.metadata['sourceCt'] === 1;
   }
 
   // Indicates whether current terminology selection is a metathesaurus or a single source
   isMultiSource() {
-    return this.getTerminology().metadata['sourceCt'] > 1;
+    return this.getTerminology()?.metadata['sourceCt'] > 1;
   }
 
   // Set configuration information from query params
@@ -286,11 +286,14 @@ export class ConfigurationService {
     }
     // If blank, set terminology to the first one matching 'term'
     else if (!terminology) {
-      const arr = this.terminologies.filter(a => a.terminology === pterminology);
-      if (!arr || arr.length === 0) {
-        throw new Error('Unable to find terminology matching ' + pterminology);
+      if (this.terminologies.length > 0) {
+        const arr = this.terminologies.filter(a => a.terminology === pterminology);
+        if (!arr || arr.length === 0) {
+          throw new Error('Unable to find terminology matching ' + pterminology);
+        }
       }
-      this.terminology = arr[0];
+
+      // this.terminology = arr[0];
     }
 
   }
@@ -320,10 +323,6 @@ export class ConfigurationService {
     // Extract the cookie value on instantiation if not passed in
     const term = this.getTerminologyName();
 
-    // defining subject object for subscription
-    if (this.getSubject() === undefined) {
-      this.setSubject(new Subject<any>());
-    }
     return new Promise((resolve, reject) => {
       this.http.get('/api/v1/metadata/terminologies',
         {

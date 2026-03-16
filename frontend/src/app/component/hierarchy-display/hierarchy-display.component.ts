@@ -63,7 +63,7 @@ export class HierarchyDisplayComponent implements OnInit {
     this.configSetup();
 
     //ONLY for popup
-    if (window.location.href.includes('popup')){
+    if (window.location.href.includes('popup')) {
       const parts = window.location.href.split('/');
       if (parts.length > 3) {
         // Assuming at least one path segment after domain
@@ -72,14 +72,14 @@ export class HierarchyDisplayComponent implements OnInit {
         }
       }
     }
-    
+
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
+    //console.log('ngOnInit - hierarchy display');
     this.getPathInHierarchy();
-    if (window.location.href.includes('popup')) { 
-      this.configService.setHierarchyPopupStatus(true); 
+    if (window.location.href.includes('popup')) {
+      this.configService.setHierarchyPopupStatus(true);
       document.querySelector('.fa-expand').remove();
       document.querySelector('.fa-close').remove();
       document.querySelector('app-concept-display').remove();
@@ -90,8 +90,11 @@ export class HierarchyDisplayComponent implements OnInit {
       this.updateDisplaySize();
       document.querySelector('.fa-compress').remove();
     }
-    this.titleService.setTitle("EVS Explore - Concept Hierarchy");
 
+  }
+
+  ngAfterViewInit(): void {
+    this.titleService.setTitle("EVS Explore - Concept Hierarchy");
   }
 
   configSetup() {
@@ -112,7 +115,9 @@ export class HierarchyDisplayComponent implements OnInit {
   }
 
   closeHierarchyPopup() {
-    window.opener.location.href = [this.parentUrl, this.hierarchyPart, this.terminology, this.conceptCode].join('/');
+    if (window.opener) {
+      window.opener.location.href = [this.parentUrl, this.hierarchyPart, this.terminology, this.conceptCode].join('/');
+    }
     setTimeout(() => {
       window.close();
     }, 100);
@@ -152,8 +157,9 @@ export class HierarchyDisplayComponent implements OnInit {
       // If we are in popup, redirect the parent page; otherwise, redirect the current page.
       if (this.configService.getHierarchyPopupStatus()) {
         // control the redirect based on the parent window (concept-display)
-        window.opener.location.href = [this.parentUrl, this.conceptPart, this.terminology, event.code].join('/');
-
+        if (window.opener) {
+          window.opener.location.href = [this.parentUrl, this.conceptPart, this.terminology, event.code].join('/');
+        }
         // Handle selecting a code to navigate away
         this.conceptCode = event.code;
         this.getPathInHierarchy();
@@ -189,14 +195,14 @@ export class HierarchyDisplayComponent implements OnInit {
     this.loaderService.showLoader();
     this.conceptDetailService.getHierarchyData(this.conceptCode, limit).then((nodes) => {
       this.hierarchyData = nodes as TreeNode[];
-      if(loadAll) {
+      if (loadAll) {
         this.selectedNodes = [];
       }
       for (const node of this.hierarchyData) {
 
         this.setTreeTableProperties(node, null);
       }
-      if (!this.configService.getHierarchyPopupStatus()){
+      if (!this.configService.getHierarchyPopupStatus()) {
         this.updateDisplaySize();
       }
       if (this.selectedNodes.length > 0) {
@@ -318,7 +324,7 @@ export class HierarchyDisplayComponent implements OnInit {
     for (let i = 0; i < hierarchyRows.length; i++) {
       const testLabel = hierarchyRows[i]['innerText'].trim();
       if (testLabel === selectedNode.label) {
-        if(selectedNodeIndex++ == this.hierarchyIndex) {
+        if (selectedNodeIndex++ == this.hierarchyIndex) {
           index = i;
           break;
         }
@@ -333,7 +339,7 @@ export class HierarchyDisplayComponent implements OnInit {
           inline: 'start',
         });
         setTimeout(() => {
-          if (this.configService.getHierarchyPopupStatus()){
+          if (this.configService.getHierarchyPopupStatus()) {
             document.getElementById('hierarchyTableDisplay').scrollIntoView({
               behavior: 'smooth',
               inline: 'start',

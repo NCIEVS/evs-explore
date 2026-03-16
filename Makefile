@@ -30,6 +30,9 @@ frontend:
 	/bin/rm -rf web/src/main/resources/static/*
 	cd frontend; ./gradlew build
 
+test: 
+	cd frontend; npm run test
+
 # Run
 run:
 	cd frontend; npm start
@@ -62,9 +65,5 @@ scan:
 	grep CRITICAL reportJava.html
 	/bin/rm -rf web/gradle.lockfile
 	
-scanJava:
-	cd web; ./gradlew dependencies --write-locks
-	trivy fs web/gradle.lockfile --format template -o reportJava.html --template "@config/trivy/html.tpl"
-	grep CRITICAL reportJava.html
 
 .PHONY: frontend

@@ -423,7 +423,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
 
   // Load source list
   loadAllSources() {
-    this.configService.getSynonymSources(this.selectedTerminology.terminology).subscribe((response) => {
+    this.configService.getSynonymSources(this.selectedTerminology?.terminology).subscribe((response) => {
       this.sourcesAll = response.map((element) => {
         return {
           label: element.code,
@@ -483,7 +483,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
 
     if (this.searchCriteria.term !== undefined && this.searchCriteria.term !== null && this.searchCriteria.term !== '') {
       // Remove tabs and quotes from search term
-      this.searchCriteria.term = String(this.searchCriteria.term).replace('\t', '');
+      this.searchCriteria.term = String(this.searchCriteria.term).replace(/\t/g, '');
       this.searchCriteria.term = String(this.searchCriteria.term).replace(/"/g, '');
       this.searchCriteria.terminology = this.configService.getMultiSearch()
         ? Array.from(this.configService.getMultiSearchTerminologies()).join(',')

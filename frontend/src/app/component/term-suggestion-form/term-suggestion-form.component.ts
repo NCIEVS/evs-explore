@@ -1,12 +1,12 @@
-import {Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {TermSuggestionFormService} from '../../service/term-suggestion-form.service';
-import {TermFormData} from '../../model/termFormData.model';
-import {ConfigurationService} from 'src/app/service/configuration.service';
-import {LoaderService} from 'src/app/service/loader.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ReCaptcha2Component} from 'ngx-captcha';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TermSuggestionFormService } from '../../service/term-suggestion-form.service';
+import { TermFormData } from '../../model/termFormData.model';
+import { ConfigurationService } from '../../service/configuration.service';
+import { LoaderService } from '../../service/loader.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ReCaptcha2Component } from 'ngx-captcha';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 // interface for core form structure
@@ -233,6 +233,29 @@ export class TermSuggestionFormComponent implements OnInit {
         // Subscribe to valueChanges and statusChanges of the form control to show all error messages
         const formControl = sectionGroup.get(field.name);
         formControl.valueChanges.subscribe(() => {
+          // If there is a change in the file upload field, 
+          if (field.name == 'file' && formControl.value) {
+            // hard code to only look at termInfo section, as this is the section where required will be toggled
+            const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
+            for (const field in termInfoSection.controls) {
+              if (field === 'vocabulary') { continue; }
+              const control = termInfoSection.get(field) as FormControl;
+              control.removeValidators(Validators.required);
+              control.updateValueAndValidity();
+            }
+            this.uiState.termFormGroup = this.formGroup;
+          }
+          else if (field.name == 'file'){
+            // hard code to only look at termInfo section, as this is the section where required will be toggled
+            const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
+            for (const field in termInfoSection.controls) {
+              if (field === 'vocabulary') { continue; }
+              const control = termInfoSection.get(field) as FormControl;
+              control.addValidators(Validators.required);
+              control.updateValueAndValidity();
+            }
+            this.uiState.termFormGroup = this.formGroup;
+          }
           this.errorMessages[field.name] = this.getErrorMessage(formControl, field);
         });
         formControl.statusChanges.subscribe(() => {
@@ -282,20 +305,27 @@ export class TermSuggestionFormComponent implements OnInit {
 
     // create the termFormData from the filled out form
     const submittedFormData: TermFormData = this.populateSubmittedFormData();
-    console.log('Sending Form Data: ', JSON.stringify(submittedFormData));
-
+    // grab batchInfoFile if present
+    const file = this.getBatchInfoFile();
     // show the spinner
     this.loaderService.showLoader();
     // send our form with the captcha token
     try {
-      await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+      //check if there is a file attachment
+      // when this is finished CHANGE TEST KEY BACK TO CAPTCHA
+      if (file) {
+        await this.formService.submitFormWithAttachment(submittedFormData, file, this.captchaSuccessEvent)
+      } else {
+        await this.formService.submitForm(submittedFormData, this.captchaSuccessEvent);
+      }
+
       this.submitFormMsg = 'Form Submitted! Once we have reviewed your suggestion, we will reach out at the business email provided.';
       this.severity = 'Success';
       this.modalService.open(this.isSuccess);
       this.onClear();
     } catch (error) {
       console.log('Error occurred while submitting form: ', error);
-      this.submitFormMsg = 'Error Submitting form.';
+      this.submitFormMsg = error.displayMessage || 'Error Submitting form.';
       this.severity = 'Failure';
       // Show a banner when the form is submitted. Message is based on success/fail
       this.modalService.open(this.isSuccess);
@@ -331,7 +361,7 @@ export class TermSuggestionFormComponent implements OnInit {
   onCaptchaSuccess(event: string) {
     this.captchaSuccessEvent = event;
     this.isCaptchaExpired = false;
-    console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
+    // console.log('Captcha Event: ' + JSON.stringify(this.captchaSuccessEvent));
   }
 
   // Set the captcha status
@@ -372,8 +402,9 @@ export class TermSuggestionFormComponent implements OnInit {
   }
 
   // Determine if a field is required
-  isRequired(field: Field): boolean {
-    return field.validations?.some(validation => validation.validator === 'required');
+  isRequired(section: Section, field: Field): boolean {
+    // prior usage: field.validations?.some(validation => validation.validator === 'required'
+    return this.formGroup.controls[section.name]?.get(field.name).hasValidator(Validators.required);
   }
 
   // Get the maxLength field.validations validator value
@@ -419,7 +450,7 @@ export class TermSuggestionFormComponent implements OnInit {
       formName: this.formData.formType,
       recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
-      subject: submittedSubject + this.formGroup.get('termInfo.term').value,
+      subject: submittedSubject + this.formGroup.get('termInfo.term')?.value,
       body: formDataLabeled,
     };
   }
@@ -434,6 +465,15 @@ export class TermSuggestionFormComponent implements OnInit {
     }
   }
 
+  // Helper method to grab file input (if present) and send it along with termformdata to email
+  private getBatchInfoFile() {
+    // only check the batch info file if the section is present
+    if (this.formGroup.contains('batchTermInfo')) {
+      const fileInput = document.getElementById('file') as HTMLInputElement;
+      return fileInput?.files[0];
+    }
+  }
+
   // Helper method to build the submitted form so that it uses the label values instead of the name values
   private buildFormDataWithLabels(formGroup: FormGroup, formFields: { [key: string]: Field }): {} {
     // create a new object to hold the form data with labels
@@ -441,7 +481,7 @@ export class TermSuggestionFormComponent implements OnInit {
     // iterate over the form controls
     for (const sectionName in this.formGroup.controls) {
       // skip the recaptcha control
-      if (sectionName === 'recaptcha') continue;
+      if (sectionName === 'recaptcha' || sectionName === 'batchTermInfo') continue;
       // get the section control
       const sectionControl = formGroup.controls[sectionName];
       // find the corresponding section in the formData.sections array
