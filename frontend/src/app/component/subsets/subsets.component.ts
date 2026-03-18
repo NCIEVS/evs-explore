@@ -11,6 +11,7 @@ import { TreeTable } from 'primeng/treetable';
   selector: 'subsets',
   templateUrl: './subsets.component.html',
   styleUrls: ['./subsets.component.css'],
+  standalone: false,
 })
 export class SubsetsComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;
@@ -55,7 +56,7 @@ export class SubsetsComponent implements OnInit {
 
   // Gets path in the hierarchy and scrolls to the active node
   getPathInHierarchy() {
-    // console.log('getPathInHierarchy', this.configService.subsets);
+    console.log('getPathInHierarchy', this.configService.subsets);
 
     if (this.configService.subsets === undefined || this.configService.subsets === null) {
       this.searchDisabled = true;
@@ -96,7 +97,7 @@ export class SubsetsComponent implements OnInit {
 
   // Handler for expanding a tree node
   treeTableNodeExpand(event) {
-    // console.log('treeTableNodeExpand', event.node);
+    console.log('treeTableNodeExpand', event.node);
     if (event.node) {
       this.getTreeTableChildrenNodes(event.node.children);
     }
@@ -104,7 +105,7 @@ export class SubsetsComponent implements OnInit {
 
   // Handler for collapsing a tree node
   treeTableNodeCollapse(event) {
-    // console.log('treeTableNodeCollapse', event.node);
+    console.log('treeTableNodeCollapse', event.node);
     setTimeout(() => {
       this.scrollToSelectionTableTree(event.node);
     }, 100);
@@ -232,9 +233,6 @@ export class SubsetsComponent implements OnInit {
   }
 
   findInTree(tn, tree) {
-    // Bail if this is called without a tree (fix for RDFBROWSER-584)
-    if (!tree) {return;}
-
     const indices = new Array();
     for (var i = 0; i < tree.length; i++) {
       //check the children regularly

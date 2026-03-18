@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-properties',
   templateUrl: './properties.component.html',
-  styleUrls: ['./properties.component.css']
+  styleUrls: ['./properties.component.css'],
+  standalone: false
 })
 export class PropertiesComponent implements OnInit {
 

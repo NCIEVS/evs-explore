@@ -1,5 +1,5 @@
 export interface TermFormData {
-  formName: string;
+  formType: string;
   recipientEmail: string;
   businessEmail: string;
   subject: string;

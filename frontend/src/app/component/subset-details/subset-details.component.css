@@ -2,10 +2,10 @@ em {
   background-color: lightyellow;
 }
 
-.container {
+/* .container {
   max-width: 80%;
   padding: 10px;
-}
+} */
 
 .page-header {
   border-bottom: none !important;
@@ -63,6 +63,7 @@ em {
 
 .search-bar {
   padding-left: 0 !important;
+  padding-bottom: .25rem !important;
 }
 
 .subset-table {
@@ -91,4 +92,12 @@ em {
 
 .w-80 {
   width: 80% !important;
+}
+
+.ui-inputgroup {
+  width: max-content;
+}
+
+p-button {
+  margin: 0px 2px;
 }
