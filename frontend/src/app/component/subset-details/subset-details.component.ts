@@ -110,11 +110,15 @@ export class SubsetDetailsComponent implements OnInit {
               // if (this.selectedSubset?.isCdiscCodeList()) {
               //   this.subsets.unshift(this.selectedSubset);
               // }
+            } else if (ContSource.some((entry) => entry.value.startsWith('ICH'))) {
+              this.subsetFormat = 'ICH';
+              this.cdiscSubsetSource = ContSource[0].value;
             } else if (ContSource.length === 1) {
               this.subsetFormat = ContSource[0].value;
             } else {
               this.subsetFormat = 'NCIt';
             }
+            console.log(this.subsetFormat, this.cdiscSubsetSource)
             this.subsetLink = this.selectedSubset.getSubsetLink();
 
             // Lookup the subset description.
@@ -251,7 +255,7 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
-    if (this.subsetFormat === 'CDISC' && !this.selectedSubset.isCdiscGrouper()) {
+    if (this.subsetFormat === 'CDISC' || this.subsetFormat === 'ICH' && !this.selectedSubset.isCdiscGrouper()) {
       subsetText += this.exportCodeFormatter(this.selectedSubset);
     }
     for (const page of pageList) {
@@ -314,7 +318,7 @@ export class SubsetDetailsComponent implements OnInit {
       // cdisc synonyms
       rowText += '"' + this.getSynonymNames(concept, this.cdiscSubsetSource, 'SY').join('\n') + '"' + ',';
       // cdisc definition
-      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr'))[0]?.definition) + ',';
+      rowText += this.escapeValue(concept.definitions.filter((def) => def.source.startsWith('CDISC') || def.source.startsWith('MRCT-Ctr') || def.source.startsWith('ICH'))[0]?.definition) + ',';
       // NCIt pref term
       rowText += this.escapeValue(concept.name);
     } else {
@@ -410,7 +414,7 @@ export class SubsetDetailsComponent implements OnInit {
       return '';
     }
 
-    // Codelists have a submission value matching CDISC or MRCTPT
+    // Codelists have a submission value matching CDISC or MRCTPT or ICH
     if (concept.isCdiscCodeList()) {
       return concept.getCdiscPtName();
     }
@@ -457,7 +461,7 @@ export class SubsetDetailsComponent implements OnInit {
   }
 
   getCdiscCodelistName(concept: Concept) {
-    var cdiscName = this.selectedSubset.synonyms.find((syn) => syn.source === 'CDISC' && syn.termType === 'SY')?.name;
+    var synonymName = this.selectedSubset.synonyms.find((syn) => (syn.source === 'CDISC' || syn.source === 'ICH') && syn.termType === 'SY')?.name;
     // For a regular entry in the table, the subset we are on is the codelist
     if (!concept.isSubset()) {
       if (this.selectedSubset.isCdiscGrouper()) {
@@ -465,10 +469,10 @@ export class SubsetDetailsComponent implements OnInit {
       }
       //the names of subsets are usually the NCIT versions; show CDISC names for CDISC entries
       //use default name if no CDISC-SY name is found
-      if (!cdiscName) {
-        cdiscName = this.selectedSubset.name;
+      if (!synonymName) {
+        synonymName = this.selectedSubset.name;
       }
-      return cdiscName;
+      return synonymName;
     }
 
     // If the subset we are on is a grouper
@@ -483,10 +487,10 @@ export class SubsetDetailsComponent implements OnInit {
       }
     } else {
       //use default name if no CDISC-SY name is found
-      if (!cdiscName){
+      if (!synonymName){
         return this.selectedSubset.name;
       }
-      return cdiscName;
+      return synonymName;
     }
   }
 
