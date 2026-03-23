@@ -31,7 +31,7 @@ export class SubsetsComponent implements OnInit {
   subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
-  placeholderText = 'Loading Subset Hierarchy...';
+  placeholderText = 'Enter at least 3 letters of a subset.';
   searchDisabled = false;
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
