@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "3.4.10"
+        springBootVersion = "3.5.13"
     }
     repositories {
         mavenCentral()
@@ -82,7 +82,6 @@ dependencies {
 
     // overrides for vulnerabilities
     implementation "org.springframework.cloud:spring-cloud-gateway-server-mvc:4.2.3"
-    // implementation "org.apache.tomcat.embed:tomcat-embed-core:10.1.44"
 		
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
       exclude group: "net.minidev", module: "json-smart"

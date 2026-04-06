@@ -31,7 +31,7 @@ export class SubsetsComponent implements OnInit {
   subsetsFound = false;
   expandLabel = 'Expand All';
   expandDisabled = false;
-  placeholderText = 'Loading Subset Hierarchy...';
+  placeholderText = 'Enter at least 3 letters of a subset.';
   searchDisabled = false;
   enteredSearchText: string; // text from search box
   subsetSearchText: string; // transferred search text
@@ -234,7 +234,7 @@ export class SubsetsComponent implements OnInit {
 
   findInTree(tn, tree) {
     const indices = new Array();
-    for (var i = 0; i < tree.length; i++) {
+    for (var i = 0; i < tree?.length; i++) {
       //check the children regularly
       if (tree[i].data.code == tn.node.data.code) {
         return tree[i];
