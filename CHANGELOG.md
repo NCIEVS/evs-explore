@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [2.3.0.RELEASE] - 2025-11-04
 ### Changed
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Support term form attachment for CDISC
 - Fix titles on a few of the pages (especially hierarchy pages)
 - Make term form link more prominent and add to search results
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.2.0.RELEASE] - 2025-06-10
 ### Changed
 - Upgrade to Angular 18
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Improvement in the use of browser tab titles
 - Fixed a few links in swagger
 - Minor changes to polish the CDISC view of subsets (show the correct names and the blue "top" row on all pages)
@@ -42,10 +44,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Adding Executive Order Disclaimer Statement to Home Page.
 ### Changed
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Ability to scroll through each highlighted concept in the View in Hierarchy display with next/previous buttons
 - Change the exports to download as .csv file instead of .xls.
+- Improvements to CDISC subsets display
 - Reorganized backend build to separate "frontend" from "deployment container"
-- Upgraded versions to address vulnerabilities
+- Improvements to CDISC term form handling
+- Added security scanning
 
 ## [2.0.0.RELEASE] - 2024-01-28
 ### Added
