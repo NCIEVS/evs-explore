@@ -22,7 +22,7 @@
                 [showToggleAll]="true" dropdownIcon="pi pi-caret-down" [options]="sourcesAll"
                 [(ngModel)]="searchCriteria.synonymSource" name="sourceSearch" defaultLabel="Source" [filter]="true"
                 (onChange)="onChangeSources($event)" (onPanelHide)="onChangeSources($event)"
-                [displaySelectedLabel]="false" [resetFilterOnHide]="true">
+                [displaySelectedLabel]="false" [resetFilterOnHide]="true" placeholder="Source">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom">{{ source.label }}</span>
                 </ng-template>
