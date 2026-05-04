@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - develop # the primary branch
+      - develop-* # primary branch when previous release is still in progress
   pull_request:
     branches:
       - develop # the primary branch
+      - develop-* # primary branch when previous release is still in progress
 permissions:
     contents: read
     pull-requests: write
