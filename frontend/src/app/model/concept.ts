@@ -622,11 +622,11 @@ export class Concept {
 
   hasCdiscSy(): boolean {
     // source with CDISC* or MRCT* or ICH* and termType = SY
-    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH') || this.name.startsWith('ICH')) && syn.termType === 'SY');
+    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || syn.source.startsWith('ICH')) && syn.termType === 'SY');
   }
 
   getCdiscPtName(): string {
-    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH')) && syn.termType === 'PT')
+    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || syn.source.startsWith('ICH')) && syn.termType === 'PT')
       ?.name;
   }
 
