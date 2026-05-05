@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [2.4.0.RELEASE] - 2026-04-06
 ### Changed
+- AngularUI Updates
 - Support term form attachment for NCIT
-- Make verbiage for CDISC term form more explanator
+- Increase page width in certain cases
+- Make verbiage for CDISC term form more explanatory
+- Display ICH M11 subsets like CDISC subsets
 - Remove 'Open in Hierarchy' button for concepts without parents
 - Fix bug related to searching through subsets after returning to subsets tab
 - Change column header in search results to only say "Synonyms" instead of "{Source} Synonyms"
+- Remove redundant hierarchy popup component
 
 ## [2.3.0.RELEASE] - 2025-11-04
 ### Changed
