@@ -4,8 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.0.RELEASE] - 2026-04-06
+### Changed
+- AngularUI Updates
+- Support term form attachment for NCIT
+- Increase page width in certain cases
+- Make verbiage for CDISC term form more explanatory
+- Display ICH M11 subsets like CDISC subsets
+- Remove 'Open in Hierarchy' button for concepts without parents
+- Fix bug related to searching through subsets after returning to subsets tab
+- Change column header in search results to only say "Synonyms" instead of "{Source} Synonyms"
+- Remove redundant hierarchy popup component
+
 ## [2.3.0.RELEASE] - 2025-11-04
 ### Changed
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Support term form attachment for CDISC
 - Fix titles on a few of the pages (especially hierarchy pages)
 - Make term form link more prominent and add to search results
@@ -15,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.2.0.RELEASE] - 2025-06-10
 ### Changed
 - Upgrade to Angular 18
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Improvement in the use of browser tab titles
 - Fixed a few links in swagger
 - Minor changes to polish the CDISC view of subsets (show the correct names and the blue "top" row on all pages)
@@ -34,10 +48,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Adding Executive Order Disclaimer Statement to Home Page.
 ### Changed
+- Various minor bug fixes and typo corrections and updates for vulnerabilities
 - Ability to scroll through each highlighted concept in the View in Hierarchy display with next/previous buttons
 - Change the exports to download as .csv file instead of .xls.
+- Improvements to CDISC subsets display
 - Reorganized backend build to separate "frontend" from "deployment container"
-- Upgraded versions to address vulnerabilities
+- Improvements to CDISC term form handling
+- Added security scanning
 
 ## [2.0.0.RELEASE] - 2024-01-28
 ### Added

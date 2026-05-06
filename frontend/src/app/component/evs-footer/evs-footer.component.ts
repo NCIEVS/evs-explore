@@ -8,7 +8,8 @@ import { ConfigurationService } from '../../service/configuration.service';
 @Component({
   selector: 'app-evs-footer',
   templateUrl: './evs-footer.component.html',
-  styleUrls: ['./evs-footer.component.css']
+  styleUrls: ['./evs-footer.component.css'],
+  standalone: false
 })
 export class EvsFooterComponent implements OnInit, AfterViewInit {
 

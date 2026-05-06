@@ -13,6 +13,7 @@ import { Title } from '@angular/platform-browser';
   selector: 'app-hierarchy-display',
   templateUrl: './hierarchy-display.component.html',
   styleUrls: ['./hierarchy-display.component.css'],
+  standalone: false,
 })
 export class HierarchyDisplayComponent implements OnInit {
   @ViewChild('hierarchyTable', { static: true }) hierarchyTable: TreeTable;

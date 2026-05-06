@@ -10,7 +10,8 @@ import { AppComponent } from '../../app.component';
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.css']
+  styleUrls: ['./welcome.component.css'],
+  standalone: false
 })
 export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;

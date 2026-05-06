@@ -60,6 +60,8 @@ interface FormSelection {
   name: string;
 }
 
+const requiredControls: Array<FormControl> = []
+
 //  Helper class for setting the UIState of the term form to manage variables easier
 class UIState {
   isFormLoaded: boolean;
@@ -73,8 +75,8 @@ class UIState {
   ) {
     this.isFormLoaded = false;
     this.forms = [
-      {id: 'ncit-form', name: 'NCIT Form'},
-      {id: 'cdisc-form', name: 'CDISC Form'},
+      { id: 'ncit-form', name: 'NCIT Form' },
+      { id: 'cdisc-form', name: 'CDISC Form' },
     ];
     this.termFormData = {
       formName: '',
@@ -92,7 +94,8 @@ class UIState {
   selector: 'app-term-suggestion-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './term-suggestion-form.component.html',
-  styleUrls: ['./term-suggestion-form.component.css']
+  styleUrls: ['./term-suggestion-form.component.css'],
+  standalone: false
 })
 export class TermSuggestionFormComponent implements OnInit {
   // Field reference for form controls
@@ -117,12 +120,12 @@ export class TermSuggestionFormComponent implements OnInit {
 
   // Store list of forms we can toggle between
   private forms = [
-    {id: 'ncit-form', name: 'NCIT Form'},
-    {id: 'cdisc-form', name: 'CDISC Form'},
+    { id: 'ncit-form', name: 'NCIT Form' },
+    { id: 'cdisc-form', name: 'CDISC Form' },
   ];
 
   // Popup information for a form submitted.
-  @ViewChild('isSuccess', {static: true}) isSuccess: TemplateRef<any>;
+  @ViewChild('isSuccess', { static: true }) isSuccess: TemplateRef<any>;
   protected submitFormMsg = '';
   protected severity = '';
 
@@ -192,7 +195,7 @@ export class TermSuggestionFormComponent implements OnInit {
     this.loaderService.showLoader();
     // show the loader for slightly longer before navigating to the new form
     await new Promise(resolve => setTimeout(resolve, 100));
-    await this.router.navigate(['/termform'], {queryParams: {formId}});
+    await this.router.navigate(['/termform'], { queryParams: { formId } });
     // wait to hide loader just a little bit for smoother transition
     setTimeout(() => {
       this.loaderService.hideLoader();
@@ -235,24 +238,30 @@ export class TermSuggestionFormComponent implements OnInit {
         formControl.valueChanges.subscribe(() => {
           // If there is a change in the file upload field, 
           if (field.name == 'file' && formControl.value) {
-            // hard code to only look at termInfo section, as this is the section where required will be toggled
             const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
+            // Check if each control in Terminology Info/Request Type is required
             for (const field in termInfoSection.controls) {
-              if (field === 'vocabulary') { continue; }
               const control = termInfoSection.get(field) as FormControl;
-              control.removeValidators(Validators.required);
-              control.updateValueAndValidity();
+              // If so, update the control to not have the required validator, and save the control to an array
+              if (control.hasValidator(Validators.required)) {
+                control.removeValidators(Validators.required);
+                control.updateValueAndValidity();
+                requiredControls.push(control)
+              }
             }
             this.uiState.termFormGroup = this.formGroup;
           }
-          else if (field.name == 'file'){
-            // hard code to only look at termInfo section, as this is the section where required will be toggled
+          else if (field.name == 'file') {
+            // If the file field was updated such that there is no longer a file...
             const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
+            // For each control in the Terminology Information/Request Type section...
             for (const field in termInfoSection.controls) {
-              if (field === 'vocabulary') { continue; }
               const control = termInfoSection.get(field) as FormControl;
-              control.addValidators(Validators.required);
-              control.updateValueAndValidity();
+              // If the control was previously added to the "required controls" array, add the Required validator
+              if (requiredControls.includes(control)) {
+                control.addValidators(Validators.required);
+                control.updateValueAndValidity();
+              }
             }
             this.uiState.termFormGroup = this.formGroup;
           }
@@ -447,7 +456,7 @@ export class TermSuggestionFormComponent implements OnInit {
 
     // populate the submittedFormData
     return {
-      formName: this.formData.formType,
+      formType: this.formData.formType,
       recipientEmail: this.formData.recipientEmail,
       businessEmail: this.formGroup.get('contact.email').value,
       subject: submittedSubject + this.formGroup.get('termInfo.term')?.value,

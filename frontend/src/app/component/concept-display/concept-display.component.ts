@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
   selector: 'app-concept-display',
   templateUrl: './concept-display.component.html',
   styleUrls: ['./concept-display.component.css'],
+  standalone: false,
 })
 export class ConceptDisplayComponent implements OnInit, OnDestroy {
   expandCollapseChange: Subject<boolean> = new Subject();
@@ -145,6 +146,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToAnchor(scrollToId);
       }
       this.loaderService.hideLoader();
+      this.displayHierarchy = this.displayHierarchy && this.concept.parents;
     });
   }
 

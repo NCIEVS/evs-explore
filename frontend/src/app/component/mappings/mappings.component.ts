@@ -10,6 +10,7 @@ import { MapsetService } from '../../service/mapset.service';
   selector: 'app-mappings',
   templateUrl: './mappings.component.html',
   styleUrls: ['./mappings.component.css'],
+  standalone: false,
 })
 export class MappingsComponent implements OnInit {
   constructor(

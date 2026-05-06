@@ -6,7 +6,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-qualifiers',
   templateUrl: './qualifiers.component.html',
-  styleUrls: ['./qualifiers.component.css']
+  styleUrls: ['./qualifiers.component.css'],
+  standalone: false
 })
 export class QualifiersComponent implements OnInit {
 

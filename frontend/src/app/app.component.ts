@@ -14,6 +14,7 @@ declare var gtag;
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  standalone: false,
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('licenseModal', { static: true }) licenseModal: TemplateRef<any>;

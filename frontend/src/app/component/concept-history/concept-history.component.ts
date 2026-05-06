@@ -10,7 +10,8 @@ import { Concept } from '../../model/concept';
 @Component({
   selector: 'app-concept-history',
   templateUrl: './concept-history.component.html',
-  styleUrls: ['./concept-history.component.css']
+  styleUrls: ['./concept-history.component.css'],
+  standalone: false
 })
 export class ConceptHistoryComponent implements OnInit {
   @Input() concept: Concept;

@@ -1,7 +1,60 @@
 .mh400 {
   min-height: 400px;
-  max-width: 80%;
-  padding: 10px;
+}
+
+/* get rid of labels after a certain width */
+@media screen and ( max-width: 1115px ) {
+  button#icon-button > span.p-button-label {
+    display: none;
+  }
+
+  button#icon-button {
+    width: 1.95rem;
+  }
+
+  .col-sm-3 {
+    padding-left: 0;
+  }
+}
+
+.col-sm-3 {
+  min-width: max-content;
+}
+
+.col-sm-4 {
+  min-width: max-content;
+}
+
+.col-sm-5 {
+  min-width: max-content;
+}
+
+/* get rid of labels after a certain width */
+@media screen and ( max-width: 1177px ) {
+  button#icon-button > span.p-button-label {
+    display: none;
+  }
+
+  button#icon-button {
+    width: 1.95rem;
+  }
+
+  .col-sm-3 {
+    padding-left: 0;
+  }
+}
+
+.col-sm-3 {
+  min-width: max-content;
+}
+
+.col-sm-4 {
+  min-width: max-content;
+}
+
+/* row settings */
+.col-sm-5 {
+  min-width: max-content;
 }
 
 em {
@@ -10,6 +63,7 @@ em {
 
 .radio-padding {
   padding-right: 0.2rem !important;
+  vertical-align: text-bottom;
 }
 
 /*toolbar*/
@@ -87,4 +141,13 @@ em {
 
 .term-dropdown [aria-label="Multiple Terminology Search"].p-dropdown-item {
   border-bottom: 1px solid black;
+}
+
+.radio-label {
+  font-size: 1rem;
+  margin-left: 4px;
+  margin-right: 10px;
+  margin-bottom: 0px !important;
+  cursor: pointer;
+  vertical-align: middle;
 }

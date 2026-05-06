@@ -71,6 +71,7 @@
               <option value="" disabled selected>{{ field.placeholder }}</option>
               <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
             </select>
+            <!-- File input -->
             <input type="file" *ngIf="field.type === 'file'" id="{{field.name}}" [formControlName]="field.name" class="text-body field-input" accept=".xls" maxFileSize="1000000" />
             <!-- Error Messages from validation checks -->
           </div>

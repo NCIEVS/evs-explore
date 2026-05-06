@@ -7,7 +7,8 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-definition-types',
   templateUrl: './definition-types.component.html',
-  styleUrls: ['./definition-types.component.css']
+  styleUrls: ['./definition-types.component.css'],
+  standalone: false
 })
 export class DefinitionTypesComponent implements OnInit {
 
