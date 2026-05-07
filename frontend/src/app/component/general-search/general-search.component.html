@@ -22,7 +22,7 @@
                 [showToggleAll]="true" dropdownIcon="pi pi-caret-down" [options]="sourcesAll"
                 [(ngModel)]="searchCriteria.synonymSource" name="sourceSearch" defaultLabel="Source" [filter]="true"
                 (onChange)="onChangeSources($event)" (onPanelHide)="onChangeSources($event)"
-                [displaySelectedLabel]="false" [resetFilterOnHide]="true">
+                [displaySelectedLabel]="false" [resetFilterOnHide]="true" placeholder="Source">
                 <ng-template let-source let-i="index" pTemplate="item">
                   <span style="vertical-align: bottom">{{ source.label }}</span>
                 </ng-template>
@@ -32,15 +32,14 @@
 
           <div class="col-sm-5">
             <div style="padding-top: 6px; float: right">
-              <!-- TODO: CHANGE TO MULTISELECT -->
-              <p-dropdown title="Select terminology" class="term-dropdown" [options]="termsAll"
+              <p-select title="Select terminology" class="term-dropdown" [options]="termsAll"
                 [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
                 <ng-template let-terminology pTemplate="item">
                   <div [title]="terminology.description">
                     {{ terminology.label }}
                   </div>
                 </ng-template>
-              </p-dropdown>
+              </p-select>
               <span style="margin-left: 10px"><button type="button" pButton label="Export" style="border: 0"
                   icon="fa fa-download" pTooltip="Click to download search results" showDelay="300"
                   (click)="exportSearch()" [disabled]="totalRecords == 0" id="icon-button"></button>

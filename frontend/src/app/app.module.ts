@@ -13,19 +13,17 @@ import { AngularSplitModule } from 'angular-split';
 import { providePrimeNG } from 'primeng/config';
 import EvsTheme from './evs-theme';
 import { MessageService } from 'primeng/api';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { BlockUIModule } from 'primeng/blockui';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { PanelModule } from 'primeng/panel';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { ChipsModule } from 'primeng/chips';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
-import { TabViewModule } from 'primeng/tabview';
+import { TabsModule } from 'primeng/tabs';
 import { TreeTableModule } from 'primeng/treetable';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ToastModule } from 'primeng/toast';
@@ -144,7 +142,6 @@ import {NgxCaptchaModule} from 'ngx-captcha';
         AppRoutingModule,
         BrowserAnimationsModule,
         // FacebookModule.forRoot(),
-        MessagesModule,
         MessageModule,
         FormsModule,
         BlockUIModule,
@@ -154,13 +151,12 @@ import {NgxCaptchaModule} from 'ngx-captcha';
         PanelModule,
         AutoCompleteModule,
         RadioButtonModule,
-        ChipsModule,
         TooltipModule,
         ToolbarModule,
         TableModule,
-        TabViewModule,
+        TabsModule,
         TreeTableModule,
-        DropdownModule,
+        SelectModule,
         ToggleButtonModule,
         ButtonModule,
         AngularSplitModule.forRoot(),
