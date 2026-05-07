@@ -417,7 +417,8 @@ export class Concept {
     const syns = this.getAllSynonymNames();
     const uniqSynonyms = [];
     for (let i = 0; i < syns.length; i++) {
-      if (
+      // skip blank synonyms
+      if (syns[i] &&
         !uniqSynonyms
           .map(function (c) {
             return c.toLowerCase();
