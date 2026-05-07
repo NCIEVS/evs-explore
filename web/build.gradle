@@ -38,7 +38,7 @@ java {
 // ext["log4j2.version"] = "2.17.1"
 
 group = "gov.nih.nci.term.browser.web"
-version = "2.4.0.RELEASE"
+version = "2.5.0.RELEASE"
 
 // Spring Cloud version compatibility.
 // The Spring Cloud 2024.0.x (Moorgate) release train is compatible with Spring Boot 3.4.x.
