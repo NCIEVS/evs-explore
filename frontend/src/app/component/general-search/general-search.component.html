@@ -15,7 +15,7 @@
           <div class="col-sm-3">
             <div style="padding-top: 4px">
               <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch()"
-                [disabled]="searchCriteria.term.length < 3" id="icon-button"></button>
+                [disabled]="searchCriteria.term?.length < 1" id="icon-button"></button>
               &nbsp;
               <p-multiSelect title="Filter by sub-sources"
                 *ngIf="configService.isMultiSource() && !configService.getMultiSearch()" autoWidth="false"
