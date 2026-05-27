@@ -138,6 +138,8 @@
           the most relevant data fields
           are searchable and should produce results.
         </li>
+        <li>In some terminologies, the same code can be used for more than one concept. HL7V3.0 is one example. Only reused codes get this treatment; codes that are already unique are left unchanged. When this happens, EVS Explore keeps the concepts separate by adding a dash and the source concept identifier from the data to the code. For example, the original HL7V3.0 code <span class="tt">41</span> appears as <span class="tt">41-11255</span> for <i>typhoid, parenteral</i> and <span class="tt">41-11672</span> for <i>Cheyenne and Arapaho Tribes, Oklahoma</i>. Each affected concept also includes a definition that explains why the code was changed and an <span class="tt">Original_Code</span> property that stores the original value, such as <span class="tt">41</span>. If you search for an original code value, such as <span class="tt">M</span>, <span class="tt">41</span>, or <span class="tt">91</span> in HL7V3.0, EVS Explore will find the matching concepts. The results will show the full disambiguated code.
+        </li>
       </ul>
 
     </li>
