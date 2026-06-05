@@ -65,20 +65,23 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Subscribe to terminology changes and check license text
     this.subscription = this.configService.getSubject().subscribe((): void => {
-      this.checkLicenseText().then((isLicenseAccepted) => {
-        if (!isLicenseAccepted) {
-          this.router.navigate(['/welcome']).then((): void => {
-            location.reload();
-          });
-        }
-      });
+      // Only open if it's the only dialog, to prevent multiple of the same license dialog from showing up
+      if (!this.modalService.hasOpenModals()) {
+        this.checkLicenseText().then((isLicenseAccepted) => {
+          if (!isLicenseAccepted) {
+            this.router.navigate(['/welcome']).then((): void => {
+              location.reload();
+            });
+          }
+        });
+      }
     });
   }
 
   // After initializing view, check license text
   async ngAfterViewInit(): Promise<void> {
     const terminology = this.configService.getTerminology();
-    if (terminology && terminology.metadata && terminology.metadata.licenseText) {
+    if (terminology && terminology.metadata && terminology.metadata.licenseText && !this.modalService.hasOpenModals()) {
       const isLicenseAccepted = await this.checkLicenseText();
       if (!isLicenseAccepted) {
         this.router.navigate(['/welcome']).then((): void => {
