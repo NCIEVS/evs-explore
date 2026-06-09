@@ -358,7 +358,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       this.pageSize = event.rows;
       this.setQueryUrl();
       this.avoidLazyLoading = true;
-      this.performSearch();
     }
   }
 
