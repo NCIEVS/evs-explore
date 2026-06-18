@@ -7,7 +7,7 @@
             <div style="padding-top: 6px">
               <p-autoComplete #termauto [style]="{ width: '100%' }" [inputStyle]="{ width: '100%' }" [delay]="800"
                 [(ngModel)]="searchCriteria.term" [suggestions]="textSuggestions" (completeMethod)="search($event)"
-                id="termauto" name="termauto" [disabled]="disableEntry()"
+                id="termauto" name="termauto" [disabled]="disableEntry()" [autofocus]="true"
                 placeholder="Enter concept code or at least 3 letters of a term." [minLength]="3">
               </p-autoComplete>
             </div>
