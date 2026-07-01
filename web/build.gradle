@@ -43,9 +43,9 @@ version = "2.5.0.RELEASE"
 // Spring Cloud version compatibility.
 // The Spring Cloud 2024.0.x (Moorgate) release train is compatible with Spring Boot 3.4.x.
 // This BOM will manage the version of Spring Cloud Gateway, ensuring it"s at least 4.2.3.
-ext {
-    set("springCloudVersion", "2025.0.0")
-}
+ext['springCloudVersion'] = "2025.0.0"
+// Override Boot BOM Jackson version to fix CVE-2026-54512 / CVE-2026-54513 (HIGH)
+ext['jackson-bom.version'] = '2.21.4'
 
 springBoot {
     buildInfo()          // generate file META-INF/build-info.properties during the build

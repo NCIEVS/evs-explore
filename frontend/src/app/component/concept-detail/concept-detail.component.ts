@@ -16,6 +16,8 @@ import { ViewportScroller } from '@angular/common';
 })
 export class ConceptDetailComponent implements OnInit {
   @Input() concept: Concept;
+  @Input() urlBase = '/concept';
+  @Input() urlTarget = '_top';
 
   // TODO: this needs to be pulled from the endpoint (e.g. application metadata)
   externalLinks = new Map(
