@@ -28,6 +28,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
+  showHierarchyButton: boolean;
 
   urlBase = '/concept';
   urlTarget = '_top';
@@ -93,8 +94,10 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // show hierarchy if NOT in hierarchy page and there is a hierarchy
-    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') && this.configService.getTerminology()?.metadata.hierarchy;
+    this.displayHierarchy = window.location.pathname.includes('/hierarchy') && !window.location.pathname.includes('/hierarchy-popup');
+    this.urlBase = this.displayHierarchy ? '/hierarchy' : '/concept';
+    // show hierarchy button if NOT in hierarchy page and there is a hierarchy
+    this.showHierarchyButton = !this.displayHierarchy && !!this.configService.getTerminology()?.metadata.hierarchy;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties().subscribe((properties: any) => {
@@ -146,7 +149,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToAnchor(scrollToId);
       }
       this.loaderService.hideLoader();
-      this.displayHierarchy = this.displayHierarchy && this.concept.parents;
+      this.showHierarchyButton = this.showHierarchyButton && !!this.concept.parents;
     });
   }
 

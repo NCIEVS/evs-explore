@@ -210,11 +210,11 @@
               <td *ngIf="metadata.detailsColumns && metadata.detailsColumns['synonyms-code']">
 
                 <a *ngIf="synonym.source && synonym.code && metadataMap[synonym.source]"
-                  [routerLink]="['/concept', metadataMap[synonym.source].terminology, synonym.code]" target="_top">{{
+                  [routerLink]="[urlBase, metadataMap[synonym.source].terminology, synonym.code]" [target]="urlTarget">{{
                   synonym.code
                   }}</a>
                 <a *ngIf="synonym.source && synonym.code && metadataMap[synonym.source] && metadataMap[synonym.source].hierarchy"
-                  [routerLink]="['/hierarchy', metadataMap[synonym.source].terminology, synonym.code]" target="_top">
+                  [routerLink]="[urlBase, metadataMap[synonym.source].terminology, synonym.code]" [target]="urlTarget">
                   <i class="pi pi-sitemap" style="font-size: 1.25rem"></i></a>
                 <span *ngIf="!metadataMap[synonym.source]">{{ synonym.code }}
                 </span>
@@ -265,7 +265,7 @@
               <td *ngIf="!property.ct">{{property.type}}</td>
               <td>
                 <span *ngIf="property.type == 'NCI_META_CUI' || property.type == 'UMLS_CUI'">
-                  <a [routerLink]="['/concept/ncim/' + property.value]" target=_top>{{property.value}}</a></span>
+                  <a [routerLink]="[urlBase, 'ncim', property.value]" [target]="urlTarget">{{property.value}}</a></span>
                 <span
                   *ngIf="!externalLinks[property.type] && property.type != 'NCI_META_CUI' && property.type != 'UMLS_CUI'"
                   [innerHTML]="checkExternalLink(property)"></span>
