@@ -114,15 +114,23 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         var link = ''
         const linkStartId = terminology.metadata.licenseText.indexOf('http')
         const linkEndId = terminology.metadata.licenseText.indexOf(')', terminology.metadata.licenseText.indexOf('http'))
-        if (linkEndId==-1) {
-          link = terminology.metadata.licenseText.substring(linkStartId)
+        if (linkStartId>-1) {
+          if (linkEndId==-1) {
+            link = terminology.metadata.licenseText.substring(linkStartId)
+          }
+          else {
+            link = terminology.metadata.licenseText.substring(linkStartId, linkEndId)
+          }
+          link = '<a href=' + link + '>' + link + '</a>';
+          this.licenseText = terminology.metadata.licenseText.substring(0, linkStartId) + link;
+          if (linkEndId>-1) {
+            this.licenseText += terminology.metadata.licenseText.substring(linkEndId);
+          }
         }
         else {
-          link = terminology.metadata.licenseText.substring(linkStartId, linkEndId)
+          this.licenseText = terminology.metadata.licenseText;
         }
-        link = '<a href=' + link + '>' + link + '</a>';
-        this.licenseText = terminology.metadata.licenseText.substring(0, linkStartId) + link;
-        
+
         const modalref = this.modalService.open(this.licenseModal, {
           size: 'lg',
           ariaLabelledBy: 'modal-basic-title',
