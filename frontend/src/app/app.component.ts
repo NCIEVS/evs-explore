@@ -109,7 +109,28 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       const cookieName = terminology.terminology + 'License';
       if (terminology.metadata.licenseText && !this.cookieService.check(cookieName)) {
-        this.licenseText = terminology.metadata.licenseText;
+
+        // Add in <a> tags around links.
+        var link = ''
+        const linkStartId = terminology.metadata.licenseText.indexOf('http')
+        const linkEndId = terminology.metadata.licenseText.indexOf(')', terminology.metadata.licenseText.indexOf('http'))
+        if (linkStartId>-1) {
+          if (linkEndId==-1) {
+            link = terminology.metadata.licenseText.substring(linkStartId)
+          }
+          else {
+            link = terminology.metadata.licenseText.substring(linkStartId, linkEndId)
+          }
+          link = '<a href=' + link + '>' + link + '</a>';
+          this.licenseText = terminology.metadata.licenseText.substring(0, linkStartId) + link;
+          if (linkEndId>-1) {
+            this.licenseText += terminology.metadata.licenseText.substring(linkEndId);
+          }
+        }
+        else {
+          this.licenseText = terminology.metadata.licenseText;
+        }
+
         const modalref = this.modalService.open(this.licenseModal, {
           size: 'lg',
           ariaLabelledBy: 'modal-basic-title',

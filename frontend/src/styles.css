@@ -312,6 +312,10 @@ body .alert-info {
   z-index: 1050 !important
 }
 
+.modal-body {
+  overflow-wrap: anywhere;
+}
+
 #truncateTermList {
   white-space: nowrap;
   overflow: hidden;
