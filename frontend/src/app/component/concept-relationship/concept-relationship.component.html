@@ -121,9 +121,9 @@
       </span>
     </p-header>
     <div class="table-responsive">
-      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" *ngIf="
-          concept.roles && concept.roles.length > 0;
-          else elseBlockRole" (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
+      <p-table [value]="concept.roles" sortMode="single" class="table table-striped table-bordered" 
+          *ngIf="concept.roles && concept.roles.length > 0;else elseBlockRole" sortField="relatedName" 
+          (sortFunction)="customSort($event)" [customSort]="true" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-30" [pSortableColumn]="'type'">Relationship

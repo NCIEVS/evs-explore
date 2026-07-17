@@ -44,6 +44,7 @@ export class ConceptDetailComponent implements OnInit {
   collapsed = false;
   conceptIsSubset = false;
   httpRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/g;
+  logicalDefinitionText: string = 'Show Logical Definition';
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -203,5 +204,11 @@ export class ConceptDetailComponent implements OnInit {
     if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
       this.conceptDisplay.lookupConcept(false, scrollToId);
     }
+  }
+
+  showLogicalDefinition() {
+    // Check that there is a logical definition property on the 
+    this.logicalDefinitionText = this.logicalDefinitionText=='Hide Logical Definition' ? 'Show Logical Definition' : 'Hide Logical Definition';
+    this.conceptDisplay.lookupConcept(false, 'logicalDefinitionsHeader')
   }
 }
