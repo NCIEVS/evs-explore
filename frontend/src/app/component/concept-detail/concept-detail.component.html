@@ -101,7 +101,7 @@
       <p-table class="table table-striped table-bordered" [value]="concept.groups"
         *ngIf="concept.roles && concept.rolesCt > 0; else elseBlockRole" 
         rowGroupMode="subheader" groupRowsBy="group" sortField="group" 
-        sortMode="single" showGridlines>
+        sortMode="single" customSort="true" (sortFunction)="customSort($event)" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-40">
@@ -131,7 +131,7 @@
             </td>
             <td>{{ group.relatedCode }}</td>
             <td>
-              <a [routerLink]="[urlBase, terminology, group.code]" [target]="urlTarget">
+              <a [routerLink]="[urlBase, terminology, group.relatedCode]" [target]="urlTarget">
                 {{ group.relatedName }}
               </a>
             </td>
