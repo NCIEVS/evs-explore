@@ -170,8 +170,14 @@ export class ConceptDetailComponent implements OnInit {
     event.data.sort((data1, data2) => {
       const value1 = data1[event.field];
       const value2 = data2[event.field];
-      if (value1 === undefined) {
+      if (value1 === undefined && value2 !== undefined) {
         return -1;
+      }
+      else if (value1 !== undefined && value2 === undefined) {
+        return 1;
+      }
+      else if (value1 === undefined && value2 === undefined) {
+        return 0;
       }
       else if (parseInt(value1) && !parseInt(value2)) {
         return 1;
