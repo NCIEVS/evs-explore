@@ -166,6 +166,23 @@ export class ConceptDetailComponent implements OnInit {
     });
   }
 
+  sortByGroup(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      const value1 = data1[event.field];
+      const value2 = data2[event.field];
+      if (value1 === undefined) {
+        return -1;
+      }
+      else if (parseInt(value1) && !parseInt(value2)) {
+        return 1;
+      }
+      else if (!parseInt(value1) && parseInt(value2)) {
+        return -1;
+      }
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+    });
+  }
+
   public setTitle() {
     // Bypass this behavior if we are in the hierarchy popup
     if (window.location.href.includes('hierarchy-popup')) {

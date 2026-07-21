@@ -100,8 +100,8 @@
     <div class="table-responsive">
       <p-table class="table table-striped table-bordered" [value]="concept.groups"
         *ngIf="concept.roles && concept.rolesCt > 0; else elseBlockRole" 
-        rowGroupMode="subheader" groupRowsBy="group" sortField="group" 
-        sortMode="single" customSort="true" (sortFunction)="customSort($event)" showGridlines>
+        rowGroupMode="subheader" groupRowsBy="group" sortField="group" sortMode="single" 
+        customSort="true" (sortFunction)="sortByGroup($event)" showGridlines>
         <ng-template pTemplate="header">
           <tr>
             <th class="w-40">
