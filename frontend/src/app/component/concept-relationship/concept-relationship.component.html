@@ -541,7 +541,7 @@
     </ng-template>
   </p-panel>
   <br *ngIf="!(configService.isMultiSource() && configService.isRrf()) && (concept.active || concept.synonymsCt > 0)" />
-  <p-panel *ngIf="concept.getProperty('Logical_Definition')=='true'" [toggleable]="true"
+  <p-panel *ngIf="checkLogicalDefinition()" [toggleable]="true"
     [collapsed]="collapsed" expandIcon="pi pi-minus" collapseIcon="pi pi-plus">
     <p-header class="bold-heading" id="logicalDefinitionsHeader">
       Logical Definitions 
@@ -582,8 +582,6 @@
         </ng-template>
         <ng-template pTemplate="body" let-group let-rowIndex="rowIndex">
           <tr >
-            <td *ngIf="role" colspan="3"><a (click)="loadAll('logicalDefinitionsHeader')" class="top-link"
-                title="More data available, click to load full concept details">More data available...</a></td>
             <td>
               <span *ngIf="group.type!='Parent'">{{ group.type }}</span>
             </td>

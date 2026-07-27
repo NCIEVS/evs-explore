@@ -242,7 +242,6 @@ export class Concept {
           this.groups.push(new Relationship(input.roles[i], configService))
         }
       }
-      this.groupsCt = this.getCt(this.groups);
       if (input.parents) {
         const parentName='';
         const parentCode='';
@@ -250,6 +249,10 @@ export class Concept {
           //get data for groups from parents (need code + name)
           this.groups.push(new Relationship({ relatedCode: this.parents[i].code, relatedName: this.parents[i].name, type: 'Parent' }, configService))
         } 
+      }
+      this.groupsCt = this.getCt(this.groups);
+      if (this.rolesCt > this.roles.length) {
+        this.groupsCt++;
       }
     }
 

@@ -83,6 +83,15 @@ export class ConceptRelationshipComponent implements OnInit {
     });
   }
 
+  checkLogicalDefinition(){
+    if (this.concept.getProperty('Logical_Definition')==='true') { 
+      if (this.concept.groupsCt > this.concept.groups.length) {
+        this.conceptDisplay.lookupConcept(false);
+      }
+      return true;
+    }
+  }
+
   isNumber(groupName) {
     if (parseInt(groupName)){
       return true;
