@@ -46,7 +46,6 @@ export class ConceptDetailComponent implements OnInit {
   collapsed = false;
   conceptIsSubset = false;
   httpRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/g;
-  logicalDefinitionText: string = 'Show Logical Definition';
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -109,7 +108,6 @@ export class ConceptDetailComponent implements OnInit {
     return concept.terminology === 'ncit' && isSubset;
   }
 
-
   checkFilter(item: any): boolean {
     if (!this.titleSet && this.concept) {
       this.setTitle();
@@ -166,29 +164,6 @@ export class ConceptDetailComponent implements OnInit {
     });
   }
 
-  sortByGroup(event: SortEvent) {
-    event.data.sort((data1, data2) => {
-      const value1 = data1[event.field];
-      const value2 = data2[event.field];
-      if (value1 === undefined && value2 !== undefined) {
-        return -1;
-      }
-      else if (value1 !== undefined && value2 === undefined) {
-        return 1;
-      }
-      else if (value1 === undefined && value2 === undefined) {
-        return 0;
-      }
-      else if (parseInt(value1) && !parseInt(value2)) {
-        return 1;
-      }
-      else if (!parseInt(value1) && parseInt(value2)) {
-        return -1;
-      }
-      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
-    });
-  }
-
   public setTitle() {
     // Bypass this behavior if we are in the hierarchy popup
     if (window.location.href.includes('hierarchy-popup')) {
@@ -227,13 +202,8 @@ export class ConceptDetailComponent implements OnInit {
 
   loadAll(scrollToId: string = null) {
     if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
-      this.conceptDisplay.lookupConcept(false, scrollToId);
+      this.conceptDisplay.lookupConcept(false, "scrollToId");
     }
   }
 
-  showLogicalDefinition() {
-    // Check that there is a logical definition property on the 
-    this.logicalDefinitionText = this.logicalDefinitionText=='Hide Logical Definition' ? 'Show Logical Definition' : 'Hide Logical Definition';
-    this.conceptDisplay.lookupConcept(false, 'logicalDefinitionsHeader')
-  }
 }

@@ -55,6 +55,41 @@ export class ConceptRelationshipComponent implements OnInit {
     });
   }
 
+  sortByGroup(event: SortEvent) {
+
+    event.data.sort((data1, data2) => {
+      const value1 = data1[event.field];
+      const value2 = data2[event.field];
+      if (value1 === undefined && value2 !== undefined) {
+        return -1;
+      }
+      else if (value1 !== undefined && value2 === undefined) {
+        return 1;
+      }
+      else if (value1 === undefined && value2 === undefined) {
+        return 0;
+      }
+      else if (parseInt(value1) && !parseInt(value2)) {
+        return 1;
+      }
+      else if (!parseInt(value1) && parseInt(value2)) {
+        return -1;
+      }
+      else if (value1 === value2) {
+        // console.log(data1, data2, event.field)
+        return event.order * data1['type'].localeCompare(data2['type'], 'en', { numeric:true })
+      }
+      return event.order * value1.localeCompare(value2, 'en', { numeric: true });
+    });
+  }
+
+  isNumber(groupName) {
+    if (parseInt(groupName)){
+      return true;
+    }
+    return false;
+  }
+
   // Prep data for the sources= query param
   getSelectedSourcesQueryParam() {
     let result = {};
