@@ -79,12 +79,19 @@
                     (click)="clickScroll('otherRelationshipsHeader')">Other Relationships</a>
                 </td>
               </tr>
+              <tr *ngIf="concept.getProperty('Logical_Definition')=='true'">
+                <td class="link-table-cell">
+                  <!-- <p-button (click)="showLogicalDefinition()" [label]="logicalDefinitionText" class="p-button-coloring"></p-button> -->
+                  <a
+                    class="link-table-entry" title="Scroll To Other Relationships"
+                    (click)="conceptDisplay.lookupConcept(false, 'logicalDefinitionsHeader')">Logical Definition</a>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
   </p-panel>
 
   <p-panel *ngIf="concept.active || concept.synonymsCt > 0" [toggleable]="true" [collapsed]="collapsed"

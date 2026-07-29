@@ -108,7 +108,6 @@ export class ConceptDetailComponent implements OnInit {
     return concept.terminology === 'ncit' && isSubset;
   }
 
-
   checkFilter(item: any): boolean {
     if (!this.titleSet && this.concept) {
       this.setTitle();
@@ -203,7 +202,8 @@ export class ConceptDetailComponent implements OnInit {
 
   loadAll(scrollToId: string = null) {
     if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
-      this.conceptDisplay.lookupConcept(false, scrollToId);
+      this.conceptDisplay.lookupConcept(false, "scrollToId");
     }
   }
+
 }

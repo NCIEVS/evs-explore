@@ -37,6 +37,8 @@ export class Concept {
   associationsCt: number = 0;
   inverseAssociations: Relationship[];
   inverseAssociationsCt: number = 0;
+  groups: Relationship[];
+  groupsCt: number = 0;
   broader: Relationship[];
   broaderCt: number = 0;
   narrower: Relationship[];
@@ -229,6 +231,29 @@ export class Concept {
         this.inverseAssociations.push(new Relationship(input.inverseAssociations[i], configService));
       }
       this.inverseAssociationsCt = this.getCt(this.inverseAssociations);
+    }
+
+    //groups
+    this.groups = new Array();
+    if (input.roles) {
+      this.groups = new Array();
+      for (let i = 0; i < input.roles.length; i++) {
+        if (input.roles[i].group) {
+          this.groups.push(new Relationship(input.roles[i], configService))
+        }
+      }
+      if (input.parents) {
+        const parentName='';
+        const parentCode='';
+        for (let i = 0; i < this.parents.length; i++) {
+          //get data for groups from parents (need code + name)
+          this.groups.push(new Relationship({ relatedCode: this.parents[i].code, relatedName: this.parents[i].name, type: 'Parent' }, configService))
+        } 
+      }
+      this.groupsCt = this.getCt(this.groups);
+      if (this.rolesCt > this.roles.length) {
+        this.groupsCt++;
+      }
     }
 
     // maps

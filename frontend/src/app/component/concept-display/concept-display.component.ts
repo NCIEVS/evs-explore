@@ -566,6 +566,8 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     return associationsTable;
   }
 
+  // TODO: Logical Defintions Table for Export
+
   broaderConceptTable() {
     const broaderConceptTable = [];
     if (!this.concept.broader && this.concept.associations !== null) this.concept.broader = this.concept.associations?.filter((x) => x.type === 'RN');
