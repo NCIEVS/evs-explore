@@ -25,6 +25,10 @@ export function getSwaggerUrl(
   return `${getApiDocumentationOrigin(hostname, protocol)}/swagger-ui/index.html`;
 }
 
-export function getFhirSwaggerUrl(version: 'r4' | 'r5'): string {
-  return `${getApiDocumentationOrigin()}/fhir/${version}/swagger-ui/`;
+export function getFhirSwaggerUrl(
+  version: 'r4' | 'r5',
+  hostname = window.location.hostname,
+  protocol = window.location.protocol
+): string {
+  return `${getApiDocumentationOrigin(hostname, protocol)}/fhir/${version}/swagger-ui/`;
 }

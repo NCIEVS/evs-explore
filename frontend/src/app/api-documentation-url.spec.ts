@@ -8,18 +8,17 @@ describe('API documentation URLs', () => {
     ['evsexplore-qa.semantics.cancer.gov', 'https:', 'https://api-evsrest-qa.semantics.cancer.gov/swagger-ui/index.html'],
     ['evsexplore-stage.semantics.cancer.gov', 'https:', 'https://api-evsrest-stage.semantics.cancer.gov/swagger-ui/index.html'],
     ['evsexplore.semantics.cancer.gov', 'https:', 'https://api-evsrest.semantics.cancer.gov/swagger-ui/index.html'],
-  ])('maps %s to its matching API Swagger host', (hostname, protocol, expectedUrl) => {
-    expect(getApiDocumentationOrigin(hostname, protocol)).toBe(new URL(expectedUrl).origin);
-    expect(getSwaggerUrl(hostname, protocol)).toBe(expectedUrl);
+  ])('maps %s to its matching API documentation endpoints', (hostname, protocol, expectedSwaggerUrl) => {
+    const apiOrigin = new URL(expectedSwaggerUrl).origin;
+
+    expect(getApiDocumentationOrigin(hostname, protocol)).toBe(apiOrigin);
+    expect(getSwaggerUrl(hostname, protocol)).toBe(expectedSwaggerUrl);
+    expect(getFhirSwaggerUrl('r4', hostname, protocol)).toBe(`${apiOrigin}/fhir/r4/swagger-ui/`);
+    expect(getFhirSwaggerUrl('r5', hostname, protocol)).toBe(`${apiOrigin}/fhir/r5/swagger-ui/`);
   });
 
   it('uses the configured Swagger origin for unrecognized hosts', () => {
     expect(getApiDocumentationOrigin('evsexplore-preview2.semantics.cancer.gov', 'https:'))
       .toBe(new URL(environment.swagger).origin);
-  });
-
-  it('builds FHIR links from the resolved API origin', () => {
-    expect(getFhirSwaggerUrl('r4')).toBe('http://localhost:8082/fhir/r4/swagger-ui/');
-    expect(getFhirSwaggerUrl('r5')).toBe('http://localhost:8082/fhir/r5/swagger-ui/');
   });
 });
