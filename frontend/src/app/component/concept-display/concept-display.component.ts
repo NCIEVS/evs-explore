@@ -711,16 +711,34 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   logicalDefinitionTable() {
     let logicalDefinitionTable = [];
 
+    let prevGroup = '';
+
     if (this.conceptDetail.groups !== undefined && this.conceptDetail.groups.length > 0 && this.conceptDetail.getProperty('Logical_Definition')=='true') {
       this.conceptDetail.groups.forEach((logicalDef) => {
 
-        if (logicalDef.ct) {
-          logicalDefinitionTable.push({ Relationship: 'More Data Available...' });
-          return;
+        if (logicalDefinitionTable.length > 0) {
+          // check to see if groups are different
+          if (prevGroup != logicalDef.group) {
+            if (logicalDef.group == '1') {
+              logicalDefinitionTable.push({  'Relationship': 'Role Group(s)'  });
+            }
+            else if (parseInt(logicalDef.group)) {
+              logicalDefinitionTable.push({  'Relationship': 'OR'  });
+            }
+            else {
+              logicalDefinitionTable.push({  'Relationship': logicalDef.group  });
+              
+            }
+          }
+        }
+        else {
+          logicalDefinitionTable.push({  'Relationship': 'Parent'  });
         }
 
+        prevGroup = logicalDef.group;
+
         const logicalDefinitionEntry = {};
-        logicalDefinitionEntry['Relationship'] = logicalDef.type;
+        logicalDefinitionEntry['Relationship'] = logicalDef.type == "Parent" ? '' : logicalDef.type;
         logicalDefinitionEntry['Code'] = logicalDef.relatedCode;
         logicalDefinitionEntry['Name'] = logicalDef.relatedName;
         
