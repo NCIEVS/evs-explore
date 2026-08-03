@@ -1,0 +1,14 @@
+.git
+.github
+.gradle
+.agents
+.settings
+.vscode
+BOOT-INF
+WEB-INF
+bin
+gradle
+src
+log
+report.html
+report-docker.html
