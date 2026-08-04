@@ -4,9 +4,13 @@
 
 This directory owns Angular environment constants and production file replacement behavior.
 
-## Development Environment
+## Local Environment
 
-`environment.ts` is used for local development. It sets `production: false`, local host expectations, the development Google Analytics code, and the dev Swagger URL.
+`environment.ts` is used for ordinary local development. It sets `production: false`, local host expectations, the development Google Analytics code, and the local EVSRESTAPI Swagger URL.
+
+## Dev-Proxy Environment
+
+`environment.dev.ts` is used by `npm run start:dev`. It keeps the Angular app on localhost while directing Swagger and FHIR documentation links to NCI dev EVSRESTAPI, matching `proxy.dev.config.json`.
 
 ## Production Environment
 
