@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   host: 'localhost',
   code: 'G-C8Y98QQ6LR',
-  swagger: 'https://api-evsrest-dev.nci.nih.gov/swagger-ui/index.html',
+  swagger: 'http://localhost:8082/swagger-ui/index.html',
 };
 
 /*

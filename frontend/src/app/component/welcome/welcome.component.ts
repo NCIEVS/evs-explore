@@ -5,6 +5,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ConfigurationService } from '../../service/configuration.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppComponent } from '../../app.component';
+import { getFhirSwaggerUrl } from '../../api-documentation-url';
 
 // Welcome screen component (simple component wrapper around welcome.component.html)
 @Component({
@@ -15,6 +16,9 @@ import { AppComponent } from '../../app.component';
 })
 export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('content', { static: true }) content: TemplateRef<any>;
+
+  readonly fhirR4SwaggerUrl = getFhirSwaggerUrl('r4');
+  readonly fhirR5SwaggerUrl = getFhirSwaggerUrl('r5');
 
   welcomeText: any = null;
   boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
