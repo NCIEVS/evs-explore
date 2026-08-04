@@ -1,5 +1,8 @@
 name: Trivy Backend Vulnerability Scan
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches:
