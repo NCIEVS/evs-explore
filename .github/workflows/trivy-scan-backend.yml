@@ -67,3 +67,50 @@ jobs:
     - name: Clean up
       run: |
         /bin/rm -rf web/gradle.lockfile
+  image-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Set up Gradle cache
+      uses: gradle/actions/setup-gradle@v6
+
+    - name: Build application image
+      run: make docker DOCKER_IMAGE=evsexplore:ci
+
+    - name: Scan application image
+      id: image-trivy-scan
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: image
+        image-ref: evsexplore:ci
+        scanners: vuln
+        severity: HIGH,CRITICAL
+        format: json
+        output: trivy_image_report.json
+        exit-code: '0'
+      env:
+        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+        TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+
+    - name: Check image vulnerabilities
+      id: check-image-vulnerabilities
+      run: |
+        vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH" or .Severity == "CRITICAL")] | length' trivy_image_report.json)
+        echo "Image HIGH and CRITICAL vulnerability count: $vuln_count"
+
+        if [ "$vuln_count" -gt 0 ]; then
+          echo "Listing HIGH and CRITICAL vulnerabilities found in the application image:"
+          jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH" or .Severity == "CRITICAL") | "\(.VulnerabilityID): \(.PkgName) - Severity: \(.Severity) - Installed Version: \(.InstalledVersion) - Fixed Version: \(.FixedVersion)"' trivy_image_report.json
+          exit 1
+        else
+          echo "No HIGH or CRITICAL vulnerabilities found in the application image."
+        fi
