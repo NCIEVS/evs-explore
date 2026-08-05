@@ -28,7 +28,7 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    # Install Trivy if not cached
+    # Install Trivy
     - name: Install Trivy
       run: |
         TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
@@ -74,39 +74,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the pull request code
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Set up Java 17 for the application build
     - name: Set up Java 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
+    # Install Trivy
+    - name: Install Trivy
+      run: |
+        TRIVY_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r .tag_name)
+        wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+        sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+
+    # Build the application image
     - name: Build application image
       run: make docker DOCKER_IMAGE=evsexplore:ci
 
+    # Scan the final application image
     - name: Scan application image
       id: image-trivy-scan
-      uses: aquasecurity/trivy-action@v0.36.0
-      with:
-        scan-type: image
-        image-ref: evsexplore:ci
-        scanners: vuln
-        severity: HIGH,CRITICAL
-        format: json
-        output: trivy_image_report.json
-        exit-code: '0'
+      run: |
+        trivy image evsexplore:ci --scanners vuln --severity HIGH,CRITICAL --format json --output trivy_image_report.json
       env:
         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
         TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
 
+    # Check for HIGH and CRITICAL vulnerabilities in the application image
     - name: Check image vulnerabilities
       id: check-image-vulnerabilities
       run: |
+        # Get the count of HIGH and CRITICAL vulnerabilities
         vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH" or .Severity == "CRITICAL")] | length' trivy_image_report.json)
         echo "Image HIGH and CRITICAL vulnerability count: $vuln_count"
 
+        # List the HIGH and CRITICAL vulnerabilities, if any
         if [ "$vuln_count" -gt 0 ]; then
           echo "Listing HIGH and CRITICAL vulnerabilities found in the application image:"
           jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH" or .Severity == "CRITICAL") | "\(.VulnerabilityID): \(.PkgName) - Severity: \(.Severity) - Installed Version: \(.InstalledVersion) - Fixed Version: \(.FixedVersion)"' trivy_image_report.json
