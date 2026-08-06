@@ -78,12 +78,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Set up Java 17 for the application build
-    - name: Set up Java 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
 
     # Install Trivy
     - name: Install Trivy
@@ -92,9 +86,6 @@ jobs:
         wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
         sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
 
-    # Build and package the current Angular bundle into the web application.
-    - name: Build frontend
-      run: cd frontend && ./gradlew build
 
     # Build the application image
     - name: Build application image

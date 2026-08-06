@@ -20,9 +20,7 @@ DOCKER_PORT             ?= 4200
 EVS_API_PORT            ?= 8082
 DOCKER_EVS_API_HOST     ?= host.docker.internal
 DOCKER_EVS_API_BASE_PATH ?= http://$(DOCKER_EVS_API_HOST):$(EVS_API_PORT)
-WEB_WAR                 := web/build/libs/evsexplore-$(DOCKER_TAG).RELEASE.war
-WEB_SOURCE_FILES        := $(shell git ls-files web) $(shell git ls-files --cached --others --exclude-standard web/src/main/resources/static)
-DOCKER_IMAGE_STAMP      := web/build/docker-image.stamp
+DOCKER_PLATFORM         ?= linux/amd64
 
 ifeq ($(OS),Windows_NT)
 DOCKER                  ?= docker.exe
@@ -32,18 +30,15 @@ DOCKER                  ?= docker
 WEB_GRADLEW             := ./gradlew
 endif
 
-.PHONY: build docker scandocker rundocker
+.PHONY: build docker dockerpush scandocker rundocker
 
 # consider also "docker save..." and "docker load..." to avoid registry.
 clean:
 	cd web; $(WEB_GRADLEW) clean
 
 # Build the library without tests.
-build: $(WEB_WAR)
-
-# Build the WAR only when its source or packaged static assets have changed.
-$(WEB_WAR): $(WEB_SOURCE_FILES)
-	cd web; $(WEB_GRADLEW) build -x test
+build:
+	cd web; $(WEB_GRADLEW) clean build -x test
 
 # build the frontend
 frontend:
@@ -57,14 +52,13 @@ test:
 run:
 	cd frontend; npm start
 
-# Build the image only when the packaged WAR or Docker build files have changed.
-docker: $(DOCKER_IMAGE_STAMP)
-	@$(DOCKER) image inspect "$(DOCKER_IMAGE)" > /dev/null 2>&1 || { rm -f "$(DOCKER_IMAGE_STAMP)"; $(MAKE) "$(DOCKER_IMAGE_STAMP)"; }
+# Build a Linux deployment image from source inside Docker.
+docker:
+	$(DOCKER) build --platform "$(DOCKER_PLATFORM)" --file web/Dockerfile --tag "$(DOCKER_IMAGE)" .
 
-$(DOCKER_IMAGE_STAMP): $(WEB_WAR) web/Dockerfile web/.dockerignore
-	$(DOCKER) build --file web/Dockerfile --tag "$(DOCKER_IMAGE)" web
-	@mkdir -p $(dir $@)
-	@touch $@
+# Push the platform-specific deployment image to the configured registry.
+dockerpush: docker
+	$(DOCKER) image push --platform "$(DOCKER_PLATFORM)" "$(DOCKER_IMAGE)"
 
 # Report HIGH and CRITICAL image vulnerabilities and write the complete HTML report.
 scandocker: docker
