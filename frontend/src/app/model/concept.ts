@@ -156,13 +156,8 @@ export class Concept {
     // roles
     this.roles = new Array();
     if (input.roles) {
-      for (let i = 0; i < input.roles.length; i++) {
-        
-        // Deal with duplicate roles that occur with groups, add just the one with the group
-        if (input.roles[i]?.relatedCode == input.roles[i+1]?.relatedCode && input.roles[i+1]?.group) {  i++;  }
-
-        this.roles.push(new Relationship(input.roles[i], configService));
-      }
+      const key = o => JSON.stringify([o.relatedCode, o.relatedName, o.source, o.type]); 
+      this.roles = [...new globalThis.Map<string, Relationship>(input.roles.map(o => [key(o), o])).values()]; 
       this.rolesCt = this.getCt(this.roles);
     }
 
