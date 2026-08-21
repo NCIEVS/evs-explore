@@ -266,7 +266,7 @@ export class TermSuggestionFormComponent implements OnInit {
             this.uiState.termFormGroup = this.formGroup;
           }
           // If there is a change in the subset control
-          else if (field.name == 'subset' && formControl.value) {
+          else if (field.name == 'subset' && formControl?.value) {
             const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
             const subsetControl = termInfoSection.get('subset') as FormControl;
             const totalData = structuredClone(this.formData);
