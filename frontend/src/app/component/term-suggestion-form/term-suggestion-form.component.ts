@@ -265,6 +265,31 @@ export class TermSuggestionFormComponent implements OnInit {
             }
             this.uiState.termFormGroup = this.formGroup;
           }
+          // If there is a change in the subset control
+          else if (field.name == 'subset' && formControl?.value) {
+            const termInfoSection = this.formGroup.get('termInfo') as FormGroup;
+            const subsetControl = termInfoSection.get('subset') as FormControl;
+            const totalData = structuredClone(this.formData);
+            let newOptions = new Array();
+            
+            if (
+              !subsetControl.value.includes('Multiple') && 
+              !subsetControl.value.includes('New') && 
+              !subsetControl.value.includes('None') && 
+              !subsetControl.value.includes('Unknown') && subsetControl.value.length > 0) {
+                console.log('doing shit')
+                for (let i = 0; i < subsetControl.value.length; i++) {
+                  const codelistOptions = this.formData.sections.find(s => s.name === 'termInfo')?.fields.find(s => s.name === 'codelist')?.mappedOptions;
+
+                  newOptions.push(...codelistOptions?.filter(codelist => codelist.label.startsWith(subsetControl.value[i])));
+                }
+                const codelistField = this.formData.sections.find(s => s.name == 'termInfo')?.fields.find(f => f.name == 'codelist');
+                codelistField.mappedOptions = newOptions.sort((a, b) => (a.label > b.label ? 1 : -1));
+            }
+            // this.uiState.termFormGroup = this.formGroup;
+            this.uiState.termFormData = this.formData;
+            this.formData = totalData;
+          } 
           this.errorMessages[field.name] = this.getErrorMessage(formControl, field);
         });
         formControl.statusChanges.subscribe(() => {
