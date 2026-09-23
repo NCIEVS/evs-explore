@@ -16,11 +16,6 @@ GIT_BRANCH				?=
 FULL_VERSION            := v$(APP_VERSION)-g$(GIT_VERSION)
 DOCKER_TAG              := $(shell grep "^version =" web/build.gradle | sed 's/version = //; s/"//g; s/.RELEASE//')
 DOCKER_IMAGE            ?= $(SERVICE):$(DOCKER_TAG)
-DOCKER_PORT             ?= 4200
-EVS_API_PORT            ?= 8082
-DOCKER_EVS_API_HOST     ?= host.docker.internal
-DOCKER_EVS_API_BASE_PATH ?= http://$(DOCKER_EVS_API_HOST):$(EVS_API_PORT)
-DOCKER_PLATFORM         ?= linux/amd64
 
 ifeq ($(OS),Windows_NT)
 DOCKER                  ?= docker.exe
@@ -29,6 +24,8 @@ else
 DOCKER                  ?= docker
 WEB_GRADLEW             := ./gradlew
 endif
+
+DOCKER_IMG              := $(shell $(DOCKER) image inspect "$(DOCKER_IMAGE)" --format "{{.Id}}" 2>/dev/null)
 
 .PHONY: build docker dockerpush scandocker rundocker
 
@@ -54,23 +51,32 @@ run:
 
 # Build a Linux deployment image from source inside Docker.
 docker:
-	$(DOCKER) build --platform "$(DOCKER_PLATFORM)" --file web/Dockerfile --tag "$(DOCKER_IMAGE)" .
 
-# Push the platform-specific deployment image to the configured registry.
-dockerpush: docker
-	$(DOCKER) image push --platform "$(DOCKER_PLATFORM)" "$(DOCKER_IMAGE)"
+# Remove prior docker image if it is built
+ifdef DOCKER_IMG
+	$(DOCKER) rmi -f $(DOCKER_IMG)
+else
+	@echo No docker image to remove
+endif
+	$(DOCKER) build --platform linux/amd64 --no-cache-filter=web-build --file web/Dockerfile --tag "$(DOCKER_IMAGE)" .
 
-# Report HIGH and CRITICAL image vulnerabilities and write the complete HTML report.
-scandocker: docker
-	trivy image "$(DOCKER_IMAGE)" --scanners vuln --severity HIGH,CRITICAL --format table
-	trivy image "$(DOCKER_IMAGE)" --scanners vuln --format template -o report-docker.html --template "@config/trivy/html.tpl"
+# Build and push a Linux/AMD64 image. Override DOCKER_IMAGE with a registry-qualified image name.
+dockerpush:
+	$(DOCKER) push --platform linux/amd64 "$(DOCKER_IMAGE)"
+
+# Report all HIGH and CRITICAL image vulnerabilities with their installed and fixed versions.
+# The complete HTML report is written to report.html.
+scandocker:
+	$(DOCKER) save -o scan.tar $(DOCKER_IMAGE)
+	trivy image --input scan.tar $(DOCKER_IMAGE) --format template -o report.html --template "@config/trivy/html.tpl"
+	egrep "CRITICAL|HIGH" report.html
+	/bin/rm -f scan.tar
 
 # Run against EVSRESTAPI exposed on the Docker host. EVSRESTAPI, Jena, and OpenSearch must be running.
-rundocker: docker
-	$(DOCKER) run --rm --name "$(SERVICE)" -p "$(DOCKER_PORT):4200" \
+rundocker:
+	$(DOCKER) run --rm --name "$(SERVICE)" -p "4200:4200" \
 		-e NCI_EVSEXPLORE_SERVER_PORT=4200 \
-		-e EVS_API_BASE_PATH="$(DOCKER_EVS_API_BASE_PATH)" \
-		-e UI_LICENSE \
+		-e EVS_API_BASE_PATH="http://host.docker.internal:8082" \
 		"$(DOCKER_IMAGE)"
 
 releasetag:
