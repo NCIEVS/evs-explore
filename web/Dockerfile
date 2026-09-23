@@ -12,7 +12,7 @@ WORKDIR /workspace/web
 COPY --chown=gradle:gradle web/ ./
 RUN mkdir -p src/main/resources/static
 COPY --from=frontend-build --chown=gradle:gradle /workspace/frontend/dist/ ./src/main/resources/static/
-RUN gradle build -x test --no-daemon
+RUN gradle --no-daemon bootWar -x test
 
 # Run the Linux deployment image as an unprivileged user.
 FROM eclipse-temurin:17-jre-jammy
