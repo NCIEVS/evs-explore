@@ -37,4 +37,8 @@ describe('WelcomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should omit terminology info until configuration is loaded', () => {
+    expect(component.getTerminologyInfo()).toBe('');
+  });
+
 });

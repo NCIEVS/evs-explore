@@ -23,7 +23,5 @@ web/bin/*
 # System Files
 .DS_Store
 
-
-report.html
 web/gradle.lockfile
-reportJava.html
+report*.html
