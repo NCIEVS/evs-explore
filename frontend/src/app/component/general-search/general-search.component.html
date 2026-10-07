@@ -46,7 +46,7 @@
               </span>
               <span style="margin-left: 2px"><button type="button" pButton style="border: 0; margin-left: 10px"
                   icon="fa fa-search" (click)="onResetSearch($event)" pTooltip="Click to start new search"
-                  showDelay="300" label="New Search" tooltipPosition="bottom"></button></span>
+                  [disabled]="disableEntry()" showDelay="300" label="New Search" tooltipPosition="bottom"></button></span>
             </div>
           </div>
         </div>
