@@ -17,6 +17,10 @@
   }
 }
 
+.col-sm-1 {
+  white-space: nowrap;
+}
+
 .col-sm-3 {
   min-width: max-content;
 }
@@ -26,6 +30,10 @@
 }
 
 .col-sm-5 {
+  min-width: max-content;
+}
+
+.col-sm-7 {
   min-width: max-content;
 }
 
