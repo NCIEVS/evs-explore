@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
-import { environment } from '../../../environments/environment';
+import { getSwaggerUrl } from '../../api-documentation-url';
 
 @Component({
   selector: 'app-evs-api',
@@ -15,7 +15,7 @@ export class EvsApiComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('EVS Explore API');
-    this.apiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.swagger);
+    this.apiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(getSwaggerUrl());
   }
 
 }

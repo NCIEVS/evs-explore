@@ -5,7 +5,7 @@ import { NotificationService } from '../../service/notification.service';
 import { SearchTermService } from '../../service/search-term.service';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 import { provideHttpClient } from '@angular/common/http';
@@ -19,10 +19,10 @@ describe('GeneralSearchComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ GeneralSearchComponent ],
       imports: [
-        RadioButtonModule,
-        DropdownModule,
         AutoCompleteModule,
-        FormsModule
+        FormsModule,
+        RadioButtonModule,
+        SelectModule
       ],
       providers: [
         NotificationService,

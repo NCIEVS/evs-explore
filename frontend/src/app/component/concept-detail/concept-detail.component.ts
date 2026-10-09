@@ -16,6 +16,8 @@ import { ViewportScroller } from '@angular/common';
 })
 export class ConceptDetailComponent implements OnInit {
   @Input() concept: Concept;
+  @Input() urlBase = '/concept';
+  @Input() urlTarget = '_top';
 
   // TODO: this needs to be pulled from the endpoint (e.g. application metadata)
   externalLinks = new Map(
@@ -105,7 +107,6 @@ export class ConceptDetailComponent implements OnInit {
     // Currently only NCIT has subsets
     return concept.terminology === 'ncit' && isSubset;
   }
-
 
   checkFilter(item: any): boolean {
     if (!this.titleSet && this.concept) {
@@ -201,7 +202,8 @@ export class ConceptDetailComponent implements OnInit {
 
   loadAll(scrollToId: string = null) {
     if (confirm('Loading all data may take a while, are you sure you want to proceed?')) {
-      this.conceptDisplay.lookupConcept(false, scrollToId);
+      this.conceptDisplay.lookupConcept(false, "scrollToId");
     }
   }
+
 }

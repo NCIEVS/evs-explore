@@ -14,7 +14,7 @@
 <app-evs-footer></app-evs-footer>
 
 <ng-template #licenseModal let-modal>
-  <div class="modal-body">{{licenseText}}
+  <div class="modal-body" [innerHTML]="licenseText">
   </div>
   <div class="modal-footer">
     <form action="" (submit)="modal.close()" method="POST">

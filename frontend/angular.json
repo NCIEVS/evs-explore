@@ -69,7 +69,15 @@
                 }
               ]
             },
-            "development": {}
+            "development": {},
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            }
           },
           "defaultConfiguration": "production"
         },
@@ -82,6 +90,9 @@
             },
             "development": {
               "buildTarget": "frontend:build:development"
+            },
+            "dev": {
+              "buildTarget": "frontend:build:dev"
             }
           },
           "defaultConfiguration": "development"

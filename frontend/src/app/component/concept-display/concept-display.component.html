@@ -2,7 +2,7 @@
   <div class="page-header p-coloring">
     <span>
       {{ title }}
-      <span *ngIf="displayHierarchy">
+      <span *ngIf="showHierarchyButton">
         --
         <p-button
           [routerLink]="['/hierarchy', terminology, conceptCode]"
@@ -49,7 +49,7 @@
       </span>
     </span>
   </div>
-  <app-concept-detail [concept]="conceptDetail"></app-concept-detail>
+  <app-concept-detail [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget"></app-concept-detail>
   <app-concept-relationship [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget"> </app-concept-relationship>
   <app-concept-history [concept]="conceptDetail" [urlBase]="urlBase" [urlTarget]="urlTarget"></app-concept-history>
 </div>

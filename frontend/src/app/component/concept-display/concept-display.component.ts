@@ -28,6 +28,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   hierarchyDisplay = '';
   title: string;
   displayHierarchy: boolean;
+  showHierarchyButton: boolean;
 
   urlBase = '/concept';
   urlTarget = '_top';
@@ -93,8 +94,10 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // show hierarchy if NOT in hierarchy page and there is a hierarchy
-    this.displayHierarchy = !window.location.pathname.includes('/hierarchy') && this.configService.getTerminology()?.metadata.hierarchy;
+    this.displayHierarchy = window.location.pathname.includes('/hierarchy') && !window.location.pathname.includes('/hierarchy-popup');
+    this.urlBase = this.displayHierarchy ? '/hierarchy' : '/concept';
+    // show hierarchy button if NOT in hierarchy page and there is a hierarchy
+    this.showHierarchyButton = !this.displayHierarchy && !!this.configService.getTerminology()?.metadata.hierarchy;
 
     // Start by getting properties because this is a new window
     this.conceptDetailService.getProperties().subscribe((properties: any) => {
@@ -146,7 +149,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToAnchor(scrollToId);
       }
       this.loaderService.hideLoader();
-      this.displayHierarchy = this.displayHierarchy && this.concept.parents;
+      this.showHierarchyButton = this.showHierarchyButton && !!this.concept.parents;
     });
   }
 
@@ -266,6 +269,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     let broaderConceptWorksheet: WorkSheet;
     let narrowerConceptWorksheet: WorkSheet;
     let otherRelationshipsWorksheet: WorkSheet;
+    let logicalDefinitionWorksheet: WorkSheet;
 
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
       roleRelationshipsWorksheet = utils.json_to_sheet(this.roleRelationshipsTable());
@@ -273,6 +277,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
       incomingRoleRelationshipsWorksheet = utils.json_to_sheet(this.incomingRoleRelationshipsTable());
       incomingAssociationsWorksheet = utils.json_to_sheet(this.incomingAssociationsTable());
       disjointWithWorksheet = utils.json_to_sheet(this.disjointWithTable());
+      logicalDefinitionWorksheet = utils.json_to_sheet(this.logicalDefinitionTable());
     } else {
       broaderConceptWorksheet = utils.json_to_sheet(this.broaderConceptTable());
       narrowerConceptWorksheet = utils.json_to_sheet(this.narrowerConceptTable());
@@ -295,6 +300,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
       incomingAssociationsWorksheet,
       disjointWithWorksheet,
       otherRelationshipsWorksheet,
+      logicalDefinitionWorksheet,
       historyWorksheet,
     );
     const excelBuffer: any = writeXLSX(workbook, { bookType: 'xlsx', type: 'array' });
@@ -563,6 +569,8 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     return associationsTable;
   }
 
+  // TODO: Logical Defintions Table for Export
+
   broaderConceptTable() {
     const broaderConceptTable = [];
     if (!this.concept.broader && this.concept.associations !== null) this.concept.broader = this.concept.associations?.filter((x) => x.type === 'RN');
@@ -700,6 +708,49 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     return associationsTable;
   }
 
+  logicalDefinitionTable() {
+    let logicalDefinitionTable = [];
+
+    let prevGroup = '';
+
+    if (this.conceptDetail.groups !== undefined && this.conceptDetail.groups.length > 0 && this.conceptDetail.getProperty('Logical_Definition')=='true') {
+      this.conceptDetail.groups.forEach((logicalDef) => {
+
+        if (logicalDefinitionTable.length > 0) {
+          // check to see if groups are different
+          if (prevGroup != logicalDef.group) {
+            if (logicalDef.group == '1') {
+              logicalDefinitionTable.push({  'Relationship': 'Role Group(s)'  });
+            }
+            else if (parseInt(logicalDef.group)) {
+              logicalDefinitionTable.push({  'Relationship': 'OR'  });
+            }
+            else {
+              logicalDefinitionTable.push({  'Relationship': logicalDef.group  });
+              
+            }
+          }
+        }
+        else {
+          logicalDefinitionTable.push({  'Relationship': 'Parent'  });
+        }
+
+        prevGroup = logicalDef.group;
+
+        const logicalDefinitionEntry = {};
+        logicalDefinitionEntry['Relationship'] = logicalDef.type == "Parent" ? '' : logicalDef.type;
+        logicalDefinitionEntry['Code'] = logicalDef.relatedCode;
+        logicalDefinitionEntry['Name'] = logicalDef.relatedName;
+        
+        logicalDefinitionTable.push(logicalDefinitionEntry);
+      });
+    } else {
+      logicalDefinitionTable.push({ None: '' });
+    }
+    
+    return logicalDefinitionTable;
+  }
+
   getQualifiers(qualifiers) {
     if (!qualifiers || qualifiers.length === 0) {
       return null;
@@ -741,6 +792,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
     incomingAssociationsWorksheet,
     disjointWithWorksheet,
     otherRelationshipsWorksheet,
+    logicalDefinitionWorksheet,
     historyWorksheet,
   ) {
     if (!(this.configService.isMultiSource() && this.configService.isRrf())) {
@@ -758,6 +810,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Incoming Role Relationships': incomingRoleRelationshipsWorksheet,
           'Incoming Associations': incomingAssociationsWorksheet,
           'Disjoint With': disjointWithWorksheet,
+          'Logical Definition': logicalDefinitionWorksheet,
           'Concept History': historyWorksheet,
         },
         SheetNames: [
@@ -773,6 +826,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Incoming Role Relationships',
           'Incoming Associations',
           'Disjoint With',
+          'Logical Definition',
           'Concept History',
         ],
       };
@@ -789,6 +843,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Broader Concepts': broaderConceptWorksheet,
           'Narrower Concepts': narrowerConceptWorksheet,
           'Other Relationships': otherRelationshipsWorksheet,
+          'Logical Definition': logicalDefinitionWorksheet,
           'Concept History': historyWorksheet,
         },
         SheetNames: [
@@ -803,6 +858,7 @@ export class ConceptDisplayComponent implements OnInit, OnDestroy {
           'Broader Concepts',
           'Narrower Concepts',
           'Other Relationships',
+          'Logical Definition',
           'Concept History',
         ],
       };

@@ -9,7 +9,7 @@ import { NotificationService } from '../../service/notification.service';
 import { SearchTermService } from '../../service/search-term.service';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -22,12 +22,12 @@ describe('AutofocusDirective', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterModule,
-        RadioButtonModule,
-        DropdownModule,
         AutoCompleteModule,
         ButtonModule,
-        FormsModule
+        FormsModule,
+        RouterModule,
+        RadioButtonModule,
+        SelectModule
       ],
       declarations: [
         AutofocusDirective,

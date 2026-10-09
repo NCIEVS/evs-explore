@@ -7,6 +7,7 @@ export class Relationship {
   relatedCode: string;
   relatedName: string;
   source: string;
+  group: string;
   ct: number;
   qualifiers: any;
   highlight: string;

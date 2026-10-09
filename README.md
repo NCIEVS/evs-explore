@@ -43,6 +43,12 @@ cd web
 java -Xmx4096M -jar build/libs/evsexplore-*.war
 ```
 
+When running in java mode like above, there is an endpoint to check the evs-explore version via
+
+```
+curl http://localhost:4200/evsexplore/version
+```
+
 ### Making tag for deployment
 
 There are a few steps to making a tag to deploy to the testing environments (dev, stage, qa, etc):

@@ -37,6 +37,8 @@ export class Concept {
   associationsCt: number = 0;
   inverseAssociations: Relationship[];
   inverseAssociationsCt: number = 0;
+  groups: Relationship[];
+  groupsCt: number = 0;
   broader: Relationship[];
   broaderCt: number = 0;
   narrower: Relationship[];
@@ -154,9 +156,8 @@ export class Concept {
     // roles
     this.roles = new Array();
     if (input.roles) {
-      for (let i = 0; i < input.roles.length; i++) {
-        this.roles.push(new Relationship(input.roles[i], configService));
-      }
+      const key = o => JSON.stringify([o.relatedCode, o.relatedName, o.source, o.type]); 
+      this.roles = [...new globalThis.Map<string, Relationship>(input.roles.map(o => [key(o), o])).values()]; 
       this.rolesCt = this.getCt(this.roles);
     }
 
@@ -229,6 +230,29 @@ export class Concept {
         this.inverseAssociations.push(new Relationship(input.inverseAssociations[i], configService));
       }
       this.inverseAssociationsCt = this.getCt(this.inverseAssociations);
+    }
+
+    //groups
+    this.groups = new Array();
+    if (input.roles) {
+      this.groups = new Array();
+      for (let i = 0; i < input.roles.length; i++) {
+        if (input.roles[i].group) {
+          this.groups.push(new Relationship(input.roles[i], configService))
+        }
+      }
+      if (input.parents) {
+        const parentName='';
+        const parentCode='';
+        for (let i = 0; i < this.parents.length; i++) {
+          //get data for groups from parents (need code + name)
+          this.groups.push(new Relationship({ relatedCode: this.parents[i].code, relatedName: this.parents[i].name, type: 'Parent' }, configService))
+        } 
+      }
+      this.groupsCt = this.getCt(this.groups);
+      if (this.rolesCt > this.roles.length) {
+        this.groupsCt++;
+      }
     }
 
     // maps
@@ -417,7 +441,8 @@ export class Concept {
     const syns = this.getAllSynonymNames();
     const uniqSynonyms = [];
     for (let i = 0; i < syns.length; i++) {
-      if (
+      // skip blank synonyms
+      if (syns[i] &&
         !uniqSynonyms
           .map(function (c) {
             return c.toLowerCase();
@@ -622,11 +647,11 @@ export class Concept {
 
   hasCdiscSy(): boolean {
     // source with CDISC* or MRCT* or ICH* and termType = SY
-    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH') || this.name.startsWith('ICH')) && syn.termType === 'SY');
+    return this.synonyms.some((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || syn.source.startsWith('ICH')) && syn.termType === 'SY');
   }
 
   getCdiscPtName(): string {
-    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || this.name.startsWith('ICH')) && syn.termType === 'PT')
+    return this.synonyms?.find((syn) => syn.source && (syn.source.startsWith('CDISC') || syn.source.startsWith('MRCT-Ctr') || syn.source.startsWith('ICH')) && syn.termType === 'PT')
       ?.name;
   }
 

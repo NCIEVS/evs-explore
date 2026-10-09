@@ -358,7 +358,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
       this.pageSize = event.rows;
       this.setQueryUrl();
       this.avoidLazyLoading = true;
-      this.performSearch();
     }
   }
 
@@ -460,7 +459,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
 
   // Perform the search
   performSearch() {
-    if (this.searchCriteria.term === null || this.searchCriteria.term.length < 3) {
+    if (this.searchCriteria.term === null || this.searchCriteria.term?.length < 1) {
       if (!this.firstSearchFlag) {
         console.log('skip search - first search has not happened, reroute to /welcome', this.searchCriteria.term);
         this.router.navigate(['/welcome'], {

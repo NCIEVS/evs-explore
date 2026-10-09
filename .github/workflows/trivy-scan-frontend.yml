@@ -4,9 +4,14 @@ on:
   pull_request:
    branches:
      - develop
+     - develop-*
      - master
 
   workflow_dispatch:  # Allows manual runs from the GitHub UI
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   frontend-trivy-scan:

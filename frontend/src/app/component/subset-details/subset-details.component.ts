@@ -255,7 +255,7 @@ export class SubsetDetailsComponent implements OnInit {
     const pages = Math.ceil(Math.min(exportMax, this.hitsFound) / exportPageSize);
     const pageList = Array.from(Array(pages).keys());
 
-    if (this.subsetFormat === 'CDISC' || this.subsetFormat === 'ICH' && !this.selectedSubset.isCdiscGrouper()) {
+    if ((this.subsetFormat === 'CDISC' || this.subsetFormat === 'ICH') && !this.selectedSubset.isCdiscGrouper()) {
       subsetText += this.exportCodeFormatter(this.selectedSubset);
     }
     for (const page of pageList) {
@@ -303,7 +303,7 @@ export class SubsetDetailsComponent implements OnInit {
       });
       rowText += ',';
       rowText += '"' + this.getSynonymNames(concept, 'CTRP', 'DN').join('\n') + '"';
-    } else if (this.subsetFormat === 'CDISC') {
+    } else if (this.subsetFormat === 'CDISC' || this.subsetFormat === 'ICH') {
       // cdisc code
       rowText += concept.code + ',';
       // codelist code
