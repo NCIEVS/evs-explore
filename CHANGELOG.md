@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.5.0.RELEASE] - 2026-09-25
 ### Changed
 - Updates to fix vulnerabilities (frontend and web)
-- AngularUI Updates
+- Upgrade to Angular 20
 - Added handling for CDISC form subset->codelist filtering
 - Initial rendering of logical definition
 - Improve experience of interacting with licenses
