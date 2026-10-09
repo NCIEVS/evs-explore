@@ -76,6 +76,7 @@
           </div>
           <ng-template #singleSearch>
             <div id="welcomeTextDiv" [innerHTML]="welcomeText"></div>
+            <div id="releaseDiv">{{ getTerminologyInfo() }}</div>
           </ng-template>
           <div *ngIf="!welcomeText" [innerHTML]="boilerPlateWelcomeText"></div>
         </div>

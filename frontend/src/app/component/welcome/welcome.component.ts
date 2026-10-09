@@ -22,6 +22,7 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   welcomeText: any = null;
   boilerPlateWelcomeText: any = 'Loading welcome text for ' + this.configService.getTerminologyName() + ' ...';
+  versionInfo: any = null;
   allTerminologies: any = null;
   selectedMultiTerminologies = new Set<String>();
   checkboxStates: { [key: string]: boolean } = {}; // track the state of the checkbox based on terminology
@@ -119,6 +120,13 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
         document.getElementById('welcomeTextDiv').innerHTML = this.sanitizer.sanitize(SecurityContext.HTML, this.welcomeText);
       }
     });
+  }
+
+  // Sets terminology & version info text
+  getTerminologyInfo(): string {
+    const terminology = this.configService.getTerminology();
+    const versionInfo = 'Version: ' + terminology.version + (terminology.date ? '; Release Date: ' + terminology.date : '');
+    return versionInfo;
   }
 
   // Opens the HHS banner
