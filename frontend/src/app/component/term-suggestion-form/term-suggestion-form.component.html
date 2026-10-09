@@ -63,7 +63,7 @@
             <p-multiSelect *ngIf="field.type === 'dropdown' && field.multiple"
                            [formControlName]="field.name" [options]="field.mappedOptions" [filter]="true"
                            [placeholder]="field.placeholder" [selectedItemsLabel]="'{0} items selected'"
-                           [defaultLabel]="field.label" class="text-body field-input">
+                           class="text-body field-input">
             </p-multiSelect>
             <!-- Dropdown no multiple select-->
             <select *ngIf="field.type === 'dropdown' && !field.multiple" [formControlName]="field.name"

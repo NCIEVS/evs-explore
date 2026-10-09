@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.5.0.RELEASE] - 2026-MM-DD
+## [2.5.0.RELEASE] - 2026-09-25
 ### Changed
-- TBD
+- Updates to fix vulnerabilities (frontend and web)
+- Upgrade to Angular 20
+- Added handling for CDISC form subset->codelist filtering
+- Initial rendering of logical definition
+- Improve experience of interacting with licenses
+- Preserve hierarchy mode when clicking around in hierarchy mode
+- Fix to prevent double searching
+- Added a version endpoint
+- Fixes for ICH subset export
 
 ## [2.4.0.RELEASE] - 2026-04-06
 ### Changed
