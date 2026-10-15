@@ -5,7 +5,7 @@
 EVS Explore is a terminology browser with two primary modules:
 
 - `frontend/`: Angular application for search, concept display, hierarchy browsing, subsets, mappings, documentation, and term suggestion workflows.
-- `web/`: Spring Boot Java 17 web module packaged as a WAR. It serves the built Angular app and proxies `/api/v1/**` requests to EVSRESTAPI.
+- `web/`: Spring Boot 4.1 Java 25 web module packaged as a WAR. It serves the built Angular app and proxies `/api/v1/**` requests to EVSRESTAPI.
 
 Production-style builds copy Angular output into `web/src/main/resources/static`, where the Java web module serves it as static content.
 

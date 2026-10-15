@@ -5,7 +5,8 @@ After=network-online.target
 [Service]
 User=evsuser
 Group=evsuser
-Environment=JAVA_HOME=/usr/openjdk11
+# Adjust to the Java 25 installation on the deployment host.
+Environment=JAVA_HOME=/usr/local/corretto-jdk25
 ExecStart=/local/content/evsexplore/evsexplore/bin/evsexplore start
 ExecStop=/local/content/evsexplore/evsexplore/bin/evsexplore stop
 WorkingDirectory=/local/content/evsexplore/evsexplore/bin

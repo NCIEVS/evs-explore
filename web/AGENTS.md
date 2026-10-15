@@ -6,11 +6,11 @@ This module owns the Spring Boot web application, Java backend proxy behavior, W
 
 ## Module Architecture
 
-The module is a Java 17 Spring Boot application using Gradle. It disables JDBC datasource auto-configuration, binds EVS Explore web properties from `application.yml`, serves static Angular assets from `src/main/resources/static`, and forwards API calls to EVSRESTAPI through Java request handling.
+The module is a Java 25 Spring Boot 4.1 application using Gradle. It has no JDBC dependencies, binds EVS Explore web properties from `application.yml`, serves static Angular assets from `src/main/resources/static`, and forwards API calls to EVSRESTAPI through Java request handling.
 
 ## Build and Runtime Notes
 
-- `build.gradle` defines Spring Boot, Spring Cloud Gateway MVC dependencies, dependency locking, WAR packaging, and zip packaging.
+- `build.gradle` defines Spring Boot, Spring MVC dependencies, dependency locking, WAR packaging, and zip packaging.
 - `src/main/resources/application.yml` defines the servlet context path, server port, logging levels, and `gov.nih.nci.evsexplore.web` property namespace.
 - `src/main/resources/static` is build output copied from `frontend/dist`; do not treat hashed JS/CSS files there as source files.
 - `src/main/bin/evsexplore` is packaged into the distribution zip as an executable helper script.

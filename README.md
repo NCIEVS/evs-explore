@@ -7,30 +7,43 @@ EVS terminology browser application
 See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
 * Run "npm outdated" from `frontend` to see whether versions are out of date
-  * Some fixing of packages was done, but this is really finicky.
-  * Sticking with Angular 16 for now.
+  * Check compatibility with the Angular version in `frontend/package.json` before upgrading.
 
 ### Building and running the Java Webapp
 
-This is how things run in production.
+Gradle builds use JDK 25 and the checked-in Gradle 9.3.0 wrappers. The web module
+uses Spring Boot 4.1.1. The frontend Gradle build downloads Node and npm;
+development and Jest tests still run directly through npm without Java.
 
-Run `make clean build` from the top level or `./gradlew clean build -x test"` from the "web/" folder.
+From the repository root, build the Angular assets first, then package the WAR:
 
-Launch the application with
+```bash
+make frontend
+make build
+cd web
+java --add-opens=java.base/java.io=ALL-UNNAMED -jar build/libs/evsexplore-2.6.0.RELEASE.war
+```
 
-    java  --add-opens=java.base/java.io=ALL-UNNAMED -jar build/libs/evsexplore-*.war
-
-Then view the browser in http://localhost:4200/evsexplore/welcome
+Open http://localhost:4200/evsexplore/welcome. `make build` skips Java tests and
+does not rebuild Angular assets. Run `cd web && ./gradlew test` from the repository
+root to run Java tests. The deployment ZIP is written to `web/build/distributions`.
 
 ### Deploying to AWS servers
 
-The built application has an application.yml file that drives the proxy endpoint for the redirected
-calls to the the API.  Make sure this environment variable is set correctly for the deployment env.
+Set `EVS_API_BASE_PATH` to the deployment's EVSRESTAPI base URL, such as
+`http://localhost:8082`. The WAR reads this through `application.yml`.
+
+Deployment hosts require Java 25. The packaged service launcher defaults to
+`/usr/local/corretto-jdk25` and accepts a `JAVA_HOME` override. Adjust the matching
+path in `evsexplore.service` for the host. The ZIP layout and start/stop commands
+are unchanged.
 
 
 ### Launching EVS-EXPLORE for development
 
-Install npm, ideally the version specified in package.json. Then run `npm install` from `frontend`.
+Use Node 22.14.0 and npm 10.9.2 to match the build tooling. Run `npm install` from
+`frontend`. `make run` starts the local Angular server, and `make test` runs Jest;
+both call npm directly and do not require Java.
 
 There are three ways to launch EVS-EXPLORE for development:
 
@@ -40,7 +53,7 @@ There are three ways to launch EVS-EXPLORE for development:
 
 ```bash
 cd web
-java -Xmx4096M -jar build/libs/evsexplore-*.war
+java -Xmx4096M -jar build/libs/evsexplore-2.6.0.RELEASE.war
 ```
 
 When running in java mode like above, there is an endpoint to check the evs-explore version via
@@ -58,35 +71,11 @@ There are a few steps to making a tag to deploy to the testing environments (dev
 4. Push all changes to your branch.
 5. Make the tag. Use the `make tag` command from the top level. This will require that you don't have any changes waiting to be pushed, otherwise it will fail.
 
-### Upgrading to latest
+### Updating frontend tooling
 
-This should work on Linux and the Mac.
-
-```
-npm install -g n
-n lts
-```
-
-Windows, run PowerShell as Administrator:
-
-To update NPM:
-
-```
-Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
-npm install -g npm-windows-upgrade
-npm-windows-upgrade
-```
-
-From the list provided, use the arrow keys to select version 10.8.3.
-
-To update Node/ng, first install `nvm`:
-
-```
-nvm install 18.20.7
-nvm use 18.20.7
-npm uninstall -g @angular/cli
-npm install -g @angular/cli@latest
-```
+Keep CI's Node version and `frontend/build.gradle` aligned. Angular CLI is a local
+dependency in `frontend/package.json`; npm scripts use that version, so a global
+Angular CLI installation is unnecessary.
 
 ### Supported Browsers
 The application has been specifically tested on the following browsers:
