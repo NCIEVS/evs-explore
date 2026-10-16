@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, AfterViewInit, 
 import { ConfigurationService } from './../../service/configuration.service';
 import { SearchCriteria } from './../../model/searchCriteria';
 import { TableData } from './../../model/tableData';
-import { ActivatedRoute, NavigationStart } from '@angular/router';
+import { ActivatedRoute, NavigationStart, NavigationEnd } from '@angular/router';
 import { Table } from 'primeng/table';
 import { AutoComplete } from 'primeng/autocomplete';
 import { SearchResult } from './../../model/searchResult';
@@ -51,7 +51,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
   // TODO: VERY NCIt specific
   selectedPropertiesReturn: string[] = ['Preferred Name', 'Synonyms', 'Definitions', 'Semantic Type'];
   showMoreSearchOption = false;
-  avoidLazyLoading = false;
+  searchAfterNavigation = false;
 
   // For possible future use
   textSuggestions: string[] = [];
@@ -100,13 +100,20 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
     const path = '' + window.location.pathname;
     this.welcomePage = path.includes('welcome');
 
-    // Set up listener for back/forward browser events
-    this.routeListener = this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe((event: NavigationStart) => {
+    // Handle paging navigation and back/forward browser events
+    this.routeListener = this.router.events.pipe(filter((event) => event instanceof NavigationStart || event instanceof NavigationEnd)).subscribe((event: NavigationStart | NavigationEnd) => {
+      // Fetch the requested page after navigation if this component was reused.
+      if (event instanceof NavigationEnd) {
+        if (this.searchAfterNavigation) {
+          this.searchAfterNavigation = false;
+          this.performSearch();
+        }
+        return;
+      }
       if (event.restoredState) {
         // Handle the search page
         if (event.url.indexOf('/search') != -1) {
           this.configFromQueryParams();
-          this.avoidLazyLoading = true;
           this.performSearch();
         }
         // handle multi-search
@@ -182,7 +189,6 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
     //temporarily search doesn't autofocus -- focusInput() broke in updating primeng and angular to 18
     setTimeout(() => (this.termauto));
     if (!this.welcomePage) {
-      this.avoidLazyLoading = true;
       setTimeout(() => this.performSearch());
     }
     if (this.configService.getMultiSearch()) {
@@ -349,16 +355,16 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, AfterViewInit 
 
   // Load table data
   loadDataLazily(event) {
-    console.log('loadDataLazily', event, this.avoidLazyLoading);
-    if (this.avoidLazyLoading) {
-      this.avoidLazyLoading = false;
-    } else {
-      this.searchCriteria.fromRecord = event.first;
-      this.searchCriteria.pageSize = event.rows;
-      this.pageSize = event.rows;
-      this.setQueryUrl();
-      this.avoidLazyLoading = true;
+    // Ignore events that do not change the requested page.
+    if (event.first === this.searchCriteria.fromRecord && event.rows === this.searchCriteria.pageSize) {
+      return;
     }
+    this.searchCriteria.fromRecord = event.first;
+    this.searchCriteria.pageSize = event.rows;
+    this.pageSize = event.rows;
+    // A reused component searches after navigation; a recreated one searches on init.
+    this.searchAfterNavigation = true;
+    this.setQueryUrl();
   }
 
   // Handle a key event with 'backspace' or 'delete'
