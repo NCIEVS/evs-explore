@@ -19,7 +19,7 @@ public class EVSController {
   Logger logger = Logger.getLogger(EVSController.class.getName());
 
   /** The application version (should match build.gradle) */
-  public static final String VERSION = "2.5.0.RELEASE";
+  public static final String VERSION = "2.5.1.RELEASE";
 
   /** The proxy service. */
   @Autowired ProxyService service;
