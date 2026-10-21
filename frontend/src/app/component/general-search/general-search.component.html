@@ -131,7 +131,8 @@
             <p-table #dtSearch [columns]="displayColumns" [value]="reportData" [paginator]="true"
               [rowsPerPageOptions]="[10, 20, 50, 100]" pageLinkSize="3" [rows]="pageSize" [scrollable]="true"
               dataKey="column1" [reorderableColumns]="true" [totalRecords]="totalRecords" paginatorPosition="both"
-              [lazy]="true" (onLazyLoad)="loadDataLazily($event)" showGridlines>
+              [first]="searchCriteria.fromRecord" [lazy]="true" [lazyLoadOnInit]="false"
+              (onLazyLoad)="loadDataLazily($event)" showGridlines>
               <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                   <!--<col style="width: 1.8em">-->
