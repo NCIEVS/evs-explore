@@ -24,6 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '19' #set the project Angular version
+      - name: Set up JDK 17 #Temporary setup for Java 17 so jest tests can run
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Install Dependencies
         run: npm install
       - name: Build Application
