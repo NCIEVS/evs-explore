@@ -117,7 +117,7 @@
               <!--<p-toggleButton [(ngModel)]="columnMore" (onChange)="setDefaultColumns()" onLabel="Show Highlights"
                 offLabel="Hide Highlights" onIcon="pi pi-times" offIcon="pi pi-check"></p-toggleButton>-->
               <p-multiSelect [showToggleAll]="false" dropdownIcon="pi pi-caret-down" [options]="multiSelectCols"
-                [(ngModel)]="selectedColumns" name="columnNames" defaultLabel="Search Result Details" [filter]="false"
+                [(ngModel)]="selectedColumns" name="columnNames" placeholder="Search Result Details" [filter]="false"
                 (onChange)="setColumns()" [displaySelectedLabel]="false" [style]="{ minWidth: '200px' }">
               </p-multiSelect>
             </div>
