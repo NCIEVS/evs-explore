@@ -24,15 +24,11 @@ jobs:
 
     # Install Trivy
     - name: Install Trivy
-      env:
-        # Authenticated lookup avoids the unauthenticated GitHub API rate limit on shared runners.
-        GH_TOKEN: ${{ github.token }}
       run: |
-        set -euo pipefail
-        TRIVY_LATEST_VERSION=$(gh release view --repo aquasecurity/trivy --json tagName --jq .tagName)
-        if [ -z "$TRIVY_LATEST_VERSION" ]; then echo "Could not determine latest Trivy version"; exit 1; fi
-        wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_LATEST_VERSION}/trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
-        sudo dpkg -i trivy_${TRIVY_LATEST_VERSION#v}_Linux-64bit.deb
+        # Pinned: the aquasecurity org's IP allow list blocks api.github.com release lookups from runners.
+        TRIVY_VERSION=0.76.2
+        wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
+        sudo dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb
 
     # Scan the frontend package-lock.json
     - name: Run Trivy scan for package-lock.json
