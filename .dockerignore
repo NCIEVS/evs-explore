@@ -10,8 +10,8 @@ frontend/dist
 frontend/node_modules
 web/.gradle
 web/build
-web/src/main/resources/static
 report.html
 reportJava.html
 report-docker.html
 scan.tar
+.trivyignore

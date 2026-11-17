@@ -1,17 +1,10 @@
 ARG BUILDPLATFORM
 
-# Build the Angular production bundle with the repository's Gradle-managed Node/npm versions.
-FROM --platform=$BUILDPLATFORM gradle:8.14.2-jdk17 AS frontend-build
-WORKDIR /workspace/frontend
-COPY --chown=gradle:gradle frontend/ ./
-RUN gradle npmBuild --no-daemon
-
-# Package the Spring Boot WAR with the freshly built frontend assets.
+# Package the Spring Boot WAR. The Angular bundle is not built here; the WAR serves the
+# frontend assets already committed under src/main/resources/static (see `make frontend`).
 FROM --platform=$BUILDPLATFORM gradle:8.14.2-jdk17 AS web-build
 WORKDIR /workspace/web
 COPY --chown=gradle:gradle web/ ./
-RUN mkdir -p src/main/resources/static
-COPY --from=frontend-build --chown=gradle:gradle /workspace/frontend/dist/ ./src/main/resources/static/
 RUN gradle --no-daemon bootWar -x test
 
 # Run the Linux deployment image as an unprivileged user.
@@ -26,6 +19,8 @@ COPY --from=web-build --chown=evsexplore:evsexplore /workspace/web/build/libs/ev
 
 USER evsexplore
 
-EXPOSE 4200
+# Listen on 8080 inside the container; remap with `docker run -p <host-port>:8080`.
+ENV NCI_EVSEXPLORE_SERVER_PORT=8080
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/evsexplore.war"]
