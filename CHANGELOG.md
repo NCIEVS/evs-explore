@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.6.0.RELEASE] - 2026-MM-DD
+### Changed
+- Docker image for the web module (serves the prebuilt frontend on port 8080)
+- Dependency updates for vulnerabilities (Jackson 2.21.7, Angular 20.3.35)
+
 ## [2.5.0.RELEASE] - 2026-09-25
 ### Changed
 - Updates to fix vulnerabilities (frontend and web)

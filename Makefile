@@ -14,16 +14,28 @@ GIT_COMMIT          	?= $(shell echo `git log | grep -m1 -oE '[^ ]+$'`)
 GIT_COMMITTED_AT        ?= $(shell echo `git log -1 --format=%ct`)
 GIT_BRANCH				?=
 FULL_VERSION            := v$(APP_VERSION)-g$(GIT_VERSION)
+DOCKER_TAG              := $(shell grep "^version =" web/build.gradle | sed 's/version = //; s/"//g; s/.RELEASE//')
+DOCKER_IMAGE            ?= $(SERVICE):$(DOCKER_TAG)
+
+ifeq ($(OS),Windows_NT)
+DOCKER                  ?= docker.exe
+WEB_GRADLEW             := ./gradlew.bat
+else
+DOCKER                  ?= docker
+WEB_GRADLEW             := ./gradlew
+endif
+
+DOCKER_IMG              := $(shell $(DOCKER) image inspect "$(DOCKER_IMAGE)" --format "{{.Id}}" 2>/dev/null)
 
 .PHONY: build
 
 # consider also "docker save..." and "docker load..." to avoid registry.
 clean:
-	cd web; ./gradlew clean
+	cd web; $(WEB_GRADLEW) clean
 
-# Build the library without tests
+# Build the library without tests.
 build:
-	cd web; ./gradlew clean build -x test
+	cd web; $(WEB_GRADLEW) clean build -x test
 
 # build the frontend
 frontend:
@@ -36,6 +48,31 @@ test:
 # Run
 run:
 	cd frontend; npm start
+
+# Build a Linux deployment image of the web module (uses the committed frontend in web/src/main/resources/static).
+docker:
+
+# Remove prior docker image if it is built
+ifdef DOCKER_IMG
+	$(DOCKER) rmi -f $(DOCKER_IMG)
+else
+	@echo No docker image to remove
+endif
+	$(DOCKER) build --platform linux/amd64 --no-cache-filter=web-build --file web/Dockerfile --tag "$(DOCKER_IMAGE)" .
+
+# Report all HIGH and CRITICAL image vulnerabilities with their installed and fixed versions.
+# The complete HTML report is written to report.html.
+scandocker:
+	$(DOCKER) save -o scan.tar $(DOCKER_IMAGE)
+	trivy image --input scan.tar $(DOCKER_IMAGE) --format template -o report.html --template "@config/trivy/html.tpl"
+	egrep "CRITICAL|HIGH" report.html
+	/bin/rm -f scan.tar
+
+# Run against EVSRESTAPI exposed on the Docker host. EVSRESTAPI, Jena, and OpenSearch must be running.
+rundocker:
+	$(DOCKER) run --rm --name "$(SERVICE)" -p "4200:8080" \
+		-e EVS_API_BASE_PATH="http://host.docker.internal:8082" \
+		"$(DOCKER_IMAGE)"
 
 releasetag:
 	git tag -a "${VERSION}-RC-`/bin/date +%Y-%m-%d`" -m "Release ${VERSION}-RC-`/bin/date +%Y-%m-%d`"
