@@ -6,7 +6,7 @@ This package is the root Java package for the EVS Explore Spring Boot web applic
 
 ## Application Entry Point
 
-`EVSWebApplication.java` bootstraps Spring Boot, excludes datasource auto-configuration, enables `WebProperties`, and starts the application.
+`EVSWebApplication.java` bootstraps Spring Boot, enables `WebProperties`, and starts the application.
 
 ## Spring Composition
 

@@ -1,57 +1,42 @@
 # Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
+The Angular UI is built and tested with the local dependencies in `package.json`.
+Use Node 22.14.0 and npm 10.9.2. Run the commands below from `frontend`.
 
-## Development server
+## Development
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```bash
+npm install
+npm start
+```
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Open http://localhost:4200/. The server reloads when source files change and
+proxies API requests to EVSRESTAPI at `http://localhost:8082`.
+Use `npm run start:dev` for the NCI development API (requires VPN access).
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- `npm run build:prod`: build the production bundle in `dist`.
+- `./gradlew build`: build the production bundle and copy it into the Java web
+  module. This command requires JDK 25 and downloads its own Node/npm tools.
 
-## Running unit tests
+See the [repository README](../README.md) for WAR packaging and deployment.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Tests
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/main/README.md).
-
-### Upgrading to latest
-
-This should work on Linux and the Mac.
-
-```
-npm install -g n
-n lts
+```bash
+npm test
+npm run cypress:open
 ```
 
-Windows, run PowerShell as Administrator:
+Unit tests use Jest. Start the Angular server before running Cypress.
+`npm run cypress:run` runs the end-to-end tests
+without the interactive runner. These npm commands do not require Java.
 
-To update NPM:
+## Angular CLI
 
-```
-Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
-npm install -g npm-windows-upgrade
-npm-windows-upgrade
-```
+Use `npm run ng -- <command>` to run the project's Angular CLI, for example:
 
-From the list provided, use the arrow keys to select version 10.8.3.
-
-To update Node/ng, first install `nvm`:
-
-```
-nvm install 18.20.7
-nvm use 18.20.7
-npm uninstall -g @angular/cli
-npm install -g @angular/cli@latest
+```bash
+npm run ng -- generate component component-name
 ```

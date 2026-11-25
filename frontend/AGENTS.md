@@ -14,6 +14,12 @@ This module owns the Angular EVS Explore user interface, local Angular developme
 - `npm run cypress:open` or `npm run cypress:run`: Cypress e2e workflows.
 - `./gradlew build`: runs the Gradle Node build and copies `dist` into `../web/src/main/resources/static`.
 
+## Build Toolchain
+
+Use JDK 25 with the checked-in Gradle 9.3.0 wrapper. The Gradle Node plugin 7.1.0
+downloads Node 22.14.0 and npm 10.9.2 for production builds.
+Development commands and Jest tests run directly through npm and do not require Java.
+
 ## Frontend Architecture
 
 The frontend is an Angular application using PrimeNG, ng-bootstrap, Angular forms, Angular routing, Jest, and Cypress. Application behavior is organized around components, services, models, directives, environment files, and source assets.
