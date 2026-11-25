@@ -125,6 +125,9 @@ export class WelcomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Sets terminology & version info text
   getTerminologyInfo(): string {
     const terminology = this.configService.getTerminology();
+    if (!terminology) {
+      return '';
+    }
     const versionInfo = 'Version: ' + terminology.version + (terminology.date ? '; Release Date: ' + terminology.date : '');
     return versionInfo;
   }

@@ -55,4 +55,8 @@ describe('WelcomeComponent', () => {
     expect(component.getTerminologyInfo()).toBe('Version: test-version');
   });
 
+  it('should omit terminology info until configuration is loaded', () => {
+    expect(component.getTerminologyInfo()).toBe('');
+  });
+
 });

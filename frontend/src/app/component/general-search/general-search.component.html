@@ -12,7 +12,7 @@
               </p-autoComplete>
             </div>
           </div>
-          <div class="col-sm-3">
+          <div [ngClass]="configService.isMultiSource() && !configService.getMultiSearch() ? 'col-sm-3' : 'col-sm-1'">
             <div style="padding-top: 4px">
               <button type="button" pButton label="Search" icon="fa fa-search" (click)="onPerformSearch()"
                 [disabled]="searchCriteria.term?.length < 1" id="icon-button"></button>
@@ -30,7 +30,7 @@
             </div>
           </div>
 
-          <div class="col-sm-5">
+          <div [ngClass]="configService.isMultiSource() && !configService.getMultiSearch() ? 'col-sm-5' : 'col-sm-7'">
             <div style="padding-top: 6px; float: right">
               <p-select title="Select terminology" class="term-dropdown" [options]="termsAll"
                 [(ngModel)]="selectedTerminology" (onChange)="onChangeTerminology($event)">
@@ -46,7 +46,7 @@
               </span>
               <span style="margin-left: 2px"><button type="button" pButton style="border: 0; margin-left: 10px"
                   icon="fa fa-search" (click)="onResetSearch($event)" pTooltip="Click to start new search"
-                  showDelay="300" label="New Search" tooltipPosition="bottom"></button></span>
+                  [disabled]="disableEntry()" showDelay="300" label="New Search" tooltipPosition="bottom"></button></span>
             </div>
           </div>
         </div>
