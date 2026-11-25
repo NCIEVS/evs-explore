@@ -4,7 +4,6 @@ plugins {
     id "war"
     id "org.springframework.boot" version "4.1.1"
     id "io.spring.dependency-management" version "1.1.7"
-    id "maven-publish"
 }
 
 group = "gov.nih.nci.term.browser.web"
@@ -55,10 +54,6 @@ tasks.register("zipFile", Zip) {
 
 tasks.named("build") {
     dependsOn tasks.named("zipFile")
-}
-
-tasks.named("publishToMavenLocal") {
-    dependsOn tasks.named("bootWar"), tasks.named("zipFile")
 }
 
 dependencyLocking {

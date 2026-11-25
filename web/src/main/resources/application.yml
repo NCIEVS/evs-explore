@@ -30,15 +30,6 @@ server:
        context-path: ${NCI_EVSEXPLORE_CONTEXT_PATH:/evsexplore}
 
 #
-# Management Properties
-#
-management:
-  endpoints:
-    web:
-      exposure:
-        include: heapdump,liquibase,loggers,prometheus,threaddump,info,metrics,health,hystrix.stream
-
-#
 # Logging Properties
 #
 logging:

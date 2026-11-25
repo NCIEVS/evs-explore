@@ -13,7 +13,7 @@ See https://blog.risingstack.com/nodejs-at-scale-npm-best-practices/
 
 Gradle builds use JDK 25 and the checked-in Gradle 9.3.0 wrappers. The web module
 uses Spring Boot 4.1.1. The frontend Gradle build downloads Node and npm;
-development and Jest tests still run directly through npm without Java.
+development and Jest tests run directly through npm without Java.
 
 From the repository root, build the Angular assets first, then package the WAR:
 
@@ -35,8 +35,7 @@ Set `EVS_API_BASE_PATH` to the deployment's EVSRESTAPI base URL, such as
 
 Deployment hosts require Java 25. The packaged service launcher defaults to
 `/usr/local/corretto-jdk25` and accepts a `JAVA_HOME` override. Adjust the matching
-path in `evsexplore.service` for the host. The ZIP layout and start/stop commands
-are unchanged.
+path in `evsexplore.service` for the host.
 
 
 ### Launching EVS-EXPLORE for development
@@ -45,20 +44,16 @@ Use Node 22.14.0 and npm 10.9.2 to match the build tooling. Run `npm install` fr
 `frontend`. `make run` starts the local Angular server, and `make test` runs Jest;
 both call npm directly and do not require Java.
 
-There are three ways to launch EVS-EXPLORE for development:
+From `frontend`:
 
-* If running a http://localhost:8082 EVSRESTAPI, use `npm start` from `frontend`.
-* To use the NCI dev deployment of EVSRESTAPI, use `npm run start:dev` from `frontend`. This method requires being connected to the NIH/NCI VPN.
-* To simulate the production environment, perform the gradle build and then launch the .war file.  For example:
+* Use `npm start` with a local EVSRESTAPI at http://localhost:8082.
+* Use `npm run start:dev` with the NCI development API (requires NIH/NCI VPN access).
+
+To run the packaged application, follow the WAR build instructions above.
+
+The packaged application exposes its version at:
 
 ```bash
-cd web
-java -Xmx4096M -jar build/libs/evsexplore-2.6.0.RELEASE.war
-```
-
-When running in java mode like above, there is an endpoint to check the evs-explore version via
-
-```
 curl http://localhost:4200/evsexplore/version
 ```
 

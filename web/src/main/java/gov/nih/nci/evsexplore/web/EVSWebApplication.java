@@ -7,9 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-/**
- * Entry point for the web application. This module has no JDBC dependencies.
- */
+/** Entry point for the web application. */
 @SpringBootApplication
 @EnableConfigurationProperties(WebProperties.class)
 public class EVSWebApplication {
