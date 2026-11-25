@@ -56,6 +56,7 @@ describe('WelcomeComponent', () => {
   });
 
   it('should omit terminology info until configuration is loaded', () => {
+    jest.spyOn(TestBed.inject(ConfigurationService), 'getTerminology').mockReturnValue(null);
     expect(component.getTerminologyInfo()).toBe('');
   });
 
